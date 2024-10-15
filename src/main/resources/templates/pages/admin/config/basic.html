@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/admin/config/basic.css}">
+    <link rel="stylesheet" th:href="@{/css/basic.css}">
+</head>
+<body>
+<header th:replace="layout/admin/header.html"></header>
+    <main>
+        <aside th:replace="layout/admin/aside.html"></aside>
+        <div class="container">
+            <div class="header">
+                <span class="header-title">기본설정</span>
+                <div class="header-right">
+                    <span>HOME</span>
+                    <span>></span>
+                    <span>환경설정</span>
+                    <span>></span>
+                    <span class="bold">기본설정</span>
+                </div>
+            </div>
+            <div class="header-gubun"></div>
+
+            <section class="s1">
+                <article class="header-title2">버전 정보</article>
+                <article class="dis1">
+                    현재 사이트 버전입니다.
+                </article>
+                <table class="tb1">
+                    <tr>
+                        <th>사이트 버전</th>
+                        <td>1.0.1-RELEASE</td>
+                    </tr>
+                </table>
+            </section>
+            <section class="s2">
+                <article class="header-title2">사이트</article>
+                <article class="dis1">
+                    브라우저 텝 , 헤더 및 푸터 노출정보입니다.
+                </article>
+                <table class="tb2">
+                    <tr>
+                        <th>제목</th>
+                        <td>
+                            <input class="inp" type="text" value="롯데 ON ">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            부제
+                        </th>
+                        <td>
+                            <input class="inp" type="text" value="더 나은 쇼핑을 위한 선택">
+                        </td>
+                    </tr>
+                </table>
+                <article class="btn">
+                    <button>수정하기</button>
+                </article>
+            </section>
+            <section class="s3">
+                <article class="header-title2">로고</article>
+                <article class="dis1">
+                    브라우저 텝 , 헤더 및 푸터 노출 로고입니다.
+                </article>
+                <table class="tb3">
+                    <tr>
+                        <th>헤더 로고</th>
+                        <td>
+                            <input class="inp" type="file" value="롯데 ON ">
+                            <span>크기 370 x 76 권장 </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>푸터 로고</th>
+                        <td>
+                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택">
+                            <span>크기 155 x 36 권장</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>파비콘</th>
+                        <td>
+                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택">
+                            <span>크기 32 x 32 권장</span>
+                        </td>
+                    </tr>
+                </table>
+                <article class="btn">
+                    <button>수정하기</button>
+                </article>
+            </section>
+            <section class="s2">
+                <article class="header-title2">기업 정보</article>
+                <article class="dis1">
+                    푸터에 노출되는 기업정보 입니다.
+                </article>
+                <table class="tb2">
+                    <tr>
+                        <th>상호명</th>
+                        <td><input class="inp" type="text" value="롯데쇼핑주식회사"></td>
+                    </tr>
+                    <tr>
+                        <th>대표이사</th>
+                        <td><input class="inp" type="text" value="이상훈"></td>
+                    </tr>
+                    <tr>
+                        <th>사업자등록번호</th>
+                        <td><input class="inp" type="text" value="123-12-12345"></td>
+                    </tr>
+                    <tr>
+                        <th>통신판매업신고</th>
+                        <td><input class="inp" type="text" value="2021-양산-1234"></td>
+                    </tr>
+                    <tr>
+                        <th>기본주소</th>
+                        <td><input class="inp" type="text" value="서울특별시 강남구 테헤란로 507"></td>
+                    </tr>
+                    <tr>
+                        <th>상세주소</th>
+                        <td><input class="inp" type="text" value="1002호"></td>
+                    </tr>
+                </table>
+                <article class="btn">
+                    <button>수정하기</button>
+                </article>
+            </section>
+            <section class="s2">
+                <article class="header-title2">고객센터 정보</article>
+                <article class="dis1">
+                    푸터에 노출되는 고객센터 정보 입니다.
+                </article>
+                <table class="tb2">
+                    <tr>
+                        <th>전화번호</th>
+                        <td><input class="inp" type="text" value="010-5555-4444"></td>
+                    </tr>
+                    <tr>
+                        <th>업무시간</th>
+                        <td>
+                            <!-- <input class="inp" type="time" min="08:00" max="18:00"> -->
+                            <input class="inp" type="time" id="start" name="start_time" value="08:00">
+                            ~
+                            <input class="inp" type="time" id="end" name="end_time" value="18:00">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이메일</th>
+                        <td><input class="inp" type="text" value="lotteon@lotteon.net"></td>
+                    </tr>
+                    <tr>
+                        <th>전자금융거래 분쟁담당</th>
+                        <td><input class="inp" type="text" value="1234-1234"></td>
+                    </tr>
+                </table>
+                <article class="btn">
+                    <button>수정하기</button>
+                </article>
+            </section>
+            <section class="s2">
+                <article class="header-title2">카피라이트</article>
+                <article class="dis1">
+                    푸터에 노출되는 카피라이트 정보 입니다.
+                </article>
+                <table class="tb1">
+                    <tr>
+                        <th>카피라이트</th>
+                        <td>
+                            <input type="text" class="inp" value="CopyrightLotteOn. All rights reserved">
+                        </td>
+                    </tr>
+                </table>
+                <article class="btn">
+                    <button>수정하기</button>
+                </article>
+            </section>
+        </div>
+    </main>
+    <footer th:replace="layout/admin/footer.html"></footer>
+</body>
+</html>

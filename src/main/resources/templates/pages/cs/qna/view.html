@@ -1,0 +1,57 @@
+<link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
+<link rel="stylesheet" th:href="@{/css/cs/cs_qna.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+    <aside class="cs_aside">
+        <h3 class="aside_title">문의하기</h3>
+        <ul class="aside_cate">
+            <li class="cate_list"><a href="#">회원</a></li>
+            <li class="cate_list"><a href="#">쿠폰/이벤트</a></li>
+            <li class="cate_list"><a href="#">주문/결제/배송</a></li>
+            <li class="cate_list"><a href="#">취소/반품/교환</a></li>
+            <li class="cate_list"><a href="#">여행/숙박/항공</a></li>
+            <li class="cate_list"><a href="#">안전거래</a></li>
+        </ul>
+    </aside>
+    <div id="main" style="height: auto">
+        <nav class="cs_nav">
+            <p class="cs_nav_tit"><span>홈</span> > <span>문의하기</span></p>
+        </nav>
+        <div class="box">
+
+            <section class="cs_qna">
+                <div class="cate_bar">
+                    <h3 class="cate_title">회원</h3>
+                    <p class="cate_des">회원관련 문의내용입니다.</p>
+                </div>
+                <div class="qna_view">
+                    <div class="view_title">
+                        <div class="cate_title">
+                            <p class="cate">가입</p>
+                            <p class="title">가입문의내용</p>
+                        </div>
+                        <p><span class="nick">chh**</span> <span class="date">2022-11-21</span></p>
+                    </div>
+                    <div class="view_content">
+                        <p>
+                            회원가입하고 싶어요. 어떻게 해야 하나요?
+                        </p>
+                    </div>
+                    <div class="view_answer">
+                        <div class="cate_title">
+                            <img src="/images/finger-icons.png" alt="">
+                            <p class="cate">답변</p>
+                            <p class="title">가입문의내용</p>
+                        </div>
+                        <div class="answer_content">
+                            <p>안녕하세요. 회원님 회원가입하시면 됩니다.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn_gray btn_list">목록</button>
+            </section>
+        </div>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>

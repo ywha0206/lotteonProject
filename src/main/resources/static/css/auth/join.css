@@ -1,0 +1,89 @@
+/* #d7d7d7 #cc3434 #31859c #bfbfbf */
+
+.container {
+    width: 800px;
+    margin: 0 auto;
+    height: 650px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-title1 {
+    margin-top: 50px;
+    font-size: 20px;
+    color: #d7d7d7 ;
+    text-align: center;
+}
+
+.header-title2 {
+    font-size: 25px;
+    text-align: center;
+}
+
+.main {
+    display: flex;
+    width: 850px;
+    margin: 0 auto;
+    margin-top: 80px;
+    gap: 80px;
+}
+
+.main > .box {
+    width: 350px;
+    border: 2px solid #d9d9d9;
+    text-align: center;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    cursor: pointer;
+}
+
+.box:hover {
+    opacity: 0.8;
+}
+
+.customer-header{
+    background-color: #cc3434;
+    padding: 20px 0;
+    color: white;
+}
+
+.seller-header {
+    background-color: #31859c;
+    padding: 20px 0;
+    color: white;
+}
+
+.box-main {
+    text-align: left;
+    margin-left: 30px;
+}
+
+.content {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.advice {
+    color: #909090;
+}
+
+.box-btn {
+    background-color: #bfbfbf;
+    width: 100px;
+    height: 35px;
+    position: relative;
+    top: -4px;
+    left: 124px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+

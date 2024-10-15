@@ -1,0 +1,115 @@
+.container {
+    width: 800px;
+    margin: 0 auto;
+}
+
+.header-title{
+    margin-top: 50px;
+}
+
+.header-gubun {
+    width: 1200px;
+    height: 3px;
+    background-image: url(/images/Vector.png);
+    margin-bottom: 30px;
+}
+
+.header-gubun-bottom {
+    width: 1200px;
+    height: 3px;
+    background-image: url(/images/login-gubun-bottom.png);
+    margin-top: 30px;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-inp {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 500px;
+}
+
+.main-img img {
+    width: 400px;
+    height: 200px;
+    cursor: pointer;
+}
+
+.inp-top {
+    display: flex;
+}
+
+.inp-bottom {
+    display: flex;
+    gap: 20px;
+    font-size: 10px;
+    margin-top: 30px;
+}
+
+.login-btn {
+    background-image: url(/images/login-btn.png);
+    width: 70px;
+    height: 70px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    margin-left: 30px;
+    cursor: pointer;
+}
+
+.login-btn:hover{
+    opacity: 0.8;
+}
+
+.label {
+    font-weight: 600;
+}
+
+.inp {
+    width: 180px;
+    float: right;
+    margin-left: 30px;
+    outline: none;
+    border: 2px solid #c7c7c7;
+    border-radius: 5px;
+}
+
+.top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+}
+
+.inp-bottom .link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.auto {
+    position: relative;
+    top: 1px;
+}
+
+.award-logos {
+    display: flex;
+    gap: 5px;
+    width: 800px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.container .logo img{
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}

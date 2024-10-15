@@ -1,0 +1,109 @@
+<link rel="stylesheet" th:href="@{/css/admin/product/categoryProduct.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <div class="container">
+        <div class="header">
+            <span class="header-title">카테고리</span>
+            <div class="header-right">
+                <span>HOME</span>
+                <span>></span>
+                <span>상품관리</span>
+                <span>></span>
+                <span class="bold">카테고리</span>
+            </div>
+        </div>
+
+        <div class="header-gubun"></div>
+
+        <section class="main">
+            <div class="main-title">카테고리 관리</div>
+            <div class="main-description">쇼핑몰 메인, 상품 페이지 사이드 카테고리 메뉴 입니다.</div>
+        </section>
+
+        <section class="categoryProduct">
+            <aside id="sidebar">
+                <div class="navi">
+                    <li onclick="openMenu2(event, 'main-menu1')">여성패션 <button class="delete-btn parent-btn">삭제</button></li>
+                    <div class="menues" id="main-menu1">
+                        <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드잡화 <button class="delete-btn">삭제</button></div>
+                        <button class="add-categoryProduct">
+                            <div class="add-icon">+</div>
+                            <div class="add-text">카테고리 추가하기</div>
+                        </button>
+                    </div>
+                </div>
+                <div class="navi">
+                    <li onclick="openMenu(event, 'main-menu2')">남성패션 <button class="delete-btn">삭제</button></li>
+                    <div class="menues" id="main-menu2">
+                        <div>- 브랜드의류2 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드가방2 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드신발2 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드잡화2 <button class="delete-btn">삭제</button></div>
+                        <button class="add-categoryProduct">
+                            <div class="add-icon">+</div>
+                            <div class="add-text">카테고리 추가하기</div>
+                        </button>
+                    </div>
+                </div>
+                <div class="navi">
+                    <li onclick="openMenu2(event, 'main-menu3')">브랜드의류 <button class="delete-btn">삭제</button></li>
+                    <div class="menues" id="main-menu3">
+                        <div>- 브랜드의류3 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드가방3 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드신발3 <button class="delete-btn">삭제</button></div>
+                        <div>- 브랜드잡화3 <button class="delete-btn">삭제</button></div>
+                        <button class="add-categoryProduct">
+                            <div class="add-icon">+</div>
+                            <div class="add-text">카테고리 추가하기</div>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </section>
+        <div class="advice-footer">
+            카테고리 메뉴 순서는 변경할때 드래그 앤 드롭으로 1차, 2차 카테고리 메뉴 이동 후 수정하기를 클릭합니다.
+        </div>
+        <div class="btn">
+            <button class="submit-btn" type="submit">수정하기</button>
+        </div>
+    </div>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+<script>
+    function openMenu2(event, menuId) {
+        const allMenus = document.querySelectorAll('.menues');
+
+        // 모든 메뉴를 닫기
+        allMenus.forEach(menu => {
+            if (menu.id !== menuId) {
+                menu.classList.remove('open');
+                menu.style.transition = 'none';
+                menu.style.maxHeight = '0';  // 즉시 닫기
+                menu.style.padding = '0';
+            }
+        });
+
+        // 클릭된 메뉴 열기/닫기
+        const selectedMenu = document.getElementById(menuId);
+        if (selectedMenu.classList.contains('open')) {
+            selectedMenu.classList.remove('open');
+            selectedMenu.style.transition = 'none';  // 닫을 때는 transition을 제거
+            selectedMenu.style.maxHeight = '0';
+            selectedMenu.style.padding = '0';
+        } else {
+            selectedMenu.classList.add('open');
+            // 열릴 때 transition을 다시 추가해서 부드럽게 열리도록 함
+            setTimeout(() => {
+                selectedMenu.style.transition = 'max-height 0.5s ease-out, padding 0.5s ease-out';
+                selectedMenu.style.maxHeight = '500px';  // 부드럽게 열기
+                selectedMenu.style.padding = '20px 0';
+            }, 10);  // 약간의 지연을 줘서 transition이 적용되도록
+        }
+    }
+</script>

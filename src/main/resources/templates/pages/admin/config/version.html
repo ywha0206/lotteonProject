@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/admin/config/version.css}"/>
+    <link rel="stylesheet" th:href="@{/css/basic.css}">
+  </head>
+  <body>
+
+  <header th:replace="layout/admin/header.html"></header>
+  <main>
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <div class="container">
+      <div class="header">
+        <span class="header-title">버전관리</span>
+        <div class="header-right">
+          <span>HOME</span>
+          <span>></span>
+          <span>환경설정</span>
+          <span>></span>
+          <span class="bold">버전관리</span>
+        </div>
+      </div>
+      <div class="header-gubun"></div>
+
+      <section>
+        <article class="header-title2">버전 목록</article>
+        <article class="dis1">사이트 버전 목록 입니다.</article>
+        <div class="header-gubun2"></div>
+        <table class="tb1">
+          <tr>
+            <th><input type="checkbox" /></th>
+            <th>번호</th>
+            <th>버전</th>
+            <th>작성자</th>
+            <th>등록일시</th>
+            <th>변경내역</th>
+          </tr>
+          <tr class="td">
+            <td>
+              <input type="checkbox" class="inp" />
+            </td>
+            <td>1</td>
+            <td>0.0.1-SNAPSHOT</td>
+            <td>kios11010</td>
+            <td>2024.10.13 17:12:00</td>
+            <td>
+              <button onclick="getVersion()">[ 확인 ]</button>
+            </td>
+          </tr>
+          <tr class="td">
+            <td>
+              <input type="checkbox" class="inp" />
+            </td>
+            <td>2</td>
+            <td>0.0.1-SNAPSHOT</td>
+            <td>kios11010</td>
+            <td>2024.10.13 17:12:00</td>
+            <td>
+              <button onclick="getVersion()">[ 확인 ]</button>
+            </td>
+          </tr>
+          <tr class="td">
+            <td>
+              <input type="checkbox" class="inp" />
+            </td>
+            <td>3</td>
+            <td>0.0.1-SNAPSHOT</td>
+            <td>kios11010</td>
+            <td>2024.10.13 17:12:00</td>
+            <td>
+              <button onclick="getVersion()">[ 확인 ]</button>
+            </td>
+          </tr>
+        </table>
+
+        <div class="btns">
+          <button class="delete-btn">선택삭제</button>
+          <button onclick="postVersion()" class="insert-btn">등록</button>
+        </div>
+        <div class="page">
+          <a href="#" class="first"><<</a>
+          <a class="on" href="#">1</a>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+          <a href="#" class="last">>></a>
+        </div>
+      </section>
+
+      <div class="popup"></div>
+      <div class="bg"></div>
+    </div>
+  </main>
+  <footer th:replace="layout/admin/footer.html"></footer>
+
+
+
+    <script>
+      const popup = document.querySelector(".popup");
+      const bg = document.querySelector(".bg");
+      const title = document.getElementById("title");
+      const content = document.getElementById("content");
+
+      function getVersion() {
+        popup.innerHTML = `
+                <div class="header">
+                <div class="title">버전확인</div>
+                <div onclick="closePopup()" class="btn">X</div>
+            </div>
+            <div class="tb-div">
+                <table class="tb2">
+                    <tr>
+                        <th>버전</th>
+                        <td id="title">
+                            0.0.1-SNAPSHOT
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>변경확인</th>
+                        <td class="td">
+                            <div id="content">
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                                - 프로젝트 생성 및 전체구조 설계 <br>
+                                - 레디스 컨피크 작성 <br>
+                                - 페이지 디자인 개발중 <br>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </div>
+            <div class="btns">
+                <button type="button" onclick="closePopup()" class="submit-btn">닫기</button>
+            </div>
+            `;
+        popup.style.display = "block";
+        bg.style.display = "block";
+      }
+
+      function closePopup() {
+        popup.style.display = "none";
+        bg.style.display = "none";
+      }
+
+      function postVersion() {
+        popup.innerHTML = `
+                <div class="header">
+                <div class="title">버전확인</div>
+                <div onclick="closePopup()" class="btn">X</div>
+            </div>
+            <div class="tb-div">
+                <table class="tb2">
+                    <tr>
+                        <th>버전</th>
+                        <td id="title">
+                           <input class="inp" type=text >
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>변경내역</th>
+                        <td class="td">
+                            <textarea class="ta" id="content"></textarea>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </div>
+            <div class="btns">
+                <button type="button" onclick="submit()" class="submit-btn">등록하기</button>
+            </div>
+            `;
+        popup.style.display = "block";
+        bg.style.display = "block";
+      }
+
+      function submit() {
+        console.log("----");
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+<link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
+<link rel="stylesheet" th:href="@{/css/cs/cs_index.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+<!--    <aside class="cs_aside">-->
+<!--        <h3 class="aside_title">문의하기</h3>-->
+<!--        <ul class="aside_cate">-->
+<!--            <li class="cate_list"><a href="#">회원</a></li>-->
+<!--            <li class="cate_list"><a href="#">쿠폰/이벤트</a></li>-->
+<!--            <li class="cate_list"><a href="#">주문/결제/배송</a></li>-->
+<!--            <li class="cate_list"><a href="#">취소/반품/교환</a></li>-->
+<!--            <li class="cate_list"><a href="#">여행/숙박/항공</a></li>-->
+<!--            <li class="cate_list"><a href="#">안전거래</a></li>-->
+<!--        </ul>-->
+<!--    </aside>-->
+
+    <div id="main" style="height: auto">
+        <div class="cs_index_title">
+            <h2 class="cs_main_title"><span class="cs_main_lotte">롯데 ON</span> 이 도와드릴게요 !</h2>
+        </div>
+        <section class="cs_index cs_index_notice">
+            <h3 class="sub_title">공지사항<a href="#" class="viewAll">전체보기</a></h3>
+            <ul class="notice_box">
+                <li class="notice"><a href="">
+                    <p class="cate">안내</p><p class="content">해외결제사칭 문자주의</p><span class="date">22.10.31</span>
+                </a></li>
+
+                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
+                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
+                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
+                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
+                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
+            </ul>
+        </section>
+        <section class="cs_index cs_index_fnq">
+            <h3 class="sub_title">자주하는질문<a href="#" class="viewAll">전체보기<img src="" alt=""></a></h3>
+            <ul class="fnq_ul">
+                <li class="fnq_li"><a href="#">
+                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
+                    <p class="fnq_content">회원</p>
+                </a></li>
+                <li class="fnq_li"><a href="#">
+                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
+                    <p class="fnq_content">쿠폰/이벤트</p>
+                </a></li>
+                <li class="fnq_li"><a href="#">
+                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
+                    <p class="fnq_content">주문/결제</p>
+                </a></li>
+                <li class="fnq_li"><a href="#">
+                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
+                    <p class="fnq_content">배송</p>
+                </a></li>
+                <li class="fnq_li"><a href="#">
+                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
+                    <p class="fnq_content">취소/반품/환불</p>
+                </a></li>
+                <li class="fnq_li"><a href="#">
+                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
+                    <p class="fnq_content">안전결제</p>
+                </a></li>
+            </ul>
+        </section>
+        <section class="cs_index cs_index_qna">
+            <h3 class="sub_title">문의하기<a href="#" class="viewAll">전체보기</a></h3>
+            <ul class="qna_ul">
+                <li class="qna"><a href="">
+                    <p class="cate">회원</p><p class="content">개인회원과 법인회원에 차이가 있나요?</p>
+                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
+                </a></li>
+                <li class="qna"><a href="">
+                    <p class="cate">쿠폰/이벤트</p><p class="content">스마일 포인트는 어디에 사용하나요?</p>
+                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
+                </a></li>
+                <li class="qna"><a href="">
+                    <p class="cate">배송</p><p class="content">주문한 상품은 언제 배송되나요?</p>
+                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
+                </a></li>
+                <li class="qna"><a href="">
+                    <p class="cate">주문/결제</p><p class="content">신용카드 결제 중 오류가 난 경우 어떻게 하나요?</p>
+                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
+                </a></li>
+                <li class="qna"><a href="">
+                    <p class="cate">취소/반품/교환</p><p class="content">주문을 취소하고 싶어요</p>
+                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
+                </a></li>
+            </ul>
+            <a href="#" class="qna_link">문의글 작성 ></a>
+        </section>
+        <section class="cs_index cs_index_info">
+            <h3 class="sub_title">1:1 상담안내</h3>
+            <ul class="infos">
+                <li class="info">
+                    <p class="info_title">이용안내</p>
+                    <p class="info_cate">일반회원/비회원</p>
+                    <strong class="info_number">1566-0001<span class="info_time">(평일 09:00 ~ 18:00)</span></strong>
+                    <p class="info_cate">스마일클럽전용</p>
+                    <strong class="info_number">1566-0002<span class="info_time">(365일 09:00 ~ 18:00)</span></strong>
+                </li>
+                <li class="info">
+                    <p class="info_title">판매상담이용안내</p>
+                    <div>
+                        <p class="info_cate">판매고객</p>
+                        <strong class="info_number">1566-5700<span class="info_time">(평일 09:00 ~ 18:00)</span></strong>
+                    </div>
+                    <a href="#">
+                        <strong class="info_guide">판매자가입및서류접수안내 ></strong>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>

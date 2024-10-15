@@ -1,0 +1,148 @@
+<link rel="stylesheet" th:href="@{/css/auth/seller.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+    <div class="container">
+        <h3 class="header-title">판매자 회원가입</h3>
+        <div class="header-gubun"></div>
+        <form class="customer" action="#">
+            <table class="tb1">
+                <tr>
+                    <th>아이디</th>
+                    <td>
+                        <input id="id" type="text">
+                        <span>영문 , 숫자 4~12자리 설정</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>비밀번호</th>
+                    <td>
+                        <input id="password" type="password">
+                        <span>영문, 숫자 , 특수문자 8~12자리 설정</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>비밀번호확인</th>
+                    <td><input id="confirm" type="password"></td>
+                </tr>
+            </table>
+            <table class="tb2">
+                <tr>
+                    <th>회사명</th>
+                    <td><input id="company" class="inp" placeholder="회사명입력" type="text"></td>
+                </tr>
+                <tr>
+                    <th>대표</th>
+                    <td><input id="representative" class="inp" placeholder="이름입력" type="text"></td>
+                </tr>
+                <tr>
+                    <th>사업자등록번호</th>
+                    <td>
+                        <input id="number1" class="inp" type="text" placeholder="사업자등록번호 입력">
+                        <span>- 포함 12자리 입력</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>통신판매업번호</th>
+                    <td>
+                        <input id="number2" class="inp" type="text" placeholder="통신판매업번호 입력">
+                    </td>
+                </tr>
+                <tr>
+                    <th>전화번호</th>
+                    <td>
+                        <input id="hp" class="inp" type="text" placeholder="전화번호 입력">
+                        <span>- 없이 11자리 입력</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>팩스번호</th>
+                    <td>
+                        <input id="fax" class="inp" type="text" placeholder="팩스번호 입력">
+                        <span>- 없이 **자리 입력</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th-addr">주소</th>
+                    <td class="td-addr">
+                        <input id="addr1" class="addr1" type="text" placeholder="우편번호검색 클릭" >
+                        <input id="addr2" class="addr2" type="text" placeholder="기본주소" >
+                        <input id="addr3" class="addr3" type="text" placeholder="상세주소">
+                    </td>
+                </tr>
+            </table>
+            <div class="signup">
+                <button type="submit" id="signup-btn" class="signup-btn">회원가입</button>
+            </div>
+        </form>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+
+
+    <script>
+        const signupBtn = document.getElementById('signup-btn');
+        const form = document.querySelector('.customer');
+    
+        // 각 입력 필드
+        const idInput = document.getElementById('id'); // 아이디
+        const passwordInput = document.getElementById('password'); // 비밀번호
+        const passwordConfirmInput = document.getElementById('confirm'); // 비밀번호 확인
+        const companyInput = document.getElementById('company'); // 회사명
+        const representativeInput = document.getElementById('representative'); // 대표
+        const businessNumberInput = document.getElementById('number1'); // 사업자등록번호
+        const saleNumberInput = document.getElementById('number2'); // 통신판매업번호
+        const phoneInput = document.getElementById('hp'); // 전화번호
+        const faxInput = document.getElementById('fax'); // 팩스번호
+        const addr1Input = document.getElementById('addr1'); // 주소1
+        const addr2Input = document.getElementById('addr2'); // 주소2
+    
+        // 사업자등록번호 유효성 검사 함수
+        function isValidBusinessNumber(number) {
+            // 사업자등록번호는 10자리 숫자여야 합니다.
+            return /^\d{10}$/.test(number);
+        }
+    
+        // 통신판매업번호 유효성 검사 함수 (간단히 숫자 12자리로 처리)
+        function isValidSaleNumber(number) {
+            // 통신판매업번호는 12자리 숫자 (또는 형식이 있을 경우 추가 수정)
+            return /^\d{12}$/.test(number);
+        }
+    
+        // 유효성 검사 함수
+        function validateForm() {
+            const isIdValid = /^[a-zA-Z0-9]{4,12}$/.test(idInput.value); // 아이디: 영문, 숫자 4~12자리
+            const isPasswordValid = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,12}$/.test(passwordInput.value); // 비밀번호: 영문, 숫자, 특수문자 8~12자리
+            const isPasswordConfirmed = passwordInput.value === passwordConfirmInput.value; // 비밀번호 확인
+            const isCompanyValid = companyInput.value.trim() !== ''; // 회사명: 빈 값이 아닌지
+            const isRepresentativeValid = representativeInput.value.trim() !== ''; // 대표: 빈 값이 아닌지
+            const isBusinessNumberValid = isValidBusinessNumber(businessNumberInput.value); // 사업자등록번호
+            const isSaleNumberValid = isValidSaleNumber(saleNumberInput.value); // 통신판매업번호
+            const isPhoneValid = /^\d{10,11}$/.test(phoneInput.value); // 전화번호: 10~11자리 숫자
+            const isFaxValid = /^\d{10,11}$/.test(faxInput.value); // 팩스번호: 10~11자리 숫자
+            const isAddrValid = addr1Input.value.trim() !== '' && addr2Input.value.trim() !== ''; // 주소: 주소1, 주소2 필수
+    
+            // 모든 조건이 참이면 버튼 활성화
+            const isFormValid = isIdValid && isPasswordValid && isPasswordConfirmed && isCompanyValid && isRepresentativeValid && isBusinessNumberValid && isSaleNumberValid && isPhoneValid && isFaxValid && isAddrValid;
+            signupBtn.disabled = !isFormValid;
+    
+            return isFormValid;
+        }
+    
+        // 입력 필드에 이벤트 리스너 추가 (입력값 변경시마다 유효성 검사)
+        form.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', validateForm);
+        });
+    
+        // 폼 제출 이벤트 처리
+        form.addEventListener('submit', function (e) {
+            if (!validateForm()) {
+                e.preventDefault(); // 유효하지 않으면 폼 제출 막기
+                alert('모든 필수 항목을 올바르게 입력해주세요.');
+            }
+        });
+    
+    </script>
+    
+</body>
+</html>

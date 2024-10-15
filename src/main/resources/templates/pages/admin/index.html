@@ -1,0 +1,139 @@
+
+    <link rel="stylesheet" th:href="@{/css/admin/index.css}">
+
+    <link rel="stylesheet" th:href="@{/css/cs/cs_common.css}" />
+    <link rel="stylesheet" th:href="@{/css/basic.css}">
+    <body>
+    <header th:replace="layout/admin/header.html"></header>
+    <main>
+        <aside th:replace="layout/admin/aside.html"></aside>
+        <section class="admin_index">
+            <nav class="notice-nav">
+                <h3 class="viewTit">관리자메인</h3>
+                <p>
+                    HOME > <strong>관리자 메인</strong>
+                </p>
+            </nav>
+            <article class="admin_current">
+                <h4>운영현황</h4>
+                <table class="operate_tbl">
+                    <tr class="count">
+                        <th colspan='2'>주문건수</th>
+                        <th colspan='2'>주문건수</th>
+                        <th colspan='2'>주문건수</th>
+                        <th colspan='2'>주문건수</th>
+                        <th colspan='2'>주문건수</th>
+                    </tr>
+                    <tr class="count">
+                        <td colspan='2'>131</td>
+                        <td colspan='2'>1,130,000</td>
+                        <td colspan='2'>1,014</td>
+                        <td colspan='2'>1,014</td>
+                        <td colspan='2'>14</td>
+                    </tr>
+                    <tr class="pc">
+                        <th>PC</th>
+                        <td>60</td>
+
+                        <th>PC</th>
+                        <td>60</td>
+
+                        <th>PC</th>
+                        <td>60</td>
+
+                        <th>PC</th>
+                        <td>60</td>
+
+                        <th>PC</th>
+                        <td>60</td>
+                    </tr>
+                    <tr>
+                        <th>Mobile</th>
+                        <td>60</td>
+
+                        <th>Mobile</th>
+                        <td>60</td>
+
+                        <th>Mobile</th>
+                        <td>60</td>
+
+                        <th>Mobile</th>
+                        <td>60</td>
+
+                        <th>Mobile</th>
+                        <td>60</td>
+                    </tr>
+                </table>
+                <h4>주문현황</h4>
+                <table class="order_tbl">
+                    <tr>
+                        <th>입금대기</th>
+                        <th>배송준비</th>
+                        <th>취소요청</th>
+                        <th>교환요청</th>
+                        <th>반품요청</th>
+                    </tr>
+                    <tr class="count">
+                        <td>101</td>
+                        <td>101</td>
+                        <td>101</td>
+                        <td>101</td>
+                        <td>101</td>
+                    </tr>
+                </table>
+            </article>
+            <article class="admin_list">
+                <div class="list">
+                    <h4>공지사항</h4>
+                    <ul>
+                        <li class="notice"><a href="#">
+                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
+                            <span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="notice"><a href="#">
+                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
+                            <span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="notice"><a href="#">
+                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
+                            <span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="notice"><a href="#">
+                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
+                            <span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="notice"><a href="#">
+                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
+                            <span class="date">22.10.31</span>
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="list">
+                    <h4>고객문의</h4>
+                    <ul>
+                        <li class="qna"><a href="#">
+                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
+                            <span class="nick">chh**</span><span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="qna"><a href="#">
+                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
+                            <span class="nick">chh**</span><span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="qna"><a href="#">
+                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
+                            <span class="nick">chh**</span><span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="qna"><a href="#">
+                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
+                            <span class="nick">chh**</span><span class="date">22.10.31</span>
+                        </a></li>
+                        <li class="qna"><a href="#">
+                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
+                            <span class="nick">chh**</span><span class="date">22.10.31</span>
+                        </a></li>
+                    </ul>
+                </div>
+            </article>
+        </section>
+    </main>
+    <footer th:replace="layout/admin/footer.html"></footer>

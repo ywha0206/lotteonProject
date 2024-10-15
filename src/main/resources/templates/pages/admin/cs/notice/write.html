@@ -1,0 +1,83 @@
+<link rel="stylesheet" th:href="@{/css/admin/cs/notice/write.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+  <aside th:replace="layout/admin/aside.html"></aside>
+  <section id="admin-product-list" class="container">
+    <script>
+      function checkSelection() {
+        const cate = document.getElementsByName("noticeCate")[0].value;
+        const type = document.getElementsByName("noticeType")[0].value;
+
+        if (cate === "유형선택" || type === "타입선택") {
+          alert("문의유형의 모든 항목을 선택해주세요.");
+          return false;
+        }
+        return true;
+      }
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+    <nav class="notice-nav">
+      <h3>공지사항 작성</h3>
+      <p>HOME > 고객센터 > <strong>공지사항</strong></p>
+    </nav>
+    <!-- 글작성 컨텐츠 시작 -->
+    <article>
+      <form
+              class="formBox"
+              th:action="@{/admin/cs/notice/write}"
+              method="post"
+              onsubmit="return checkSelection()"
+      >
+        <table>
+          <tbody>
+          <tr>
+            <th>유형</th>
+            <td>
+              <select class="noticeCate" name="noticeCate">
+                <option>유형선택</option>
+                <option value="service">고객서비스</option>
+                <option value="event">이벤트당첨</option>
+                <option value="safe">안전거래</option>
+                <option value="danger">위해상품</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>제목</th>
+            <td>
+              <input
+                      type="text"
+                      class="noticeTitle"
+                      name="noticeTitle"
+                      placeholder="제목을 입력하세요."
+                      required
+              />
+            </td>
+          </tr>
+          <tr>
+            <th>내용</th>
+            <td>
+              <textarea
+                      class="noticeContent"
+                      name="noticeContent"
+                      placeholder="내용을 입력하세요."
+                      required
+              ></textarea>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="button-group">
+          <button class="button--back">취소하기</button>
+          <button class="button--write">등록하기</button>
+        </div>
+      </form>
+    </article>
+  </section>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+

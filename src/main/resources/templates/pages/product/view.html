@@ -1,0 +1,208 @@
+<link rel="stylesheet" th:href="@{/css/product/view.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+    <div class="aside">
+        <aside class="aside1">
+
+        </aside>
+        <aside class="aside2">
+
+        </aside>
+    </div>
+    <div id="wrap">
+       <!-- .aside -->
+        <main id="main">
+            <nav id="navi">
+                <h2 class="sub_tit">상품보기</h2>
+                <p class="location">
+                    <span>HOME</span>
+                    <span>패션·의류·뷰티</span>
+                    <span>남성의류</span>
+                </p>
+            </nav> <!-- #navi-->
+            <div class="product_info">
+                <img src="https://via.placeholder.com/353x211" alt="상품 이미지" />
+                <div class="product_details">
+                    <table class="tb1">
+                        <tr>
+                            <td class="td_company">
+                                <span>상호명</span>
+                                <span>상품번호 : 111111</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="prod_name">
+                                <span>상품명</span> <br>
+                                <img src="https://via.placeholder.com/56x17" alt="별점">
+                                <a href="#">상품평보기</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="price">
+                                <del>30,000원&nbsp;</del>
+                                <span>10%&#8595;</span> <br>
+                                <span>27,000원</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="delivery">
+                                <span>무료배송 </span>
+                                <span>모레 (금) 7/8 도착예정</span> <br>
+                                <span>본상품은 국내배송만 가능합니다.</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="https://via.placeholder.com/33x17" alt="별점">
+                                <span>무이자 할부 </span>
+                                <img src="https://via.placeholder.com/33x17" alt="별점">
+                                <span>카드 추가 혜택</span> <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 16px;">원산지 - 상세설명 참조</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 16px;">수량 </span>
+                                <input type="number" class="count" value="1"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="total">
+                                <span>총 상품 금액 </span>
+                                <span>27,000원</span>
+                            </td>
+                        </tr>
+                    </table> <!-- .tb1-->
+                    <div class="buttons">
+                        <button type="button" class="cart">장바구니</a>
+                            <button  type="button" class="order">구매하기</a>
+                    </div> <!-- .buttons -->
+                </div> <!-- .product_details -->
+            </div> <!-- .product_info -->
+            <h2 class="sub_tit2">상품보기</h2>
+            <div class="detail_image">
+                <img src="https://via.placeholder.com/784x111" alt="상품 상세 이미지">
+            </div> <!-- .detail_image-->
+            <h2 class="sub_tit3">
+                상품정보 제공고시
+                <span>[전자상거래에 관한 상품정보 제공에 관한 고시]항목에 의거 등록된 정보입니다.</span>
+            </h2>
+            <table class="tb2">
+                <colgroup>
+                    <col style="width: 40%;">
+                    <col style="width: 60%;">
+                </colgroup>
+                <tr>
+                    <th>상품번호</th>
+                    <td>10010118412</td>
+                </tr>
+                <tr>
+                    <th>상품상태</th>
+                    <td>새상품</td>
+                </tr>
+                <tr>
+                    <th>부가세면세여부</th>
+                    <td>과세상품</td>
+                </tr>
+                <tr>
+                    <th>영수증 발행</th>
+                    <td>발행가능신용카드전표, 온라인 현금영수증</td>
+                </tr>
+                <tr>
+                    <th>사업자 구분</th>
+                    <td>통신판매업자</td>
+                </tr>
+                <tr>
+                    <th>브랜드</th>
+                    <td>블루포스</td>
+                </tr>
+                <tr>
+                    <th>원산지</th>
+                    <td>국내 생산</td>
+                </tr>
+            </table> <!-- tb2 -->
+            <table class="tb3">
+                <colgroup>
+                    <col style="width: 40%;">
+                    <col style="width: 60%;">
+                </colgroup>
+                <tr>
+                    <th>제조사/수입국</th>
+                    <td>상세정보 집적입력</td>
+                </tr>
+                <tr>
+                    <th>제조국</th>
+                    <td>상세정보 집적입력</td>
+                </tr>
+                <tr>
+                    <th>취급시 주의사항</th>
+                    <td>상세정보 집적입력</td>
+                </tr>
+                <tr>
+                    <th>제조연월</th>
+                    <td>상세정보 집적입력</td>
+                </tr>
+                <tr>
+                    <th>품질보증기준</th>
+                    <td>상세정보 집적입력</td>
+                </tr>
+                <tr>
+                    <th>A/S 책임자</th>
+                    <td>상세정보 집적입력</td>
+                </tr>
+                <tr>
+                    <th>전화번호</th>
+                    <td>상세정보 집적입력</td>
+                </tr>
+            </table> <!-- tb3 -->
+            <div class="refund">
+                <span>소비자가 전자상거래등에서 소비자 보호에 관한 법률 제 17조 1항 또는 제 3항에 따라 청약철회를 하고
+                동법 제 18조 제 1항에 다라 청약철회한 물품을 판매자에게 반환하였음에도 불구하고 결제 대금의 환급이
+                3영업일을 넘게 지연된 경우, 소비자는 전자상거래등에서 소비자보호에 관한 법률 제 18조 제 2항 및 동법 시행령 제 21조 2에
+                따라 지연일수에 대하여 전상법 시행령으로 정하는 이율을 곱하여 산정한 지연이자("지연배상금")를 신청할 수 있습니다.
+                아울러, 교환반품보증 및 결제대금의 환급신청은 [나의 쇼핑정보]에서 하실 수 있으며, 자세한 문의는
+                개별 판매자에게 연락하여 주시기 바랍니다.</span>
+            </div> <!-- .refund-->
+            <h2 class="sub_tit4">상품리뷰</h2>
+            <div class="cmt">
+                <img src="https://via.placeholder.com/78x20"> <br>
+                <span>상품명</span>
+                <span>2024-10-13</span>
+                <span>nickname </span><br>
+                <span>후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~</span>
+            </div>
+            <div class="cmt">
+                <img src="https://via.placeholder.com/78x20"> <br>
+                <span>상품명</span>
+                <span>2024-10-13</span>
+                <span>nickname </span><br>
+                <span>후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~</span>
+            </div>
+            <div class="cmt">
+                <img src="https://via.placeholder.com/78x20"> <br>
+                <span>상품명</span>
+                <span>2024-10-13</span>
+                <span>nickname </span><br>
+                <span>후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~</span>
+            </div>
+            <div class="page">
+                <a href="#">&lt; 이전</a>
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>5</button>
+                <a href="#">다음 &gt;</a>
+            </div> <!-- page -->
+        </main> <!-- #main-->
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+<!-- #wrap -->
+</body>
+</html>

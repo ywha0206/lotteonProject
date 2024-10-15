@@ -1,0 +1,118 @@
+<link rel="stylesheet" th:href="@{/css/product/list.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+    <div class="aside">
+        <aside class="aside1">
+
+        </aside>
+        <aside class="aside2">
+
+        </aside>
+    </div><!-- .aside -->
+    <div id="wrap">
+
+        <main id="main">
+            <nav id="navi">
+                <h2 class="sub_tit">상품목록</h2>
+                <p class="location">
+                    <span>HOME</span>
+                    <span>패션·의류·뷰티</span>
+                    <span>남성의류</span>
+                </p>
+            </nav> <!-- .navi-->
+            <div class="tab">
+                <ul class="array">
+                    <li><a href="#">판매많은순</a></li>
+                    <li><a href="#">낮은가격순</a></li>
+                    <li><a href="#">높은가격순</a></li>
+                    <li><a href="#">평점높은순</a></li>
+                    <li><a href="#">후기많은순</a></li>
+                    <li><a href="#">최근등록순</a></li>
+                </ul><!-- .array -->
+            </div><!-- .tab -->
+            <table class="tb1">
+                <colgroup>
+                    <col style="width: 20%;">
+                    <col style="width: 40%;">
+                    <col style="width: 20%;">
+                    <col style="width: 20%;">
+                </colgroup>
+                <tr>
+                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
+                    <td>
+                        <span>상품명</span> <br>
+                        <span>간단한 상품 설명</span>
+                    </td>
+                    <td>
+                        <span>27,000원</span> <br>
+                        <del>30,000원&nbsp;</del>
+                        <span>10%&#8595;</span> <br>
+                        <span>배송비 2,500</span>
+                        <img src="https://via.placeholder.com/89x19" alt="">
+                    </td>
+                    <td>
+                        <img src="https://via.placeholder.com/19x19">
+                        <span>&nbsp;&nbsp;판매자</span> <br> <br>
+                        <img src="https://via.placeholder.com/76x18"> <br> <br>
+                        <span>상품평</span>
+                        <img src="https://via.placeholder.com/56x17">
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
+                    <td>
+                        <span>상품명</span> <br>
+                        <span>간단한 상품 설명</span>
+                    </td>
+                    <td>
+                        <span>27,000원</span> <br>
+                        <del>30,000원&nbsp;</del>
+                        <span>10%&#8595;</span> <br>
+                        <span>배송비 2,500</span>
+                        <img src="https://via.placeholder.com/89x19" alt="">
+                    </td>
+                    <td>
+                        <img src="https://via.placeholder.com/19x19">
+                        <span>&nbsp;&nbsp;판매자</span> <br> <br>
+                        <img src="https://via.placeholder.com/76x18"> <br> <br>
+                        <span>상품평</span>
+                        <img src="https://via.placeholder.com/56x17">
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
+                    <td>
+                        <span>상품명</span> <br>
+                        <span>간단한 상품 설명</span>
+                    </td>
+                    <td>
+                        <span>27,000원</span> <br>
+                        <del>30,000원&nbsp;</del>
+                        <span>10%&#8595;</span> <br>
+                        <span>배송비 2,500</span>
+                        <img src="https://via.placeholder.com/89x19" alt="">
+                    </td>
+                    <td>
+                        <img src="https://via.placeholder.com/19x19">
+                        <span>&nbsp;&nbsp;판매자</span> <br> <br>
+                        <img src="https://via.placeholder.com/76x18"> <br> <br>
+                        <span>상품평</span>
+                        <img src="https://via.placeholder.com/56x17">
+                    </td>
+                </tr>
+
+            </table> <!-- tb1 -->
+            <div class="page">
+                <a href="#">&lt; 이전</a>
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>5</button>
+                <a href="#">다음 &gt;</a>
+            </div> <!-- page -->
+        </main> <!-- #main-->
+    </div><!-- #wrap -->
+</main>
+<footer th:replace="layout/main/footer.html"></footer>

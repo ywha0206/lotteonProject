@@ -1,0 +1,76 @@
+
+<link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
+<link rel="stylesheet" th:href="@{/css/cs/cs_notice.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+    <aside class="cs_aside">
+        <h3 class="aside_title">공지사항</h3>
+        <ul class="aside_cate">
+            <li class="cate_list"><a href="#">전체</a></li>
+            <li class="cate_list"><a href="#">고객서비스</a></li>
+            <li class="cate_list"><a href="#">안전거래</a></li>
+            <li class="cate_list"><a href="#">위해상품</a></li>
+            <li class="cate_list"><a href="#">이벤트당첨</a></li>
+        </ul>
+    </aside>
+    <div id="main" style="height: auto">
+        <nav class="cs_nav">
+            <p class="cs_nav_tit"><span>홈</span> > <span>공지사항</span></p>
+        </nav>
+        <div class="box">
+
+            <section class="cs_faq">
+                <div class="cate_bar">
+                    <h3 class="cate_title">전체</h3>
+                    <p class="cate_des">공지사항 전체 내용입니다.</p>
+                </div>
+                <ul class="notice_box">
+                    <li class="notice"><a href="#">
+                        <p class="cate n_cate">안내</p>
+                        <p class="content n_content">해외결제사칭 문자주의</p>
+                        <span class="date n_date">22.10.31</span>
+                    </a></li>
+                    <li class="notice"><a href="#">
+                        <p class="cate n_cate">안내</p>
+                        <p class="content n_content">해외결제사칭 문자주의</p>
+                        <span class="date n_date">22.10.31</span>
+                    </a></li>
+                    <li class="notice"><a href="#">
+                        <p class="cate n_cate">안내</p>
+                        <p class="content n_content">해외결제사칭 문자주의</p>
+                        <span class="date n_date">22.10.31</span>
+                    </a></li>
+                    <li class="notice"><a href="#">
+                        <p class="cate n_cate">안내</p>
+                        <p class="content n_content">해외결제사칭 문자주의</p>
+                        <span class="date n_date">22.10.31</span>
+                    </a></li>
+                    <li class="notice"><a href="#">
+                        <p class="cate n_cate">안내</p>
+
+                        <p class="content n_content">해외결제사칭 문자주의</p>
+                        <span class="date n_date">22.10.31</span>
+                    </a></li>
+                    <li class="notice"><a href="#">
+                        <p class="cate n_cate">안내</p>
+                        <p class="content n_content">해외결제사칭 문자주의</p>
+                        <span class="date n_date">22.10.31</span>
+                    </a></li>
+                </ul>
+                <div class="paging">
+                    <a class="ico btn_prev" href="#"><span>이전</span></a>
+                    <ol>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                    </ol>
+                    <a class="ico btn_next" href="#"><span>다음</span></a>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>

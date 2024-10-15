@@ -1,0 +1,165 @@
+@charset "UTF-8";
+
+*{margin: 0; padding:0; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 400;}
+html{color:#111; position:relative;}
+html, body{height:100%; }
+body{font-size:12px; line-height:18px; font-family: 'Noto Sans KR', sans-serif;}
+a, address, blockquote, br, fieldset, legend, label, form, input, select, textarea, button, cite, code, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, div, iframe, ul, ol, li, hr, img {margin: 0; padding: 0; outline:none;}
+a{color:#111; text-decoration: none;}
+img{border:none; vertical-align: top;}
+ul, ol{list-style:none;}
+address{font-style: normal;}
+
+/* clearfix */
+.cf{}
+.cf::after {content: ""; display: block; clear: both;}
+
+/* hyper link */
+a, a:link, a:visited, a:active, a:hover{text-decoration: none; color: inherit;}
+
+/* input outline */
+input:active{outline: none;}
+input:focus{outline: none;}
+
+#wrap{
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.aside{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+}
+
+.aside1, .aside2{
+    background-color: #111;
+    padding: 20px;
+    margin-bottom: 10px;
+    width: 236px;
+}
+
+#main {
+    width: 816px;
+    height: auto;
+    border: 2px solid #D9D9D9;
+}
+
+#navi {
+    width: 765px;
+    height: auto;
+    display: flex;
+    justify-content: space-between; /* 두 요소를 양 끝에 배치 */
+    align-items: center;
+    border-bottom: 2px solid #000000;
+    margin: 0 auto;
+}
+
+.sub_tit {
+   font-size: 16px;
+   font-weight: 700;
+   margin-left: 3px;
+   margin-bottom: 8px;
+   margin-top: 5px;
+}
+
+/* 로케이션 */
+.location > span::after{content: ' \003E'; }
+.location > span:last-of-type{font-weight: 700;}
+.location > span:last-of-type:after{content:none;}
+
+/* 상품 정보 */
+.product_info {
+    margin: 0 auto;
+    display: flex;
+    width: 770px;
+    height: 433px;
+    margin-top: 24px;
+    gap: 22px;
+}
+.product_info > img {width: 353px; height: 211px;}
+
+.tb1 {width: 390px;}
+.tb1 td {border-bottom: 1.5px solid #f2f2f2; padding-top: 15px;}
+
+/* 상호명, 번호 */
+.td_company > span:first-child{
+    font-size: 16px;
+    font-weight: 700;
+}
+.td_company > span:last-child{float: right;}
+
+/* 상품 이름, 별점 */
+.prod_name > span{font-size: 16px;}
+.prod_name > a{color: #0b0bcf; text-decoration: underline;}
+
+/* 가격 */
+.price > del{color: #7f7f7f; font-size: 16px;}
+.price > span:nth-child(2){font-size: 16px; color: #c00000;}
+.price > span:last-child{font-size: 20px;}
+
+/* 배송비 관련 */
+.delivery > :nth-child(1){font-size: 16px; color: #538cd5;}
+.delivery > :nth-child(2){font-size: 16px;}
+.delivery > :nth-child(4){font-size: 14px;}
+
+/* 수량 */
+.count{width: 34px; height: 22px;}
+
+/* 총 금액 */
+.total{text-align: right;}
+.total > span{font-size: 16px;}
+.total > span:last-child{font-weight: 700;}
+
+/* 장바구니, 구매하기 버튼 */
+.cart, .order {width: 184px; height: 35px; font-size: 16px; margin-right: 12px; border: none; color: #ffffff;}
+.cart {background-color: #bfbfbf;}
+.order {background-color: #558ed5;}
+
+/* 상품 디테일 이미지 */
+.sub_tit2, .sub_tit3, .sub_tit4{
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 3px;
+    margin-bottom: 8px;
+    margin-top: 5px;
+    border-bottom: 2px solid #D9D9D9;
+ }
+.detail_image {
+    margin: 0 auto;
+    width: 816px;
+    height: auto;
+    text-align: center;
+}
+
+/* 상품정보 제공고시 */
+.sub_tit3 > span {color: #7f7f7f;}
+.tb2, .tb3 {border: 1px solid #7f7f7f; border-collapse: collapse; width: 670px; text-align: left; margin: 0 auto; margin-bottom: 3px;}
+.tb2 th,.tb2 td {height: 35px; font-size: 14px; border: 1px solid #000; text-indent: 3px;}
+.tb3 th,.tb3 td {height: 35px; font-size: 14px; border: 1px solid #000;  text-indent: 3px}
+.refund {width: 777px; height: 138px; background-color: #f2f2f2; line-height: 20px; margin: 0 auto;}
+.refund > span{font-size: 14px; letter-spacing: 1px;}
+
+/* 댓글창 */
+.cmt {width: 750px; border-bottom: 1px solid #f2f2f2; margin: 0 auto; margin-top: 6px;}
+.cmt > span {font-size: 16px; line-height: 40px;}
+.cmt > span:nth-child(4), .cmt > span:nth-child(5) {float: right; margin-right: 5px;}
+.cmt > span:last-child {font-size: 14px; line-height: 17px;}
+
+/* page 버튼 부분 */
+.page {
+    margin-top: 5px;
+    text-align: center;
+}
+.page > a{color: #595959;}
+
+button {
+    background-color: #ffffff;
+    border: 0.5px solid #bfbfbf;
+    width: 30px;
+    height: 30px;
+    margin-left: 1px;
+    margin-right: 1px;
+}

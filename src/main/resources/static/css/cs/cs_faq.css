@@ -1,0 +1,19 @@
+.box{display: flex;}
+.cs_faq{width: 100%; height: auto;}
+
+/* faq list */
+.faq_main{margin-left: 50px; margin-bottom: 30px;}
+.faq_list{width: 700px; border: 1.5px solid #A6A6A6; border-radius: 10px; margin-top: 5px;}
+.faq_list td{height: 40px; border-bottom: 1px solid #D9D9D9;}
+.faq_simple{display: flex; justify-content: center;}
+.faq_simple td{ border-bottom: none; line-height: 40px;}
+.Q{display: inline-block; width: 50px;}
+
+
+/* faq view */
+.view_title{width: 780px; height: 50px; line-height: 50px; display: flex; flex-wrap: wrap; padding: 10px 0;margin-left: 50px;  
+    border-bottom: 1px solid #D9D9D9; border-top: 2px solid #000;}
+.view_title>.title{width: 700px;}
+.view_content{width: 780px; padding: 30px 0; margin-left: 50px; line-height: 30px; border-bottom: 1px solid #D9D9D9;}
+.autolink{margin-top: 30px;}
+.btn_list{margin-top: 50px;}

@@ -1,0 +1,64 @@
+<link rel="stylesheet" th:href="@{/css/admin/cs/faq/view.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+  <aside th:replace="layout/admin/aside.html"></aside>
+  <section id="admin-product-list" class="container">
+    <script>
+      function deletefaq(event) {
+        const chk = confirm("정말 삭제하시겠습니까?");
+        if (!chk) {
+          event.preventDefault();
+        }
+      }
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+    <nav class="faq-nav">
+      <h3 class="viewTit">자주묻는질문 보기</h3>
+      <p>HOME > 고객센터 > <strong>자주묻는질문 </strong></p>
+    </nav>
+    <!-- 자주묻는 질문  컨텐츠 시작 -->
+    <article class="sectionBox">
+      <table>
+        <tbody>
+        <input type="hidden" name="faqHit" value="1" />
+        <tr style="height: 60px">
+          <th>유형</th>
+          <td class="faq-type">회원 - 가입</td>
+        </tr>
+        <tr style="height: 60px">
+          <th>제목</th>
+          <td class="faq-title">개인회원과 법인회원에 차이가 있나요?</td>
+          <!-- 자주묻는 질문  제목 -->
+        </tr>
+        <tr style="height: 200px">
+          <th>내용</th>
+          <td class="faq-content">
+            개인회원과 법인회원에 차이가 있나요? 혜택도 있나요? 알려주세요
+          </td>
+          <!-- 자주묻는 질문  내용 -->
+        </tr>
+        </tbody>
+      </table>
+      <div class="button-group">
+        <button
+                class="button--delete"
+                onclick="deletefaq(event);"
+                href="/admin/cs/faq/delete?faqNo=1"
+        >
+          삭제
+        </button>
+        <button class="button--modify" href="/admin/cs/faq/modify?faqNo=1">
+          수정
+        </button>
+        <button class="button--back" href="#" onclick="goBack();">목록</button>
+      </div>
+    </article>
+  </section>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+
+

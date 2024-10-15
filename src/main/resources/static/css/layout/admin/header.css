@@ -1,0 +1,29 @@
+header {
+    width: 100%;
+    background-color: #f2f2f2;
+    height: 100px;
+}
+
+.top-link {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.top-link a {
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.s1 {
+    width: 100%;
+    background-color: #d9d9d9;
+    height: 60px;
+    padding-top: 20px;
+}
+
+.logo img {
+    position: relative;
+    top: -50px;
+    left: 45px;
+}

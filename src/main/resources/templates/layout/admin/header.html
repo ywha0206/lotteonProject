@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LotteOn 번창하세여~</title>
+    <link rel="stylesheet" th:href="@{/css/layout/admin/header.css}">
+</head>
+<body>
+        <section class="s1">
+            <div class="top-link">
+                <a th:href="@{/}">홈</a>
+                <a th:href="@{/auth/logout}">로그아웃</a>
+                <a th:href="@{/admin/cs/index}">고객센터</a>
+            </div>
+        </section>
+        <div class="logo">
+            <img src="https://via.placeholder.com/120x60" alt="">
+        </div>
+</body>
+</html>

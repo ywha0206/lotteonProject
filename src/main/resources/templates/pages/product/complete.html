@@ -1,0 +1,124 @@
+<link rel="stylesheet" th:href="@{/css/product/complete.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+  <div class="aside">
+    <aside class="aside1"></aside>
+    <aside class="aside2"></aside>
+  </div>
+  <div id="wrap">
+    <!-- .aside -->
+    <main id="main" style="height: auto;">
+      <nav id="navi">
+        <h2 class="sub_tit">주문완료</h2>
+        <p class="location">
+          <span>HOME</span>
+          <span>주문하기</span>
+          <span>주문완료</span>
+        </p>
+      </nav>
+      <!-- .navi-->
+      <div class="clear">
+        <span>고객님의 주문이 정상적으로 완료되었습니다.</span> <br />
+        <span
+        >즐거운 쇼핑이 되셨나요? 항상 고객님을 위한 롯데ON이
+            되겠습니다.</span
+        >
+      </div>
+      <!-- .clear-->
+      <table class="tb1">
+        <colgroup>
+          <col style="width: 40%" />
+          <col style="width: 15%" />
+          <col style="width: 15%" />
+          <col style="width: 15%" />
+          <col style="width: 15%" />
+        </colgroup>
+        <tr>
+          <th>상품명</th>
+          <th>상품금액</th>
+          <th>할인금액</th>
+          <th>수량</th>
+          <th>총합</th>
+        </tr>
+        <tr>
+          <td>
+            <div class="img">
+              <img src="https://via.placeholder.com/74x69" />
+              <div class="name_desc">
+                <span>상품명</span> <br />
+                <span>상품설명</span>
+              </div>
+            </div>
+          </td>
+          <td>27,000</td>
+          <td>-1,350</td>
+          <td>1</td>
+          <td>25,650</td>
+        </tr>
+      </table>
+      <!-- .tb1-->
+      <div class="total">
+        <table class="tb2">
+          <tr>
+            <td>총 상품금액</td>
+            <td>27,000원</td>
+          </tr>
+          <tr>
+            <td>총 할인금액</td>
+            <td>-1,350원</td>
+          </tr>
+          <tr>
+            <td>배송비</td>
+            <td>0원</td>
+          </tr>
+          <tr>
+            <td>총 결제금액</td>
+            <td style="color: #c00000">25,650원</td>
+          </tr>
+        </table>
+        <!-- .tb2-->
+      </div>
+      <!-- .total-->
+      <h2 class="sub_tit2">주문정보</h2>
+      <table class="tb3">
+        <tr>
+          <th>주문번호</th>
+          <td>1111111111</td>
+        </tr>
+        <tr>
+          <th>결제방법</th>
+          <td>신용카드</td>
+        </tr>
+        <tr>
+          <th>주문자/연락처</th>
+          <td>홍길동 / 1111111111</td>
+        </tr>
+        <tr>
+          <th>총 결제금액</th>
+          <td style="color: #c00000">24,650원</td>
+        </tr>
+      </table>
+      <!-- .tb3-->
+      <h2 class="sub_tit3">배송정보</h2>
+      <table class="tb4">
+        <tr>
+          <th>수취인</th>
+          <td>홍길동</td>
+        </tr>
+        <tr>
+          <th>연락처</th>
+          <td>11111111111</td>
+        </tr>
+        <tr>
+          <th>배송지 주소</th>
+          <td>부산 금정구 123123 10층</td>
+        </tr>
+      </table>
+      <!-- .tb4-->
+    </main>
+    <!-- #main-->
+  </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+

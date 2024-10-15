@@ -1,0 +1,97 @@
+<link rel="stylesheet" th:href="@{/css/auth/signup.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+    <form action="">
+        <div class="container">
+            <h3 class="header-title">약관동의</h3>
+            <div class="header-gubun"></div>
+            <div class="box box1">
+                <div class="title">
+                    <span class="red">( 필수 )</span>
+                    <span>이용약관</span>
+                </div>
+                <textarea readonly class="content"></textarea>
+                <div class="essential-check check">
+                    <label for="">
+                        <input type="checkbox"> 동의하기
+                    </label>
+                </div>
+            </div>
+            <div class="box box2">
+                <div class="title">
+                    <span class="red">( 필수 )</span>
+                    <span>전자금융 이용약관</span>
+                </div>
+                <textarea readonly class="content"></textarea>
+                <div class="essential-check check">
+                    <label for="">
+                        <input type="checkbox"> 동의하기
+                    </label>
+                </div>
+            </div>
+            <div class="box box3">
+                <div class="title">
+                    <span class="red">( 필수 )</span>
+                    <span>개인정보 수집 동의</span>
+                </div>
+                <textarea readonly class="content"></textarea>
+                <div class="essential-check check">
+                    <label for="">
+                        <input type="checkbox"> 동의하기
+                    </label>
+                </div>
+            </div>
+            <div class="box box4">
+                <div class="title">
+                    <span class="blue">( 선택 )</span>
+                    <span>위치정보 이용약관</span>
+                </div>
+                <textarea readonly class="content"></textarea>
+                <div class="not-required-check check">
+                    <label for="">
+                        <input type="checkbox"> 동의하기
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" disabled id="next-btn" class="next-btn">동의하기</button>
+        </div>
+    </form>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+
+
+
+    <script>
+        const essentialCheckboxes = document.querySelectorAll('.essential-check input');
+        const nextBtn = document.getElementById('next-btn');
+        const page1 = document.querySelector('.container')
+        const page2 = document.querySelector('.container2')
+
+        function checkAllEssentialChecked() {
+            const allChecked = Array.from(essentialCheckboxes).every((checkbox) => checkbox.checked);
+            if (allChecked) {
+                nextBtn.style.pointerEvents = 'auto';
+                nextBtn.style.cursor = 'pointer';
+                nextBtn.style.opacity = '1';
+                nextBtn.disabled = false;
+            } else {
+                nextBtn.style.pointerEvents = 'none';
+                nextBtn.style.opacity = '0.5';
+                nextBtn.disabled = true;
+            }
+        }
+
+        essentialCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', checkAllEssentialChecked);
+        });
+
+        function nextFunction(){
+            
+        }
+
+        
+    </script>
+</body>
+</html>

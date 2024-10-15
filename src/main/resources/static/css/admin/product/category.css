@@ -1,0 +1,167 @@
+.container {
+    width: 800px;
+}
+
+.header{
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.header-title{
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.header-right {
+    font-size: 14px;
+}
+
+.header-right .bold {
+    font-weight: 600;
+}
+
+.header-gubun {
+    height: 3px;
+    background-image: url(/images/Vector.png);
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.main {
+    width: 780px;
+    box-sizing: border-box;
+}
+
+.main-title{
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.main-description {
+    background-color: #f2f2f2;
+    font-size: 14px;
+    font-weight: 400;
+    height: 37px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+
+#sidebar {
+    width: 200px;
+    height: auto;
+    /* background-color: #d9d9d9; */
+    
+}
+
+.menues {
+    background-color: #f2f2f2;
+    width: 200px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 0;
+    overflow: hidden; /* 이 부분이 필요합니다 */
+    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+}
+
+.menues div {
+    margin-left: 10px;
+}
+
+.menues.open {
+    max-height: 500px; /* 메뉴에 따른 최대 높이 설정 */
+    padding: 20px 0;
+}
+
+.menues a {
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+.navi {
+    border: 2px solid #dfdfdf;
+    border-bottom: none;
+}
+
+.navi li {
+    padding: 20px 0;
+    cursor: pointer;
+    padding-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 5px;
+}
+
+.advice-footer {
+    background-color: #FFFFCC;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17px;
+    padding: 20px;
+    margin: 30px 0;
+    color: #595959;
+}
+
+.add-category {
+    display: flex;
+    /* gap: 3px; */
+    border: none;
+    cursor: pointer;
+    color: #909090;
+    align-items: center;
+    &:hover {
+        .add-icon {
+            background-color: #8EB4E3;
+        }
+    }
+}
+
+.add-icon {
+    border: 1px solid #909090;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.btn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.submit-btn{
+    background-color: #8EB4E3;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 95.87px;
+    height: 36.79px;
+}
+
+.delete-btn {
+    border: 1px solid red;
+    color: red;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #dfdfdf;
+    }
+}
+
+button {
+    
+}

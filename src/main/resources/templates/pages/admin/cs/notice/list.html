@@ -1,0 +1,129 @@
+<link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+  <aside th:replace="layout/admin/aside.html"></aside>
+  <section id="admin-product-list" class="container">
+    <div id="search_input">
+      <nav class="notice-nav">
+        <h3>공지사항 목록</h3>
+        <p>HOME > 고객센터 > <strong>공지사항</strong></p>
+      </nav>
+      <form
+              action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}"
+              class="search"
+      >
+        <input type="hidden" name="content" value="list" />
+        <input type="hidden" name="cateNo" value="${cate.cateNo}" />
+        <!-- - 공지사항 유형 선택할 때마다 목록 출력, 갱신 됨 -->
+        <select name="type" class="select_type">
+          <option value="typeselect">유형선택</option>
+          <option value="customer_service">고객서비스</option>
+          <option value="safe_transaction">안전거래</option>
+          <option value="hazardous_product">위해상품</option>
+          <option value="event_winner">이벤트 당첨</option>
+        </select>
+      </form>
+    </div>
+    <article>
+      <table style="width: 100%">
+        <tr>
+          <th style="width: 5%"><input type="checkbox" id="selectAll" /></th>
+          <th style="width: 5%">번호</th>
+          <th>유형</th>
+          <th>제목</th>
+          <th>조회</th>
+          <th>날짜</th>
+          <th>관리</th>
+        </tr>
+        <!-- <th:block th:if="${pageResponseDTO.getDtoList().size() == 0}" >
+                                     <tr>
+                                         <td colspan="7" class="td_first"><a  th:href="@{/article/list(pg=1)}">일치하는 내용이 없습니다.</a></td>
+                                     </tr>
+                                  </th:block> -->
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>100</td>
+          <td>고객서비스</td>
+          <td style="text-align: left">[안내] 구매회원 이용약관 개정</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>98</td>
+          <td>안전거래</td>
+          <td style="text-align: left">[안내] 로젠택배 반품</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>97</td>
+          <td>고객서비스</td>
+          <td style="text-align: left">[안내] 위치정보이용 약관 개정 공지</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>96</td>
+          <td>위해상품</td>
+          <td style="text-align: left">
+            [위해상품정보] 무주꾸지뽕 지도점검 회수사 유적발
+          </td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>95</td>
+          <td>고객서비스</td>
+          <td style="text-align: left">[안내] 구매회원 이용약관 개정</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
+      </table>
+    </article>
+
+    <div class="button-group">
+      <button class="button--delete">선택삭제</button>
+      <button class="button--write">작성하기</button>
+    </div>
+
+    <!-- 페이지 네비게이션 -->
+    <div class="paging">
+      <a href="#" class="prev">이전</a>
+      <a href="#">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <!--페이지 이전 다음 글자 누를 수 있게-->
+      <a href="#" class="next">다음</a>
+    </div>
+  </section>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+

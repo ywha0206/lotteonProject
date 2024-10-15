@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" th:href="@{/css/admin/cs/faq/list.css}">
+  <link rel="stylesheet" th:href="@{/css/basic.css}">
+</head>
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+  <aside th:replace="layout/admin/aside.html"></aside>
+  <section id="admin-product-list" class="container">
+    <div id="search_input">
+      <nav class="faq-nav">
+        <h3>자주묻는질문 목록</h3>
+        <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
+      </nav>
+      <form
+              action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}"
+              class="search"
+      >
+        <input type="hidden" name="content" value="list" />
+        <input type="hidden" name="cateNo"  />
+        <!-- - 공지사항 유형 선택할 때마다 목록 출력, 갱신 됨 -->
+        <select class="faqCate" name="faqCate" onchange="firstOption()">
+          <option>1차선택</option>
+          <option value="user">회원</option>
+          <option value="coupon">쿠폰/이벤트</option>
+          <option value="order">주문/결제</option>
+          <option value="delivery">배송</option>
+          <option value="cancel">취소/반품/환불</option>
+          <option value="travel">여행/숙박/항공</option>
+          <option value="safe">안전결제</option>
+        </select>
+        <select class="faqType" name="faqType" onchange="redirectToCateType()">
+
+          <option>2차선택</option>
+          <option value="regi">가입</option>
+          <option value="leave">탈퇴</option>
+          <option value="info">회원정보</option>
+          <option value="login">로그인</option>
+        </select>
+      </form>
+    </div>
+    <article>
+      <table style="width: 100%">
+        <tr>
+          <th style="width: 5%"><input type="checkbox" id="selectAll" /></th>
+          <th style="width: 5%">번호</th>
+          <th>1차유형</th>
+          <th>2차유형</th>
+          <th>제목</th>
+          <th>조회</th>
+          <th>날짜</th>
+          <th>관리</th>
+        </tr>
+        <!-- <th:block th:if="${pageResponseDTO.getDtoList().size() == 0}" >
+                                     <tr>
+                                         <td colspan="7" class="td_first"><a  th:href="@{/article/list(pg=1)}">일치하는 내용이 없습니다.</a></td>
+                                     </tr>
+                                  </th:block> -->
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>1</td>
+          <td>회원</td>
+          <td>가입</td>
+          <td style="text-align: left">개인회원과 법인회원에 차이가 있나요?</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>1</td>
+          <td>회원</td>
+          <td>가입</td>
+          <td style="text-align: left">
+            본인 인증 시 이미 가입되어 있는 정보라고 나옵니다.
+          </td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>1</td>
+          <td>회원</td>
+          <td>가입</td>
+          <td style="text-align: left">아이디를 여러 개 사용할 수 있나요?</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>1</td>
+          <td>회원</td>
+          <td>가입</td>
+          <td style="text-align: left">회원 종류 및 혜택 안내</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>1</td>
+          <td>회원</td>
+          <td>탈퇴</td>
+          <td style="text-align: left">회원탈퇴는 어떻게 하나요?</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>1</td>
+          <td>회원</td>
+          <td>탈퇴</td>
+          <td style="text-align: left">개인회원과 법인회원에 차이가 있나요?</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>1</td>
+          <td>회원</td>
+          <td>가입</td>
+          <td style="text-align: left">개인회원과 법인회원에 차이가 있나요?</td>
+          <td>120</td>
+          <td>00.00.00</td>
+          <td>
+            <div>[삭제]</div>
+            <div>[수정]</div>
+          </td>
+        </tr>
+        <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
+      </table>
+    </article>
+
+    <div class="button-group">
+      <button class="button--delete">선택삭제</button>
+      <button class="button--write">작성하기</button>
+    </div>
+
+    <!-- 페이지 네비게이션 -->
+    <div class="paging">
+      <a href="#" class="prev">이전</a>
+      <a href="#">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <!--페이지 이전 다음 글자 누를 수 있게-->
+      <a href="#" class="next">다음</a>
+    </div>
+  </section>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+</body>
+

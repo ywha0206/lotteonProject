@@ -1,0 +1,103 @@
+<link rel="stylesheet" th:href="@{/css/product/cart.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main>
+  <div class="aside">
+    <aside class="aside1"></aside>
+    <aside class="aside2"></aside>
+  </div>
+  <div id="wrap">
+
+    <!-- .aside -->
+    <main id="main" style="height: auto;">
+      <nav id="navi">
+        <h2 class="sub_tit">장바구니</h2>
+        <p class="location">
+          <span>HOME</span>
+          <span>패션·의류·뷰티</span>
+          <span>장바구니</span>
+        </p>
+      </nav>
+      <!-- .navi-->
+      <table class="tb1">
+        <colgroup>
+          <col style="width: 3%" />
+          <col style="width: 32%" />
+          <col style="width: 10%" />
+          <col style="width: 15%" />
+          <col style="width: 10%" />
+          <col style="width: 10%" />
+          <col style="width: 10%" />
+          <col style="width: 10%" />
+        </colgroup>
+        <tr>
+          <th><input type="checkbox" class="checkbox" /></th>
+          <th>상품명</th>
+          <th>수량</th>
+          <th>판매가</th>
+          <th>할인</th>
+          <th>포인트</th>
+          <th>배송비</th>
+          <th>총합</th>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="checkbox" /></td>
+          <td>
+            <div class="img">
+              <img src="https://via.placeholder.com/74x69" />
+              <div class="name_desc">
+                <span>상품명</span> <br />
+                <span>상품설명</span>
+              </div>
+            </div>
+          </td>
+          <td>1</td>
+          <td>27,000</td>
+          <td>5%</td>
+          <td>270</td>
+          <td>무료배송</td>
+          <td>25,650</td>
+        </tr>
+      </table>
+      <!-- .tb1-->
+      <button class="btnDel"><a href="#">선택삭제</a></button>
+      <div class="total">
+        <table class="tb2">
+          <tr>
+            <th colspan="2">전체합계</th>
+          </tr>
+          <tr>
+            <td>상품수</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>상품금액</td>
+            <td>27,000</td>
+          </tr>
+          <tr>
+            <td>할인금액</td>
+            <td>-1,350</td>
+          </tr>
+          <tr>
+            <td>배송비</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>전체주문금액</td>
+            <td>25,650</td>
+          </tr>
+          <tr>
+            <td>적립 포인트</td>
+            <td>270</td>
+          </tr>
+        </table>
+        <!-- .tb2-->
+        <button class="btn_order"><a href="#">주문하기</a></button>
+      </div>
+      <!-- .total-->
+    </main>
+    <!-- main -->
+  </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+
