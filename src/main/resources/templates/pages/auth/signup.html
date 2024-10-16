@@ -2,7 +2,7 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <main>
-    <form action="">
+    <form action=""                                                                                                         >
         <div class="container">
             <h3 class="header-title">약관동의</h3>
             <div class="header-gubun"></div>
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <button type="submit" disabled id="next-btn" class="next-btn">동의하기</button>
+            <a th:href="@{/auth/customer}" disabled id="next-btn" class="next-btn">동의하기</a>
         </div>
     </form>
 </main>
