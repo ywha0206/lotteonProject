@@ -22,7 +22,7 @@
             <td>
               <div class="thumb">
                 <a href="#">
-                  <img src="https://via.placeholder.com/120x120" alt="" />
+                  <img th:src="@{https://via.placeholder.com/120x120}" alt="" />
                 </a>
               </div>
               <ul>
@@ -48,7 +48,7 @@
             <td>
               <div class="thumb">
                 <a href="#">
-                  <img src="https://via.placeholder.com/120x120" alt="" />
+                  <img th:src="@{https://via.placeholder.com/120x120}" alt="" />
                 </a>
               </div>
               <ul>
@@ -72,7 +72,7 @@
         </table>
       </article>
 
-      <h3>포인트 적립내역<a href="#">더보기 &gt; </a></h3>
+      <h3>포인트 적립내역<a th:href="@{/my/points/{page}/{sdate}/{edate}(page=${page}, sdate=${sdate}, edate=${edate})}">더보기 &gt; </a></h3>
       <article>
         <table border="0" class="point">
           <tr>
@@ -102,7 +102,7 @@
         </table>
       </article>
 
-      <h3>상품평<a href="#">더보기 &gt; </a></h3>
+      <h3>상품평<a th:href="@{/my/reviews/{page}(page=${page})}">더보기 &gt; </a></h3>
       <article>
         <table border="0" class="review">
           <tr>
@@ -136,7 +136,7 @@
         </table>
       </article>
 
-      <h3>문의내역 <a href="#">더보기 &gt; </a></h3>
+      <h3>문의내역 <a th:href="@{/my/qnas/{page}(page=${page})}">더보기 &gt; </a></h3>
       <article>
         <table border="0" class="qna">
           <tr>
