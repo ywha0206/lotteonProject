@@ -6,11 +6,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/cs")
+@RequestMapping("/admin/shop")
 @RequiredArgsConstructor
-public class CsController {
-    @GetMapping("/index")
-    public String join() {
-        return "pages/cs/index";
+public class AdminShopController {
+
+    @GetMapping("/income")
+    public String income() {
+        return "pages/admin/shop/income";
+    }
+
+    @GetMapping("/shop")
+    public String shop() {
+        return "pages/admin/shop/shop";
     }
 }

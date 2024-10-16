@@ -16,8 +16,8 @@ public class Config {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "config_name")
-    private String configName;
+    @Column(name = "version_id")
+    private Long configVersion;
 
     @Column(name = "config_title")
     private String configTitle;

@@ -22,4 +22,7 @@ public class Terms {
     @Column(name = "terms_content", columnDefinition = "TEXT")
     private String termsContent;
 
+    @Column(name = "terms_type")
+    private String termsType;
+
 }

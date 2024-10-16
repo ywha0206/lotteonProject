@@ -19,8 +19,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "mem_id")
-    private String memId;
+    @Column(name = "mem_uid")
+    private String memUid;
 
     @Column(name = "mem_pwd")
     private String memPwd;

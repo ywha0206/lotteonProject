@@ -1,115 +1,85 @@
 <link rel="stylesheet" th:href="@{/css/my/my.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
+<th:block th:replace="layout/my/modal.html"></th:block>
 <main>
   <div id="my">
-    <nav class="info">
-      <h2 class="tit">나의쇼핑정보</h2>
-      <table>
-        <tr>
-          <td>주문</td>
-          <td>쿠폰</td>
-          <td>포인트</td>
-          <td>문의</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>1</td>
-          <td>1,800</td>
-          <td>1</td>
-        </tr>
-      </table>
-    </nav>
-    <aside>
-      <ul class="aside_cate">
-        <li>전체주문내역</li>
-        <li>포인트내역</li>
-        <li>쿠폰</li>
-        <li>나의리뷰</li>
-        <li>문의하기</li>
-        <li>나의설정</li>
-      </ul>
-    </aside>
+    <th:block th:replace="layout/my/aside.html"></th:block>
     <main>
-      <a href="#"
-      ><img
-              src="https://via.placeholder.com/810x86"
-              class="banner"
-              alt="배너광고"
-      /></a>
-      <section>
-        <h3>포인트내역</h3>
+      <th:block th:replace="layout/my/banner.html"></th:block>
+    <section>
+      <h3>포인트내역</h3>
 
-        <article class="byDate">
-          <span class="tit">기간별조회</span>
-          <ul class="date_3ea">
-            <li><a href="#">1주일</a></li>
-            <li><a href="#">15일</a></li>
-            <li><a href="#">1개월</a></li>
-          </ul>
-          <ul class="date_5ea">
-            <li><a href="#" class="5month_before">5월</a></li>
-            <li><a href="#" class="4month_before">6월</a></li>
-            <li><a href="#" class="3month_before">7월</a></li>
-            <li><a href="#" class="2month_before">8월</a></li>
-            <li><a href="#" class="1month_before">9월</a></li>
-          </ul>
-          <p>
-            <input type="date" max="9999-12-31" /><span>~</span
-          ><input type="date" max="9999-12-31" />
-          </p>
-          <button class="btnConfirm">조회하기</button>
-        </article>
-        <article>
-          <table border="0" class="point">
-            <tr>
-              <th>날짜</th>
-              <th>구분</th>
-              <th>주문번호</th>
-              <th>적립금액</th>
-              <th>비고</th>
-              <th>유효기간</th>
-            </tr>
-            <tr>
-              <td class="date">2022-12-13</td>
-              <td>적립</td>
-              <td>2022121001</td>
-              <td>340</td>
-              <td>상품 구매확정</td>
-              <td>2024-12-10</td>
-            </tr>
-            <tr>
-              <td class="date">2022-12-13</td>
-              <td>적립</td>
-              <td>2022120601</td>
-              <td>120</td>
-              <td>상품 구매확정</td>
-              <td>2024-12-06</td>
-            </tr>
-          </table>
-          <div
-                  style="
-                width: 100%;
-                height: 150px;
-                font-size: 14px;
-                line-height: 150px;
-                text-align: center;
-              "
-          >
-            적립 내역이 없습니다.
-          </div>
+      <article class="byDate">
+        <span class="tit">기간별조회</span>
+        <ul class="date_3ea">
+          <li><a href="#">1주일</a></li>
+          <li><a href="#">15일</a></li>
+          <li><a href="#">1개월</a></li>
+        </ul>
+        <ul class="date_5ea">
+          <li><a href="#" class="5month_before">5월</a></li>
+          <li><a href="#" class="4month_before">6월</a></li>
+          <li><a href="#" class="3month_before">7월</a></li>
+          <li><a href="#" class="2month_before">8월</a></li>
+          <li><a href="#" class="1month_before">9월</a></li>
+        </ul>
+        <p>
+          <input type="date" max="9999-12-31" /><span>~</span
+        ><input type="date" max="9999-12-31" />
+        </p>
+        <button class="btnConfirm">조회하기</button>
+      </article>
+      <article>
+        <table border="0" class="point">
+          <tr>
+            <th>날짜</th>
+            <th>구분</th>
+            <th>주문번호</th>
+            <th>적립금액</th>
+            <th>비고</th>
+            <th>유효기간</th>
+          </tr>
+          <tr>
+            <td class="date">2022-12-13</td>
+            <td>적립</td>
+            <td>2022121001</td>
+            <td>340</td>
+            <td>상품 구매확정</td>
+            <td>2024-12-10</td>
+          </tr>
+          <tr>
+            <td class="date">2022-12-13</td>
+            <td>적립</td>
+            <td>2022120601</td>
+            <td>120</td>
+            <td>상품 구매확정</td>
+            <td>2024-12-06</td>
+          </tr>
+        </table>
+        <div
+                style="
+              width: 100%;
+              height: 150px;
+              font-size: 14px;
+              line-height: 150px;
+              text-align: center;
+            "
+        >
+          적립 내역이 없습니다.
+        </div>
 
-          <ul class="paging">
-            <li><a class="prev" href="#">이전</a></li>
-            <li><a class="num on" href="#">1</a></li>
-            <li><a class="num" href="#">2</a></li>
-            <li><a class="num" href="#">3</a></li>
-            <li><a class="num" href="#">4</a></li>
-            <li><a class="num" href="#">5</a></li>
-            <li><a class="next" href="#"> 다음</a></li>
-          </ul>
-        </article>
-      </section>
+        <ul class="paging">
+          <li><a class="prev" href="#">이전</a></li>
+          <li><a class="num on" href="#">1</a></li>
+          <li><a class="num" href="#">2</a></li>
+          <li><a class="num" href="#">3</a></li>
+          <li><a class="num" href="#">4</a></li>
+          <li><a class="num" href="#">5</a></li>
+          <li><a class="next" href="#"> 다음</a></li>
+        </ul>
+      </article>
+    </section>
     </main>
   </div>
 </main>
