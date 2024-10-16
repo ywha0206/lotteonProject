@@ -23,6 +23,7 @@ public class ProductController {
         return "pages/product/view";
     }
 
+
     @GetMapping("/products/search")
     public String search(Model model) {
         return "pages/product/search";
