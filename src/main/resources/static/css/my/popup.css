@@ -4,8 +4,8 @@ dialog .btn{border-radius: 3px; border: none; height: 40px;}
 
 dialog .color{background: #558ED5; color: #FFF; width: 100px;}
 dialog .grey{background: #BFBFBF; color: #FFF;width: 100px;}
-.imgbox80{width: 80px; height: 80px; overflow: hidden;}
-img{height: 100%; width: 100%; object-fit: cover;}
+dialog .imgbox80{width: 80px; height: 80px; overflow: hidden;}
+dialog img{height: 100%; width: 100%; object-fit: cover;}
 
 dialog {
     position: fixed;
