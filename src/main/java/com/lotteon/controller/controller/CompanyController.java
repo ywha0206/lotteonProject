@@ -30,4 +30,8 @@ public class CompanyController {
     public String story() {
         return "pages/company/story";
     }
+
+
+
 }
+
