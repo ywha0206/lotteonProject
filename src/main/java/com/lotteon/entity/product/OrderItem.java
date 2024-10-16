@@ -4,6 +4,8 @@ import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @ToString
 @Getter
@@ -24,6 +26,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_id")
+    private Product product;
+
     @Column(name = "order_item_quantity")
     private int quantity;
 
@@ -41,4 +47,11 @@ public class OrderItem {
 
     @Column(name = "order_item_req" ,columnDefinition = "TEXT")
     private String req;
+
+    @Column(name = "order_item_deli")
+    private int deli;
+
+    @Column(name = "order_item_warranty")
+    private Timestamp warranty;
+
 }
