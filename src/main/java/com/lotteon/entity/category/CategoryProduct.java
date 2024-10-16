@@ -4,6 +4,7 @@ import com.lotteon.dto.responseDto.TestResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,6 +31,11 @@ public class CategoryProduct {
     @ToString.Exclude
     @OneToMany(mappedBy = "parent")
     private List<CategoryProduct> children;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    private List<CategoryProductMapper> productMappings = new ArrayList<>();
 
     public TestResponseDto toDto() {
         return TestResponseDto.builder()

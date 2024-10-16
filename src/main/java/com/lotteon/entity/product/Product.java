@@ -1,11 +1,15 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.entity.category.CategoryProduct;
+import com.lotteon.entity.category.CategoryProductMapper;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @ToString
@@ -21,6 +25,11 @@ public class Product {
 
     @Column(name = "sell_id")
     private Long sellId;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    private List<CategoryProductMapper> categoryMappings = new ArrayList<>();
 
     @Column(name = "prod_summary")
     private String prodSummary;
@@ -64,4 +73,8 @@ public class Product {
     @Column(name = "prod_rdate")
     @CreationTimestamp
     private Timestamp prodRdate;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ProductOption> options = new ArrayList<>();
 }

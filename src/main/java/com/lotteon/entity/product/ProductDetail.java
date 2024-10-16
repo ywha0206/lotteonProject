@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
 @ToString
@@ -50,4 +49,19 @@ public class ProductDetail {
 
     @Column(name = "prod_origin")
     private String origin;
+
+    @Column(name = "prod_deli_able")
+    private Boolean deliable;
+
+    @Column(name = "prod_installment_able")
+    private Boolean installmentable;
+
+    @Column(name = "prod_card_event")
+    private String cardEvent;
+
+    @Column(name = "prod_card_type")
+    private String cardType;
+
+    @Column(name = "prod_deli_date")
+    private int deliDate;
 }

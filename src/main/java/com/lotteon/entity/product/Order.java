@@ -6,6 +6,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @ToString
@@ -53,6 +55,11 @@ public class Order {
     @Column(name = "order_rdate")
     @CreationTimestamp
     private Timestamp orderRdate;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    private List<OrderItem> orderItems = new ArrayList<>();
 
 
 }
