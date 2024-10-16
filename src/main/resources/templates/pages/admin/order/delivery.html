@@ -101,45 +101,57 @@
     function openDeliveryPopup() {
 
         popup.innerHTML = `
+
         <div class="header">
-            <div class="title">주문상세 <span style="color: white">1012000000</span></div>
+            <div class="title">배송입력 <span style="color: white">1012000000</span></div>
             <div onclick="closeShopPopup()" class="btn">X</div>
         </div>
         <div style="margin: 20px; margin-bottom: 30px;">
-            <div class="header2">
-                <span class="header-title">상품정보</span>
-            </div>
-
             <div class="header-gubun"></div>
-            <table class="tb2">
+            <form class="popup_form">
+                <table class="tb3">
                     <tr>
-                        <th>이미지</th>
-                        <th>상품번호</th>
-                        <th>상품명</th>
-                        <th>판매자</th>
-                        <th>가격</th>
-                        <th>할인</th>
-                        <th>수량</th>
-                        <th>배송비</th>
-                        <th>결제금액</th>
+                        <th>주문번호</th>
+                        <td><input type="text" class="input1" value="1012000000" readonly></td>
                     </tr>
                     <tr>
-                        <td><img th:src="@{https://via.placeholder.com/35x35}" alt=""></td>
-                        <td>12100000</td>
-                        <td>OOO</td>
-                        <td>(주)상호명</td>
-                        <td>24,000</td>
-                        <td>-1,200</td>
-                        <td>3</td>
-                        <td>0</td>
-                        <td>68,400</td>
+                        <th>수령인</th>
+                        <td><input type="text" class="input2" value="홍길동" readonly></td>
                     </tr>
-            </table>
-            <div class="header2">
-                <span class="header-title">배송정보</span>
-            </div>
-
-            <div class="header-gubun"></div>
+                    <tr>
+                        <th>우편번호</th>
+                        <td><input type="text" class="input2" value="12345" readonly></td>
+                    </tr>
+                    <tr>
+                        <th>기본주소</th>
+                        <td><input type="text" class="input3" value="부산광역시 부산진구 부전동 123" readonly></td>
+                    </tr>
+                    <tr>
+                        <th>상세주소</th>
+                        <td><input type="text" class="input3" value="빌딩 3층 301호" readonly></td>
+                    </tr>
+                    <tr>
+                        <th>택배사</th>
+                        <td>
+                            <select>
+                                <option>택배사선택</option>
+                                <option>롯데택배</option>
+                                <option>로젠택배</option>
+                                <option>대한통운</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>운송장번호</th>
+                        <td><input type="text" class="input3"  placeholder="발급받은 택배사 송장번호 입력"></td>
+                    </tr>
+                    <tr>
+                        <th>기타</th>
+                        <td><textarea placeholder="기타정보입력"></textarea></td>
+                    </tr>
+                </table>
+                <button class="btn_green">등록하기</button>
+            </form>
         </div>
         `
 
