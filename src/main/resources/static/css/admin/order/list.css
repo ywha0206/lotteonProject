@@ -115,14 +115,14 @@ li {list-style: none;}
 
 .popup {
     position: fixed;
-    top: 100px;
-    left: 410px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 810px;
     background-color: white;
     z-index: 1000;
     overflow: scroll;
-    max-height: 500px;
-
+    height: 550px;
 }
 
 .popup .header {
@@ -172,7 +172,7 @@ li {list-style: none;}
 
 .tb2 td {
     text-align: center;
-    height: 120px;
+    height: 70px;
     font-size: 12px;
 }
 
@@ -188,6 +188,7 @@ li {list-style: none;}
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    margin-top: 20px;
 }
 
 .right-bg {
@@ -237,6 +238,18 @@ li {list-style: none;}
 .tb3 td {
     padding-left: 10px;
 }
+
+.tb3 td input, .tb3 td select{height: 30px; text-indent: 5px; border: 1px solid #BFBFBF; margin: 3px 0; }
+.tb3 .input1{width: 300px;}
+.tb3 .input2{width: 150px;}
+.tb3 .input3{width: 450px;}
+.tb3 select{width: 120px;}
+.tb3 textarea{width: 450px; height: 80px; resize: none; text-indent: 5px; border: 1px solid #BFBFBF;  margin: 3px 0;}
+.popup_form{display: flex; flex-direction: column; align-items: center;}
+.popup_form button{margin-top: 40px;}
+
+.btn_green{width: 100px; height: 30px; background-color: #14AE5C; border: none; color: #fff;}
+
 
 .total-price {
     position: relative;
