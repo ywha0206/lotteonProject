@@ -13,7 +13,7 @@
                         <div class="customer-content content">개인구매회원(외국인포함)</div>
                         <div class="customer-advice advice">만 14세이상가능</div>
                     </div>
-                    <div class="customer-btn box-btn">회원가입</div>
+                    <a th:href="@{/auth/signup}" class="customer-btn box-btn">회원가입</a>
                 </div>
                 <div class="seller box">
                     <div class="seller-header box-header">판매회원가입</div>
@@ -21,7 +21,7 @@
                         <div class="seller-content content">사업자판매회원</div>
                         <div class="seller-advice advice">사업자등록증을 보유한 회원</div>
                     </div>
-                    <div class="seller-btn box-btn">회원가입</div>
+                    <div th:href="@{/auth/signup}" class="seller-btn box-btn">회원가입</div>
                 </div>
             </div>
         </div>

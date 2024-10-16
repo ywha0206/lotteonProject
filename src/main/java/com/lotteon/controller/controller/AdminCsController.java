@@ -1,59 +1,63 @@
 package com.lotteon.controller.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/cs")
 @RequiredArgsConstructor
+@Log4j2
 public class AdminCsController {
 
-    @GetMapping(value = {"/faq","/faq/","/faq/list"})
-    public String faqList() {
+    @GetMapping("/index")
+    public String index(Model model) {
+        return "pages/admin/cs/index";
+    }
+    @GetMapping("/faqs")
+    public String faqs(Model model) {
         return "pages/admin/cs/faq/list";
     }
 
-    @GetMapping("/faq/modify")
-    public String faqModify() {
-        return "pages/admin/cs/faq/modify";
-    }
+    @GetMapping("/faq")
+    public String faq(Model model) {
 
-    @GetMapping("/faq/view")
-    public String faqView() {
-        return "pages/admin/cs/faq/view";
-    }
 
     @GetMapping("/faq/write")
-    public String faqWrite() {
+    public String faqWrite(Model model) {
         return "pages/admin/cs/faq/write";
     }
 
-
-    @GetMapping(value = {"/notice","/notice/","/notice/list"})
-    public String noticeList() {
-        return "pages/admin/cs/notice/list";
+    @GetMapping("/faq/modify")
+    public String faqModify(Model model) {
+        return "pages/admin/cs/faq/modify";
     }
 
-    @GetMapping("/notice/modify")
-    public String noticeModify() {
-        return "pages/admin/cs/notice/modify";
+    @GetMapping("/notices")
+    public String notices(Model model) {
+        return "pages/admin/cs/notices";
     }
 
-    @GetMapping("/notice/view")
-    public String noticeView() {
+    @GetMapping("/notice")
+    public String notice(Model model) {
         return "pages/admin/cs/notice/view";
     }
 
+    @GetMapping("/notice/modify")
+    public String noticeModify(Model model) {
+        return "pages/admin/cs/notice/modify";
+    }
+
     @GetMapping("/notice/write")
-    public String noticeWrite() {
+    public String noticeWrite(Model model) {
         return "pages/admin/cs/notice/write";
     }
 
-
-    @GetMapping(value = {"/qna","/qna/","/qna/list"})
-    public String qnaList() {
+    @GetMapping("/qnas")
+    public String qnas(Model model) {
         return "pages/admin/cs/qna/list";
     }
 
@@ -62,7 +66,7 @@ public class AdminCsController {
         return "pages/admin/cs/qna/modify";
     }
 
-    @GetMapping("/qna/view")
+    @GetMapping("/qna")
     public String qnaView() {
         return "pages/admin/cs/qna/view";
     }
