@@ -3,236 +3,205 @@
 <header th:replace="layout/main/header.html"></header>
 <main>
   <div id="my">
-    <nav class="info">
-      <h2 class="tit">나의쇼핑정보</h2>
-      <table>
-        <tr>
-          <td>주문</td>
-          <td>쿠폰</td>
-          <td>포인트</td>
-          <td>문의</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>1</td>
-          <td>1,800</td>
-          <td>1</td>
-        </tr>
-      </table>
-    </nav>
-    <aside>
-      <ul class="aside_cate">
-        <li>전체주문내역</li>
-        <li>포인트내역</li>
-        <li>쿠폰</li>
-        <li>나의리뷰</li>
-        <li>문의하기</li>
-        <li>나의설정</li>
-      </ul>
-    </aside>
+    <th:block th:replace="~{pages/my/_fragment::aside}"></th:block>
     <main>
-      <a href="#"
-      ><img
-              src="https://via.placeholder.com/810x86"
-              class="banner"
-              alt="배너광고"
-      /></a>
-      <section>
-        <h3>최근 주문내역<a href="#">더보기 &gt; </a></h3>
-        <article>
-          <table border="0" class="order">
-            <tr>
-              <th>날짜</th>
-              <th>상품정보</th>
-              <th>상태</th>
-              <th>확인/신청</th>
-            </tr>
-            <tr>
-              <td class="date">2022-12-13</td>
-              <td>
-                <div class="thumb">
-                  <a href="#">
-                    <img src="https://via.placeholder.com/120x120" alt="" />
-                  </a>
-                </div>
-                <ul>
-                  <li class="company">(주) 회사명</li>
-                  <li class="prodName"><a href="#">상품명</a></li>
-                  <li>
-                    수량 : <span class="prodCount">5</span>개 / 주문번호 :
-                    <span class="ordNo">1234567</span>
-                  </li>
-                  <li class="prodPrice">34,000</li>
-                </ul>
-              </td>
-              <td class="status">배송완료</td>
-              <td class="confirm">
-                <a href="#" class="receive color">수취확인</a>
-                <a href="#" class="review color">상품평쓰기</a>
-                <a href="#" class="refund grey">반품신청</a>
-                <a href="#" class="exchange grey">교환신청</a>
-              </td>
-            </tr>
-            <tr>
-              <td class="date">2022-12-13</td>
-              <td>
-                <div class="thumb">
-                  <a href="#">
-                    <img src="https://via.placeholder.com/120x120" alt="" />
-                  </a>
-                </div>
-                <ul>
-                  <li class="company">(주) 회사명</li>
-                  <li class="prodName"><a href="#">상품명</a></li>
-                  <li>
-                    수량 : <span class="prodCount">5</span>개 / 주문번호 :
-                    <span class="ordNo">1234567</span>
-                  </li>
-                  <li class="prodPrice">34,000</li>
-                </ul>
-              </td>
-              <td class="status">배송완료</td>
-              <td class="confirm">
-                <a href="#" class="receive color">수취확인</a>
-                <a href="#" class="review color">상품평쓰기</a>
-                <a href="#" class="refund grey">반품신청</a>
-                <a href="#" class="exchange grey">교환신청</a>
-              </td>
-            </tr>
-          </table>
-        </article>
+    <th:block th:replace="~{pages/my/_fragment::banner}"></th:block>
+    <section>
+      <h3>최근 주문내역<a href="#">더보기 &gt; </a></h3>
+      <article>
+        <table border="0" class="order">
+          <tr>
+            <th>날짜</th>
+            <th>상품정보</th>
+            <th>상태</th>
+            <th>확인/신청</th>
+          </tr>
+          <tr>
+            <td class="date">2022-12-13</td>
+            <td>
+              <div class="thumb">
+                <a href="#">
+                  <img src="https://via.placeholder.com/120x120" alt="" />
+                </a>
+              </div>
+              <ul>
+                <li class="company">(주) 회사명</li>
+                <li class="prodName"><a href="#">상품명</a></li>
+                <li>
+                  수량 : <span class="prodCount">5</span>개 / 주문번호 :
+                  <span class="ordNo">1234567</span>
+                </li>
+                <li class="prodPrice">34,000</li>
+              </ul>
+            </td>
+            <td class="status">배송완료</td>
+            <td class="confirm">
+              <a href="#" class="receive color">수취확인</a>
+              <a href="#" class="review color">상품평쓰기</a>
+              <a href="#" class="refund grey">반품신청</a>
+              <a href="#" class="exchange grey">교환신청</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="date">2022-12-13</td>
+            <td>
+              <div class="thumb">
+                <a href="#">
+                  <img src="https://via.placeholder.com/120x120" alt="" />
+                </a>
+              </div>
+              <ul>
+                <li class="company">(주) 회사명</li>
+                <li class="prodName"><a href="#">상품명</a></li>
+                <li>
+                  수량 : <span class="prodCount">5</span>개 / 주문번호 :
+                  <span class="ordNo">1234567</span>
+                </li>
+                <li class="prodPrice">34,000</li>
+              </ul>
+            </td>
+            <td class="status">배송완료</td>
+            <td class="confirm">
+              <a href="#" class="receive color">수취확인</a>
+              <a href="#" class="review color">상품평쓰기</a>
+              <a href="#" class="refund grey">반품신청</a>
+              <a href="#" class="exchange grey">교환신청</a>
+            </td>
+          </tr>
+        </table>
+      </article>
 
-        <h3>포인트 적립내역<a href="#">더보기 &gt; </a></h3>
-        <article>
-          <table border="0" class="point">
-            <tr>
-              <th>날짜</th>
-              <th>구분</th>
-              <th>주문번호</th>
-              <th>적립금액</th>
-              <th>비고</th>
-              <th>유효기간</th>
-            </tr>
-            <tr>
-              <td class="date">2022-12-13</td>
-              <td>적립</td>
-              <td>2022121001</td>
-              <td>340</td>
-              <td>상품 구매확정</td>
-              <td>2024-12-10</td>
-            </tr>
-            <tr>
-              <td class="date">2022-12-13</td>
-              <td>적립</td>
-              <td>2022120601</td>
-              <td>120</td>
-              <td>상품 구매확정</td>
-              <td>2024-12-06</td>
-            </tr>
-          </table>
-        </article>
+      <h3>포인트 적립내역<a href="#">더보기 &gt; </a></h3>
+      <article>
+        <table border="0" class="point">
+          <tr>
+            <th>날짜</th>
+            <th>구분</th>
+            <th>주문번호</th>
+            <th>적립금액</th>
+            <th>비고</th>
+            <th>유효기간</th>
+          </tr>
+          <tr>
+            <td class="date">2022-12-13</td>
+            <td>적립</td>
+            <td>2022121001</td>
+            <td>340</td>
+            <td>상품 구매확정</td>
+            <td>2024-12-10</td>
+          </tr>
+          <tr>
+            <td class="date">2022-12-13</td>
+            <td>적립</td>
+            <td>2022120601</td>
+            <td>120</td>
+            <td>상품 구매확정</td>
+            <td>2024-12-06</td>
+          </tr>
+        </table>
+      </article>
 
-        <h3>상품평<a href="#">더보기 &gt; </a></h3>
-        <article>
-          <table border="0" class="review">
-            <tr>
-              <th>번호</th>
-              <th>상품명</th>
-              <th>내용</th>
-              <th>평점</th>
-              <th>작성일</th>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td><span>상품번호</span> / <span>상품명</span></td>
-              <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
-              <td>★★★★☆</td>
-              <td>2024-12-10</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td><span>상품번호</span> / <span>상품명</span></td>
-              <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
-              <td>★★★★☆</td>
-              <td>2024-12-06</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td><span>상품번호</span> / <span>상품명</span></td>
-              <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
-              <td>★★★★☆</td>
-              <td>2024-12-06</td>
-            </tr>
-          </table>
-        </article>
+      <h3>상품평<a href="#">더보기 &gt; </a></h3>
+      <article>
+        <table border="0" class="review">
+          <tr>
+            <th>번호</th>
+            <th>상품명</th>
+            <th>내용</th>
+            <th>평점</th>
+            <th>작성일</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td><span>상품번호</span> / <span>상품명</span></td>
+            <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
+            <td>★★★★☆</td>
+            <td>2024-12-10</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><span>상품번호</span> / <span>상품명</span></td>
+            <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
+            <td>★★★★☆</td>
+            <td>2024-12-06</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><span>상품번호</span> / <span>상품명</span></td>
+            <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
+            <td>★★★★☆</td>
+            <td>2024-12-06</td>
+          </tr>
+        </table>
+      </article>
 
-        <h3>문의내역 <a href="#">더보기 &gt; </a></h3>
-        <article>
-          <table border="0" class="qna">
-            <tr>
-              <th>번호</th>
-              <th>문의채널</th>
-              <th>문의유형</th>
-              <th>제목</th>
-              <th>작성일</th>
-              <th>상태</th>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>고객센터</td>
-              <td>주문/결제</td>
-              <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
-              <td>2024-12-12</td>
-              <td><span class="check">검토중</span></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>고객센터</td>
-              <td>주문/결제</td>
-              <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
-              <td>2024-12-12</td>
-              <td><span class="success">답변완료</span></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>판매자 게시판</td>
-              <td>배송</td>
-              <td>배송기간이 보통 얼마나 걸리나요?</td>
-              <td>2024-12-12</td>
-              <td><span class="success">답변완료</span></td>
-            </tr>
-          </table>
-        </article>
+      <h3>문의내역 <a href="#">더보기 &gt; </a></h3>
+      <article>
+        <table border="0" class="qna">
+          <tr>
+            <th>번호</th>
+            <th>문의채널</th>
+            <th>문의유형</th>
+            <th>제목</th>
+            <th>작성일</th>
+            <th>상태</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>고객센터</td>
+            <td>주문/결제</td>
+            <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
+            <td>2024-12-12</td>
+            <td><span class="check">검토중</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>고객센터</td>
+            <td>주문/결제</td>
+            <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
+            <td>2024-12-12</td>
+            <td><span class="success">답변완료</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>판매자 게시판</td>
+            <td>배송</td>
+            <td>배송기간이 보통 얼마나 걸리나요?</td>
+            <td>2024-12-12</td>
+            <td><span class="success">답변완료</span></td>
+          </tr>
+        </table>
+      </article>
 
-        <h3>나의설정</h3>
-        <article>
-          <table class="user">
-            <tr>
-              <td colspan="3"></td>
-            </tr>
-            <tr>
-              <td>
-                <div><b>기본배송지 설정</b> <a href="#">변경</a></div>
-                <p class="addr1">부산광역시 부산진구 대연동 120</p>
-                <p class="addr2">한빛빌딩 10층</p>
-              </td>
-              <td>
-                <div><b>Email 설정</b> <a href="#">변경</a></div>
-                <p>abc123@naver.com</p>
-                <p class="lastUpdate">(최종수정일 2021-12-10)</p>
-              </td>
-              <td>
-                <div><b>휴대폰 설정</b> <a href="#">변경</a></div>
-                <p>010-1234-1001</p>
-                <p class="lastUpdate">(최종수정일 2021-12-10)</p>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3"></td>
-            </tr>
-          </table>
-        </article>
-      </section>
+      <h3>나의설정</h3>
+      <article>
+        <table class="user">
+          <tr>
+            <td colspan="3"></td>
+          </tr>
+          <tr>
+            <td>
+              <div><b>기본배송지 설정</b> <a href="#">변경</a></div>
+              <p class="addr1">부산광역시 부산진구 대연동 120</p>
+              <p class="addr2">한빛빌딩 10층</p>
+            </td>
+            <td>
+              <div><b>Email 설정</b> <a href="#">변경</a></div>
+              <p>abc123@naver.com</p>
+              <p class="lastUpdate">(최종수정일 2021-12-10)</p>
+            </td>
+            <td>
+              <div><b>휴대폰 설정</b> <a href="#">변경</a></div>
+              <p>010-1234-1001</p>
+              <p class="lastUpdate">(최종수정일 2021-12-10)</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3"></td>
+          </tr>
+        </table>
+      </article>
+    </section>
     </main>
   </div>
 </main>
