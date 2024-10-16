@@ -12,4 +12,8 @@ public class AdminCsController {
     public String index() {
         return "pages/admin/cs/index";
     }
+    @GetMapping("/faq")
+    public String faq() {
+        return "pages/admin/cs/faq";
+    }
 }
