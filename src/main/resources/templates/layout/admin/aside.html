@@ -11,48 +11,48 @@
         <div class="navi">
             <li onclick="openMenu(event, 'menu1')">환경설정</li>
             <div class="menues" id="menu1">
-                <a href="">- 기본설정</a>
-                <a href="">- 배너관리</a>
-                <a href="">- 약관관리</a>
-                <a href="">- 버전관리</a>
+                <a th:href="@{/admin/config/basics}">- 기본설정</a>
+                <a th:href="@{/admin/config/banners}">- 배너관리</a>
+                <a th:href="@{/admin/config/terms}">- 약관관리</a>
+                <a th:href="@{/admin/config/versions}">- 버전관리</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu2')">상점관리</li>
             <div class="menues" id="menu2">
-                <a href="">- 상품목록</a>
-                <a href="">- 상품등록</a>
+                <a th:href="@{/admin/shop/shop}">- 상점목록</a>
+                <a th:href="@{/admin/shop/income}">- 매출현황</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu3')">회원관리</li>
             <div class="menues" id="menu3">
-                <a href="">- 상품목록</a>
-                <a href="">- 상품등록</a>
+                <a th:href="@{/admin/user/user}">- 회원목록</a>
+                <a th:href="@{/admin/user/point}">- 포인트관리</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu4')">상품관리</li>
             <div class="menues" id="menu4">
-                <a href="">- 상품목록</a>
-                <a href="">- 상품등록</a>
+                <a th:href="@{/admin/prod/prodect}">- 상품현황</a>
+                <a th:href="@{/admin/prod/product/post}">- 상품등록</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu5')">주문관리</li>
             <div class="menues" id="menu5">
-                <a href="">- 상품목록</a>
-                <a href="">- 상품등록</a>
+                <a href="">- 주문현황</a>
+                <a href="">- 배송현황</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu6')">고객센터</li>
             <div class="menues" id="menu6">
-                <a href="">- 공지사항</a>
-                <a href="">- 자주묻는질문</a>
-                <a href="">- 문의하기</a>
+                <a th:href="@{/admin/cs/notices}">- 공지사항</a>
+                <a th:href="@{/admin/cs/faqs}">- 자주묻는질문</a>
+                <a th:href="@{/admin/cs/qnas}">- 문의하기</a>
             </div>
-        </div> 
+        </div>
     </aside>
 
     <script>
