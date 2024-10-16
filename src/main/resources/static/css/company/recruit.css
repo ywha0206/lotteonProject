@@ -1,0 +1,81 @@
+.container {
+    width: 800px;
+    margin: 0 auto;
+    user-select: none;
+}
+
+.header{
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.header-title{
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.header-right {
+    font-size: 14px;
+}
+
+.header-right .bold {
+    font-weight: 600;
+}
+
+.header-gubun {
+    height: 3px;
+    background-image: url(/images/Vector.png);
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+.c1{
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.tb1 {
+    border-collapse: collapse;
+    width: 750px;
+}
+
+.tb1 tr {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+
+    &:hover {
+        background-color: #bbb;
+        opacity: 0.2;
+    }
+}
+
+.navigation {
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.tb1 th {
+    width: 150px;
+    height: 50px;
+}
+
+.tb1 td {
+    display: flex;
+    gap: 0px;
+    justify-content: space-around;
+}
+
+.btns {
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    height: 30px;
+
+}

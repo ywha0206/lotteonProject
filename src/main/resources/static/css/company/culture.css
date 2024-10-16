@@ -1,0 +1,71 @@
+.container {
+    width: 800px;
+    margin: 0 auto;
+    user-select: none;
+}
+
+.header{
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.header-title{
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.header-right {
+    font-size: 14px;
+}
+
+.header-right .bold {
+    font-weight: 600;
+}
+
+.header-gubun {
+    height: 3px;
+    background-image: url(/images/Vector.png);
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.img1 {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+.img2{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.img1 img {
+    width: 340px;
+    height: 340px;
+}
+
+.img2 img {
+    width: 340px;
+    height: 340px;
+}
+.a1{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.a1 img{
+    width: 300px;
+    height: 200px;
+}
+
+.con2 {
+    width: 450px;
+}
