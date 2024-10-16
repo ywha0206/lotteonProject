@@ -34,7 +34,7 @@ public class ProductDetail {
     private Timestamp mdate;
 
     @Column(name = "prod_warranty")
-    private Timestamp warranty;
+    private int warranty;
 
     @Column(name = "prod_warranty_type")
     private Boolean warrantyType;

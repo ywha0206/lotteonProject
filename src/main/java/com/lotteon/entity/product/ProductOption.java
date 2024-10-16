@@ -26,4 +26,7 @@ public class ProductOption {
 
     @Column(name = "option_card")
     private Boolean optionCard;
+
+    @Column(name = "option_deli_date")
+    private int optionDeliverDate;
 }
