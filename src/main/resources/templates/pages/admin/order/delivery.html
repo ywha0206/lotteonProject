@@ -1,0 +1,154 @@
+<link rel="stylesheet" th:href="@{/css/admin/order/list.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/reset.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main style="margin: 0 auto; margin-bottom: 50px">
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <div class="container">
+        <div class="header">
+            <span class="header-title">배송현황</span>
+            <div class="header-right">
+                <span>HOME</span>
+                <span>></span>
+                <span>주문관리</span>
+                <span>></span>
+                <span class="bold">배송현황</span>
+            </div>
+        </div>
+
+        <div class="header-gubun"></div>
+
+        <section class="categoryProduct">
+            <form class="order-search">
+                <select>
+                    <option>송장번호</option>
+                    <option>주문번호</option>
+                    <option>수령인</option>
+                </select>
+                <input type="text" placeholder="검색어입력">
+                <button type="submit">검색</button>
+            </form>
+            <table class="tb1">
+                <tr>
+                    <th>송장번호</th>
+                    <th>택배사</th>
+                    <th>주문번호</th>
+                    <th>수령인</th>
+                    <th>상품명</th>
+                    <th>건수</th>
+                    <th>물품합계</th>
+                    <th>배송비</th>
+                    <th>배송상태</th>
+                    <th>접수일</th>
+                </tr>
+                <tr>
+                    <td onclick="openDeliveryPopup()" style="text-decoration: underline; cursor: pointer">10121111</td>
+                    <td>로젠택배</td>
+                    <td>10121122020</td>
+                    <td>김유신</td>
+                    <td>OOO</td>
+                    <td>3</td>
+                    <td>68,400</td>
+                    <td>무료</td>
+                    <td style="color: #00B050;">배송준비</td>
+                    <td>2024.10.16<br>00:00:00</td>
+                </tr>
+                <tr>
+                    <td onclick="openDeliveryPopup()" style="text-decoration: underline; cursor: pointer">10121111</td>
+                    <td>로젠택배</td>
+                    <td>10121122020</td>
+                    <td>김유신</td>
+                    <td>OOO</td>
+                    <td>3</td>
+                    <td>68,400</td>
+                    <td>무료</td>
+                    <td style="color: #00B050;">배송준비</td>
+                    <td>2024.10.16<br>00:00:00</td>
+                </tr>
+                <tr>
+                    <td onclick="openDeliveryPopup()" style="text-decoration: underline; cursor: pointer">10121111</td>
+                    <td>로젠택배</td>
+                    <td>10121122020</td>
+                    <td>김유신</td>
+                    <td>OOO</td>
+                    <td>3</td>
+                    <td>68,400</td>
+                    <td>무료</td>
+                    <td style="color: #00B050;">배송준비</td>
+                    <td>2024.10.16<br>00:00:00</td>
+                </tr>
+            </table>
+            <div class="page">
+                <a href="#">이전</a>
+                <a href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">다음</a>
+            </div>
+        </section>
+        <div class="popup"></div>
+        <div class="popupbg"></div>
+    </div>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+
+<script>
+    const popup = document.querySelector('.popup')
+    const bg = document.querySelector('.popupbg')
+    function openDeliveryPopup() {
+
+        popup.innerHTML = `
+        <div class="header">
+            <div class="title">주문상세 <span style="color: white">1012000000</span></div>
+            <div onclick="closeShopPopup()" class="btn">X</div>
+        </div>
+        <div style="margin: 20px; margin-bottom: 30px;">
+            <div class="header2">
+                <span class="header-title">상품정보</span>
+            </div>
+
+            <div class="header-gubun"></div>
+            <table class="tb2">
+                    <tr>
+                        <th>이미지</th>
+                        <th>상품번호</th>
+                        <th>상품명</th>
+                        <th>판매자</th>
+                        <th>가격</th>
+                        <th>할인</th>
+                        <th>수량</th>
+                        <th>배송비</th>
+                        <th>결제금액</th>
+                    </tr>
+                    <tr>
+                        <td><img th:src="@{https://via.placeholder.com/35x35}" alt=""></td>
+                        <td>12100000</td>
+                        <td>OOO</td>
+                        <td>(주)상호명</td>
+                        <td>24,000</td>
+                        <td>-1,200</td>
+                        <td>3</td>
+                        <td>0</td>
+                        <td>68,400</td>
+                    </tr>
+            </table>
+            <div class="header2">
+                <span class="header-title">배송정보</span>
+            </div>
+
+            <div class="header-gubun"></div>
+        </div>
+        `
+
+        popup.style.display = "block";
+        bg.style.display = "flex";
+    }
+
+    function closeShopPopup() {
+        popup.style.display = "none";
+        bg.style.display = "none";
+    }
+</script>
