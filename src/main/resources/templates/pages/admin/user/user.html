@@ -1,0 +1,159 @@
+<link rel="stylesheet" th:href="@{/css/admin/user/user.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <div id="wrap">
+        <div class="container">
+            <nav id="navi">
+                <h2 class="sub_tit">회원목록</h2>
+                <p class="location">
+                    <span>HOME</span>
+                    <span>회원관리</span>
+                    <span>회원목록</span>
+                </p>
+            </nav>
+            <form class="search">
+                <select name="search" class="search-option">
+                    <option value="상품명">아이디</option>
+                    <option value="상품번호">이름</option>
+                    <option value="판매자">이메일</option>
+                    <option value="제조사">휴대폰</option>
+                </select>
+                <input class="search-keyword" type="text" name="keyword" placeholder="키워드 입력">
+                <button class="search-btn" type="submit">검색</button>
+            </form>
+
+            <div class="header-gubun-bottom">
+            </div>
+            <table class="tb1">
+                <colgroup>
+                    <col style="width: 5%;">
+                    <col style="width: 5%;">
+                    <col style="width: 12%;">
+                    <col style="width: 7%;">
+                    <col style="width: 5%;">
+                    <col style="width: 12%;">
+                    <col style="width: 10%;">
+                    <col style="width: 5%;">
+                    <col style="width: 12%;">
+                    <col style="width: 12%;">
+                    <col style="width: 8%;">
+                    <col style="width: 7%;">
+                </colgroup>
+                <tr>
+                    <th class="checkbox">
+                        <input type="checkbox" id="allCheckbox">
+                    </th>
+                    <th>번호</th>
+                    <th>아이디</th>
+                    <th>이름</th>
+                    <th>성별</th>
+                    <th>등급</th>
+                    <th>포인트</th>
+                    <th>이메일</th>
+                    <th>휴대폰</th>
+                    <th>가입일</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="checkbox">
+                    </td>
+                    <td>5</td>
+                    <td>xxx...</td>
+                    <td>정우성</td>
+                    <td>M</td>
+                    <td>
+                        <select name="search" class="grade">
+                            <option value="등급">Family</option>
+                            <option value="등급">Silver</option>
+                            <option value="등급">Gold</option>
+                            <option value="등급">VIP</option>
+                            <option value="등급">VVIP</option>
+                        </select>
+                    </td>
+                    <td>15,000</td>
+                    <td>xxxxx@naver.com</td>
+                    <td>010-1234-1234</td>
+                    <td>0000-00-00 00:00:00</td>
+                    <td class="condition">정상</td>
+                    <td class="td-admin">
+                        <input type="button" value="[ 수정 ]">
+                        <input type="button" value="[ 중지 ]">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="checkbox">
+                    </td>
+                    <td>5</td>
+                    <td>xxx...</td>
+                    <td>정우성</td>
+                    <td>M</td>
+                    <td>
+                        <select name="search" class="grade">
+                            <option value="등급">Family</option>
+                            <option value="등급">Silver</option>
+                            <option value="등급">Gold</option>
+                            <option value="등급">VIP</option>
+                            <option value="등급">VVIP</option>
+                        </select>
+                    </td>
+                    <td>15,000</td>
+                    <td>xxxxx@naver.com</td>
+                    <td>010-1234-1234</td>
+                    <td>0000-00-00 00:00:00</td>
+                    <td class="condition">정상</td>
+                    <td class="td-admin">
+                        <input type="button" value="[ 수정 ]">
+                        <input type="button" value="[ 중지 ]">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="checkbox">
+                    </td>
+                    <td>5</td>
+                    <td>xxx...</td>
+                    <td>정우성</td>
+                    <td>M</td>
+                    <td>
+                        <select name="search" class="grade">
+                            <option value="등급">Family</option>
+                            <option value="등급">Silver</option>
+                            <option value="등급">Gold</option>
+                            <option value="등급">VIP</option>
+                            <option value="등급">VVIP</option>
+                        </select>
+                    </td>
+                    <td>15,000</td>
+                    <td>xxxxx@naver.com</td>
+                    <td>010-1234-1234</td>
+                    <td>0000-00-00 00:00:00</td>
+                    <td class="condition">정상</td>
+                    <td class="td-admin">
+                        <input type="button" value="[ 수정 ]">
+                        <input type="button" value="[ 중지 ]">
+                    </td>
+                </tr>
+
+            </table>
+            <div class="btns">
+                <button class="delete-btn">선택수정</button>
+            </div>
+            <div class="page">
+                <a href="#" class="first">이전</a>
+                <a class="on" href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#" class="last">다음</a>
+            </div>
+        </div><!--container-->
+    </div>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>

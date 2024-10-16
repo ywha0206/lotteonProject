@@ -1,0 +1,254 @@
+<link rel="stylesheet" th:href="@{/css/admin/shop/shop.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <div id="wrap">
+        <div class="container">
+            <nav id="navi">
+                <h2 class="sub_tit">상점목록</h2>
+                <p class="location">
+                    <span>HOME</span>
+                    <span>상점관리 </span>
+                    <span>상점목록</span>
+                </p>
+            </nav>
+            <form class="search">
+                <select name="search" class="search-option">
+                    <option value="상품명">상품명</option>
+                    <option value="상품번호">상품번호</option>
+                    <option value="판매자">판매자</option>
+                    <option value="제조사">제조사</option>
+                </select>
+                <input class="search-keyword" type="text" name="keyword" placeholder="키워드 입력">
+                <button class="search-btn" type="submit">검색</button>
+            </form>
+
+            <div class="header-gubun-bottom">
+                <span class="circle green">운영 중</span>
+                <span class="circle red">운영 중지</span>
+                <span class="circle blue">운영 준비</span>
+            </div>
+            <table class="tb1">
+                <colgroup>
+                    <col style="width: 10%;">
+                    <col style="width: 5%;">
+                    <col style="width: 10%;">
+                    <col style="width: 10%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 5%;">
+                    <col style="width: 15%;">
+                </colgroup>
+                <tr>
+                    <th class="checkbox">
+                        <input type="checkbox" id="allCheckbox">
+                    </th>
+                    <th>번호</th>
+                    <th>상호명</th>
+                    <th>대표</th>
+                    <th>사업자등록번호</th>
+                    <th>통신판매업번호</th>
+                    <th>연락처</th>
+                    <th>운영</th>
+                    <th>관리</th>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="checkbox">
+                    </td>
+                    <td>5</td>
+                    <td>(주)다나와</td>
+                    <td>정우성</td>
+                    <td>112-12-12345</td>
+                    <td>2024 - 서울강남 - 04433</td>
+                    <td>010-1234-1001</td>
+                    <td><div class="cir"></div></td>
+                    <td class="td-admin">
+                        <input type="button" value="[ 중단 ]">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="checkbox" class="checkbox">
+                    </td>
+                    <td>5</td>
+                    <td>(주)다나와</td>
+                    <td>정우성</td>
+                    <td>112-12-12345</td>
+                    <td>2024 - 서울강남 - 04433</td>
+                    <td>010-1234-1001</td>
+                    <td><div class="cir"></div></td>
+                    <td class="td-admin">
+                        <input type="button" value="[ 중단 ]">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="checkbox" class="checkbox">
+                    </td>
+                    <td>5</td>
+                    <td>(주)다나와</td>
+                    <td>정우성</td>
+                    <td>112-12-12345</td>
+                    <td>2024 - 서울강남 - 04433</td>
+                    <td>010-1234-1001</td>
+                    <td><div class="cir"></div></td>
+                    <td class="td-admin">
+                        <input type="button" value="[ 중단 ]">
+                    </td>
+                </tr>
+
+            </table>
+            <div class="btns">
+                <button class="delete-btn">선택삭제</button>
+                <button onclick="openShopPopup()" class="insert-btn">상점등록</button>
+            </div>
+            <div class="page">
+                <a href="#" class="first"><<</a>
+                <a class="on" href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#" class="last">>></a>
+            </div>
+            <div class="popup">
+                <div class="header">
+                    <div class="title">상점등록</div>
+                    <div onclick="closeShopPopup()" class="btn">X</div>
+                </div>
+                <form action="">
+                    <table class="tb2">
+                        <div class="userinfo">
+                            <tr>
+                                <th>아이디</th>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 4px">
+                                        <input class="inp" type="text" />
+                                        <p class="info2">영문, 숫자 4~12자 설정</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호</th>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 4px">
+                                        <input class="inp" type="text" />
+                                        <p class="info2">영문 숫자 특수문자 8~12자 설정</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호 확인</th>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 4px">
+                                        <input class="inp" type="text" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </div>
+                    </table>
+                    <br />
+                    <table class="tb2">
+                        <div class="shopinfo">
+                            <tr>
+                                <th>상호명</th>
+                                <td>
+                                    <input
+                                            class="inp"
+                                            type="text"
+                                            placeholder="상호명 입력 예 "
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>대표</th>
+                                <td>
+                                    <input class="inp" type="text" placeholder="이름입력" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>사업자등록번호</th>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 4px">
+                                        <input
+                                                class="inp"
+                                                type="text"
+                                                placeholder="사업자등록번호입력"
+                                        />
+                                        <p class="info2">- 포함 12자리 입력</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>통신판매업번호</th>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 4px">
+                                        <input
+                                                class="inp"
+                                                type="text"
+                                                placeholder="통신판매업번호입력"
+                                        />
+                                        <p class="info2">- 포함 12자리 입력</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>전화번호</th>
+                                <td>
+                                    <input class="inp" type="text" placeholder="전화번호입력" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>팩스</th>
+                                <td>
+                                    <input class="inp" type="text" placeholder="팩스번호입력" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>주소</th>
+                                <td>
+                                    <input
+                                            class="inp"
+                                            type="text"
+                                            placeholder="우편번호검색클릭"
+                                    />
+                                    <br />
+                                    <input class="inp" type="text" placeholder="기본주소검색" />
+                                    <br />
+                                    <input class="inp" type="text" placeholder="상세주소검색" />
+                                </td>
+                            </tr>
+                        </div>
+                    </table>
+
+                </form>
+                <div class="btns">
+                    <button type="submit" class="submit-btn">등록하기</button>
+                </div>
+            </div>
+            <div class="popupbg"></div>
+        </div><!--container-->
+    </div>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+
+
+<script>
+    const popup = document.querySelector('.popup')
+    const bg = document.querySelector('.popupbg')
+    function openShopPopup() {
+        popup.style.display = "block";
+        bg.style.display = "flex";
+    }
+
+    function closeShopPopup() {
+        popup.style.display = "none";
+        bg.style.display = "none";
+    }
+</script>
