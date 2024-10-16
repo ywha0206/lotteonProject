@@ -24,8 +24,7 @@ public class AdminCsController {
 
     @GetMapping("/faq")
     public String faq(Model model) {
-        return "pages/admin/cs/faq/view";
-    }
+
 
     @GetMapping("/faq/write")
     public String faqWrite(Model model) {
@@ -62,8 +61,19 @@ public class AdminCsController {
         return "pages/admin/cs/qna/list";
     }
 
+    @GetMapping("/qna/modify")
+    public String qnaModify() {
+        return "pages/admin/cs/qna/modify";
+    }
+
     @GetMapping("/qna")
-    public String qna(Model model) {
+    public String qnaView() {
         return "pages/admin/cs/qna/view";
     }
+
+    @GetMapping("/qna/write")
+    public String qnaWrite() {
+        return "pages/admin/cs/qna/write";
+    }
+
 }
