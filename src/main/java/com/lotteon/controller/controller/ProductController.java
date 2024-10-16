@@ -28,9 +28,9 @@ public class ProductController {
         return "pages/product/view";
     }
 
-    @GetMapping("/cart")
-    public String cart(Model model) {
-        return "pages/product/cart";
+    @GetMapping("/cart/direct")
+    public String cartDirect(Model model) {
+        return "redirect:/prod/order";
     }
 
     @GetMapping("/order")
@@ -47,4 +47,5 @@ public class ProductController {
     public String search(Model model) {
         return "pages/product/search";
     }
+
 }
