@@ -3,6 +3,9 @@ package com.lotteon.entity.product;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @ToString
 @Getter
@@ -18,4 +21,7 @@ public class Cart {
     @Column(name = "cust_id")
     private Long custId;
 
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CartItem> items = new ArrayList<>();
 }

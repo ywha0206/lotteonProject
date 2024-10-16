@@ -2,6 +2,10 @@ package com.lotteon.entity.product;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @ToString
@@ -15,18 +19,24 @@ public class ProductOption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "prod_id")
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_id")
+    @ToString.Exclude
+    private Product product;
 
-    @Column(name = "option_deli")
-    private Boolean optionDeliver;
+    @Column(name = "prod_option_name")
+    private String optionName; // 예: "사이즈", "색상"
+    @Column(name = "prod_option_value")
+    private String optionValue; // 예: "S", "M", "L"
+    @Column(name = "additionalPrice")
+    private Double additionalPrice; // 추가 가격 (옵션 선택 시 가격 증가분)
+    @Column(name = "prod_option_stock")
+    private int stock;
 
-    @Column(name = "option_installment")
-    private Boolean optionInstallment;
+    @OneToMany(mappedBy = "productOption", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    private List<CartItemOption> cartItemOptions = new ArrayList<>();
 
-    @Column(name = "option_card")
-    private Boolean optionCard;
 
-    @Column(name = "option_deli_date")
-    private int optionDeliverDate;
 }

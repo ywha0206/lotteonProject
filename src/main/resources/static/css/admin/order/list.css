@@ -123,7 +123,6 @@ li {list-style: none;}
     z-index: 1000;
     overflow: scroll;
     height: 550px;
-
 }
 
 .popup .header {
@@ -239,6 +238,7 @@ li {list-style: none;}
 .tb3 td {
     padding-left: 10px;
 }
+
 .tb3 td input, .tb3 td select{height: 30px; text-indent: 5px; border: 1px solid #BFBFBF; margin: 3px 0; }
 .tb3 .input1{width: 300px;}
 .tb3 .input2{width: 150px;}
@@ -249,6 +249,7 @@ li {list-style: none;}
 .popup_form button{margin-top: 40px;}
 
 .btn_green{width: 100px; height: 30px; background-color: #14AE5C; border: none; color: #fff;}
+
 
 .total-price {
     position: relative;
