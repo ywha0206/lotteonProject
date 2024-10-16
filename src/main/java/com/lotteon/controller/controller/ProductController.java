@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class ProductController {
 
-    @GetMapping("/cart")
-    public String join(Model model) {
-        return "pages/product/cart";
-    }
-
     @GetMapping("/products")
     public String products(Model model) {
         return "pages/product/list";
@@ -26,21 +21,6 @@ public class ProductController {
     @GetMapping("/product")
     public String product(Model model) {
         return "pages/product/view";
-    }
-
-    @GetMapping("/cart/direct")
-    public String cartDirect(Model model) {
-        return "redirect:/prod/order";
-    }
-
-    @GetMapping("/order")
-    public String order(Model model) {
-        return "pages/product/order";
-    }
-
-    @GetMapping("/order/complete")
-    public String orderComplete(Model model) {
-        return "pages/product/complete";
     }
 
     @GetMapping("/products/search")
