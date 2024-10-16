@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/prod")
+@RequestMapping("/admin/user")
 @RequiredArgsConstructor
-public class ApiProductController {
+public class ApiAdminUserController {
+
 }
