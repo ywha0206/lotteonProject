@@ -1,25 +1,4 @@
-
-@charset "UTF-8";
-
-*{margin: 0; padding:0; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 400;}
-html{color:#111; position:relative;}
-html, body{height:100%; }
-body{font-size:12px; line-height:18px; font-family: 'Noto Sans KR', sans-serif;}
-a, address, blockquote, br, fieldset, legend, label, form, input, select, textarea, button, cite, code, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, div, iframe, ul, ol, li, hr, img {margin: 0; padding: 0; outline:none;}
-a{color:#111; text-decoration: none;}
-img{border:none; vertical-align: top;}
-ul, ol{list-style:none;}
-address{font-style: normal;}
-/* clearfix */
-.cf{}
-.cf::after {content: ""; display: block; clear: both;}
-
-/* hyper link */
-a, a:link, a:visited, a:active, a:hover{text-decoration: none; color: inherit;}
-
-/* input outline */
-input:active{outline: none;}
-input:focus{outline: none;}
+#aside{margin-top: 0px !important;}
 
 #wrap{
     display: flex;
@@ -108,8 +87,8 @@ input:focus{outline: none;}
 
 /* .tb1 상세 설정 */
 
-.tb1 td:nth-of-type(2) > span:first-child {font-size: 20px; font-weight: 700; }
-.tb1 td:nth-of-type(2) > span:nth-of-type(2) {font-size: 16px;}
+.tb1 td:nth-of-type(2) > a > span:first-child {font-size: 20px; font-weight: 700; }
+.tb1 td:nth-of-type(2) > a > span:nth-of-type(2) {font-size: 16px;}
 
 .tb1 td:nth-of-type(3) > span:first-child {font-size: 20px; font-weight: 400;}
 .tb1 td:nth-of-type(3) > del {color: #7f7f7f; font-size: 16px;}
@@ -121,8 +100,10 @@ input:focus{outline: none;}
 
 /* page 버튼 부분 */
 .page {
+    width: 100%;
     margin-top: 5px;
     text-align: center;
+    justify-content: center;
 }
 .page > a{color: #595959;}
 

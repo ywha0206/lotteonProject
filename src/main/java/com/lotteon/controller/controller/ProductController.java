@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @Log4j2
 public class ProductController {
+
     @GetMapping("/cart")
     public String join(Model model) {
         return "pages/product/cart";
