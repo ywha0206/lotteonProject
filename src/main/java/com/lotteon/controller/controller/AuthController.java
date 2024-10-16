@@ -6,6 +6,7 @@ import com.lotteon.service.term.TermsService;
 
 import lombok.extern.log4j.Log4j2;
 
+import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 <<<<<<< HEAD
 =======
