@@ -3,9 +3,9 @@
 <header th:replace="layout/main/header.html"></header>
 <main>
   <div id="my">
-    <th:block th:replace="~{pages/my/_fragment::aside}"></th:block>
+    <th:block th:replace="layout/my/aside.html"></th:block>
     <main>
-    <th:block th:replace="~{pages/my/_fragment::banner}"></th:block>
+      <th:block th:replace="layout/my/banner.html"></th:block>
     <section>
       <h3>나의설정</h3>
 
