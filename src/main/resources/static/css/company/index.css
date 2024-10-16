@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    max-width: 1440px;
     margin: 0 auto;
 }
 
@@ -373,21 +372,25 @@ footer {
 
 .footer-social a.facebook {
     background-color: #3b5998;
+    padding-top: 11px;
     color: white;
 }
 
 .footer-social a.twitter {
     background-color: #55acee;
+    padding-top: 11px;
     color: white;
 }
 
 .footer-social a.google-plus {
     background-color: #dd4b39;
+    padding-top: 11px;
     color: white;
 }
 
 .footer-social a.pinterest {
     background-color: #bd081c;
+    padding-top: 11px;
     color: white;
 }
 

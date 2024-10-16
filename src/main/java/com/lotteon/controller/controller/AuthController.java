@@ -1,9 +1,14 @@
 package com.lotteon.controller.controller;
 
+
 import com.lotteon.entity.term.Terms;
 import com.lotteon.service.term.TermsService;
-import lombok.RequiredArgsConstructor;
+
 import lombok.extern.log4j.Log4j2;
+
+import ch.qos.logback.core.model.Model;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
