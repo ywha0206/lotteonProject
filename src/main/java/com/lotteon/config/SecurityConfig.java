@@ -1,6 +1,7 @@
 package com.lotteon.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
@@ -24,6 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@ToString
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
