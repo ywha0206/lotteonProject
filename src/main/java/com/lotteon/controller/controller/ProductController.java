@@ -9,8 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/prod")
 @RequiredArgsConstructor
 public class ProductController {
+
     @GetMapping("/cart")
     public String join() {
         return "pages/product/cart";
     }
+
+    @GetMapping("/products")
+    public String products() {
+        return "pages/product/list";
+    }
+
 }

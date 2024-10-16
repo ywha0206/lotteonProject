@@ -58,11 +58,11 @@ input:focus{outline: none;}
 }
 
 .sub_tit {
-   font-size: 16px;
-   font-weight: 700;
-   margin-left: 3px;
-   margin-bottom: 8px;
-   margin-top: 5px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 3px;
+    margin-bottom: 8px;
+    margin-top: 5px;
 }
 
 /* 로케이션 */
@@ -105,6 +105,9 @@ input:focus{outline: none;}
 .delivery > :nth-child(2){font-size: 16px;}
 .delivery > :nth-child(4){font-size: 14px;}
 
+/* 원산지 */
+.tb1 .des , .tb1 .qty{font-size: 16px;}
+
 /* 수량 */
 .count{width: 34px; height: 22px;}
 
@@ -114,6 +117,7 @@ input:focus{outline: none;}
 .total > span:last-child{font-weight: 700;}
 
 /* 장바구니, 구매하기 버튼 */
+.buttons {display: flex;}
 .cart, .order {width: 184px; height: 35px; font-size: 16px; margin-right: 12px; border: none; color: #ffffff;}
 .cart {background-color: #bfbfbf;}
 .order {background-color: #558ed5;}
@@ -126,7 +130,7 @@ input:focus{outline: none;}
     margin-bottom: 8px;
     margin-top: 5px;
     border-bottom: 2px solid #D9D9D9;
- }
+}
 .detail_image {
     margin: 0 auto;
     width: 816px;

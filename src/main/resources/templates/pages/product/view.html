@@ -62,12 +62,12 @@
                         </tr>
                         <tr>
                             <td>
-                                <span style="font-size: 16px;">원산지 - 상세설명 참조</span>
+                                <span class="des">원산지 - 상세설명 참조</span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span style="font-size: 16px;">수량 </span>
+                                <span class="qty">수량 </span>
                                 <input type="number" class="count" value="1"/>
                             </td>
                         </tr>
@@ -79,8 +79,8 @@
                         </tr>
                     </table> <!-- .tb1-->
                     <div class="buttons">
-                        <button type="button" class="cart">장바구니</a>
-                            <button  type="button" class="order">구매하기</a>
+                        <button type="button" class="cart"><a th:href="@{/prod/cart}"> 장바구니</a></button>
+                            <button  type="button" class="order"><a th:href="@{/prod/cart/direct}"> 구매하기</a></button>
                     </div> <!-- .buttons -->
                 </div> <!-- .product_details -->
             </div> <!-- .product_info -->
