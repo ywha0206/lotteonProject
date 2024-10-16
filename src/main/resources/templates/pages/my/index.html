@@ -1,12 +1,12 @@
 <link rel="stylesheet" th:href="@{/css/my/my.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
-<th:block th:replace="~{pages/my/_fragment::modal}"></th:block>
+<th:block th:replace="layout/my/modal.html"></th:block>
 <main>
   <div id="my">
-    <th:block th:replace="~{pages/my/_fragment::aside}"></th:block>
+    <th:block th:replace="layout/my/aside.html"></th:block>
     <main>
-    <th:block th:replace="~{pages/my/_fragment::banner}"></th:block>
+      <th:block th:replace="layout/my/banner.html"></th:block>
     <section>
       <h3>최근 주문내역<a href="#">더보기 &gt; </a></h3>
       <article>
