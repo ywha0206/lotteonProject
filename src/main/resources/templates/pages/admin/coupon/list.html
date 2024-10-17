@@ -1,0 +1,183 @@
+<link rel="stylesheet" th:href="@{/css/admin/coupon/list.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/reset.css}">
+<header th:replace="layout/admin/header.html"></header>
+<main style="margin: 0 auto; margin-bottom: 50px">
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <div class="container">
+        <div class="header">
+            <span class="header-title">쿠폰목록</span>
+            <div class="header-right">
+                <span>HOME</span>
+                <span>></span>
+                <span>쿠폰관리</span>
+                <span>></span>
+                <span class="bold">쿠폰목록</span>
+            </div>
+        </div>
+
+        <div class="header-gubun"></div>
+
+        <section class="categoryProduct">
+            <form class="order-search">
+                <select>
+                    <option>쿠폰번호</option>
+                    <option>쿠폰명</option>
+                    <option>발급자</option>
+                </select>
+                <input type="text" placeholder="검색어입력">
+                <button type="submit">검색</button>
+            </form>
+            <table class="tb1">
+                <tr>
+                    <th>쿠폰번호</th>
+                    <th>쿠폰종류</th>
+                    <th>쿠폰명</th>
+                    <th>혜택</th>
+                    <th>사용기간</th>
+                    <th>발급자</th>
+                    <th>발급수</th>
+                    <th>사용수</th>
+                    <th>상태</th>
+                    <th>발급일</th>
+                    <th>관리</th>
+                </tr>
+                <tr>
+                    <td onclick="openCouponPopup(1)" style="text-decoration: underline; cursor:pointer;">10121111</td>
+                    <td>abc1</td>
+                    <td>김유신</td>
+                    <td>OOO</td>
+                    <td>2</td>
+                    <td>102,999</td>
+                    <td>신용카드</td>
+                    <td style="color: #00B050;">결제완료</td>
+                    <td>2024.10.16<br>00:00:00</td>
+                    <td onclick="openCouponPopup(2)" style="cursor:pointer">배송하기</td>
+                    <td>종료</td>
+                </tr>
+
+            </table>
+            <div class="page">
+                <a href="#">이전</a>
+                <a href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">다음</a>
+            </div>
+        </section>
+        <div class="green2"><button onclick="openCouponPopup(2)"  class="btn_green2">등록하기</button></div>
+        <div class="popup"></div>
+        <div class="popupbg"></div>
+    </div>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+<script>
+    const popup = document.querySelector('.popup')
+    const bg = document.querySelector('.popupbg')
+    function openCouponPopup(a) {
+        if(a===1){
+            popup.innerHTML = `
+            <div class="header">
+                <div class="title">쿠폰정보 <span style="color: white">1012000000</span></div>
+                <div onclick="closeShopPopup()" class="btn">X</div>
+            </div>
+            <div style="margin: 20px; margin-bottom: 30px;">
+                <table class="tb4">
+                    <tr>
+                        <th>쿠폰번호</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>발급처</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰종류</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰명</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>혜택</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>사용기간</th>
+                        <td>
+                            ㅁㄴㅇㅁㄴㅇ
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>유의사항</th>
+                        <td><textarea readonly>ddddd</textarea></td>
+                    </tr>
+                </table>
+                <div class="btns"><button>등록하기</button></div>
+            </div>
+            `
+        } else {
+            popup.innerHTML = `
+            <div class="header">
+                <div class="title">쿠폰등록 <span style="color: white">1012000000</span></div>
+                <div onclick="closeShopPopup()" class="btn">X</div>
+            </div>
+            <div style="margin: 20px; margin-bottom: 30px;">
+                <table class="tb4">
+                    <tr>
+                        <th>발급처</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰종류</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰명</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>기본주소</th>
+                        <td><input value="101200000"></td>
+                    </tr>
+                    <tr>
+                        <th>혜택</th>
+                        <td>
+                            <select>
+                                <option>1000원 할인</option>
+                                <option>2000원 할인</option>
+                                <option>3000원 할인</option>
+                                <option>10% 할인</option>
+                                <option>20% 할인</option>
+                                <option>50% 할인</option>
+                                <option>배송비 무료</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사용기간</th>
+                        <td>
+                            <input type="date"> ~ <input type="date">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>유의사항</th>
+                        <td><textarea readonly>ddddd</textarea></td>
+                    </tr>
+                </table>
+                <div class="btns"><button>등록하기</button></div>
+            </div>
+            `
+        }
+        popup.style.display = "block";
+        bg.style.display = "flex";
+    }
+
+    function closeShopPopup() {
+        popup.style.display = "none";
+        bg.style.display = "none";
+    }
+</script>
