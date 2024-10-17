@@ -1,6 +1,7 @@
 package com.lotteon.controller.controller;
 
 
+import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.service.term.TermsService;
 
@@ -32,12 +33,13 @@ public class AuthController {
     public String join() {
         return "pages/auth/join";
     }
-
+    
+    // 이용약관
     @GetMapping("/signup/{type}")
-    public String signUp(@PathVariable("type") String type, Model model) {
-        List<Terms> terms = termsService.selectTerms(type);
+    public String signUp(@PathVariable("type") String termsType, Model model) {
+        GetTermsResponseDto terms = termsService.selectTerms(termsType);
+        log.info(terms);
         model.addAttribute("terms", terms);
-
         return "pages/auth/signup";
     }
 
