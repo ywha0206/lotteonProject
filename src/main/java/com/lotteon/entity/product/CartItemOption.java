@@ -20,8 +20,6 @@ public class CartItemOption {
     @JoinColumn(name = "cart_item_id")
     private CartItem cartItem;
 
-    // 다대일 관계: ProductOption -> CartItemOption
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_option_id")
-    private ProductOption productOption;
+    @Column(name = "option_id")
+    private Long prodOptionId;
 }

@@ -20,7 +20,6 @@ public class OrderItemOption {
     @ToString.Exclude
     private OrderItem orderItem; // 소속 주문 항목
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_option_id", nullable = false)
-    private ProductOption productOption; // 선택된 옵션
+    @Column(name = "option_id")
+    private Long prodOptionId;
 }
