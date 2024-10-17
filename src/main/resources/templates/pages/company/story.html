@@ -2,7 +2,7 @@
 <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css}">
 <link th:href="@{https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap}" rel="stylesheet">
 <!-- AOS CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css}">
 
 <header th:replace="layout/company/header.html"></header>
 
@@ -11,6 +11,16 @@
     <div class="contentHead" data-aos="fade-down">
         <h1>롯데ON을 더 알고 싶다면!</h1>
         <p>우리의 다양한 이야기를 소개합니다</p>
+    </div>
+    <!-- Story Navigation (카테고리 네비게이션) -->
+    <div class="storyNav" data-aos="fade-up">
+        <a th:href="@{/company/story}" th:classappend="${storyCate == '' ? 'navOn' : ''}">전체보기</a>
+        <a th:href="@{/company/story(storyCate='culture')}" th:classappend="${storyCate == 'culture' ? 'navOn' : ''}">기업문화</a>
+        <a th:href="@{/company/story(storyCate='interview')}" th:classappend="${storyCate == 'interview' ? 'navOn' : ''}">인터뷰</a>
+        <a th:href="@{/company/story(storyCate='recruit')}" th:classappend="${storyCate == 'recruit' ? 'navOn' : ''}">채용</a>
+        <a th:href="@{/company/story(storyCate='lotteon')}" th:classappend="${storyCate == 'lotteon' ? 'navOn' : ''}">롯데ON</a>
+        <a th:href="@{/company/story(storyCate='report')}" th:classappend="${storyCate == 'report' ? 'navOn' : ''}">보도자료</a>
+        <a th:href="@{/company/story(storyCate='ESG')}" th:classappend="${storyCate == 'ESG' ? 'navOn' : ''}">ESG</a>
     </div>
 
     <!-- 카드 그리드 레이아웃 -->
@@ -131,17 +141,79 @@
                 <p>여름 휴가 준비는 ‘롯데’가 책임진다!</p>
             </div>
         </div>
+
+        <!-- 콘텐츠 더보기 버튼 -->
+        <div class="elementor-button-wrapper">
+            <a href="#" id="loadMore" class="elementor-button-link elementor-button" role="button">
+        <span class="elementor-button-content-wrapper">
+            <span class="elementor-button-text">콘텐츠 더보기 +</span>
+        </span>
+                <span class="e-load-more-spinner">
+            <i aria-hidden="true" class="fas fa-spinner"></i>
+        </span>
+            </a>
+        </div>
     </div>
 </main>
 
 <footer th:replace="layout/company/footer.html"></footer>
 
 <!-- AOS JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js}"></script>
 <script>
     // AOS 초기화
     AOS.init({
         duration: 1000, // 애니메이션 지속 시간
         once: true // 한 번만 애니메이션 실행
+    });
+
+    // 부드러운 스크롤
+    document.querySelectorAll('.nav-link').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // 스크롤 위치에 따라 네비게이션 링크 활성화
+    window.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        let currentSection = "";
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 60) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentSection}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // 콘텐츠 더보기 기능
+    document.getElementById('loadMore').addEventListener('click', function(e) {
+        e.preventDefault();
+        const hiddenCards = document.querySelectorAll('.card.hidden');
+
+        hiddenCards.forEach((card, index) => {
+            // 애니메이션 추가: 콘텐츠가 차례로 나타남
+            setTimeout(() => {
+                card.style.display = 'block';
+                card.classList.remove('hidden');
+            }, index * 200); // 0.2초 간격으로 표시
+        });
+
+        // 더보기 버튼 숨김 처리
+        this.style.display = 'none';
     });
 </script>

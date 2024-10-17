@@ -22,29 +22,8 @@ server:
     port: 8080
 spring:
     config :
-#        import :
-#            - optional:classpath:application-ec2.yml
-#            - classpath:application-local.yml
         import:
             - optional:classpath:application-local.yml
-            - classpath:application-ec2.yml
+            - optional:classpath:application-ec2.yml
 
 
-
-
-#    application:
-#        name: lotteon
-#        version: 0.0.1-SNAPSHOT
-#    cache:
-#        type: redis
-#    servlet:
-#        multipart:
-#            max-file-size: 10MB
-#            max-request-size: 10MB
-#    thymeleaf:
-#        cache: false
-#        check-template-location: true
-#        enabled: true
-#        mode: HTML
-#        prefix: classpath:/templates/
-#        suffix: .html
