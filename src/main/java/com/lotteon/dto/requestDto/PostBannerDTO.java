@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 
@@ -12,8 +13,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 public class PostBannerDTO {
-    private String bannerImg;
     private String bannerName;
+    private String bannerImg;
     private String bannerSize;
     private String bannerBg;
     private String bannerLink;
@@ -22,4 +23,6 @@ public class PostBannerDTO {
     private Timestamp bannerEdate;
     private Timestamp bannerStime;
     private Timestamp bannerEtime;
+
+    private MultipartFile bannerUpload;
 }
