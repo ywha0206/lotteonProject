@@ -47,8 +47,15 @@
             </div>
         </div>
         <div class="navi">
-            <li onclick="openMenu(event, 'menu6')">고객센터</li>
+            <li onclick="openMenu(event, 'menu6')">쿠폰관리</li>
             <div class="menues" id="menu6">
+                <a th:href="@{/admin/coupon/coupons}">- 쿠폰목록</a>
+                <a th:href="@{/admin/coupon/issuearances}">- 쿠폰발급신청현황</a>
+            </div>
+        </div>
+        <div class="navi">
+            <li onclick="openMenu(event, 'menu7')">고객센터</li>
+            <div class="menues" id="menu7">
                 <a th:href="@{/admin/cs/notices}">- 공지사항</a>
                 <a th:href="@{/admin/cs/faqs}">- 자주묻는질문</a>
                 <a th:href="@{/admin/cs/qnas}">- 문의하기</a>

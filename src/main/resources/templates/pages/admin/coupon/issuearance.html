@@ -1,0 +1,67 @@
+<link rel="stylesheet" th:href="@{/css/admin/coupon/list.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/reset.css}">
+<header th:replace="layout/admin/header.html"></header>
+<main style="margin: 0 auto; margin-bottom: 50px">
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <div class="container">
+        <div class="header">
+            <span class="header-title">쿠폰발급현황</span>
+            <div class="header-right">
+                <span>HOME</span>
+                <span>></span>
+                <span>쿠폰관리</span>
+                <span>></span>
+                <span class="bold">쿠폰발급현황</span>
+            </div>
+        </div>
+
+        <div class="header-gubun"></div>
+
+        <section class="categoryProduct">
+            <form class="order-search">
+                <select>
+                    <option>주문번호</option>
+                    <option>주문자</option>
+                    <option>주문자명</option>
+                </select>
+                <input type="text" placeholder="검색어입력">
+                <button type="submit">검색</button>
+            </form>
+            <table class="tb1">
+                <tr>
+                    <th>발급번호</th>
+                    <th>쿠폰번호</th>
+                    <th>쿠폰종류</th>
+                    <th>쿠폰명</th>
+                    <th>사용자</th>
+                    <th>상태</th>
+                    <th>사용일</th>
+                    <th>관리</th>
+                </tr>
+                <tr>
+                    <td onclick="openOrderPopup(1)" style="text-decoration: underline; cursor:pointer;">10121111</td>
+                    <td>abc1</td>
+                    <td>김유신</td>
+                    <td>OOO</td>
+                    <td>2</td>
+                    <td style="color: #00B050;">결제완료</td>
+                    <td>2024.10.16<br>00:00:00</td>
+                    <td onclick="openOrderPopup(2)" style="cursor:pointer">배송하기</td>
+                </tr>
+            </table>
+            <div class="page">
+                <a href="#">이전</a>
+                <a href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">다음</a>
+            </div>
+        </section>
+        <div class="popup"></div>
+        <div class="popupbg"></div>
+    </div>
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
