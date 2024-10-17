@@ -30,8 +30,8 @@ public class CartOrderController {
         System.out.println("컨트롤러접속");
         System.out.println(postCartDto);
         String result = cartService.insertCart(postCartDto);
-        System.out.println(result);
-        return "/";
+        //return "redirect:/pages/cart";
+        return null;
     }
 
     @GetMapping("/cart/direct")
