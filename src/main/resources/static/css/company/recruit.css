@@ -1,7 +1,8 @@
-/* 초기화 및 기본 설정 */
+ /* 초기화 및 기본 설정 */
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: 'Noto Sans', sans-serif;
 }
 
@@ -13,7 +14,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding-bottom: 40px;
 }
 
 /* Hero Banner */
@@ -45,7 +46,8 @@ body {
 
 .banner-text h1 {
     font-size: 3.5em;
-    font-weight: bold;
+    font-weight: 900;
+    letter-spacing: 2px;
     margin-bottom: 20px;
 }
 
@@ -55,14 +57,19 @@ body {
     color: white;
     padding: 12px 40px;
     font-size: 1.2em;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 1px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 845px;
 }
 
 .apply-btn:hover {
     background-color: #d11a16;
+    transform: scale(1.05);
 }
 
 /* Content Head */
@@ -74,15 +81,37 @@ body {
     text-align: center;
     margin-top: 100px;
     margin-bottom: 200px;
+    letter-spacing: 1px;
+}
+
+.content-head h2 {
+    font-weight: 900;
+    font-size: 1.8em;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.content-head p {
+    font-size: 1.3em;
+    color: #666;
+    font-weight: 600;
 }
 
 /* Company Intro */
-.company-intro {
-    text-align: center;
-    font-size: 1.3em;
-    margin-top: 40px;
-    margin-bottom: 60px;
-}
+ .company-intro {
+     text-align: center;
+     font-size: 1.6em; /* 폰트 크기 조정 */
+     font-weight: 700; /* 폰트 굵기 조정 */
+     letter-spacing: 1px; /* 글자 간격 조정 */
+     line-height: 1.8; /* 줄 간격을 늘려 가독성 향상 */
+     margin-top: 40px;
+     margin-bottom: 60px;
+     color: #333; /* 세련된 검정색 */
+ }
+ .company-intro p {
+     font-weight: 400; /* 본문 내용의 굵기를 살짝 줄여서 강조 */
+     color: #555; /* 텍스트 색상 약간 부드럽게 */
+ }
 
 /* Filters */
 .filters {
@@ -96,13 +125,15 @@ body {
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 1em;
 }
 
 /* Recruitment Cards */
 .recruit-table {
     display: flex;
     flex-direction: column;
-    gap: 30px; /* 상하 여백 추가 */
+    gap: 20px;
+    width: 100%;
 }
 
 .recruit-card {
@@ -110,47 +141,44 @@ body {
     justify-content: space-between;
     align-items: center;
     background-color: #fff;
-    padding: 30px; /* 상하 여백 추가 */
+    padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-    margin-bottom: 30px; /* 카드 간 상하 여백 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    width: 100%;
 }
 
 .recruit-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recruit-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .recruit-card h3 {
-    margin: 0;
-    font-size: 1.5em;
-    font-weight: bold;
+    font-size: 1.8em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
 }
 
 .recruit-card span {
     color: #666;
+    font-size: 1em;
 }
 
 .status {
-    font-size: 0.9em;
-    color: #ef2a23;
+    font-size: 1.1em;
     font-weight: bold;
-}
-
-.recruit-card button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    font-size: 1em;
-    font-weight: 600;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.recruit-card button:hover {
-    background-color: #555;
+    color: #ef2a23;
+    white-space: nowrap;
+    min-width: 100px;
+    text-align: right;
 }
 
 /* 반응형 스타일 */
@@ -183,5 +211,10 @@ body {
 
     .company-intro {
         font-size: 1.1em;
+    }
+
+    .status {
+        margin-top: 10px;
+        text-align: left;
     }
 }
