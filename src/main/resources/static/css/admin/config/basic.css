@@ -27,7 +27,7 @@
 
 .header-gubun {
     height: 3px;
-    background-image: url(/images/Vector.png);
+    background-image: url(../../../images/Vector.png);
     margin: 0 auto;
     margin-bottom: 30px;
 }
