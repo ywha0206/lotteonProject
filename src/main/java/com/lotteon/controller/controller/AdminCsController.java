@@ -40,7 +40,7 @@ public class AdminCsController {
 
     @GetMapping("/notices")
     public String notices(Model model) {
-        return "pages/admin/cs/notices";
+        return "pages/admin/cs/notice/list";
     }
 
     @GetMapping("/notice")
