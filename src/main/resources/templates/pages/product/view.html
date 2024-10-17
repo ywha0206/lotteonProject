@@ -30,7 +30,7 @@
                                 <td class="td_company">
                                     <span>상호명</span>
                                     <span>상품번호 : 111111</span>
-                                    <input type="hidden" value="상품번호" name="prodId">
+                                    <input type="hidden" value="1" name="prodId">
                                 </td>
                             </tr>
                             <tr>
@@ -69,31 +69,28 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select name="option1">
-                                        <option>사이즈 선택</option>
-                                        <option>S</option>
-                                        <option>M</option>
-                                        <option>L</option>
+                                    <select name="options">
+                                        <option value="1">S</option>
+                                        <option value="2">M</option>
+                                        <option value="3">L</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <select  name="option2">
-                                        <option>색상 선택</option>
-                                        <option>red</option>
-                                        <option>green</option>
-                                        <option>blue</option>
+                                    <select name="options">
+                                        <option value="4">red</option>
+                                        <option value="5">green</option>
+                                        <option value="6">blue</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <select name="option3">
-                                        <option>또 뭐 선택하등가</option>
-                                        <option>S</option>
-                                        <option>M</option>
-                                        <option>L</option>
+                                    <select name="options">
+                                        <option value="7">S</option>
+                                        <option value="8">M</option>
+                                        <option value="9">L</option>
                                     </select>
                                 </td>
                                 <td>
@@ -109,7 +106,7 @@
                             </tr>
                         </table> <!-- .tb1-->
                         <div class="buttons">
-                            <button type="button" class="cart"><a th:href="@{/prod/cart}"> 장바구니</a></button>
+                            <button type="submit" class="cart">장바구니</button>
                             <button  type="button" class="order"><a th:href="@{/prod/cart/direct}"> 구매하기</a></button>
                         </div> <!-- .buttons -->
                     </form>

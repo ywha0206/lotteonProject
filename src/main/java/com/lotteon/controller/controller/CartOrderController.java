@@ -26,7 +26,8 @@ public class CartOrderController {
 
     @PostMapping("/cart")
     public void cart(PostCartDto postCartDto){
-
+        System.out.println("컨트롤러접속");
+        System.out.println(postCartDto);
         ResponseEntity result = cartService.insertCart(postCartDto);
 
     }
