@@ -1,12 +1,12 @@
 spring:
   data:
     redis:
-      host: localhost
+      host: ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com
       port: 6379
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: 1234
-    url: jdbc:mysql://localhost:3306/lotte?useSSL=false&allowPublicKeyRetrieval=true
+    password: Alcls154*
+    url: jdbc:mysql://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:3306/lotte?useSSL=false&allowPublicKeyRetrieval=true
     username: lotteon
   devtools:
     livereload:
