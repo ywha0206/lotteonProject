@@ -3,15 +3,9 @@ package com.lotteon.service.product;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartDto;
 import com.lotteon.entity.member.Customer;
-import com.lotteon.entity.product.Cart;
-import com.lotteon.entity.product.CartItem;
-import com.lotteon.entity.product.CartItemOption;
-import com.lotteon.entity.product.Product;
+import com.lotteon.entity.product.*;
 import com.lotteon.repository.member.CustomerRepository;
-import com.lotteon.repository.product.CartItemOptionRepository;
-import com.lotteon.repository.product.CartItemRepository;
-import com.lotteon.repository.product.CartRepository;
-import com.lotteon.repository.product.ProductRepository;
+import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,40 +32,60 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final CartItemOptionRepository cartItemOptionRepository;
     private final ProductRepository productRepository;
-
+    private final ProductOptionRepository productOptionRepository;
 
     public String insertCart(PostCartDto postCartDto) {
-
-        try {
 
 //        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
 //                                                                .getAuthentication()
 //                                                                .getPrincipal();
 //
 //        //유저 조회, 없으면 던져
-//        long memId = Long.parseLong(auth.getUsername());
+//        long memberId = Long.parseLong(auth.getUsername());
 
-            long memberId = 1;
-            Optional<Customer> optCustomer = customerRepository.findByMemberId(memberId);
-                //.orElseThrow(() -> new RuntimeException("Customer not found"));
-            Customer customer = optCustomer.get();
-            long custId = customer.getId();
+        long memberId = 1;
+        Optional<Customer> optCustomer = customerRepository.findByMemberId(memberId);
+            //.orElseThrow(() -> new RuntimeException("Customer not found"));
+        Customer customer = optCustomer.get();
+        long custId = customer.getId();
+
+
         //장바구니 조회 없으면 생성
         Optional<Cart> optCart = cartRepository.findByCustId(custId);
 
-        Cart cart;
-        if (optCart.isPresent()) {
-            cart = optCart.get();
-        } else {
-            cart = Cart.builder().custId(custId).build();
+        if(!optCart.isPresent()) {
+            Cart cart = Cart.builder().custId(custId).build();
             cartRepository.save(cart);
         }
+        Cart cart = optCart.get();
+        log.info("장바구니 조회한거"+cart.toString());
+
+        long prodId = postCartDto.getProdId();
+
+        //상품 조회하고 상품옵션 조회해서
+        Optional<Product> optProduct = productRepository.findById(prodId);//엥?여기서 익셉션으로 넘어감
+
+        Product product = optProduct.get();
+        double total = product.getProdPrice() * postCartDto.getQuantity();
+
+        Optional<ProductOption> optProdOption = productOptionRepository.findByProduct(product);
+
+        CartItem cartItem = CartItem.builder()
+                                    .cart(optCart.get())
+                                    .product(product)
+                                    .quantity(postCartDto.getQuantity())
+                                    .productOption(optProdOption.get())
+                                    .totalPrice(total)
+                                    .build();
+
+        cartItemRepository.save(cartItem);
+
 //============================================================================================================
 //        //장바구니 아이템 있으면 수정 없으면 추가
-        CartItem cartItem ;
-        Product prod = productRepository.findById(postCartDto.getProdId()).orElse(null);
-        List<CartItem> optCartItem = cartItemRepository.findAllByCartAndProduct(cart, prod);
-            System.out.println(optCartItem);
+//        CartItem cartItem ;
+//        Product prod = productRepository.findById(postCartDto.getProdId()).orElse(null);
+//        List<CartItem> optCartItem = cartItemRepository.findAllByCartAndProduct(cart, prod);
+//            System.out.println(optCartItem);
 //        if (optCartItem.isPresent()) {
 //            cartItem = optCartItem.get();
 //            int dtoQuan = postCartDto.getQuantity();
@@ -104,10 +118,6 @@ public class CartService {
 
 
         return null;
-
-        }catch (Exception e) {
-            return null;
-        }
 
     }
 }

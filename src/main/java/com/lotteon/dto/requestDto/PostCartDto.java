@@ -13,7 +13,6 @@ import java.util.List;
 @ToString
 public class PostCartDto {
 
-    private long id;
     private long custId;
     private long prodId;
     private int quantity;
