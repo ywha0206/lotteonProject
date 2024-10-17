@@ -1,8 +1,11 @@
+<!-- 타임리프 문법으로 변환된 HTML -->
 
+<!-- AOS CSS 및 타임리프 문법 적용 -->
 <link rel="stylesheet" th:href="@{/css/company/culture.css}">
 <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css}">
 <link th:href="@{https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap}" rel="stylesheet">
 <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css}">
+
 <header th:replace="layout/company/header.html"></header>
 
 <main class="container">
@@ -18,6 +21,7 @@
     </div>
     <div class="header-gubun"></div>
 
+    <!-- 첫 번째 섹션 -->
     <section class="s1" data-aos="fade-up">
         <article class="content">
             <p class="highlight-title">롯데홈쇼핑은 기존 패러다임을 뛰어넘어 <br> '게임의 규칙'을 바꾸어 왔습니다.</p>
@@ -29,12 +33,12 @@
         </article>
     </section>
 
+    <!-- 주체적으로 일하는 사람 섹션 -->
     <section class="s3">
-        <h3 data-aos="fade-up">
-            주체적으로 일하는 '사람'
-        </h3>
+        <h3 data-aos="fade-up">주체적으로 일하는 '사람'</h3>
+
         <article class="a1" data-aos="fade-right">
-            <img src="/images/05_함께성장.png" alt="">
+            <img th:src="@{/images/05_함께성장.png}" alt="">
             <div class="con2">
                 <p class="h3">직원과 회사는 <em class="border">Partner</em> 입니다.</p>
                 <p>좋은 기업일수록 회사와 직원의 관계는 Partnership 에 가깝습니다.<br>
@@ -45,7 +49,7 @@
         </article>
 
         <article class="a1" data-aos="fade-left">
-            <img src="/images/06_clipdrop-enhance.png" alt="">
+            <img th:src="@{/images/06_clipdrop-enhance.png}" alt="">
             <div class="con2">
                 <p class="h3">모두가 <em class="border">사업가</em> 처럼 일합니다.</p>
                 <p>자신의 모든 것을 걸고 일에 임하는 사업가는 학습에 대한 열의,<br>
@@ -56,7 +60,7 @@
         </article>
 
         <article class="a1" data-aos="fade-right">
-            <img src="/images/teamwork-3213924_960_720.webp" alt="">
+            <img th:src="@{/images/teamwork-3213924_960_720.webp}" alt="">
             <div class="con2">
                 <p class="h3">모두가 리더이고 <em class="border">스스로</em> 결정합니다.</p>
                 <p>임원과 리더는 목표와 방향만 제시합니다.<br>
@@ -67,12 +71,12 @@
         </article>
     </section>
 
+    <!-- 효율적으로 일하는 문화 섹션 -->
     <section class="s3">
-        <h3 data-aos="fade-up">
-            효율적으로 일하는 ‘문화’
-        </h3>
+        <h3 data-aos="fade-up">효율적으로 일하는 ‘문화’</h3>
+
         <article class="a1" data-aos="fade-right">
-            <img src="/images/토론하는이미지.jpg" alt="">
+            <img th:src="@{/images/토론하는이미지.jpg}" alt="">
             <div class="con2">
                 <em class="border">수평적 조직</em> 을 추구합니다.</p>
                 <p>부서장은 ‘리더’, 그 외 모든 구성원은 ‘님’으로 부릅니다.<br>
@@ -90,11 +94,11 @@
                     리더의 승인을 받지 않아도 공기처럼 자유롭게 정보를<br>
                     공유할 수 있는 소통의 문화를 추구합니다.</p>
             </div>
-            <img src="/images/img_culture_list_5.jpg" alt="">
+            <img th:src="@{/images/img_culture_list_5.jpg}" alt="">
         </article>
 
         <article class="a1" data-aos="fade-right">
-            <img src="/images/img_culture_list_6.jpg" alt="">
+            <img th:src="@{/images/img_culture_list_6.jpg}" alt="">
             <div class="con2">
                 <p class="h3">쓸데없는 격식은 모두 <em class="border">내려놓았습니다.</em></p>
                 <p>편한 옷 입고, 편하게 일합니다.<br>
@@ -111,22 +115,23 @@
                     누구나 승인 없이 자유롭게 휴가를 사용하고,<br>
                     5년마다 Refresh 할 수 있는 안식월 제도를 운영하고 있습니다.</p>
             </div>
-            <img src="/images/img_culture_list_7.jpg" alt="">
+            <img th:src="@{/images/img_culture_list_7.jpg}" alt="">
         </article>
     </section>
+
     <!-- 배너 섹션 -->
     <section class="job img" data-aos="fade-in">
         <div class="service-list">
             <div class="service-item">
-                <img src="/images/기업문화_banner.png" alt="LotteON 기업문화">
+                <img th:src="@{/images/기업문화_banner.png}" alt="LotteON 기업문화">
             </div>
         </div>
     </section>
 </main>
 
-<script
-        src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js}"></script>
 <script>
     AOS.init();
 </script>
+
 <footer th:replace="layout/company/footer.html"></footer>

@@ -1,6 +1,5 @@
 <!-- AOS CSS 추가 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-
+<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css}">
 <link rel="stylesheet" th:href="@{/css/company/recruit.css}">
 <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css}">
 <link th:href="@{https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap}" rel="stylesheet">
@@ -9,7 +8,7 @@
 
 <!-- 배너 섹션 -->
 <section class="hero-banner" style="margin-bottom: 30px">
-    <img src="/images/optimize.webp" alt="LotteON Banner" class="banner-img" data-aos="fade-up">
+    <img th:src="@{/images/optimize.webp}" alt="LotteON Banner" class="banner-img" data-aos="fade-up">
     <div class="banner-text" data-aos="fade-right">
         <h1>Join LOTTE ON</h1>
         <button class="apply-btn" data-aos="zoom-in">상시채용</button>
@@ -45,21 +44,21 @@
             <input type="text" placeholder="키워드 검색">
         </div>
         <div class="recruit-table" data-aos="fade-up">
-            <a href="#" class="recruit-card" data-aos="flip-left">
+            <a th:href="@{/apply/beauty-md}" class="recruit-card" data-aos="flip-left">
                 <div class="recruit-info">
                     <h3>뷰티 (백화점, 명품) MD</h3>
                     <span>영업 | MD | 경력 6~12년 | 정규직 | 롯데커머스 삼성오피스</span>
                 </div>
                 <div class="status">상시채용</div>
             </a>
-            <a href="#" class="recruit-card" data-aos="flip-left">
+            <a th:href="@{/apply/performance-marketer}" class="recruit-card" data-aos="flip-left">
                 <div class="recruit-info">
                     <h3>퍼포먼스마케터 (Paid 광고)</h3>
                     <span>마케팅 | 경력 4~12년 | 정규직 | 롯데커머스 삼성오피스</span>
                 </div>
                 <div class="status">상시 채용</div>
             </a>
-            <a href="#" class="recruit-card" data-aos="flip-left">
+            <a th:href="@{/apply/it-recruit}" class="recruit-card" data-aos="flip-left">
                 <div class="recruit-info">
                     <h3>IT 인재 영입(신입)</h3>
                     <span>IT | 경력 1~2년 | 정규직 | 롯데월드타워</span>
@@ -73,7 +72,7 @@
 <footer th:replace="layout/company/footer.html"></footer>
 
 <!-- AOS 및 이벤트 스크립트 추가 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js}"></script>
 <script>
     // AOS 초기화
     AOS.init();
@@ -82,6 +81,6 @@
     document.querySelector('.apply-btn').addEventListener('click', function() {
         alert('상시 채용 페이지로 이동합니다!');
         // URL로 리디렉션
-        window.location.href = '/apply';
+        window.location.href = /*[[@{/apply}]]*/ '/apply';
     });
 </script>
