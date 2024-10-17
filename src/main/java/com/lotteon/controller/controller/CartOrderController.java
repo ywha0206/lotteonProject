@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -25,11 +26,12 @@ public class CartOrderController {
     }
 
     @PostMapping("/cart")
-    public void cart(PostCartDto postCartDto){
+    public String cart(PostCartDto postCartDto){
         System.out.println("컨트롤러접속");
         System.out.println(postCartDto);
-        ResponseEntity result = cartService.insertCart(postCartDto);
-
+        String result = cartService.insertCart(postCartDto);
+        System.out.println(result);
+        return "/";
     }
 
     @GetMapping("/cart/direct")
