@@ -39,7 +39,6 @@ out/
 
 
 src/main/resources/application-local.yml
-
-
+src/main/resources/application-ec2.yml
 
 
