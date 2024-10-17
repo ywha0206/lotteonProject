@@ -33,10 +33,4 @@ public class ProductOption {
     @Column(name = "prod_option_stock")
     private int stock;
 
-    @OneToMany(mappedBy = "productOption", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    @ToString.Exclude
-    private List<CartItemOption> cartItemOptions = new ArrayList<>();
-
-
 }
