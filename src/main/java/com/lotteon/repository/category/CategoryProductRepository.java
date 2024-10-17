@@ -9,4 +9,10 @@ public interface CategoryProductRepository extends JpaRepository<CategoryProduct
     List<CategoryProduct> findAllByParent(CategoryProduct categoryProduct);
 
     List<CategoryProduct> findByParent(CategoryProduct categoryProduct);
+
+    List<CategoryProduct> findAllByCategoryLevel(int i);
+
+    List<CategoryProduct> findAllByCategoryId(Long id);
+
+    CategoryProduct findByCategoryId(Long id);
 }

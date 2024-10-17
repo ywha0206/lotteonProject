@@ -1,5 +1,6 @@
 package com.lotteon.entity.category;
 
+import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.TestResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,12 +18,12 @@ import java.util.List;
 public class CategoryProduct {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    private Long category_id;
+    private Long categoryId;
     @Column(name = "category_name")
-    private String category_name;
+    private String categoryName;
 
     @Column(name = "category_level")
-    private int category_level;
+    private int categoryLevel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_id")
@@ -39,9 +40,18 @@ public class CategoryProduct {
 
     public TestResponseDto toDto() {
         return TestResponseDto.builder()
-                .name(category_name)
-                .level(category_level)
-                .parent(parent.getCategory_name())
+                .name(categoryName)
+                .level(categoryLevel)
+                .parent(parent.getCategoryName())
                 .build();
     }
+
+    public GetCategoryDto toGetCategoryDto(){
+        return GetCategoryDto.builder()
+                .name(categoryName)
+                .id(categoryId)
+                .build();
+    }
+
+
 }
