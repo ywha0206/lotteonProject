@@ -35,6 +35,10 @@ public class CompanyController {
         return "pages/company/story";
     }
 
+    @GetMapping("/media")
+    public String media(Model model) {
+        return "pages/company/media";
+    }
 
 
 }
