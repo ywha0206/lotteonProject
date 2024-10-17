@@ -7,7 +7,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     password: Alcls154*
-    url: jdbc:mysql://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:3306/lotte?useSSL=false&allowPublicKeyRetrieval=true
+
+    url: jdbc:mysql://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:3306/lotteon?useSSL=false&allowPublicKeyRetrieval=true
 
     username: lotteon
   devtools:
