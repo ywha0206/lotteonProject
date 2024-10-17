@@ -11,22 +11,11 @@
 
             <aside id="aside">
                 <nav id="menu" class="menu">
-                    <ul>
+                    <ul th:each="cate1 : ${category1}">
                         <li class="dep1">
                             <a href="#" class="m">
-                                <span onclick="openCategory()" class="d1_tit">패션 · 의류 · 뷰티</span>
+                                <span onclick="openCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}" class="d1_tit">패션 · 의류 · 뷰티</span>
                             </a></li>
-                        <li class="dep1"><a href="#" class="m">
-                            <span  onclick="openCategory()" class="d1_tit">가전 · 디지털</span>
-
-                        </a></li>
-                        <li class="dep1"><a href="#" class="m">
-                            <span  onclick="openCategory()" class="d1_tit">식품 · 생필품</span>
-
-                        </a></li>
-                        <li class="dep1"><a href="#" class="m last_bor">
-                            <span  onclick="openCategory()" class="d1_tit">홈 · 문구 · 취미</span>
-                        </a></li>
                     </ul>
                     <ul>
 
@@ -34,52 +23,16 @@
                             <a href="#">
                                 <div class="dep2">
                                     <button onclick="closePopupCategory()">X</button>
-                                    <ul class="cf flex">
-                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit cf">여성패션
-                                            <ul class="dep3 cf">
-                                                <li><a href="#" target="_blank">여성패션1</a></li>
-                                                <li><a href="#" target="_blank">여성패션2</a></li>
-                                                <li><a href="#" target="_blank">여성패션3</a></li>
-                                                <li><a href="#" target="_blank">여성패션4</a></li>
-                                                <li><a href="#" target="_blank">여성패션5</a></li>
-                                            </ul>
-                                        </a></li>
-                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit">남성패션
-                                            <ul class="dep3">
-                                                <li><a href="#" target="_blank">남성패션1</a></li>
-                                                <li><a href="#" target="_blank">남성패션2</a></li>
-                                                <li><a href="#" target="_blank">남성패션3</a></li>
-                                                <li><a href="#" target="_blank">남성패션4</a></li>
-                                                <li><a href="#" target="_blank">남성패션5</a></li>
-                                            </ul>
-                                        </a></li>
-                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit">식품
-                                            <ul class="dep3">
-                                                <li><a href="#" target="_blank">식품1</a></li>
-                                                <li><a href="#" target="_blank">식품2</a></li>
-                                                <li><a href="#" target="_blank">식품3</a></li>
-                                                <li><a href="#" target="_blank">식품4</a></li>
-                                                <li><a href="#" target="_blank">식품5</a></li>
-                                            </ul>
-                                        </a></li>
-                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit">생활/건강
-                                            <ul class="dep3">
-                                                <li><a href="#" target="_blank">생활/건강1</a></li>
-                                                <li><a href="#" target="_blank">생활/건강2</a></li>
-                                                <li><a href="#" target="_blank">생활/건강3</a></li>
-                                                <li><a href="#" target="_blank">생활/건강4</a></li>
-                                                <li><a href="#" target="_blank">생활/건강5</a></li>
-                                            </ul>
-                                        </a></li>
-                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit">유아동
-                                            <ul class="dep3">
-                                                <li><a href="#" target="_blank">유아동1</a></li>
-                                                <li><a href="#" target="_blank">유아동2</a></li>
-                                                <li><a href="#" target="_blank">유아동3</a></li>
-                                                <li><a href="#" target="_blank">유아동4</a></li>
-                                                <li><a href="#" target="_blank">유아동5</a></li>
-                                            </ul>
-                                        </a></li>
+                                    <ul class="cf flex" id="data-response">
+<!--                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit cf">여성패션-->
+<!--                                            <ul class="dep3 cf">-->
+<!--                                                <li><a href="#" target="_blank">여성패션1</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션2</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션3</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션4</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션5</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </a></li>-->
                                     </ul>
                                 </div>
                             </a>

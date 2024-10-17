@@ -1,20 +1,4 @@
-file:
-    upload-dir: /home/ubuntu/upload
-logging:
-    file:
-        name: /logs/lotteon.log
-    level:
-        org:
-            hibernate:
-                orm:
-                    jdbc:
-                        bind: info
-                sql: debug
-            mybatis: error
-            springframework:
-                security: debug
-                web: error
-        root: info
+
 server:
     error:
         whitelabel:
