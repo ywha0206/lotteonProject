@@ -153,7 +153,7 @@
     width: 735.53px;
     background-color: white;
     z-index: 1000;
-    height: 584px;
+    height: auto;
 }
 
 .popup .header {
@@ -208,7 +208,8 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 80px;
+    margin-top: 50px;
+    margin-bottom: 0 !important;
 }
 
 .popup .submit-btn {
@@ -253,4 +254,8 @@
     border: 1px solid #BFBFBF;
     outline: none;
     padding-left: 10px;
+}
+.popup input[type=file]{
+    border: none;
+    padding: 3px 0;
 }
