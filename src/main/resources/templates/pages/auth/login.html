@@ -3,7 +3,7 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <main>
-    <div class="container">
+    <div id="lsh-container">
         <h3 class="header-title">로그인</h3>
         <div class="header-gubun"></div>
         <div class="main">
@@ -18,7 +18,7 @@
                         </div><!-- inp-pwd -->
                     </div>
                     <div class="top-right">
-                        <button type="submit" class="login-btn"><a th:href="@{/auth/login}">로그인</a></button>
+                        <button style="border :none;" type="submit" class="login-btn">로그인</button>
                     </div>
                 </form>
                 <div class="inp-bottom">
@@ -38,18 +38,12 @@
                 </div>
             </div>
             <div class="main-img">
-                <img th:src="@{/images/x-img.png}" alt="" class="login-banner">
+                <img th:src="@{/images/login-banner.png}" alt="" class="login-banner">
             </div>
         </div>
         <div class="header-gubun-bottom"></div>
         <div class="award-logos">
-            <div class="logo logo1"><img th:src="@{/images/x-img.png}" alt=""></div>
-            <div class="logo logo2"><img th:src="@{/images/x-img.png}" alt=""></div>
-            <div class="logo logo3"><img th:src="@{/images/x-img.png}" alt=""></div>
-            <div class="logo logo4"><img th:src="@{/images/x-img.png}" alt=""></div>
-            <div class="logo logo5"><img th:src="@{/images/x-img.png}" alt=""></div>
-            <div class="logo logo6"><img th:src="@{/images/x-img.png}" alt=""></div>
-            <div class="logo logo7"><img th:src="@{/images/x-img.png}" alt=""></div>
+            <div style="display: flex; justify-content: center; width: 1200px; margin: 0 auto;" class="logo logo1"><img th:src="@{/images/award-logo.png}" style="width: 700px ;height: 100px" alt=""></div>
         </div>
     </div>
 </main>

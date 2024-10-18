@@ -14,8 +14,8 @@
                 <!-- 이용약관 -->
                 <textarea readonly class="content" th:text="${terms.termsContent}"></textarea>
                 <div class="essential-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
+                    <label style="font-size: 16px; letter-spacing: -0.5px" for="">
+                        <input style="margin-top: 10px;" type="checkbox"> 동의하기
                     </label>
                 </div>
             </div>
@@ -27,8 +27,8 @@
                 </div>
                 <textarea readonly class="content"></textarea>
                 <div class="essential-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
+                    <label style="font-size: 16px; letter-spacing: -0.5px" for="">
+                        <input style="margin-top: 10px;" type="checkbox"> 동의하기
                     </label>
                 </div>
             </div>
@@ -39,8 +39,8 @@
                 </div>
                 <textarea readonly class="content"></textarea>
                 <div class="essential-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
+                    <label style="font-size: 16px; letter-spacing: -0.5px" for="">
+                        <input style="margin-top: 10px;" type="checkbox"> 동의하기
                     </label>
                 </div>
             </div>
@@ -51,14 +51,17 @@
                 </div>
                 <textarea readonly class="content"></textarea>
                 <div class="not-required-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
+                    <label style="font-size: 16px; letter-spacing: -0.5px" for="">
+                        <input style="margin-top: 10px;" type="checkbox"> 동의하기
                     </label>
                 </div>
-            </div>
 
-            <a th:href="@{/auth/customer}" disabled id="next-btn" class="next-btn">동의하기</a>
+            </div>
+            <div class="signup">
+                <a th:href="@{/auth/customer}" disabled id="next-btn" class="btnSignUp next-btn">동의하기</a>
+            </div>
         </div>
+
     </form>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
