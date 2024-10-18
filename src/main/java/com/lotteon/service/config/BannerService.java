@@ -21,8 +21,8 @@ public class BannerService {
     public Banner insert(PostBannerDTO bannerDTO) {
         log.info(bannerDTO.toString());
         // 이미지 업로드 및 경로 설정
-        if (bannerDTO.getBannerUpload() != null && !bannerDTO.getBannerUpload().isEmpty()) {
-            String uploadedImagePath = imageService.uploadImage(bannerDTO.getBannerUpload());
+        if (bannerDTO.getUploadFile() != null && !bannerDTO.getUploadFile().isEmpty()) {
+            String uploadedImagePath = imageService.uploadImage(bannerDTO.getUploadFile());
             if (uploadedImagePath != null) {
                 bannerDTO.setBannerImg(uploadedImagePath);
             } else {

@@ -170,7 +170,7 @@
                         </td>
                         <td>1</td>
                         <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
+                            <img th:src="@{/../../images/x-img2.png}" alt="">
                         </td>
                         <td class="td-info">
                             <div class="name">특정배너명</div>
@@ -200,62 +200,63 @@
                     <div class="title">배너등록</div>
                     <div onclick="closeBanner()" class="btn">X</div>
                 </div>
-                <form id="bannerForm">
+                <form id="bannerForm" method="post">
                     <table class="tb2">
                         <tr>
                             <th>배너이름</th>
                             <td>
-                                <input class="inp" type="text" name="bannerName" placeholder="배너명 입력">
+                                <input class="inp" type="text" name="bName" placeholder="배너명 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배너 이미지</th>
                             <td>
-                                <input class="inp" type="file" name="bannerUpload">
+                                <input class="inp" type="file" name="file">
                             </td>
                         </tr>
                         <tr>
                             <th>배너크기</th>
                             <td>
-                                <input class="inp" type="text" name="bannerSize" placeholder="배너크기 입력">
+                                <input class="inp" type="text" name="bSize" placeholder="배너크기 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배경색</th>
                             <td>
-                                <input class="short" type="color" name="bannerBg" placeholder="배경색 입력">
+                                <input class="short" type="color" name="bBg" placeholder="배경색 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배너 링크</th>
                             <td>
-                                <input class="inp" type="text" name="bannerLink" placeholder="배너와 연결될 링크 입력">
+                                <input class="inp" type="text" name="bLink" placeholder="배너와 연결될 링크 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배너위치</th>
                             <td>
-                                <select class="place short" name="bannerLocation">
+                                <select class="place short" name="bLocation">
                                     <option value="1">MAIN1</option>
                                     <option value="2">MAIN2</option>
                                     <option value="3">PRODUCT1</option>
                                     <option value="4">MEMBER1</option>
                                     <option value="5">MY1</option>
                                 </select>
+                                <span id="locaInfo">메인화면 최상단에 표시되는 배너입니다.</span>
                             </td>
                         </tr>
                         <tr>
                             <th>노출날짜</th>
                             <td>
-                                <input id="start-date" type="date" name="bannerSdate"> ~
-                                <input id="end-date" type="date" name="bannerEdate">
+                                <input id="start-date" type="date" name="bSdate"> ~
+                                <input id="end-date" type="date" name="bEdate">
                             </td>
                         </tr>
                         <tr>
                             <th>노출시간</th>
                             <td>
-                                <input id="start-time" type="time" data-placeholder="시 : 분" name="bannerStime"> ~
-                                <input id="end-time" type="time" data-placeholder="시 : 분" name="bannerEtime">
+                                <input id="start-time" type="time" data-placeholder="시 : 분" name="bStime"> ~
+                                <input id="end-time" type="time" data-placeholder="시 : 분" name="bEtime">
                             </td>
                         </tr>
                     </table>
@@ -308,11 +309,21 @@
             event.target.classList.add('active');
             document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText    
         }
-
-        const imgInput = document.getElementsByName('bannerUpload')[0];
-        const imgSize = document.getElementsByName('bannerSize')[0];
+        function info() {
+            var loca = selectBox.value;
+            console.log("location changed " + loca);
+            if(loca<=1){locaInfo.textContent='메인화면 최상단에 표시되는 배너입니다.'}
+            else if(loca<=2){locaInfo.textContent='메인화면 슬라이드에 표시되는 배너입니다.'}
+            else if(loca<=3){locaInfo.textContent="상품 상세화면에 표시되는 배너입니다."}
+            else if(loca<=4){locaInfo.textContent="로그인 화면에 표시되는 배너입니다."}
+            else if(loca<=5){locaInfo.textContent="마이페이지 상단에 표시되는 배너입니다."}
+        }
+        const imgInput = document.getElementsByName('file')[0];
+        const imgSize = document.getElementsByName('bSize')[0];
         var imgRatio = 0;
         const option = document.getElementsByTagName('option');
+        const selectBox = document.getElementsByTagName('select')[0];
+        const locaInfo = document.getElementById('locaInfo');
 
         // 파일 업로드 input의 change 이벤트를 감지.
         imgInput.addEventListener('change', function() {
@@ -320,13 +331,11 @@
 
             // 파일의 크기를 체크합니다.
             if (file.size > 500 * 1024) {
-                // 파일 크기가 500KB를 넘는 경우 처리합니다.
                 alert('이미지 파일의 크기는 최대 500KB 이하이어야 합니다.');
                 imgInput.value = '';
                 imgSize.value = '';
                 return;
             }
-
             var reader = new FileReader();
 
             reader.onload = function(e) {
@@ -337,23 +346,23 @@
 
                     imgRatio = width/height;
                     imgSize.value = width + "px × " + height + "px";
+
                     option[0].disabled = false;
                     option[1].disabled = false;
                     option[2].disabled = false;
                     option[3].disabled = false;
                     option[4].disabled = false;
-                    if(imgRatio<2){
-                        option[3].selected = true;
-                    }else if(imgRatio<3.3){
-                        option[1].selected = true;
-                    }else if(imgRatio>10){
-                        option[0].selected = true;
-                    }else{
+
+                    if(imgRatio<2){option[3].selected = true;}
+                    else if(imgRatio<3.3){option[1].selected = true;}
+                    else if(imgRatio>10){option[0].selected = true;}
+                    else{
                         option[2].selected = true;
                         option[0].disabled = true;
                         option[1].disabled = true;
                         option[3].disabled = true;
                     }
+                    info();
                 };
                 // 이미지 객체에 파일 데이터를 설정하고 로드.
                 image.src = e.target.result;
@@ -361,54 +370,85 @@
             reader.readAsDataURL(imgInput.files[0]);
         });
 
-        const f = document.getElementById('bannerForm');
+        const form = document.getElementById('bannerForm');
+        const button = document.getElementsByClassName('submit-btn')[0]; // 버튼을 가져오는 예시
 
-        f.addEventListener("submit", function (e) {
-            e.preventDefault();
-            // 클릭 후 비활성화로 중복 클릭 방지
-            const button = f.querySelector('button[type="submit"]');
-            button.disabled = true;
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // 기본 폼 제출 방지
 
-            const formData = new FormData(this);
+            const jsonData = {
+                "bannerName" : form.bName.value,
+                "bannerImg" : null,
+                "bannerSize" : form.bSize.value,
+                "bannerBg" : form.bBg.value,
+                "bannerLink" : form.bLink.value,
+                "bannerLocation" : form.bLocation.value,
+                "bannerSdate" : form.bSdate.value,
+                "bannerEdate" : form.bEdate.value,
+                "bannerStime" : form.bStime.value,
+                "bannerEtime" : form.bEtime.value
+            }
 
-            fetch('/admin/config/banner', {
+            const formData = new FormData();
+            const fileInput = document.querySelector('input[name="file"]').files;
+            formData.append("bannerDTO",JSON.stringify(jsonData));
+            formData.append("file",fileInput[0]);
+            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
+
+            button.disabled = true; // 버튼 비활성화 (fetch 중복 방지)
+
+            fetch('/admin/config/banners', {
                 method: 'POST',
                 body: formData
             })
-                .then(resp => resp.json())
-                .then(data => {
-                    console.log(data);
-                    const tab = data.bannerLocation;
-                     if(tab>0){
-                         alert('성공적으로 등록되었습니다.');
-                         closeBanner();
+                .then(resp => {
+                    console.log(resp);
+                    if (!resp.ok) {
+                        return resp.json().then(err => {
 
-                         const allBanners = document.querySelectorAll('.section > div');
-                         allBanners.forEach(function(banner) {
-                             banner.classList.remove('active');
-                         });
-                         const Banner = document.getElementsByClassName('tab'+tab)[0];
-
-                         Banner.classList.add('active');
-                         document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText
-
-                         window.scrollTo({ // 페이지 상단으로 스크롤 이동
-                             top: 0,
-                             behavior: 'smooth' // 부드럽게 스크롤 이동
-                         });
-
-                         f.reset();
-                     }
+                            console.error('Server responded with an error:', err); // 추가된 로그
+                            // 오류 응답을 자세히 로그에 남김
+                            throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
+                        });
+                    }
+                    return resp.json();
                 })
-                .catch(err =>{
-                    console.error(err);
+                .then(data => {
+                    console.log('Response Data:', data);
+
+                    const tab = data.bannerLocation;
+                    if (tab > 0) {
+                        alert('성공적으로 등록되었습니다.');
+                        closeBanner();
+
+                        const allBanners = document.querySelectorAll('.section > div');
+                        allBanners.forEach(function (banner) {
+                            banner.classList.remove('active');
+                        });
+
+                        const Banner = document.getElementsByClassName('tab' + tab)[0];
+                        Banner.classList.add('active');
+
+                        document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText;
+
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // 부드럽게 스크롤 이동
+                        });
+                        form.reset(); // 폼 초기화
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('배너 등록 중 오류가 발생했습니다. 다시 시도해 주세요.');
                 })
                 .finally(() => {
                     // fetch 완료 후 버튼 다시 활성화
                     button.disabled = false;
                 });
-
         });
+
+        selectBox.addEventListener('change',info());
 
     </script>
 </body>
