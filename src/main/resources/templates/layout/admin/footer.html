@@ -1,9 +1,14 @@
-
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
     <link rel="stylesheet" th:href="@{/css/layout/admin/footer.css}">
 
     <footer>
         <p>Copyright ©LotteON.co.kr All rights reserved.</p>
-        <p th:text="${appName} + ${version}"></p>
+        <p th:text="${appName} ${version}"></p>
     </footer>
 </body>
     </html>
