@@ -1,6 +1,5 @@
 <link rel="stylesheet" th:href="@{/css/admin/config/banner.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
-<body>
     <header th:replace="layout/admin/header.html"></header>
     <main>
         <aside th:replace="layout/admin/aside.html"></aside>
@@ -206,37 +205,37 @@
                         <tr>
                             <th>배너이름</th>
                             <td>
-                                <input class="inp" type="text" name="name" placeholder="배너명 입력">
+                                <input class="inp" type="text" name="bannerName" placeholder="배너명 입력">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>배너 이미지</th>
+                            <td>
+                                <input class="inp" type="file" name="bannerUpload">
                             </td>
                         </tr>
                         <tr>
                             <th>배너크기</th>
                             <td>
-                                <input class="inp" type="text" name="size" placeholder="배너크기 입력">
+                                <input class="inp" type="text" name="bannerSize" placeholder="배너크기 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배경색</th>
                             <td>
-                                <input class="short" type="color" name="bg" placeholder="배경색 입력">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>배너 이미지 주소</th>
-                            <td>
-                                <input class="inp" type="text" name="img" placeholder="배너 이미지 링크 입력">
+                                <input class="short" type="color" name="bannerBg" placeholder="배경색 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배너 링크</th>
                             <td>
-                                <input class="inp" type="text" name="link" placeholder="배너와 연결될 링크 입력">
+                                <input class="inp" type="text" name="bannerLink" placeholder="배너와 연결될 링크 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배너위치</th>
                             <td>
-                                <select class="place short" name="location">
+                                <select class="place short" name="bannerLocation">
                                     <option value="1">MAIN1</option>
                                     <option value="2">MAIN2</option>
                                     <option value="3">PRODUCT1</option>
@@ -248,15 +247,15 @@
                         <tr>
                             <th>노출날짜</th>
                             <td>
-                                <input id="start-date" type="date" name="sdate"> ~
-                                <input id="end-date" type="date" name="edate">
+                                <input id="start-date" type="date" name="bannerSdate"> ~
+                                <input id="end-date" type="date" name="bannerEdate">
                             </td>
                         </tr>
                         <tr>
                             <th>노출시간</th>
                             <td>
-                                <input id="start-time" type="time" data-placeholder="시 : 분" name="stime"> ~
-                                <input id="end-time" type="time" data-placeholder="시 : 분" name="etime">
+                                <input id="start-time" type="time" data-placeholder="시 : 분" name="bannerStime"> ~
+                                <input id="end-time" type="time" data-placeholder="시 : 분" name="bannerEtime">
                             </td>
                         </tr>
                     </table>
@@ -281,24 +280,19 @@
             popup.style.display = 'block'
             bg.style.display = 'block'
         }
-
         function closeBanner(){
             popup.style.display = 'none'
             bg.style.display = 'none'
         }
-
         document.getElementById('start-time').addEventListener('focus', function() {
             this.showPicker();
         });
-
         document.getElementById('end-time').addEventListener('focus', function() {
             this.showPicker();
         });
-
         document.getElementById('start-date').addEventListener('focus', function() {
             this.showPicker();
         });
-
         document.getElementById('end-date').addEventListener('focus', function() {
             this.showPicker();
         });
@@ -315,27 +309,71 @@
             document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText    
         }
 
+        const imgInput = document.getElementsByName('bannerUpload')[0];
+        const imgSize = document.getElementsByName('bannerSize')[0];
+        var imgRatio = 0;
+        const option = document.getElementsByTagName('option');
+
+        // 파일 업로드 input의 change 이벤트를 감지.
+        imgInput.addEventListener('change', function() {
+            var file = imgInput.files[0];
+
+            // 파일의 크기를 체크합니다.
+            if (file.size > 500 * 1024) {
+                // 파일 크기가 500KB를 넘는 경우 처리합니다.
+                alert('이미지 파일의 크기는 최대 500KB 이하이어야 합니다.');
+                imgInput.value = '';
+                imgSize.value = '';
+                return;
+            }
+
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var image = new Image();
+                image.onload = function() {
+                    var width = this.width;
+                    var height = this.height;
+
+                    imgRatio = width/height;
+                    imgSize.value = width + "px × " + height + "px";
+                    option[0].disabled = false;
+                    option[1].disabled = false;
+                    option[2].disabled = false;
+                    option[3].disabled = false;
+                    option[4].disabled = false;
+                    if(imgRatio<2){
+                        option[3].selected = true;
+                    }else if(imgRatio<3.3){
+                        option[1].selected = true;
+                    }else if(imgRatio>10){
+                        option[0].selected = true;
+                    }else{
+                        option[2].selected = true;
+                        option[0].disabled = true;
+                        option[1].disabled = true;
+                        option[3].disabled = true;
+                    }
+                };
+                // 이미지 객체에 파일 데이터를 설정하고 로드.
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(imgInput.files[0]);
+        });
+
         const f = document.getElementById('bannerForm');
 
         f.addEventListener("submit", function (e) {
             e.preventDefault();
-            const jsonData = {
-                "bannerImg" : f.img.value,
-                "bannerName" : f.name.value,
-                "bannerSize" : f.size.value,
-                "bannerBg" : f.bg.value,
-                "bannerLink" : f.link.value,
-                "bannerLocation" : f.location.value,
-                "bannerSdate" : f.sdate.value,
-                "bannerEdate" : f.edate.value,
-                "bannerStime" : f.stime.value,
-                "bannerEtime" : f.etime.value}
+            // 클릭 후 비활성화로 중복 클릭 방지
+            const button = f.querySelector('button[type="submit"]');
+            button.disabled = true;
 
-            console.log(jsonData);
+            const formData = new FormData(this);
+
             fetch('/admin/config/banner', {
                 method: 'POST',
-                headers: {"Content-type":"application/json"},
-                body: JSON.stringify(jsonData)
+                body: formData
             })
                 .then(resp => resp.json())
                 .then(data => {
@@ -349,9 +387,7 @@
                          allBanners.forEach(function(banner) {
                              banner.classList.remove('active');
                          });
-                         const clas = 'tab'+tab;
-                         console.log(clas);
-                         const Banner = document.getElementsByClassName(clas)[0];
+                         const Banner = document.getElementsByClassName('tab'+tab)[0];
 
                          Banner.classList.add('active');
                          document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText
@@ -360,11 +396,18 @@
                              top: 0,
                              behavior: 'smooth' // 부드럽게 스크롤 이동
                          });
+
+                         f.reset();
                      }
                 })
                 .catch(err =>{
                     console.error(err);
+                })
+                .finally(() => {
+                    // fetch 완료 후 버튼 다시 활성화
+                    button.disabled = false;
                 });
+
         });
 
     </script>

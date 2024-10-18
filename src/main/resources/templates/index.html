@@ -1,30 +1,45 @@
-<!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>LotteON</title>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" /> <!-- 가변 다이나믹 서브셋 (fontfamily : pretendard) -->
-    <link href="css/reset.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-</head>
-<body>
+
+    <link rel="stylesheet" as="style" crossorigin th:href="@{https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css}" /> <!-- 가변 다이나믹 서브셋 (fontfamily : pretendard) -->
+    <link th:href="@{css/reset.css}" rel="stylesheet">
+    <link th:href="@{css/main.css}" rel="stylesheet">
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
 <header th:replace="layout/main/header.html"></header>
 <div id="wrap">
     <main id="main">
         <div class="mainIn">
 
             <aside id="aside">
-
-                <nav class="menu">
-                    <ul>
-                        <li><a href="#">패션 · 의류 · 뷰티</a></li>
-                        <li><a href="#">가전 · 디지털</a></li>
-                        <li><a href="#">식품 · 생필품</a></li>
-                        <li><a href="#">홈 · 문구 · 취미</a></li>
+                <nav id="menu" class="menu">
+                    <ul th:each="cate1 : ${category1}">
+                        <li class="dep1">
+                            <a href="#" class="m">
+                                <span onclick="openCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}" class="d1_tit">패션 · 의류 · 뷰티</span>
+                            </a></li>
                     </ul>
-                </nav><!--.menu-->
+                    <ul>
+
+                        <li class="dep1">
+                            <a href="#">
+                                <div class="dep2">
+                                    <button onclick="closePopupCategory()">X</button>
+                                    <ul class="cf flex" id="data-response">
+<!--                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit cf">여성패션-->
+<!--                                            <ul class="dep3 cf">-->
+<!--                                                <li><a href="#" target="_blank">여성패션1</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션2</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션3</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션4</a></li>-->
+<!--                                                <li><a href="#" target="_blank">여성패션5</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </a></li>-->
+                                    </ul>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </nav><!-- #memu .memu -->
+                <div class="memuBg"></div><!-- .memuBg -->
 
                 <div class="best">
                     <h3 class="tit_sty02 cf">
@@ -79,13 +94,13 @@
                                 </dd><!--.price-->
                             </dl>
                         </a></li>
-                        
+
                     </ul>
                 </div><!--.best-->
 
             </aside><!-- #aside -->
 
-            
+
 
 
             <section id="sec">
@@ -108,7 +123,7 @@
                         </div><!-- .pager -->
                     </a></div><!-- .btnL -->
                 </div><!-- .mainSlider -->
-                
+
                 <div class="cont1">
                     <div class="inner">
                         <h2 class="tit cf">히트상품</h2><!--.tit-->
@@ -263,7 +278,7 @@
                                         </a></dd>
                                     </dl>
                                 </a></li><!-- .last -->
-                                
+
                             </ul>
                         </div><!--.brsite-->
                     </div><!--.inner-->
@@ -347,7 +362,7 @@
                     </div><!--.inner-->
                 </div><!-- .cont1 -->
 
-                
+
 
 
             </section><!--#sec-->
@@ -360,71 +375,4 @@
     <a href="#" class="btnTop">TOP</a><!--.btnTop-->
 </div><!--#wrap-->
 <footer th:replace="layout/main/footer.html"></footer>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>
-var menu=$(".gnb>ul>li");
-var section=$("#container>section");
-var last=menu.size()-1;
-    
-// 메뉴5개 모두를 클릭했을 때~
-menu.click(function(){
-  var i=$(this).index();
-  var tg=section.eq(i);
-  var tt=tg.offset().top;
-  $("html, body").animate({
-      scrollTop:tt
-  },500);
-  return false;
-});
-
-    
-// 마우스가 스크롤 했을 때~
-$(window).scroll(function(){
-  var st=$(window).scrollTop(); // 현재 스크롤위치
-  var bt=$(document).height()-$(window).height();
-  // 1) 만약 변수 st값이 50보다 크거나 같다면
-  // => #header.fix를 추가함
-  // 2) 만약 변수 st값이 50보다 작다면
-  // => #header.fix를 삭제함
-  if(st>=50){
-      $("#header").addClass("fix");
-  }else{
-      $("#header").removeClass("fix");
-  }
-  // menu의 활성화 상태 .on 상태
-  section.each(function(){
-      var i=$(this).index();
-      var tt=$(this).offset().top;
-      if(st>=tt){
-          menu.removeClass("on");
-          menu.eq(i).addClass("on");
-      };
-      if(st==bt){
-          menu.removeClass("on");
-          menu.eq(i).addClass("on");
-      }
-  })
-});
-// .btnTop 버튼 없음
-$(".btnTop").hide();
-// .btnTop 버튼 보이기 (스크롤 했을 때)
-$(window).scroll(function(){
-    if($(this).scrollTop()>120){
-        $(".btnTop").fadeIn();
-    }else{
-        $(".btnTop").fadeOut();
-    }
-})
-// .btnTop 버튼 클릭했을 때~
-$(".btnTop").click(function(){
-    $("body, html").animate({
-        scrollTop:0
-    },500);
-    return false;
-})
-    
-    
-    
-</script>
-</body>
-</html>
+<script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>

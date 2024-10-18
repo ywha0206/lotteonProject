@@ -11,7 +11,8 @@
                     <span class="red">( 필수 )</span>
                     <span>이용약관</span>
                 </div>
-                <textarea readonly class="content"></textarea>
+                <!-- 이용약관 -->
+                <textarea readonly class="content" th:text="${terms.termsContent}"></textarea>
                 <div class="essential-check check">
                     <label for="">
                         <input type="checkbox"> 동의하기
@@ -21,6 +22,7 @@
             <div class="box box2">
                 <div class="title">
                     <span class="red">( 필수 )</span>
+                    <!-- 이용약관 -->
                     <span>전자금융 이용약관</span>
                 </div>
                 <textarea readonly class="content"></textarea>

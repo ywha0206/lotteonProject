@@ -16,8 +16,10 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "mem_id")
-    private Long memId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mem_id")
+    @ToString.Exclude
+    private Member member;
 
     @Column(name = "sell_grade")
     private int sellGrade;

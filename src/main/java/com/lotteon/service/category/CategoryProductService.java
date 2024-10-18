@@ -1,5 +1,6 @@
 package com.lotteon.service.category;
 
+import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.TestResponseDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
@@ -11,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +56,38 @@ public class CategoryProductService {
             result.add(child.toDto()); // DTO 변환하여 결과 리스트에 추가
             findAllChildCategories(child, result); // 하위 카테고리에 대해 재귀 호출
         }
+    }
+
+    public List<GetCategoryDto> findCategory() {
+        List<CategoryProduct> categoryProducts = categoryProductRepository.findAllByCategoryLevel(1);
+        System.out.println(categoryProducts);
+        List<GetCategoryDto> dtos = categoryProducts.stream().map(v->v.toGetCategoryDto()).toList();
+
+        return dtos;
+    }
+
+    public List<GetCategoryDto> findCategory2(Long id) {
+        CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
+        List<CategoryProduct> cates = categoryProducts.getChildren();
+
+        List<GetCategoryDto> dtos = cates.stream().map(v->v.toGetCategoryDto()).toList();
+        System.out.println(dtos);
+
+        return dtos;
+    }
+
+    public Map<String,Object> findCategory3(Long id) {
+        CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
+        List<CategoryProduct> cates = categoryProducts.getChildren();
+        Map<String,Object> map = new HashMap<>();
+        cates.forEach(v->{
+
+            List<CategoryProduct> cates2 = v.getChildren();
+            List<GetCategoryDto> dtos = cates2.stream().map(v2->v2.toGetCategoryDto()).toList();
+            map.put(v.getCategoryName(),dtos);
+        });
+
+
+        return map;
     }
 }

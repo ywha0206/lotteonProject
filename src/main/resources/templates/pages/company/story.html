@@ -14,6 +14,7 @@
     </div>
     <!-- Story Navigation (카테고리 네비게이션) -->
     <div class="storyNav" data-aos="fade-up">
+
         <a th:href="@{/company/story}" th:classappend="${storyCate == '' ? 'navOn' : ''}" onclick="filterCards('', event)" class="nav-link">전체보기</a>
         <a th:href="@{/company/story(storyCate='culture')}" th:classappend="${storyCate == 'culture' ? 'navOn' : ''}" onclick="filterCards('culture', event)" class="nav-link">기업문화</a>
         <a th:href="@{/company/story(storyCate='interview')}" th:classappend="${storyCate == 'interview' ? 'navOn' : ''}" onclick="filterCards('interview', event)" class="nav-link">인터뷰</a>
@@ -21,6 +22,7 @@
         <a th:href="@{/company/story(storyCate='lotteon')}" th:classappend="${storyCate == 'lotteon' ? 'navOn' : ''}" onclick="filterCards('lotteon', event)" class="nav-link">롯데ON</a>
         <a th:href="@{/company/story(storyCate='report')}" th:classappend="${storyCate == 'report' ? 'navOn' : ''}" onclick="filterCards('report', event)" class="nav-link">보도자료</a>
         <a th:href="@{/company/story(storyCate='ESG')}" th:classappend="${storyCate == 'ESG' ? 'navOn' : ''}" onclick="filterCards('ESG', event)" class="nav-link">ESG</a>
+
     </div>
 
     <!-- 카드 그리드 레이아웃 -->
@@ -144,6 +146,7 @@
                 <p>여름 휴가 준비는 ‘롯데’가 책임진다!</p>
             </div>
         </div>
+
 
         <!-- 카드 13 -->
         <div class="card" data-category="report">
@@ -278,6 +281,7 @@
                 <h3>2024년 개인정보 중장기 목표</h3>
                 <p>롯데쇼핑e커머스 정보보호정책 공유</p>
             </div>
+
         </div>
     </div>
 
@@ -340,6 +344,7 @@
             }
         });
     });
+
 
     // 카테고리 필터링 함수 추가
     function filterCards(category, event) {
@@ -411,5 +416,6 @@
         if (cardsLoaded >= totalCards) {
             this.style.display = 'none';
         }
+
     });
 </script>
