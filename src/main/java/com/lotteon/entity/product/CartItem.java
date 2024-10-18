@@ -30,9 +30,9 @@ public class CartItem {
     @Column(name = "cart_item_quantity")
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_option_id")
-    private ProductOption productOption;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "prod_option_id")
+//    private ProductOption productOption;
 
     @Column(name = "total_price")
     private Double totalPrice;

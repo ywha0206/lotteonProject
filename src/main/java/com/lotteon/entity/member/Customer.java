@@ -18,8 +18,10 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "mem_id")
-    private Long memberId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mem_id")
+    @ToString.Exclude
+    private Member member;
 
     @Column(name = "cust_point")
     private Integer custPoint;
