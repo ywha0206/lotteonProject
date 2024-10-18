@@ -5,6 +5,7 @@ import com.lotteon.entity.article.Faq;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.repository.article.FaqRepository;
 import com.lotteon.repository.category.CategoryArticleRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -13,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,9 @@ public class FaqService {
     private final FaqRepository faqRepository;
     private final CategoryArticleRepository categoryArticleRepository;
     private final ModelMapper modelMapper;
+
+
+
     // FAQ 목록 조회 (카테고리별)
     public Page<ArticleDto> list(CategoryArticle cate1Id, CategoryArticle cate2Id, int limit) {
         Pageable pageable = PageRequest.of(0, limit); // 0번째 페이지에서 limit 만큼 데이터 조회
@@ -48,7 +54,13 @@ public class FaqService {
         Page<Faq> faqPage = faqRepository.findByCate1AndCate2(cate1Id, cate2Id, pageable);
         // Page<ArticleDto>로 변환하여 반환
         return faqPage.map(faq -> modelMapper.map(faq, ArticleDto.class));
+
     }
+
+
+
+
+
 
 
 }

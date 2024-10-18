@@ -19,20 +19,21 @@
 
             <div class="main">
                 <div class="section">
-                    <div onclick="nav(event)" class="tab1 banner-main-top active">메인상단 배너</div>
-                    <div onclick="nav(event)" class="tab2 banner-main-slide">메인슬라이드 배너</div>
-                    <div onclick="nav(event)" class="tab3 banner-product-view">상품 상세보기 배너</div>
-                    <div onclick="nav(event)" class="tab4 banner-login">회원로그인 배너</div>
-                    <div onclick="nav(event)" class="tab5 banner-my">마이페이지 배너</div>
+                    <div onclick="nav(event)" data-tab="1" class="tab1 banner-main-top active">메인상단 배너</div>
+                    <div onclick="nav(event)" data-tab="2" class="tab2 banner-main-slide">메인슬라이드 배너</div>
+                    <div onclick="nav(event)" data-tab="3" class="tab3 banner-product-view">상품 상세보기 배너</div>
+                    <div onclick="nav(event)" data-tab="4" class="tab4 banner-login">회원로그인 배너</div>
+                    <div onclick="nav(event)" data-tab="5" class="tab5 banner-my">마이페이지 배너</div>
                 </div>
 
                 <div class="header-title2">메인상단 배너</div>
                 <div class="header-gubun2"></div>
 
                 <table class="tb1">
+                    <thead>
                     <tr>
                         <th class="checkbox">
-                            <input type="checkbox" id="allCheck">
+                            <input type="checkbox" class="selectall">
                         </th>
                         <th class="no">번호</th>
                         <th class="img">이미지</th>
@@ -44,150 +45,43 @@
                         <th class="end-time">종료시간</th>
                         <th class="admin">관리</th>
                     </tr>
-                    <tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="b:${bannerList}">
                         <td class="checkbox">
-                            <input type="checkbox" name="" id="">
+                            <input type="checkbox" class="select">
                         </td>
-                        <td>1</td>
+                        <td class="no">[[${b.id}]]</td>
                         <td>
-                            <img src="../images/x-img2.png" alt="">
+                            <div class="imgBox">
+                                <img th:src="@{'/file/'+${b.bannerImg}}" alt="" class="bannerImg">
+                            </div>
                         </td>
                         <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
+                            <div class="name">[[${b.bannerName}]]</div>
+                            <div class="size">크기 : [[${b.bannerSize}]]</div>
+                            <div class="bgcolor">배경색 : [[${b.bannerBg}]]</div>
+                            <div class="link">[[${b.bannerLink}]]</div>
                         </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
+                        <td th:switch="${b.bannerLocation}">
+                            <span th:case="1">MAIN1</span>
+                            <span th:case="2">MAIN2</span>
+                            <span th:case="3">PRODUCT1</span>
+                            <span th:case="4">MEMBER1</span>
+                            <span th:case="5">MYPAGE1</span>
+                            <span th:case="*">-</span> <!-- 기본값 (일치하는 값이 없을 때) -->
+                        </td>
+                        <td>[[${#strings.substring(b.bannerSdate,0,10)}]]</td>
+                        <td>[[${#strings.substring(b.bannerEdate,0,10)}]]</td>
+                        <td>[[${#strings.substring(b.bannerStime,11,16)}]]</td>
+                        <td>[[${#strings.substring(b.bannerEtime,11,16)}]]</td>
                         <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
+                            <input type="button" class="banner-active"
+                                   th:value="${b.bannerState < 1?'[ 활성화 ]':'[ 비활성화 ]'}"
+                                   th:data-state="${b.bannerState}" th:data-no="${b.id}">
                         </td>
                     </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
+                    </tbody>
                 </table>
                 <div class="btns">
                     <button class="delete-btn">선택삭제</button>
@@ -200,62 +94,67 @@
                     <div class="title">배너등록</div>
                     <div onclick="closeBanner()" class="btn">X</div>
                 </div>
-                <form id="bannerForm">
+                <form id="bannerForm" method="post">
                     <table class="tb2">
                         <tr>
                             <th>배너이름</th>
                             <td>
-                                <input class="inp" type="text" name="bannerName" placeholder="배너명 입력">
+                                <input class="inp" type="text" name="bName" placeholder="배너명 입력" required>
                             </td>
                         </tr>
                         <tr>
                             <th>배너 이미지</th>
                             <td>
-                                <input class="inp" type="file" name="bannerUpload">
+                                <input class="inp" type="file" name="file" required>
+
                             </td>
                         </tr>
                         <tr>
                             <th>배너크기</th>
                             <td>
-                                <input class="inp" type="text" name="bannerSize" placeholder="배너크기 입력">
+                                <input class="inp" type="text" name="bSize" placeholder="배너크기 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배경색</th>
                             <td>
-                                <input class="short" type="color" name="bannerBg" placeholder="배경색 입력">
+                                <input class="short" type="color" name="bBg" placeholder="배경색 입력">
                             </td>
                         </tr>
                         <tr>
                             <th>배너 링크</th>
                             <td>
-                                <input class="inp" type="text" name="bannerLink" placeholder="배너와 연결될 링크 입력">
+                                <input class="inp" type="text" name="bLink" placeholder="배너와 연결될 링크 입력" required>
+
                             </td>
                         </tr>
                         <tr>
                             <th>배너위치</th>
                             <td>
-                                <select class="place short" name="bannerLocation">
+                                <select class="place short" name="bLocation">
                                     <option value="1">MAIN1</option>
                                     <option value="2">MAIN2</option>
                                     <option value="3">PRODUCT1</option>
                                     <option value="4">MEMBER1</option>
                                     <option value="5">MY1</option>
                                 </select>
+                                <span id="locaInfo">메인화면 최상단에 표시되는 배너입니다.</span>
                             </td>
                         </tr>
                         <tr>
                             <th>노출날짜</th>
                             <td>
-                                <input id="start-date" type="date" name="bannerSdate"> ~
-                                <input id="end-date" type="date" name="bannerEdate">
+                                <input id="start-date" type="date" name="bSdate" required> ~
+                                <input id="end-date" type="date" name="bEdate" required>
+
                             </td>
                         </tr>
                         <tr>
                             <th>노출시간</th>
                             <td>
-                                <input id="start-time" type="time" data-placeholder="시 : 분" name="bannerStime"> ~
-                                <input id="end-time" type="time" data-placeholder="시 : 분" name="bannerEtime">
+                                <input id="start-time" type="time" data-placeholder="시 : 분" name="bStime" required> ~
+                                <input id="end-time" type="time" data-placeholder="시 : 분" name="bEtime" required>
+
                             </td>
                         </tr>
                     </table>
@@ -296,7 +195,79 @@
         document.getElementById('end-date').addEventListener('focus', function() {
             this.showPicker();
         });
+        const tbody = document.getElementsByTagName('tbody')[0];
 
+        function getLocationText(location) {
+            switch (location) {
+                case 1:
+                    return 'MAIN1';
+                case 2:
+                    return 'MAIN2';
+                case 3:
+                    return 'PRODUCT1';
+                case 4:
+                    return 'MEMBER1';
+                case 5:
+                    return 'MYPAGE1';
+                default:
+                    return '-';
+            }
+        }
+        function selectTab(num){
+            fetch('/admin/config/banners/'+num)
+                .then(resp => {
+                    console.log(resp);
+                    if (!resp.ok) {
+                        return resp.json().then(err => {
+                            console.error('Server responded with an error:', err);
+                            throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
+                        });
+                    }
+                    return resp.json();
+                })
+                .then(data => {
+                    console.log('Response Data:', data);
+
+                    tbody.innerHTML=``;
+                    data.forEach((b, i) => {
+                        // 각 banner 데이터를 반복하면서 HTML을 생성합니다.
+                        const row = `
+                                        <tr>
+                                            <td class="checkbox">
+                                                <input type="checkbox" class="select">
+                                            </td>
+                                            <td class="no">${b.id}</td>
+                                            <td>
+                                                <div class="imgBox">
+                                                    <img src="/file/${b.bannerImg}" alt="" class="bannerImg">
+                                                </div>
+                                            </td>
+                                            <td class="td-info">
+                                                <div class="name">${b.bannerName}</div>
+                                                <div class="size">크기 : ${b.bannerSize}</div>
+                                                <div class="bgcolor">배경색 : ${b.bannerBg}</div>
+                                                <div class="link">${b.bannerLink}</div>
+                                            </td>
+                                            <td>${getLocationText(b.bannerLocation)}</td>
+                                            <td>${b.bannerSdate.substring(0, 10)}</td>
+                                            <td>${b.bannerEdate.substring(0, 10)}</td>
+                                            <td>${b.bannerStime.substring(11, 16)}</td>
+                                            <td>${b.bannerEtime.substring(11, 16)}</td>
+                                            <td class="td-admin">
+                                                <input type="button" class="banner-active"
+                                                    value="${b.bannerState<1?'[ 활성화 ]':'[ 비활성화 ]'}"
+                                                    data-state="${b.bannerState}" data-no="${b.id}">
+                                            </td>
+                                        </tr>
+                                    `;
+                        tbody.innerHTML += row;  // 생성된 row를 테이블에 추가합니다.
+                    });
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('배너 로딩 중 오류가 발생했습니다. 다시 시도해 주세요.');
+                });
+        }
         function nav(event) {
             // 모든 요소에서 active 클래스를 제거
             const allBanners = document.querySelectorAll('.section > div');
@@ -306,13 +277,24 @@
             
             // 클릭한 요소에만 active 클래스 추가
             event.target.classList.add('active');
-            document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText    
+            document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText;
+            selectTab(event.target.dataset.tab);
         }
-
-        const imgInput = document.getElementsByName('bannerUpload')[0];
-        const imgSize = document.getElementsByName('bannerSize')[0];
+        function info() {
+            var loca = selectBox.value;
+            console.log("location changed " + loca);
+            if(loca<=1){locaInfo.textContent='메인화면 최상단에 표시되는 배너입니다.'}
+            else if(loca<=2){locaInfo.textContent='메인화면 슬라이드에 표시되는 배너입니다.'}
+            else if(loca<=3){locaInfo.textContent="상품 상세화면에 표시되는 배너입니다."}
+            else if(loca<=4){locaInfo.textContent="로그인 화면에 표시되는 배너입니다."}
+            else if(loca<=5){locaInfo.textContent="마이페이지 상단에 표시되는 배너입니다."}
+        }
+        const imgInput = document.getElementsByName('file')[0];
+        const imgSize = document.getElementsByName('bSize')[0];
         var imgRatio = 0;
         const option = document.getElementsByTagName('option');
+        const selectBox = document.getElementsByTagName('select')[0];
+        const locaInfo = document.getElementById('locaInfo');
 
         // 파일 업로드 input의 change 이벤트를 감지.
         imgInput.addEventListener('change', function() {
@@ -320,13 +302,11 @@
 
             // 파일의 크기를 체크합니다.
             if (file.size > 500 * 1024) {
-                // 파일 크기가 500KB를 넘는 경우 처리합니다.
                 alert('이미지 파일의 크기는 최대 500KB 이하이어야 합니다.');
                 imgInput.value = '';
                 imgSize.value = '';
                 return;
             }
-
             var reader = new FileReader();
 
             reader.onload = function(e) {
@@ -337,23 +317,23 @@
 
                     imgRatio = width/height;
                     imgSize.value = width + "px × " + height + "px";
+
                     option[0].disabled = false;
                     option[1].disabled = false;
                     option[2].disabled = false;
                     option[3].disabled = false;
                     option[4].disabled = false;
-                    if(imgRatio<2){
-                        option[3].selected = true;
-                    }else if(imgRatio<3.3){
-                        option[1].selected = true;
-                    }else if(imgRatio>10){
-                        option[0].selected = true;
-                    }else{
+
+                    if(imgRatio<2){option[3].selected = true;}
+                    else if(imgRatio<3.3){option[1].selected = true;}
+                    else if(imgRatio>10){option[0].selected = true;}
+                    else{
                         option[2].selected = true;
                         option[0].disabled = true;
                         option[1].disabled = true;
                         option[3].disabled = true;
                     }
+                    info();
                 };
                 // 이미지 객체에 파일 데이터를 설정하고 로드.
                 image.src = e.target.result;
@@ -361,54 +341,163 @@
             reader.readAsDataURL(imgInput.files[0]);
         });
 
-        const f = document.getElementById('bannerForm');
+        const form = document.getElementById('bannerForm');
+        const button = document.getElementsByClassName('submit-btn')[0]; // 버튼을 가져오는 예시
 
-        f.addEventListener("submit", function (e) {
-            e.preventDefault();
-            // 클릭 후 비활성화로 중복 클릭 방지
-            const button = f.querySelector('button[type="submit"]');
-            button.disabled = true;
 
-            const formData = new FormData(this);
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // 기본 폼 제출 방지
 
-            fetch('/admin/config/banner', {
+            const jsonData = {
+                "bannerName" : form.bName.value,
+                "bannerImg" : null,
+                "bannerSize" : form.bSize.value,
+                "bannerBg" : form.bBg.value,
+                "bannerLink" : form.bLink.value,
+                "bannerLocation" : form.bLocation.value,
+                "bannerSdate" : form.bSdate.value,
+                "bannerEdate" : form.bEdate.value,
+                "bannerStime" : form.bStime.value+":00",
+                "bannerEtime" : form.bEtime.value+":00"
+            }
+
+            const formData = new FormData();
+            const fileInput = document.querySelector('input[name="file"]').files;
+            formData.append("bannerDTO",JSON.stringify(jsonData));
+            formData.append("file",fileInput[0]);
+            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
+
+            button.disabled = true; // 버튼 비활성화 (fetch 중복 방지)
+
+            fetch('/admin/config/banners', {
                 method: 'POST',
                 body: formData
             })
-                .then(resp => resp.json())
-                .then(data => {
-                    console.log(data);
-                    const tab = data.bannerLocation;
-                     if(tab>0){
-                         alert('성공적으로 등록되었습니다.');
-                         closeBanner();
+                .then(resp => {
+                    console.log(resp);
+                    if (!resp.ok) {
+                        return resp.json().then(err => {
 
-                         const allBanners = document.querySelectorAll('.section > div');
-                         allBanners.forEach(function(banner) {
-                             banner.classList.remove('active');
-                         });
-                         const Banner = document.getElementsByClassName('tab'+tab)[0];
-
-                         Banner.classList.add('active');
-                         document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText
-
-                         window.scrollTo({ // 페이지 상단으로 스크롤 이동
-                             top: 0,
-                             behavior: 'smooth' // 부드럽게 스크롤 이동
-                         });
-
-                         f.reset();
-                     }
+                            console.error('Server responded with an error:', err); // 추가된 로그
+                            // 오류 응답을 자세히 로그에 남김
+                            throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
+                        });
+                    }
+                    return resp.json();
                 })
-                .catch(err =>{
-                    console.error(err);
+                .then(data => {
+                    console.log('Response Data:', data);
+
+                    const tab = data.bannerLocation;
+                    if (tab > 0) {
+                        alert('성공적으로 등록되었습니다.');
+                        closeBanner();
+
+                        const allBanners = document.querySelectorAll('.section > div');
+                        allBanners.forEach(function (banner) {
+                            banner.classList.remove('active');
+                        });
+
+                        const Banner = document.getElementsByClassName('tab' + tab)[0];
+                        Banner.classList.add('active');
+
+                        document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText;
+                        selectTab(tab);
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // 부드럽게 스크롤 이동
+                        });
+                        form.reset(); // 폼 초기화
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('배너 등록 중 오류가 발생했습니다. 다시 시도해 주세요.');
                 })
                 .finally(() => {
                     // fetch 완료 후 버튼 다시 활성화
                     button.disabled = false;
                 });
-
         });
+
+        selectBox.addEventListener('change',function (){
+            info();
+        });
+
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('banner-active')){
+                const clickedNo = e.target.dataset.no;
+                const clickState = e.target.dataset.state;
+                const changedState = Math.abs(clickState-1);
+
+                e.target.value = changedState<1?'[ 활성화 ]':'[ 비활성화 ]';
+            }
+
+            const selectall = document.querySelector('.selectall');
+            const checkboxes = document.querySelectorAll('.select');
+
+            if (e.target.classList.contains('selectall')) {selectAll(e.target);}
+            if (e.target.classList.contains('select')) {updateSelectAllCheckbox();}
+
+            function selectAll(selectAllCheckbox) {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            }
+
+            function updateSelectAllCheckbox() {
+                const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                selectall.checked = allChecked;
+            }
+
+            // 삭제 버튼 클릭 시
+            if (e.target.classList.contains('delete-btn')) {
+                e.preventDefault();
+
+                const selectedCheckboxes = document.querySelectorAll('.select:checked');
+                let selectedIds = [];
+
+                for (let checkbox of selectedCheckboxes) {
+                    const row = checkbox.closest('tr');
+                    const bannerNo = row.querySelector('.no').innerText.trim();
+                    console.log(bannerNo);
+                    selectedIds.push(bannerNo);
+                }
+
+                if (selectedIds.length === 0) {
+                    alert('삭제하려는 배너를 선택하세요.');
+                    return;
+                }
+
+                if (!confirm('선택한 배너를 정말 삭제하시겠습니까?')) {
+                    return;
+                }
+
+                fetch('/admin/config/banners', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(selectedIds)
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('삭제되었습니다.');
+                            for (let checkbox of selectedCheckboxes) {
+                                const row = checkbox.closest('tr');
+                                row.remove();
+                            }
+                        } else {
+                            alert('삭제에 실패했습니다.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        alert('삭제 중 오류가 발생했습니다.');
+                    });
+            }
+        }); // EventListener END
 
     </script>
 </body>

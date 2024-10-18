@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @ToString
@@ -57,4 +58,6 @@ public class OrderItem {
     @Column(name = "order_item_deli_company")
     private String deliCompany;
 
+    @OneToMany(mappedBy = "orderItem")
+    private List<OrderItemOption> selectedOptions;
 }

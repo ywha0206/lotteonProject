@@ -51,15 +51,23 @@ public class AuthController {
 
     // 2. 회원가입 (일반회원 정보입력) | optional : 선택약관 동의 여부
     @GetMapping("/customer/{optional}")
-    public String customer(@PathVariable("optional") String optional, Model model) {
+    public String customer(){
         return "pages/auth/customer";
     }
 
     // 2. 회원가입 (일반회원 정보입력)
     @PostMapping("/customer")
-    public String customer(PostCustSignupDTO postCustSignupDTO) {
-        customerService.insertCustomer(postCustSignupDTO);
-        log.info("11111111111"+postCustSignupDTO);
+    public String customer(
+             PostCustSignupDTO postCustSignupDTO) {
+//        log.info("Register Controller - UserDTO :"+PostCustSignupDTO.toString());
+//        System.out.println(postCustSignupDTO 4
+//        String regip= req.getRemoteAddr();
+//        PostCustSignupDTO.setRegip(regip);
+//        customerService.insertCustomer(PostCustSignupDTO);
+//        return "redirect:/user/login?success=200";
+
+
+//        return "redirect:pages/auth/login/customer";
         return "pages/auth/customer";
     }
 
@@ -68,5 +76,6 @@ public class AuthController {
     public String seller(){
         return "pages/auth/seller";
     }
+
 
 }

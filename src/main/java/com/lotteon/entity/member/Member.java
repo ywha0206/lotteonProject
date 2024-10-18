@@ -37,4 +37,10 @@ public class Member {
 
     @Column(name = "mem_edate")
     private Timestamp memSignout;
+
+    @OneToOne(mappedBy = "member")
+    private Customer customer;
+
+    @OneToOne(mappedBy = "member")
+    private Seller seller;
 }
