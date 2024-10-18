@@ -1,5 +1,4 @@
-
-    <link rel="stylesheet" th:href="@{/css/auth/join.css}">
+ <link rel="stylesheet" th:href="@{/css/auth/join.css}">
     <link rel="stylesheet" th:href="@{/css/basic.css}">
     <header th:replace="layout/main/header.html"></header>
     <main id="join-container">
@@ -13,7 +12,7 @@
                         <div class="customer-content content">개인구매회원(외국인포함)</div>
                         <div class="customer-advice advice">만 14세이상가능</div>
                     </div>
-                    <a th:href="@{/auth/signup/customer}" class="customer-btn box-btn">회원가입</a>
+                    <a href="/auth/signup?termsType=customer" class="customer-btn box-btn">회원가입</a>
                 </div>
                 <div class="seller box">
                     <div class="seller-header box-header">판매회원가입</div>
@@ -21,7 +20,7 @@
                         <div class="seller-content content">사업자판매회원</div>
                         <div class="seller-advice advice">사업자등록증을 보유한 회원</div>
                     </div>
-                    <a th:href="@{/auth/signup/seller}" class="seller-btn box-btn">회원가입</a>
+                    <a href="/auth/signup?termsType=seller" class="seller-btn box-btn">회원가입</a>
                 </div>
             </div>
         </div>
