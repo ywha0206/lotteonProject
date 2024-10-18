@@ -1,5 +1,6 @@
 package com.lotteon.entity.term;
 
+import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +27,16 @@ public class Terms {
 
     @Column(name = "terms_type")
     private String termsType;
+
+
+    // Entity -> DTO
+    public GetTermsResponseDto toDTO(){
+        return GetTermsResponseDto.builder()
+                .id(id)
+                .termsName(termsName)
+                .termsContent(termsContent)
+                .termsType(termsType)
+                .build();
+    }
 
 }
