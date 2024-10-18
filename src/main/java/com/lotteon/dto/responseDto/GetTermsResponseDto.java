@@ -1,5 +1,6 @@
 package com.lotteon.dto.responseDto;
 
+import com.lotteon.entity.term.Terms;
 import lombok.*;
 
 @AllArgsConstructor
@@ -15,4 +16,12 @@ public class GetTermsResponseDto {
     private String termsContent;
     private String termsType;
 
+    public Terms toEntity() {
+        return Terms.builder()
+                .id(id)
+                .termsName(termsName)
+                .termsContent(termsContent)
+                .termsType(termsType)
+                .build();
+    }
 }

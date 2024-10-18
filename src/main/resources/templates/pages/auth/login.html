@@ -8,7 +8,7 @@
         <div class="header-gubun"></div>
         <div class="main">
             <div class="main-inp">
-                <form th:action="@{/auth/login/customer}" method="post" class="inp-top">
+                <form action="/auth/login" method="post" class="inp-top">
                     <div class="top-left">
                         <div class="inp-id">
                             <label class="label-id label">아이디 <input name="userName" class="id inp" type="text"></label>
@@ -18,7 +18,7 @@
                         </div><!-- inp-pwd -->
                     </div>
                     <div class="top-right">
-                        <button type="submit" class="login-btn"><a th:href="@{/auth/login}">로그인</a></button>
+                        <button type="submit" class="login-btn"><a>로그인</a></button>
                     </div>
                 </form>
                 <div class="inp-bottom">

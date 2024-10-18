@@ -40,45 +40,33 @@ public class AuthController {
         return "pages/auth/join";
     }
     
-    // 이용약관
-    @GetMapping("/signup/{type}")
-    public String signUp(@PathVariable("type") String termsType, Model model) {
-        GetTermsResponseDto terms = termsService.selectTerms(termsType);
-        log.info(terms);
-        model.addAttribute("terms", terms);
+    // 이용약관 Terms
+    @GetMapping("/signup")
+    public String signUp(@RequestParam String termsType, Model model) {
+        List<GetTermsResponseDto> getterms = termsService.selectTerms(termsType);
+        log.info(getterms);
+        model.addAttribute("terms", getterms);
         return "pages/auth/signup";
     }
 
     // 2. 회원가입 (일반회원 정보입력) | optional : 선택약관 동의 여부
     @GetMapping("/customer/{optional}")
-    public String customer(){
+    public String customer(@PathVariable("optional") String optional, Model model) {
         return "pages/auth/customer";
     }
 
     // 2. 회원가입 (일반회원 정보입력)
     @PostMapping("/customer")
-    public String customer(
-             PostCustSignupDTO postCustSignupDTO) {
-//        log.info("Register Controller - UserDTO :"+PostCustSignupDTO.toString());
-//        System.out.println(postCustSignupDTO 4
-//        String regip= req.getRemoteAddr();
-//        PostCustSignupDTO.setRegip(regip);
-//        customerService.insertCustomer(PostCustSignupDTO);
-//        return "redirect:/user/login?success=200";
-
-
-//        return "redirect:pages/auth/login/customer";
+    public String customer(PostCustSignupDTO postCustSignupDTO) {
+        customerService.insertCustomer(postCustSignupDTO);
+        log.info("11111111111"+postCustSignupDTO);
         return "pages/auth/customer";
     }
-
 
     // 회원가입 (판매회원 정보입력)
     @GetMapping("/seller")
     public String seller(){
         return "pages/auth/seller";
     }
-
-
-
 
 }
