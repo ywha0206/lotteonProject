@@ -59,7 +59,7 @@ public class Product {
     private int prodStock;
 
     @Column(name = "prod_order_cnt")
-    private int prodOrderCnt;
+    private Integer prodOrderCnt;
 
     @Column(name = "prod_views")
     private int prodViews;
