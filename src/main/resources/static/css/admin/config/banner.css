@@ -96,6 +96,18 @@
 .tb1 tr {
     border-bottom: 0.4px solid #A6A6A6;
 }
+.tb1 tr>td>.imgBox{
+    height: 90px;
+    width: 90px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+.imgBox>.bannerImg{
+    height: 100%;
+    object-fit: cover;
+}
 
 .btns {
     margin-top: 30px;
