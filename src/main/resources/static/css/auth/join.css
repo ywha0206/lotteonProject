@@ -1,6 +1,6 @@
 /* #d7d7d7 #cc3434 #31859c #bfbfbf */
 
-.container {
+#join-container  {
     width: 800px;
     margin: 0 auto;
     height: 650px;
@@ -10,19 +10,19 @@
     align-items: center;
 }
 
-.header-title1 {
+#join-container .header-title1 {
     margin-top: 50px;
     font-size: 20px;
     color: #d7d7d7 ;
     text-align: center;
 }
 
-.header-title2 {
+#join-container .header-title2 {
     font-size: 25px;
     text-align: center;
 }
 
-.main {
+#join-container .main {
     display: flex;
     width: 850px;
     margin: 0 auto;
@@ -30,50 +30,52 @@
     gap: 80px;
 }
 
-.main > .box {
+#join-container .main > .box {
     width: 350px;
     border: 2px solid #d9d9d9;
     text-align: center;
 }
 
-.box {
+#join-container .box {
     display: flex;
     flex-direction: column;
     gap: 30px;
     cursor: pointer;
 }
 
-.box:hover {
+#join-container .box:hover {
     opacity: 0.8;
 }
 
-.customer-header{
+#join-container .customer-header{
     background-color: #cc3434;
     padding: 20px 0;
     color: white;
+    font-size: 15px;
 }
 
-.seller-header {
+#join-container .seller-header {
     background-color: #31859c;
     padding: 20px 0;
     color: white;
+    font-size: 15px;
 }
 
-.box-main {
+#join-container .box-main {
     text-align: left;
     margin-left: 30px;
 }
 
-.content {
+#join-container .content {
     font-weight: 600;
     margin-bottom: 5px;
 }
 
-.advice {
+#join-container .advice {
     color: #909090;
 }
 
-.box-btn {
+#join-container .box-btn {
     background-color: #bfbfbf;
     width: 100px;
     height: 35px;

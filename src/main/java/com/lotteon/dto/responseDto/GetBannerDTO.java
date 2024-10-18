@@ -1,29 +1,27 @@
-package com.lotteon.dto.requestDto;
+package com.lotteon.dto.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostBannerDTO {
-    private String bannerName;
+public class GetBannerDTO {
+    private Long id;
     private String bannerImg;
+    private String bannerName;
     private String bannerSize;
     private String bannerBg;
     private String bannerLink;
     private int bannerLocation;
     private Timestamp bannerSdate;
     private Timestamp bannerEdate;
-    private Time bannerStime;
-    private Time bannerEtime;
-
-    private MultipartFile uploadFile;
+    private Timestamp bannerStime;
+    private Timestamp bannerEtime;
+    private int bannerState;
 }
