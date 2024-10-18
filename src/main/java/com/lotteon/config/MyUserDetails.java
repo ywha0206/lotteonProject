@@ -45,7 +45,7 @@ public class MyUserDetails implements UserDetails, OAuth2User{
 
     @Override
     public String getUsername() {
-        return String.valueOf(user.getId());
+        return user.getMemUid();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class MyUserDetails implements UserDetails, OAuth2User{
 
     @Override
     public String getName() {
-        return user.getMemUid();
+        return String.valueOf(user.getId());
     }
 
 }
