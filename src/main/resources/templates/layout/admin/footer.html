@@ -2,7 +2,8 @@
     <link rel="stylesheet" th:href="@{/css/layout/admin/footer.css}">
 
     <footer>
-        <p>Copyright ©LotteON.co.kr All rights reserved. LotteON ADMINISTRATOR Version 5.4.1.2</p>
+        <p>Copyright ©LotteON.co.kr All rights reserved.</p>
+        <p th:text="${appName} + ${version}"></p>
     </footer>
 </body>
     </html>
