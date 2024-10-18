@@ -90,4 +90,14 @@ public class CategoryProductService {
 
         return map;
     }
+
+    public String deleteCategory(Long id) {
+        CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
+        if(categoryProducts.getProductMappings().isEmpty()){
+            categoryProductRepository.deleteById(id);
+            return "SU";
+        } else {
+            return "FA";
+        }
+    }
 }

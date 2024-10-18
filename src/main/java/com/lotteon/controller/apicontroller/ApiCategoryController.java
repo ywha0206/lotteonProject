@@ -30,4 +30,24 @@ public class ApiCategoryController {
         map.put("cates2", cates2);
         return ResponseEntity.ok(map);
     }
+
+    @GetMapping("/admin/prod/cate1")
+    public ResponseEntity<?> getCate1(
+            @RequestParam Long id
+    ){
+        List<GetCategoryDto> cates = categoryProductService.findCategory2(id);
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("cates", cates);
+        return ResponseEntity.ok(map);
+    }
+
+    @DeleteMapping("/admin/prod/category")
+    public ResponseEntity<String> addCate2(
+            @RequestParam Long id
+    ){
+        String result = categoryProductService.deleteCategory(id);
+
+        return ResponseEntity.ok().body(result);
+    }
 }

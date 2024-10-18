@@ -112,7 +112,8 @@ li {list-style: none;}
 
 .navi2 {
     border: 2px solid #dfdfdf;
-    border-bottom: none;
+    background-color: aliceblue;
+
 }
 
 .navi2 li {
@@ -122,8 +123,13 @@ li {list-style: none;}
     display: flex;
     justify-content: space-between;
     padding-right: 5px;
-    background-color: #ffffff;
+    background-color: aliceblue;
     font-size: 16px;
+
+    &:hover {
+        color: blueviolet;
+        opacity: 0.8;
+    }
 }
 
 .subCate li {
@@ -216,12 +222,85 @@ li {list-style: none;}
     color: red;
     background-color: transparent;
     cursor: pointer;
+    position: relative;
+    top: -36px;
+    left: 150px;
 
     &:hover {
         background-color: #dfdfdf;
     }
 }
 
-button {
+.delBtn2 {
+    border: 1px solid red;
+    color: red;
+    background-color: transparent;
+    cursor: pointer;
 
+    &:hover {
+        background-color: #dfdfdf;
+    }
+}
+
+.depth2 li {
+    font-size: 13px;
+    padding-left: 30px;
+    /*background-color: gainsboro;*/
+}
+
+.depth3 {
+    position: relative;
+    top: -133px;
+    left: 199px;
+    background-color: gainsboro;
+    height: 0;
+    /*width: 300px;*/
+}
+
+.depth2 {
+
+    background-color: gainsboro;
+    &:hover {
+        background-color: gainsboro;
+    }
+}
+
+.add-category {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.delete-categories {
+    background-image: url("/images/delete_category.png");
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    opacity: 0;
+    z-index: 1000;
+
+}
+
+.add-inp {
+    border: none;
+    outline: none;
+    padding: 20px;
+    background-color: antiquewhite;
+    color: black;
+    margin-right: 20px;
+    position: relative;
+    top: 59px;
+    /*display: none;*/
+    /*position: absolute;*/
+    /*top: 70%;*/
+    /*left: 50%;*/
+    /*translate: -50% -50%;*/
 }

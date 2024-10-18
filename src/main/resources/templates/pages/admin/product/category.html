@@ -23,33 +23,26 @@
             <div class="main-title">카테고리 관리</div>
             <div class="main-description">쇼핑몰 메인, 상품 페이지 사이드 카테고리 메뉴 입니다.</div>
         </section>
-
+        <div class="btn">
+            <input draggable="true" class="add-inp" placeholder="추가할 카테고리 이름을 입력해주세요.">
+        </div>
         <section class="categoryProduct">
+            <div class="delete-categories"></div>
             <aside id="sidebar2">
-                <div class="navi2" id="mainCate">
-                    <li onclick="open1('sub')">여성패션 <button class="delBtn parent">삭제</button></li>
-                    <div class="subCate" id="sub">
-                        <li onclick="open1('third')">브랜드의류 <button class="delBtn parent">삭제</button></li>
-                        <div class="thdCate" id="third">
-                            <div>- 브랜드의류 <button class="delBtn">삭제</button></div>
-                            <div>- 브랜드가방 <button class="delBtn">삭제</button></div>
-                            <div>- 브랜드신발 <button class="delBtn">삭제</button></div>
-                            <button class="addThd" onclick="addThd('third')">
-                                <div class="icon">+</div>
-                                <div>카테고리 추가하기</div>
-                            </button>
-                        </div><!-- thd category -->
-                        <button class="addSub" onclick="addSub('sub')">
-                            <div class="icon">+</div>
-                            <div>서브 카테고리 추가하기</div>
-                        </button>
+                <div th:each="cate1 : ${cate1}" class="navi2" id="mainCate">
+                    <li onclick="openMainCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}"></li>
+<!--                    <button class="delBtn parent">삭제</button>-->
+                    <div class="depth2" th:id="${cate1.id}">
+
                     </div>
-                    <button class="addMain">
-                        <div class="icon">+</div>
-                        <div>메인 카테고리 추가하기</div>
-                    </button>
                 </div>
+
+<!--                <button onclick="addCategory(event)" class="add-category">-->
+<!--                    <div class="icon">+</div>-->
+<!--                    <div>서브 카테고리 추가하기</div>-->
+<!--                </button>-->
             </aside>
+
         </section>
         <div class="advice-footer">
             카테고리 메뉴 순서는 변경할때 드래그 앤 드롭으로 1차, 2차 카테고리 메뉴 이동 후 수정하기를 클릭합니다.
@@ -60,4 +53,153 @@
     </div>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
-<script type="text/javascript" src="/js/category.js"></script>
+<!--<script type="text/javascript" th:src="@{/js/category.js}"></script>-->
+<script>
+    let allCate;
+    const deleteCategory = document.querySelector('.delete-categories');
+    async function openMainCategory(event){
+
+        console.log(event.target.dataset.id)
+        let id = event.target.dataset.id
+        document.querySelectorAll('.add-category').forEach(v=>{
+            if(v.dataset.id===id){
+                v.style.display='flex'
+            } else {
+                v.style.display='none'
+            }
+        })
+        const resetClass = document.querySelectorAll('.depth2')
+        if(resetClass){
+            resetClass.forEach(v=> v.innerHTML=``)
+        }
+        const dataResponse2 = document.getElementById(`${id}`)
+        try {
+            const response = await fetch(`/admin/prod/cate1?id=${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const result = await response.json();
+
+
+            dataResponse2.innerHTML = result.cates.map(v=> {
+                return `
+                    <li draggable="true" class="change-color" data-id="${v.id}" onclick="openThirdCategory(event)">
+                            ${v.name}
+<!--                        <button class="delBtn2">삭제</button>-->
+
+                    </li>
+
+                    <div class="depth3 resetClass" id="${v.id}">
+
+                    </div>
+                `
+            }).join('');
+            allCate = document.querySelectorAll('.change-color')
+            allCate.forEach(item => {
+                item.addEventListener('dragstart', (event) => {
+                    deleteCategory.style.opacity='1';
+                    const categoryId = event.currentTarget.dataset.id;
+                    event.dataTransfer.setData('text/plain', categoryId);
+                });
+
+            });
+
+        } catch (e) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function openThirdCategory(event) {
+        console.log(event.target.dataset.id)
+        let id = event.target.dataset.id
+        const resetClass = document.querySelectorAll('.depth3')
+        if (resetClass) {
+            resetClass.forEach(v => v.innerHTML = ``)
+        }
+        const dataResponse2 = document.getElementById(`${id}`)
+        try {
+            const response = await fetch(`/admin/prod/cate1?id=${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const result = await response.json();
+
+
+            dataResponse2.innerHTML = result.cates.map(v => {
+                return `
+                    <li draggable="true" class="change-color" data-id="${v.id}">
+                            ${v.name}
+
+                    </li>
+
+                `
+            }).join('');
+            allCate = document.querySelectorAll('.change-color')
+            allCate.forEach(item => {
+
+                // 드래그 시작 이벤트 리스너 추가
+                item.addEventListener('dragstart', (event) => {
+                    deleteCategory.style.opacity='1';
+                    const categoryId = event.currentTarget.dataset.id;
+                    event.dataTransfer.setData('text/plain', categoryId);
+                });
+
+            });
+
+        } catch (e) {
+            console.error('Error:', error);
+
+        }
+
+    }
+    function addCategory(event){
+        const addInp = document.querySelector('.add-inp')
+        addInp.style.display='flex'
+    }
+
+
+
+
+
+    // deleteCategory 영역에 드롭 허용
+    deleteCategory.addEventListener('dragover', (event) => {
+        event.preventDefault();  // 기본 동작 방지 (드롭 허용)
+    });
+
+    // 드롭 이벤트 처리
+    deleteCategory.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        deleteCategory.style.opacity='0';
+        const categoryId = e.dataTransfer.getData('text/plain');
+        try {
+            const response = await fetch(`/admin/prod/category?id=${categoryId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (!response.ok) {
+                throw new Error('네트워크 응답에 문제가 있습니다.');
+            }
+            alert(`카테고리 ${categoryId}가 삭제되었습니다.`)
+            document.querySelector(`li[data-id="${categoryId}"]`).remove();
+
+
+        } catch (error) {
+            alert(`[실패] 카테고리에 등록된 상품이 존재합니다.`)
+        }
+    });
+
+</script>
