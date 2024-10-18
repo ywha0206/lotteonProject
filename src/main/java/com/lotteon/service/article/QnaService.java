@@ -66,7 +66,7 @@ public class QnaService {
                 .qnaViews(articleDto.getViews())
                 .cate1(cate1)
                 .cate2(cate2)
-                .member(null) // 테스트 중 member -> null
+                .member(member)
                 .build();
 
         // DB에 저장

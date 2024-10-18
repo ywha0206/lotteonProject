@@ -72,9 +72,5 @@ public class CsController {
         return "redirect:/cs/qnas";  // 작성 후 목록 페이지로 이동
     }
 
-    // 문의하기 목록 페이지
-    @GetMapping("/qnas")
-    public String qnaList() {
-        return "pages/cs/qna/list"; // 목록 페이지 이동 (리스트 데이터를 추가하면 됨)
-    }
+
 }
