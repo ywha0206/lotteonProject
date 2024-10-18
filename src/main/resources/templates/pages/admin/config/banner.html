@@ -101,6 +101,7 @@
                             <th>배너 이미지</th>
                             <td>
                                 <input class="inp" type="file" name="file" required>
+
                             </td>
                         </tr>
                         <tr>
@@ -119,6 +120,7 @@
                             <th>배너 링크</th>
                             <td>
                                 <input class="inp" type="text" name="bLink" placeholder="배너와 연결될 링크 입력" required>
+
                             </td>
                         </tr>
                         <tr>
@@ -139,6 +141,7 @@
                             <td>
                                 <input id="start-date" type="date" name="bSdate" required> ~
                                 <input id="end-date" type="date" name="bEdate" required>
+
                             </td>
                         </tr>
                         <tr>
@@ -146,6 +149,7 @@
                             <td>
                                 <input id="start-time" type="time" data-placeholder="시 : 분" name="bStime" required> ~
                                 <input id="end-time" type="time" data-placeholder="시 : 분" name="bEtime" required>
+
                             </td>
                         </tr>
                     </table>
@@ -261,6 +265,7 @@
 
         const form = document.getElementById('bannerForm');
         const button = document.getElementsByClassName('submit-btn')[0]; // 버튼을 가져오는 예시
+
 
         form.addEventListener('submit', (event) => {
             event.preventDefault(); // 기본 폼 제출 방지
