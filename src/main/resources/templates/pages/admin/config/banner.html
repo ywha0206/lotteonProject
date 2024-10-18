@@ -44,148 +44,37 @@
                         <th class="end-time">종료시간</th>
                         <th class="admin">관리</th>
                     </tr>
-                    <tr>
+                    <tr th:each="b,i:${bannerList}">
                         <td class="checkbox">
                             <input type="checkbox" name="" id="">
                         </td>
-                        <td>1</td>
+                        <td>[[${i.index+1}]]</td>
                         <td>
-                            <img src="../images/x-img2.png" alt="">
+                            <div class="imgBox">
+                                <img th:src="@{'/file/'+${b.bannerImg}}" alt="" class="bannerImg">
+                            </div>
                         </td>
                         <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
+                            <div class="name">[[${b.bannerName}]]</div>
+                            <div class="size">크기 : [[${b.bannerSize}]]</div>
+                            <div class="bgcolor">배경색 : [[${b.bannerBg}]]</div>
+                            <div class="link">[[${b.bannerLink}]]</div>
                         </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
+                        <td th:switch="${b.bannerLocation}">
+                            <span th:case="1">MAIN1</span>
+                            <span th:case="2">MAIN2</span>
+                            <span th:case="3">PRODUCT1</span>
+                            <span th:case="4">MEMBER1</span>
+                            <span th:case="5">MYPAGE1</span>
+                            <span th:case="*">-</span> <!-- 기본값 (일치하는 값이 없을 때) -->
+                        </td>
+                        <td>[[${#strings.substring(b.bannerSdate,0,10)}]]</td>
+                        <td>[[${#strings.substring(b.bannerEdate,0,10)}]]</td>
+                        <td>[[${#strings.substring(b.bannerStime,11,16)}]]</td>
+                        <td>[[${#strings.substring(b.bannerEtime,11,16)}]]</td>
                         <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox">
-                            <input type="checkbox" name="" id="">
-                        </td>
-                        <td>1</td>
-                        <td>
-                            <img th:src="@{/../../images/x-img2.png}" alt="">
-                        </td>
-                        <td class="td-info">
-                            <div class="name">특정배너명</div>
-                            <div class="size">크기 : 1200 x 80</div>
-                            <div class="bgcolor">배경색 : #ffff00</div>
-                            <div class="link">배너링크</div>
-                        </td>
-                        <td>MAIN1</td>
-                        <td>2023/01/01</td>
-                        <td>2023/01/07</td>
-                        <td>13:00</td>
-                        <td>15:00</td>
-                        <td class="td-admin">
-                            <input type="button" value="[ 삭제 ]">
-                            <input type="button" value="[ 수정 ]">
+                            <input type="button" value="[ 활성 ]">
+                            <input type="button" value="[ 비활성 ]">
                         </td>
                     </tr>
                 </table>
@@ -205,13 +94,13 @@
                         <tr>
                             <th>배너이름</th>
                             <td>
-                                <input class="inp" type="text" name="bName" placeholder="배너명 입력">
+                                <input class="inp" type="text" name="bName" placeholder="배너명 입력" required>
                             </td>
                         </tr>
                         <tr>
                             <th>배너 이미지</th>
                             <td>
-                                <input class="inp" type="file" name="file">
+                                <input class="inp" type="file" name="file" required>
                             </td>
                         </tr>
                         <tr>
@@ -229,7 +118,7 @@
                         <tr>
                             <th>배너 링크</th>
                             <td>
-                                <input class="inp" type="text" name="bLink" placeholder="배너와 연결될 링크 입력">
+                                <input class="inp" type="text" name="bLink" placeholder="배너와 연결될 링크 입력" required>
                             </td>
                         </tr>
                         <tr>
@@ -248,15 +137,15 @@
                         <tr>
                             <th>노출날짜</th>
                             <td>
-                                <input id="start-date" type="date" name="bSdate"> ~
-                                <input id="end-date" type="date" name="bEdate">
+                                <input id="start-date" type="date" name="bSdate" required> ~
+                                <input id="end-date" type="date" name="bEdate" required>
                             </td>
                         </tr>
                         <tr>
                             <th>노출시간</th>
                             <td>
-                                <input id="start-time" type="time" data-placeholder="시 : 분" name="bStime"> ~
-                                <input id="end-time" type="time" data-placeholder="시 : 분" name="bEtime">
+                                <input id="start-time" type="time" data-placeholder="시 : 분" name="bStime" required> ~
+                                <input id="end-time" type="time" data-placeholder="시 : 분" name="bEtime" required>
                             </td>
                         </tr>
                     </table>
@@ -385,8 +274,8 @@
                 "bannerLocation" : form.bLocation.value,
                 "bannerSdate" : form.bSdate.value,
                 "bannerEdate" : form.bEdate.value,
-                "bannerStime" : form.bStime.value,
-                "bannerEtime" : form.bEtime.value
+                "bannerStime" : form.bStime.value+":00",
+                "bannerEtime" : form.bEtime.value+":00"
             }
 
             const formData = new FormData();
