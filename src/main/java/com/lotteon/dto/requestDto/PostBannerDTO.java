@@ -24,5 +24,5 @@ public class PostBannerDTO {
     private Timestamp bannerStime;
     private Timestamp bannerEtime;
 
-    private MultipartFile bannerUpload;
+    private MultipartFile uploadFile;
 }

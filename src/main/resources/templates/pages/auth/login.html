@@ -8,14 +8,14 @@
         <div class="header-gubun"></div>
         <div class="main">
             <div class="main-inp">
-                <form action="/auth/login" method="post" class="inp-top">
+                <form th:action="@{/auth/login/customer}" method="post" class="inp-top">
                     <div class="top-left">
                         <div class="inp-id">
                             <label class="label-id label">아이디 <input name="userName" class="id inp" type="text"></label>
                         </div>
                         <div class="inp-pwd">
                             <label class="label-pwd label">비밀번호<input name="pwd" class="pwd inp" type="password"></label>
-                        </div>
+                        </div><!-- inp-pwd -->
                     </div>
                     <div class="top-right">
                         <button type="submit" class="login-btn"><a th:href="@{/auth/login}">로그인</a></button>

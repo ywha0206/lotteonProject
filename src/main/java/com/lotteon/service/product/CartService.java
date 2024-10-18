@@ -34,6 +34,7 @@ public class CartService {
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
 
+    @Transactional
     public String insertCart(PostCartDto postCartDto) {
 
 //        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
@@ -63,22 +64,25 @@ public class CartService {
         long prodId = postCartDto.getProdId();
 
         //상품 조회하고 상품옵션 조회해서
-        Optional<Product> optProduct = productRepository.findById(prodId);//엥?여기서 익셉션으로 넘어감
+//        productRepository.findById(prodId);//엥?여기서 익셉션으로 넘어감
 
-        Product product = optProduct.get();
-        double total = product.getProdPrice() * postCartDto.getQuantity();
+        System.out.println(productRepository.findById((long)1).get());
 
-        Optional<ProductOption> optProdOption = productOptionRepository.findByProduct(product);
-
-        CartItem cartItem = CartItem.builder()
-                                    .cart(optCart.get())
-                                    .product(product)
-                                    .quantity(postCartDto.getQuantity())
-                                    .productOption(optProdOption.get())
-                                    .totalPrice(total)
-                                    .build();
-
-        cartItemRepository.save(cartItem);
+//        Product product = optProduct.get();
+//        log.info("vmf프로덕트 보자"+product.toString());
+//        double total = product.getProdPrice() * postCartDto.getQuantity();
+//
+//        Optional<ProductOption> optProdOption = productOptionRepository.findByProduct(product);
+//
+//        CartItem cartItem = CartItem.builder()
+//                                    .cart(optCart.get())
+//                                    .product(product)
+//                                    .quantity(postCartDto.getQuantity())
+//                                    .productOption(optProdOption.get())
+//                                    .totalPrice(total)
+//                                    .build();
+//
+//        cartItemRepository.save(cartItem);
 
 //============================================================================================================
 //        //장바구니 아이템 있으면 수정 없으면 추가
@@ -117,7 +121,7 @@ public class CartService {
 
 
 
-        return null;
+        return "ss";
 
     }
 }

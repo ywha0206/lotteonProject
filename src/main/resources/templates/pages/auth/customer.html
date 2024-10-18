@@ -6,19 +6,19 @@
     <div class="container">
         <h3 class="header-title">일반 회원가입</h3>
         <div class="header-gubun"></div>
-        <form class="customer" action="#">
+        <form class="customer" action="/auth/customer" method="post">
             <table class="tb1">
                 <tr>
                     <th>아이디</th>
                     <td>
-                        <input id="id" type="text">
+                        <input id="id" name="memId" type="text">
                         <span>영문 , 숫자 4~12자리 설정</span>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호</th>
                     <td>
-                        <input id="password" type="password">
+                        <input id="password" name="memPwd" type="password">
                         <span>영문, 숫자 , 특수문자 8~12자리 설정</span>
                     </td>
                 </tr>
@@ -30,33 +30,33 @@
             <table class="tb2">
                 <tr>
                     <th>이름</th>
-                    <td><input id="name" class="inp" placeholder="이름입력" type="text"></td>
+                    <td><input id="name" name="custName" class="inp" placeholder="이름입력" type="text"></td>
                 </tr>
                 <tr>
                     <th>성별</th>
                     <td>
-                        <label for=""><input value="male" type="radio" name="gender">남</label>
-                        <label for=""><input value="female" type="radio" name="gender">여</label>
+                        <label for=""><input value="male" type="radio" name="custGender">남</label>
+                        <label for=""><input value="female" type="radio" name="custGender">여</label>
                     </td>
                 </tr>
                 <tr>
                     <th>이메일</th>
                     <td>
-                        <input id="email" class="inp" type="email" placeholder="이메일입력">
+                        <input id="email" class="inp" name="custEmail" type="email" placeholder="이메일입력">
                     </td>
                 </tr>
                 <tr>
                     <th>휴대폰</th>
                     <td>
-                        <input id="hp" class="inp" type="text" placeholder="-없이 입력해주세요">
+                        <input name="custHp" id="hp" class="inp" type="text" placeholder="-없이 입력해주세요">
                     </td>
                 </tr>
                 <tr>
                     <th class="th-addr">주소</th>
                     <td class="td-addr">
-                        <input id="addr1" class="addr1" type="text" placeholder="우편번호검색 클릭" >
-                        <input id="addr2" class="addr2" type="text" placeholder="기본주소"     >
-                        <input id="addr3" class="addr3" type="text" placeholder="상세주소">
+                        <input id="addr1" name="addr1" class="addr1" type="text" placeholder="우편번호검색 클릭" >
+                        <input id="addr2" name="addr2" class="addr2" type="text" placeholder="기본주소"     >
+                        <input id="addr3" name="addr3" class="addr3" type="text" placeholder="상세주소">
                     </td>
                 </tr>
             </table>
@@ -70,50 +70,52 @@
 
 
 
-    <script>
-        const signupBtn = document.getElementById('signup-btn');
-        const form = document.querySelector('.customer');
-    
-        // 각 입력 필드
-        const idInput = document.getElementById('id'); // 아이디
-        const passwordInput = document.getElementById('password'); // 비밀번호
-        const passwordConfirmInput = document.getElementById('confirm'); // 비밀번호 확인
-        const nameInput = document.getElementById('name'); // 이름
-        const emailInput = document.getElementById('email'); // 이메일
-        const phoneInput = document.getElementById('hp'); // 휴대폰
-        const addr1Input = document.getElementById('addr1'); // 주소1
-        const addr2Input = document.getElementById('addr2'); // 주소2
-    
-        // 유효성 검사 함수 (성별은 검사하지 않음)
-        function validateForm() {
-            const isIdValid = /^[a-zA-Z0-9]{4,12}$/.test(idInput.value); // 아이디: 영문, 숫자 4~12자리
-            const isPasswordValid = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,12}$/.test(passwordInput.value); // 비밀번호: 영문, 숫자, 특수문자 8~12자리
-            const isPasswordConfirmed = passwordInput.value === passwordConfirmInput.value; // 비밀번호 확인
-            const isNameValid = nameInput.value.trim() !== ''; // 이름: 빈 값이 아닌지
-            const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value); // 이메일 형식
-            const isPhoneValid = /^\d{10,11}$/.test(phoneInput.value); // 휴대폰: 숫자만 10~11자리
-            const isAddrValid = addr1Input.value.trim() !== '' && addr2Input.value.trim() !== ''; // 주소: 주소1, 주소2 필수
-    
-            // 모든 조건이 참이면 버튼 활성화 (성별 선택 제외)
-            const isFormValid = isIdValid && isPasswordValid && isPasswordConfirmed && isNameValid && isEmailValid && isPhoneValid && isAddrValid;
-            signupBtn.disabled = !isFormValid;
-    
-            return isFormValid;
-        }
-    
-        // 입력 필드에 이벤트 리스너 추가 (입력값 변경시마다 유효성 검사)
-        form.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', validateForm);
-        });
-    
-        // 폼 제출 이벤트 처리
-        form.addEventListener('submit', function (e) {
-            if (!validateForm()) {
-                e.preventDefault(); // 유효하지 않으면 폼 제출 막기
-                alert('모든 필수 항목을 올바르게 입력해주세요.');
-            }
-        });
-    
-    </script>
+<!--    <script>-->
+<!--        const signupBtn = document.getElementById('signup-btn');-->
+<!--        const form = document.querySelector('.customer');-->
+<!--    -->
+<!--        // 각 입력 필드-->
+<!--        const idInput = document.getElementById('id'); // 아이디-->
+<!--        const passwordInput = document.getElementById('password'); // 비밀번호-->
+<!--        const passwordConfirmInput = document.getElementById('confirm'); // 비밀번호 확인-->
+<!--        const nameInput = document.getElementById('name'); // 이름-->
+<!--        const emailInput = document.getElementById('email'); // 이메일-->
+<!--        const phoneInput = document.getElementById('hp'); // 휴대폰-->
+<!--        const addr1Input = document.getElementById('addr1'); // 주소1-->
+<!--        const addr2Input = document.getElementById('addr2'); // 주소2-->
+<!--    -->
+<!--        // 유효성 검사 함수 (성별은 검사하지 않음)-->
+<!--        function validateForm() {-->
+<!--            const isIdValid = /^[a-zA-Z0-9]{4,12}$/.test(idInput.value); // 아이디: 영문, 숫자 4~12자리-->
+<!--            const isPasswordValid = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,12}$/.test(passwordInput.value); // 비밀번호: 영문, 숫자, 특수문자 8~12자리-->
+<!--            const isPasswordConfirmed = passwordInput.value === passwordConfirmInput.value; // 비밀번호 확인-->
+<!--            const isNameValid = nameInput.value.trim() !== ''; // 이름: 빈 값이 아닌지-->
+<!--            const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value); // 이메일 형식-->
+<!--            const isPhoneValid = /^\d{10,11}$/.test(phoneInput.value); // 휴대폰: 숫자만 10~11자리-->
+<!--            const isAddrValid = addr1Input.value.trim() !== '' && addr2Input.value.trim() !== ''; // 주소: 주소1, 주소2 필수-->
+<!--    -->
+<!--            // 모든 조건이 참이면 버튼 활성화 (성별 선택 제외)-->
+<!--            const isFormValid = isIdValid && isPasswordValid && isPasswordConfirmed && isNameValid && isEmailValid && isPhoneValid && isAddrValid;-->
+<!--            signupBtn.disabled = !isFormValid;-->
+<!--    -->
+<!--            return isFormValid;-->
+<!--        }-->
+<!--    -->
+<!--        // 입력 필드에 이벤트 리스너 추가 (입력값 변경시마다 유효성 검사)-->
+<!--        form.querySelectorAll('input').forEach(input => {-->
+<!--            input.addEventListener('input', validateForm);-->
+<!--        });-->
+<!--    -->
+<!--        // 폼 제출 이벤트 처리-->
+<!--        form.addEventListener('submit', function (e) {-->
+<!--            if (!validateForm()) {-->
+<!--                e.preventDefault(); // 유효하지 않으면 폼 제출 막기-->
+<!--                alert('모든 필수 항목을 올바르게 입력해주세요.');-->
+<!--            } else {-->
+<!--                console.log("ddd")-->
+<!--            }-->
+<!--        });-->
+<!--    -->
+<!--    </script>-->
     
     
