@@ -13,13 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class AdminCouponController {
 
+    private String getSideValue() {
+        return "coupon";  // 실제 config 값을 여기에 설정합니다.
+    }
+
     @GetMapping("/coupons")
     public String coupons(Model model) {
+        model.addAttribute("config", getSideValue());
         return "pages/admin/coupon/list";
     }
 
     @GetMapping("/issuearances")
     public String issuances(Model model) {
+        model.addAttribute("config", getSideValue());
         return "pages/admin/coupon/issuearance";
     }
 }

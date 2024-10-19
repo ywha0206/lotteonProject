@@ -18,14 +18,19 @@ import java.util.List;
 public class AdminProdController {
     private final CategoryProductService categoryProductService;
 
+    private String getSideValue() {
+        return "product";  // 실제 config 값을 여기에 설정합니다.
+    }
+
     @GetMapping("/products")
     public String products(Model model) {
-
+        model.addAttribute("config", getSideValue());
         return "pages/admin/product/list";
     }
 
     @GetMapping("/product/post")
     public String post(Model model) {
+        model.addAttribute("config", getSideValue());
         return "pages/admin/product/register";
     }
 
@@ -33,7 +38,7 @@ public class AdminProdController {
     public String cate(Model model) {
         List<GetCategoryDto> cate1 = categoryProductService.findCategory();
         model.addAttribute("cate1", cate1);
-
+        model.addAttribute("config", getSideValue());
         return "pages/admin/product/category";
     }
 
