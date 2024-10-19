@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -72,8 +69,10 @@ public class CategoryProductService {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
         List<CategoryProduct> cates = categoryProducts.getChildren();
 
-        List<GetCategoryDto> dtos = cates.stream().map(v->v.toGetCategoryDto()).toList();
-        System.out.println(dtos);
+        List<GetCategoryDto> dtos = cates.stream()
+                .sorted(Comparator.comparing(CategoryProduct::getCategoryOrder))
+                .map(CategoryProduct::toGetCategoryDto)
+                .toList();
 
         return dtos;
     }
@@ -119,9 +118,16 @@ public class CategoryProductService {
             return;
         }
 
+        List<CategoryProduct> children = categoryProduct.get().getChildren();
+
+        int newCategoryOrder = children.isEmpty()
+                ? 1
+                : children.get(children.size() - 1).getCategoryOrder() + 1;
+
         CategoryProduct newCategoryProduct = CategoryProduct.builder()
-                .categoryLevel(categoryProduct.get().getCategoryLevel()+1)
+                .categoryLevel(categoryProduct.get().getCategoryLevel() + 1)
                 .categoryName(getCategoryDto.getName())
+                .categoryOrder(newCategoryOrder)
                 .parent(categoryProduct.get())
                 .build();
 
@@ -132,8 +138,14 @@ public class CategoryProductService {
     public void putCategory(GetCategoryDto getCategoryDto) {
         Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(Long.parseLong(getCategoryDto.getName()));
         Optional<CategoryProduct> categoryParent = categoryProductRepository.findById(getCategoryDto.getId());
+        if(categoryProduct.get().getCategoryLevel() > categoryParent.get().getCategoryLevel()){
+            categoryProduct.get().updateParent(categoryParent.get());
+        } else if (categoryProduct.get().getCategoryLevel() == categoryParent.get().getCategoryLevel() 
+                && categoryProduct.get().getParent()==categoryParent.get().getParent()
+        ){
+            categoryProduct.get().replaceOrder(categoryParent.get());
+        }
 
-        categoryProduct.get().updateParent(categoryParent.get());
 
     }
 }
