@@ -110,9 +110,9 @@
                     if(draggedElementClass==='수정'){
                         const result = await putCategory(postSubmitData);
                         if(result){
-                            console.log(e.target)
-                            e.target.dispatchEvent(new MouseEvent('click'))
-                            e.target.dispatchEvent(new MouseEvent('click'))
+                            const parent = e.target.parentElement.parentElement.firstElementChild
+                            parent.dispatchEvent(new MouseEvent('click'))
+                            parent.dispatchEvent(new MouseEvent('click'))
                         }
                     } else {
                         const result2 = await postCategory(postSubmitData);
@@ -169,8 +169,6 @@
 
             }
             allCate.forEach(item => {
-
-                // 드래그 시작 이벤트 리스너 추가
                 item.addEventListener('dragstart', (event) => {
                     deleteCategory.style.opacity='1';
                     const categoryId = event.currentTarget.dataset.id;
@@ -180,6 +178,23 @@
 
                 item.addEventListener('dragover', (event) => {
                     event.preventDefault();  // 기본 동작 방지 (드롭 허용)
+                });
+                item.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation()
+                    const categoryName = e.dataTransfer.getData('text/plain');
+                    const postSubmitData = {
+                        "id": e.target.dataset.id,
+                        "name": categoryName
+                    }
+                    if (draggedElementClass === '수정') {
+                        const result = await putCategory(postSubmitData);
+                        if (result) {
+                            const parent = e.target.parentElement.parentElement.firstElementChild
+                            parent.dispatchEvent(new MouseEvent('click'))
+                            parent.dispatchEvent(new MouseEvent('click'))
+                        }
+                    }
                 });
 
             });
