@@ -53,5 +53,9 @@ public class CategoryProduct {
                 .build();
     }
 
+    public void updateParent(CategoryProduct categoryProduct){
+        this.parent = categoryProduct;
+    }
+
 
 }

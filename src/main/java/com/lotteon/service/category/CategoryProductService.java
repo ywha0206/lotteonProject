@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -111,4 +112,28 @@ public class CategoryProductService {
 
     }
 
+    public void postCategory(GetCategoryDto getCategoryDto) {
+        Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(getCategoryDto.getId());
+
+        if(categoryProduct.isEmpty()){
+            return;
+        }
+
+        CategoryProduct newCategoryProduct = CategoryProduct.builder()
+                .categoryLevel(categoryProduct.get().getCategoryLevel()+1)
+                .categoryName(getCategoryDto.getName())
+                .parent(categoryProduct.get())
+                .build();
+
+        categoryProductRepository.save(newCategoryProduct);
+
+    }
+
+    public void putCategory(GetCategoryDto getCategoryDto) {
+        Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(Long.parseLong(getCategoryDto.getName()));
+        Optional<CategoryProduct> categoryParent = categoryProductRepository.findById(getCategoryDto.getId());
+
+        categoryProduct.get().updateParent(categoryParent.get());
+
+    }
 }
