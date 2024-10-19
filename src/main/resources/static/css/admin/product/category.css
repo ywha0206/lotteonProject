@@ -242,11 +242,18 @@ li {list-style: none;}
     }
 }
 
-.depth2 li {
+.depth2 > li {
     font-size: 13px;
     padding-left: 30px;
-    /*background-color: gainsboro;*/
+    background-color: ghostwhite;
 }
+
+.depth3 > li {
+    font-size: 13px;
+    padding-left: 30px;
+    background-color: ivory;
+}
+
 
 .depth3 {
     position: relative;

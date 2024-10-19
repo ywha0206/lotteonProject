@@ -31,16 +31,8 @@
             <aside id="sidebar2">
                 <div th:each="cate1 : ${cate1}" class="navi2" id="mainCate">
                     <li onclick="openMainCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}"></li>
-<!--                    <button class="delBtn parent">삭제</button>-->
-                    <div class="depth2" th:id="${cate1.id}">
-
-                    </div>
+                    <div class="depth2" th:id="${cate1.id}"></div>
                 </div>
-
-<!--                <button onclick="addCategory(event)" class="add-category">-->
-<!--                    <div class="icon">+</div>-->
-<!--                    <div>서브 카테고리 추가하기</div>-->
-<!--                </button>-->
             </aside>
 
         </section>
@@ -53,26 +45,20 @@
     </div>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
-<!--<script type="text/javascript" th:src="@{/js/category.js}"></script>-->
 <script>
     let allCate;
+    const addInp = document.querySelector('.add-inp')
     const deleteCategory = document.querySelector('.delete-categories');
+    let draggedElementClass = '';
+    let draggedElementClass2 = '';
+    let cnt=0;
     async function openMainCategory(event){
-
-        console.log(event.target.dataset.id)
         let id = event.target.dataset.id
-        document.querySelectorAll('.add-category').forEach(v=>{
-            if(v.dataset.id===id){
-                v.style.display='flex'
-            } else {
-                v.style.display='none'
-            }
-        })
-        const resetClass = document.querySelectorAll('.depth2')
-        if(resetClass){
-            resetClass.forEach(v=> v.innerHTML=``)
-        }
         const dataResponse2 = document.getElementById(`${id}`)
+        if(dataResponse2.innerHTML!==``){
+            dataResponse2.innerHTML=``
+            return;
+        }
         try {
             const response = await fetch(`/admin/prod/cate1?id=${id}`, {
                 method: "GET",
@@ -86,13 +72,10 @@
             }
             const result = await response.json();
 
-
             dataResponse2.innerHTML = result.cates.map(v=> {
                 return `
-                    <li draggable="true" class="change-color" data-id="${v.id}" onclick="openThirdCategory(event)">
+                    <li draggable="true" class="cate2" data-id="${v.id}" onMouseEnter="openThirdCategory(event)">
                             ${v.name}
-<!--                        <button class="delBtn2">삭제</button>-->
-
                     </li>
 
                     <div class="depth3 resetClass" id="${v.id}">
@@ -100,23 +83,54 @@
                     </div>
                 `
             }).join('');
-            allCate = document.querySelectorAll('.change-color')
+            allCate = document.querySelectorAll('.cate2')
             allCate.forEach(item => {
+
+                // 드래그 시작 이벤트 리스너 추가
                 item.addEventListener('dragstart', (event) => {
                     deleteCategory.style.opacity='1';
                     const categoryId = event.currentTarget.dataset.id;
+                    draggedElementClass = '수정';
                     event.dataTransfer.setData('text/plain', categoryId);
+                    draggedElementClass2 = event.target.parentElement.parentElement.firstElementChild
                 });
 
-            });
+                item.addEventListener('dragover', (event) => {
+                    event.preventDefault();  // 기본 동작 방지 (드롭 허용)
+                });
 
+                item.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation()
+                    const categoryName = e.dataTransfer.getData('text/plain');
+                    const postSubmitData = {
+                        "id" : e.target.dataset.id,
+                        "name" : categoryName
+                    }
+                    if(draggedElementClass==='수정'){
+                        const result = await putCategory(postSubmitData);
+                        if(result){
+                            console.log(e.target)
+                            e.target.dispatchEvent(new MouseEvent('mouseout'))
+                            e.target.dispatchEvent(new MouseEvent('mouseenter'))
+                        }
+                    } else {
+                        const result2 = await postCategory(postSubmitData);
+                        if(result2){
+                            e.target.dispatchEvent(new MouseEvent('mouseout'))
+                            e.target.dispatchEvent(new MouseEvent('mouseenter'))
+                        }
+                    }
+                })
+
+            });
         } catch (e) {
             console.error('Error:', error);
         }
     }
 
+
     async function openThirdCategory(event) {
-        console.log(event.target.dataset.id)
         let id = event.target.dataset.id
         const resetClass = document.querySelectorAll('.depth3')
         if (resetClass) {
@@ -135,50 +149,55 @@
                 throw new Error('Network response was not ok');
             }
             const result = await response.json();
-
-
-            dataResponse2.innerHTML = result.cates.map(v => {
-                return `
-                    <li draggable="true" class="change-color" data-id="${v.id}">
+            if(result.cates.length===0){
+                dataResponse2.innerHTML= `
+                     <li draggable="true" class="cate3"">
+                            하위 카테고리가 없습니다.
+                    </li>
+                `
+                allCate = document.querySelectorAll('.cate3')
+            } else {
+                dataResponse2.innerHTML = result.cates.map(v => {
+                    return `
+                    <li draggable="true" class="cate3" data-id="${v.id}">
                             ${v.name}
-
                     </li>
 
                 `
-            }).join('');
-            allCate = document.querySelectorAll('.change-color')
+                }).join('');
+                allCate = document.querySelectorAll('.cate3')
+
+            }
             allCate.forEach(item => {
 
                 // 드래그 시작 이벤트 리스너 추가
                 item.addEventListener('dragstart', (event) => {
                     deleteCategory.style.opacity='1';
                     const categoryId = event.currentTarget.dataset.id;
+                    draggedElementClass = '수정';
                     event.dataTransfer.setData('text/plain', categoryId);
                 });
 
-            });
+                item.addEventListener('dragover', (event) => {
+                    event.preventDefault();  // 기본 동작 방지 (드롭 허용)
+                });
 
+            });
         } catch (e) {
             console.error('Error:', error);
 
         }
-
     }
-    function addCategory(event){
-        const addInp = document.querySelector('.add-inp')
-        addInp.style.display='flex'
-    }
-
-
-
-
-
-    // deleteCategory 영역에 드롭 허용
+    addInp.addEventListener('dragstart', (event) => {
+        deleteCategory.style.opacity='1';
+        const categoryName = event.currentTarget.value;
+        draggedElementClass = '추가';
+        event.dataTransfer.setData('text/plain', categoryName);
+    });
     deleteCategory.addEventListener('dragover', (event) => {
         event.preventDefault();  // 기본 동작 방지 (드롭 허용)
     });
 
-    // 드롭 이벤트 처리
     deleteCategory.addEventListener('drop', async (e) => {
         e.preventDefault();
         deleteCategory.style.opacity='0';
@@ -201,5 +220,94 @@
             alert(`[실패] 카테고리에 등록된 상품이 존재합니다.`)
         }
     });
+
+    async function postCategory(postSubmitData){
+
+        try {
+            const response = await fetch(`/admin/prod/category`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(postSubmitData)
+            });
+            if (!response.ok) {
+                throw new Error('네트워크 응답에 문제가 있습니다.');
+            }
+            deleteCategory.style.opacity='0';
+            addInp.value = ''
+            return true;
+
+        } catch (e) {
+            return false;
+        }
+
+    }
+
+    async function putCategory(postSubmitData){
+
+        try {
+            const response = await fetch(`/admin/prod/category`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(postSubmitData)
+            });
+            if (!response.ok) {
+                throw new Error('네트워크 응답에 문제가 있습니다.');
+            }
+            deleteCategory.style.opacity='0';
+            addInp.value = ''
+            return true;
+
+        } catch (e) {
+            return false;
+        }
+
+    }
+
+    const mainCategory = document.querySelectorAll('.navi2 li')
+    mainCategory.forEach(v=> {
+        v.addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
+
+        v.addEventListener('drop',async (e) => {
+            e.preventDefault();
+            e.stopPropagation()
+            const categoryName = e.dataTransfer.getData('text/plain');
+            const postSubmitData = {
+                "id": event.target.dataset.id,
+                "name": categoryName
+            }
+
+            if (draggedElementClass === '수정') {
+                const result = await putCategory(postSubmitData);
+                if (result) {
+                    const clickEvent = new MouseEvent('click');
+                    draggedElementClass2.dispatchEvent(new MouseEvent('click'))
+                    draggedElementClass2.dispatchEvent(new MouseEvent('click'))
+                    const parentElement = e.target
+                    if (parentElement) {
+                        parentElement.dispatchEvent(clickEvent)
+                        parentElement.dispatchEvent(clickEvent)
+                    }
+                }
+            } else {
+                const isSuccess = await postCategory(postSubmitData);
+
+                if (isSuccess) {
+                    const previousSibling = e.target;
+
+                    if (previousSibling) {
+                        const clickEvent = new MouseEvent('click');
+                        previousSibling.dispatchEvent(clickEvent);
+                        previousSibling.dispatchEvent(clickEvent);
+                    }
+                }
+            }
+        })
+    })
 
 </script>
