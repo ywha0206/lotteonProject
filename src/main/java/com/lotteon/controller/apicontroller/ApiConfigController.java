@@ -2,7 +2,6 @@ package com.lotteon.controller.apicontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lotteon.dto.requestDto.PatchBannerDTO;
 import com.lotteon.dto.requestDto.PostBannerDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.entity.config.Banner;
