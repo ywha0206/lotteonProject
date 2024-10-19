@@ -74,7 +74,9 @@
 
             dataResponse2.innerHTML = result.cates.map(v=> {
                 return `
+
                     <li draggable="true" class="cate2" data-id="${v.id}" onclick="openThirdCategory(event)">
+
                             ${v.name}
                     </li>
 
@@ -110,15 +112,19 @@
                     if(draggedElementClass==='수정'){
                         const result = await putCategory(postSubmitData);
                         if(result){
+
                             const parent = e.target.parentElement.parentElement.firstElementChild
                             parent.dispatchEvent(new MouseEvent('click'))
                             parent.dispatchEvent(new MouseEvent('click'))
+
                         }
                     } else {
                         const result2 = await postCategory(postSubmitData);
                         if(result2){
+
                             e.target.dispatchEvent(new MouseEvent('click'))
                             e.target.dispatchEvent(new MouseEvent('click'))
+
                         }
                     }
                 })
