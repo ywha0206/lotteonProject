@@ -74,7 +74,9 @@
 
             dataResponse2.innerHTML = result.cates.map(v=> {
                 return `
-                    <li draggable="true" class="cate2" data-id="${v.id}" onMouseEnter="openThirdCategory(event)">
+
+                    <li draggable="true" class="cate2" data-id="${v.id}" onclick="openThirdCategory(event)">
+
                             ${v.name}
                     </li>
 
@@ -111,14 +113,18 @@
                         const result = await putCategory(postSubmitData);
                         if(result){
                             console.log(e.target)
-                            e.target.dispatchEvent(new MouseEvent('mouseout'))
-                            e.target.dispatchEvent(new MouseEvent('mouseenter'))
+
+                            e.target.dispatchEvent(new MouseEvent('click'))
+                            e.target.dispatchEvent(new MouseEvent('click'))
+
                         }
                     } else {
                         const result2 = await postCategory(postSubmitData);
                         if(result2){
-                            e.target.dispatchEvent(new MouseEvent('mouseout'))
-                            e.target.dispatchEvent(new MouseEvent('mouseenter'))
+
+                            e.target.dispatchEvent(new MouseEvent('click'))
+                            e.target.dispatchEvent(new MouseEvent('click'))
+
                         }
                     }
                 })
