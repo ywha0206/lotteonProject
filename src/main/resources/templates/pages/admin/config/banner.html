@@ -426,11 +426,28 @@
 
         document.addEventListener('click', function(e) {
             if(e.target.classList.contains('banner-active')){
+
+                const nowStr = e.target.value.split(' ')[1];
+                if(!confirm("정말 "+nowStr+"하시겠습니까?")){
+                    return;
+                }
                 const clickedNo = e.target.dataset.no;
                 const clickState = e.target.dataset.state;
                 const changedState = Math.abs(clickState-1);
-
-                e.target.value = changedState<1?'[ 활성화 ]':'[ 비활성화 ]';
+                console.log(clickState+" to "+changedState);
+                fetch(`/admin/config/banner/${clickedNo}/${changedState}`, {method: "PATCH"})
+                    .then(resp => resp.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        if(data.bannerState===changedState){
+                            alert("성공적으로 "+nowStr+"되었습니다.");
+                            e.target.dataset.state = changedState;
+                            e.target.value = changedState<1?'[ 활성화 ]':'[ 비활성화 ]';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
             }
 
             const selectall = document.querySelector('.selectall');

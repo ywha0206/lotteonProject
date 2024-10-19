@@ -1,9 +1,11 @@
 package com.lotteon.service.config;
 
+import com.lotteon.dto.requestDto.PatchBannerDTO;
 import com.lotteon.dto.requestDto.PostBannerDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.entity.config.Banner;
 import com.lotteon.repository.config.BannerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -63,5 +65,16 @@ public class BannerService {
             log.error(e.getMessage());
             return false;
         }
+    }
+
+    public Banner updateBannerState(Long id, Integer state) {
+        Banner banner = bannerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        log.info("unchanged : "+banner);
+        log.info("state : "+state);
+        banner.updateBannerState(state);
+        log.info("changed : "+banner);
+
+        return bannerRepository.save(banner);
     }
 }

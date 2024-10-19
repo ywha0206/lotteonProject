@@ -1,6 +1,7 @@
 package com.lotteon.entity.config;
 
 
+import com.lotteon.dto.requestDto.PatchBannerDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,4 +51,13 @@ public class Banner {
 
     @Column(name = "banner_state")
     private int bannerState;
+
+
+    public void updateBannerState(Integer bannerState) {
+        if (bannerState != null && bannerState<2) {
+            this.bannerState = bannerState;
+        }
+    }
+
+
 }
