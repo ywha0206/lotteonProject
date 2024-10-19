@@ -1,16 +1,39 @@
 <link rel="stylesheet" th:href="@{/css/product/cart.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<script th:src="@{/js/main.js}"></script>
 <header th:replace="layout/main/header.html"></header>
-<main>
-  <div class="aside">
-    <aside class="aside1"></aside>
-    <aside class="aside2"></aside>
-  </div>
+<main style="margin-top: 140px; gap: 0">
+  <aside id="aside" style="margin: 0; margin-right: 30px">
+    <nav id="menu" class="menu">
+      <ul th:each="cate1 : ${category1}">
+        <li class="dep1">
+          <a href="#" class="m">
+            <span onclick="openCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}" class="d1_tit">패션 · 의류 · 뷰티</span>
+          </a></li>
+      </ul>
+      <ul>
+
+        <li class="dep1">
+          <a href="#">
+            <div class="dep2">
+              <button onclick="closePopupCategory()">X</button>
+              <ul class="cf flex" id="data-response">
+              </ul>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </nav><!-- #memu .memu -->
+    <div class="memuBg"></div><!-- .memuBg -->
+
+
+
+  </aside>
   <div id="wrap">
 
     <!-- .aside -->
     <main id="main" style="height: auto;">
-      <nav id="navi">
+      <nav id="navi" style="width: 810px">
         <h2 class="sub_tit">장바구니</h2>
         <p class="location">
           <span>HOME</span>

@@ -1,7 +1,10 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.PostCartDto;
+import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.product.CartService;
+import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/prod")
 @RequiredArgsConstructor
@@ -19,9 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CartOrderController {
 
     private final CartService cartService;
+    private final CategoryProductService categoryProductService;
 
     @GetMapping("/cart")
     public String join(Model model) {
+        List<GetCategoryDto> category1 = categoryProductService.findCategory();
+
+        model.addAttribute("category1", category1);
         return "pages/product/cart";
     }
 
@@ -41,11 +50,17 @@ public class CartOrderController {
 
     @GetMapping("/order")
     public String order(Model model) {
+        List<GetCategoryDto> category1 = categoryProductService.findCategory();
+
+        model.addAttribute("category1", category1);
         return "pages/product/order";
     }
 
     @GetMapping("/order/complete")
     public String orderComplete(Model model) {
+        List<GetCategoryDto> category1 = categoryProductService.findCategory();
+
+        model.addAttribute("category1", category1);
         return "pages/product/complete";
     }
 }
