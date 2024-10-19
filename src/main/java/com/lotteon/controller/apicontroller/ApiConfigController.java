@@ -2,6 +2,7 @@ package com.lotteon.controller.apicontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lotteon.dto.requestDto.PatchBannerDTO;
 import com.lotteon.dto.requestDto.PostBannerDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.entity.config.Banner;
@@ -31,7 +32,6 @@ public class ApiConfigController {
                                           @RequestPart("file") MultipartFile file) {
         log.info("inserting...");
 
-
         ObjectMapper objectMapper = new ObjectMapper();
         PostBannerDTO bannerDTO;
         try {
@@ -45,7 +45,6 @@ public class ApiConfigController {
             bannerDTO.setUploadFile(file);
             // 서비스 호출하여 배너 등록
             Banner banner = bannerService.insert(bannerDTO);
-
             // 성공 응답
             return ResponseEntity.ok().body(banner);
         } catch (Exception e) {
@@ -72,4 +71,11 @@ public class ApiConfigController {
         response.put("success", success);
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/banner/{id}/{state}")
+    public ResponseEntity<?> changeBannerState(@PathVariable("id") Long id, @PathVariable("state") Integer state) {
+        Banner banner = bannerService.updateBannerState(id, state);
+        return ResponseEntity.ok().body(banner);
+    }
+
 }
