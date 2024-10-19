@@ -1,7 +1,6 @@
 package com.lotteon.entity.config;
 
 
-import com.lotteon.dto.requestDto.PatchBannerDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
