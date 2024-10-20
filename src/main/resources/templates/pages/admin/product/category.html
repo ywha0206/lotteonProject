@@ -24,10 +24,11 @@
             <div class="main-description">쇼핑몰 메인, 상품 페이지 사이드 카테고리 메뉴 입니다.</div>
         </section>
         <div class="btn">
+            <div class="delete-categories"></div>
             <input draggable="true" class="add-inp" placeholder="추가할 카테고리 이름을 입력해주세요.">
         </div>
         <section class="categoryProduct">
-            <div class="delete-categories"></div>
+
             <aside id="sidebar2">
                 <div th:each="cate1 : ${cate1}" class="navi2" id="mainCate">
                     <li onclick="openMainCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}"></li>
@@ -196,9 +197,10 @@
                     if (draggedElementClass === '수정') {
                         const result = await putCategory(postSubmitData);
                         if (result) {
-                            const parent = e.target.parentElement.parentElement.firstElementChild
+                            const parent = e.target.parentElement.previousElementSibling
                             parent.dispatchEvent(new MouseEvent('click'))
                             parent.dispatchEvent(new MouseEvent('click'))
+                            console.log(e.target)
                         }
                     }
                 });
