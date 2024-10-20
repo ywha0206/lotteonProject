@@ -129,7 +129,7 @@
                                 <th>아이디</th>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 4px">
-                                        <input class="inp" type="text" />
+                                        <input class="inp" id="memId" type="text" />
                                         <p class="info2">영문, 숫자 4~12자 설정</p>
                                     </div>
                                 </td>
@@ -138,7 +138,7 @@
                                 <th>비밀번호</th>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 4px">
-                                        <input class="inp" type="text" />
+                                        <input class="inp" id="memPwd" type="text" />
                                         <p class="info2">영문 숫자 특수문자 8~12자 설정</p>
                                     </div>
                                 </td>
@@ -160,6 +160,7 @@
                                 <th>상호명</th>
                                 <td>
                                     <input
+                                            id="sellCompany"
                                             class="inp"
                                             type="text"
                                             placeholder="상호명 입력 예 "
@@ -169,7 +170,7 @@
                             <tr>
                                 <th>대표</th>
                                 <td>
-                                    <input class="inp" type="text" placeholder="이름입력" />
+                                    <input class="inp" id="sellRep" type="text" placeholder="이름입력" />
                                 </td>
                             </tr>
                             <tr>
@@ -177,6 +178,7 @@
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 4px">
                                         <input
+                                                id="sellCode"
                                                 class="inp"
                                                 type="text"
                                                 placeholder="사업자등록번호입력"
@@ -190,6 +192,7 @@
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 4px">
                                         <input
+                                                id="sellOrderCode"
                                                 class="inp"
                                                 type="text"
                                                 placeholder="통신판매업번호입력"
@@ -201,27 +204,28 @@
                             <tr>
                                 <th>전화번호</th>
                                 <td>
-                                    <input class="inp" type="text" placeholder="전화번호입력" />
+                                    <input class="inp" id="sellHp" type="text" placeholder="전화번호입력" />
                                 </td>
                             </tr>
                             <tr>
                                 <th>팩스</th>
                                 <td>
-                                    <input class="inp" type="text" placeholder="팩스번호입력" />
+                                    <input class="inp" id="sellFax" type="text" placeholder="팩스번호입력" />
                                 </td>
                             </tr>
                             <tr>
                                 <th>주소</th>
                                 <td>
                                     <input
+                                            id="sellAddr1"
                                             class="inp"
                                             type="text"
                                             placeholder="우편번호검색클릭"
                                     />
                                     <br />
-                                    <input class="inp" type="text" placeholder="기본주소검색" />
+                                    <input class="inp" id="sellAddr2" type="text" placeholder="기본주소검색" />
                                     <br />
-                                    <input class="inp" type="text" placeholder="상세주소검색" />
+                                    <input class="inp" id="sellAddr3" type="text" placeholder="상세주소검색" />
                                 </td>
                             </tr>
                         </div>
@@ -229,7 +233,7 @@
 
                 </form>
                 <div class="btns">
-                    <button type="submit" class="submit-btn">등록하기</button>
+                    <button type="button" onclick="postSeller(event)" class="submit-btn">등록하기</button>
                 </div>
             </div>
             <div class="popupbg"></div>
@@ -251,4 +255,36 @@
         popup.style.display = "none";
         bg.style.display = "none";
     }
+
+    async function postSeller(event){
+        const submitData = {
+            'memId' : document.getElementById('memId').value,
+            'memPwd' : document.getElementById('memPwd').value,
+            'sellCompany' : document.getElementById('sellCompany').value,
+            'sellRep' : document.getElementById('sellRep').value,
+            'sellCode' : document.getElementById('sellCode').value,
+            'sellOrderCode' : document.getElementById('sellOrderCode').value,
+            'sellHp' : document.getElementById('sellHp').value,
+            'sellFax' : document.getElementById('sellFax').value,
+            'sellAddr' : document.getElementById('sellAddr1').value+'/'+document.getElementById('sellAddr2').value+'/'+document.getElementById('sellAddr3').value,
+        }
+
+        try {
+            const resp = await fetch('/admin/shop/seller',{
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(submitData)
+            })
+            const result = await resp.text();
+            if(result==="SU"){
+                window.location.href = "/admin/shop/shop"
+            }
+            
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
 </script>
