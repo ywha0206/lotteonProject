@@ -289,7 +289,7 @@ li {list-style: none;}
     height: 50px;
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 78%;
     translate: -50% -50%;
     opacity: 0;
     z-index: 1000;
