@@ -1,22 +1,25 @@
 package com.lotteon.service.product;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartDto;
-import com.lotteon.entity.member.Member;
+import com.lotteon.dto.responseDto.CartSessionDto;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.*;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.product.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -35,13 +38,27 @@ public class CartService {
     private final ProductOptionRepository productOptionRepository;
 
     @Transactional
-    public ResponseEntity<?> insertCart(PostCartDto postCartDto) {
+    public ResponseEntity<?> insertCart(PostCartDto postCartDto, HttpSession session) {
 
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                                                                .getAuthentication()
-                                                                .getPrincipal();
+                .getAuthentication()
+                .getPrincipal();
 
-        long custId = auth.getUser().getCustomer().getId();
+        // 인증 정보가 없는 경우
+        if (auth == null) {
+            // responseDto를 생성해서 세션에 저장
+            CartSessionDto cartSessionDto = new CartSessionDto(postCartDto.getProdId(), postCartDto.getQuantity(), postCartDto.getOptions());
+            session.setAttribute("cartSession", cartSessionDto);  // 세션에 저장
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated. Cart saved to session.");
+        }
+
+        Customer customer = auth.getUser().getCustomer();
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer not found");
+        }
+
+        long custId = customer.getId();
 
         //장바구니 조회 없으면 생성
         Optional<Cart> optCart = cartRepository.findByCustId(custId);
@@ -54,80 +71,71 @@ public class CartService {
             cart = optCart.get();
         }
 
-        log.info("장바구니 조회한거"+cart.toString());
-// ===============================================================================================================
-//
-//        long prodId = postCartDto.getProdId();
-//
-//        //상품 조회
-//        Optional<Product> optProduct = productRepository.findById(prodId);
-//        Product product = optProduct.get();
-//
-//        //카트 아이템에 상품이 있는지 조회하고
-//        List<CartItem> cartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
-//        log.info(cartItems.toString());
-//
-//        // 카트 아이템에 있는 상품의 옵션이 현재 선택한 옵션과 일치하는지 비교
-//        List<Long> selectedOptionsIds = cartItem.getSelectedOptions().stream()
-//                .map(CartItemOption::getProdOptionId) // CartItemOption에서 prodOptionId 추출
-//                .collect(Collectors.toList());
-//
-//        // PostCartDto에서 넘어온 옵션들과 비교
-//        boolean isSameOptions = selectedOptionsIds.containsAll(postCartDto.getOptions())
-//                && postCartDto.getOptions().containsAll(selectedOptionsIds);
-//
-//        if (isSameOptions) {
-//            // 옵션이 동일하면 수량과 가격을 업데이트
-//            double updatePrice = product.getProdPrice() * postCartDto.getQuantity();
-//            int updateQuantity = postCartDto.getQuantity() + cartItem.getQuantity();
-//
-//            cartItem.setQuantity(updateQuantity);
-//            cartItem.setTotalPrice(updatePrice);
-//        } else {
-//            // 옵션이 다르면 다른 처리 (새로운 CartItem 생성 등)
-//        }
-//
-//
-//        //카트 아이템에 있는 상품의 옵션이 현재 선택한 옵션과 일치하면 상품의 옵션과 수량을 업데이트
-//
-//        postCartDto.getOptions();
-//        for (CartItem cartItem : cartItems) {
-//
-//            if(cartItem.getSelectedOptions().equals(selectedOptions) && product.getId().equals(postCartDto.getProdId())) {
-//
-//                double updatePrice = product.getProdPrice() * postCartDto.getQuantity();
-//                int updateQuantity = postCartDto.getQuantity()+cartItem.getQuantity();
-//
-//                cartItem.setQuantity(updateQuantity);
-//                cartItem.setTotalPrice(updatePrice);
-//
-//                return ResponseEntity.ok().body("update");
-//
-//            }else {
-//
-//                CartItem savedcartItem = CartItem.builder()
-//                                    .cart(cart)
-//                                    .product(product)
-//                                    .quantity(postCartDto.getQuantity())
-//                                    .totalPrice(postCartDto.getTotalPrice())
-//                                    .build();
-//
-//                cartItemRepository.save(savedcartItem);
-//
-//                //카트 아이템 옵션
-//                postCartDto.getOptions().forEach(option -> {
-//                    CartItemOption cartItemOption = CartItemOption.builder()
-//                            .prodOptionId(option)
-//                            .cartItem(cartItem)
-//                            .build();
-//                    cartItemOptionRepository.save(cartItemOption);
-//                } );
-//
-//                return ResponseEntity.ok().body("insert");
-//            }
-//        }
-//        return ResponseEntity.ok().body("?");
-    return null;
+        return ResponseEntity.ok(cart);
+
+    }
+
+    public ResponseEntity<?> insertCartItem(PostCartDto postCartDto, Cart cart) {
+
+        long prodId = postCartDto.getProdId();
+        Product product = productRepository.findById(prodId).orElse(null);
+        List<ProductOption> prodOptions = product.getOptions();//프로덕트 옵션 뽑기
+        List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
+
+        //프로덕트 옵션과 dto 옵션이 일치하는지 확인
+        log.info("prod Options : "+prodOptions.toString());
+
+        List<Long> dtoOptions = postCartDto.getOptions();
+        log.info("dtoOptions : "+dtoOptions.toString());
+
+        List<Long> matchOption = postCartDto.getOptions().stream()
+                .filter(dto -> prodOptions.stream().anyMatch(prod -> Objects.equals(dto, prod.getId()))).collect(Collectors.toList());
+
+        log.info("matchOptions : "+matchOption.toString());
+
+        CartItem existingCartItem = null;
+        for (CartItem cartItem : existingCartItems) {
+            // 3. 선택된 옵션이 동일한지 확인
+            List<CartItemOption> existingOptions = cartItem.getSelectedOptions();
+            List<Long> existingOptionIds = existingOptions.stream()
+                    .map(CartItemOption::getProdOptionId)
+                    .collect(Collectors.toList());
+
+            // 선택된 옵션 리스트가 동일한지 비교
+            if (new HashSet<>(existingOptionIds).containsAll(matchOption) && new HashSet<>(matchOption).containsAll(existingOptionIds)) {
+                existingCartItem = cartItem;
+                break;
+            }
+        }
+        if (existingCartItem != null) {
+            int newQuantity = existingCartItem.getQuantity() + postCartDto.getQuantity();
+            double newPrice = newQuantity * product.getProdPrice();
+            existingCartItem.setTotalPrice(newPrice);
+            existingCartItem.setQuantity(newQuantity);
+            cartItemRepository.save(existingCartItem);
+        } else {
+
+            CartItem newCartItem = CartItem.builder()
+                    .cart(cart)
+                    .product(product)
+                    .quantity(postCartDto.getQuantity())
+                    .totalPrice(product.getProdPrice() * postCartDto.getQuantity())
+                    .build();
+
+            List<CartItemOption> newOptions = new ArrayList<>();
+            for (Long optionId : matchOption) {
+                CartItemOption newOption = CartItemOption.builder()
+                        .cartItem(newCartItem)
+                        .prodOptionId(optionId)
+                        .build();
+                newOptions.add(newOption);
+            }
+            newCartItem.getSelectedOptions().addAll(newOptions);
+            cartItemRepository.save(newCartItem);
+
+        }
+
+        return ResponseEntity.ok().body("insert");
     }
 }
 
