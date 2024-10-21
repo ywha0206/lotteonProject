@@ -4,6 +4,8 @@ package com.lotteon.entity.config;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @ToString
 @Getter
@@ -33,6 +35,20 @@ public class Config {
 
     @Column(name = "config_fabicon")
     private String configFabicon;
+
+
+
+    @Column(name = "config_update_version")
+    private int configUpdateVersion;
+
+    @Column(name = "config_update_location")
+    private int configUpdateLocation;
+
+    @Column(name = "config_updated_admin")
+    private String configUpdatedAdmin;
+
+    @Column(name = "config_update_time")
+    private Timestamp configUpdateTime;
 
 
 }

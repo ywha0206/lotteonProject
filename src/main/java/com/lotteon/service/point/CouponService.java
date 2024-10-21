@@ -2,6 +2,7 @@ package com.lotteon.service.point;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCouponDto;
+
 import com.lotteon.dto.responseDto.GetCouponDto;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.point.Coupon;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +28,9 @@ public class CouponService {
                 .getAuthentication()
                 .getPrincipal();
 
+
         Member memId = auth.getUser();
+
         String couponDiscountString = postCouponDto.getCouponDiscount();
         int slashIndex = couponDiscountString.indexOf('/');
         int couponDiscount = Integer.parseInt(couponDiscountString.substring(0, slashIndex));
@@ -43,11 +47,13 @@ public class CouponService {
                 .couponState("발급중")
                 .couponIssueCount(0)
                 .couponUseCount(0)
+
                 .build();
 
         couponRepository.save(coupon);
 
     }
+
 
     public Page<GetCouponDto> findAllCoupons(int page) {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
@@ -63,4 +69,5 @@ public class CouponService {
         }
         return dtos;
     }
+
 }

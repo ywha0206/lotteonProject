@@ -26,55 +26,53 @@ import java.util.Map;
 public class ApiConfigController {
     private final BannerService bannerService;
 
+    @GetMapping("/banners/{tab}")
+    public ResponseEntity<?> selectBanner(@PathVariable("tab") String tab) {
+        int num = Integer.parseInt(tab);
+        List<GetBannerDTO> bannerList = bannerService.findAllByCate(num);
+        return ResponseEntity.ok().body(bannerList);
+    }
+
     @PostMapping(value = {"/banners"}, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> insertBanner(@RequestPart("bannerDTO") String bannerJson,
                                           @RequestPart("file") MultipartFile file) {
         log.info("inserting...");
-
         ObjectMapper objectMapper = new ObjectMapper();
         PostBannerDTO bannerDTO;
         try {
             bannerDTO = objectMapper.readValue(bannerJson, PostBannerDTO.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("error", "Invaild Json Data: " + e.getMessage()));
         }
         try {
             bannerDTO.setUploadFile(file);
-            // 서비스 호출하여 배너 등록
             Banner banner = bannerService.insert(bannerDTO);
-            // 성공 응답
             return ResponseEntity.ok().body(banner);
         } catch (Exception e) {
             log.error("Error inserting banner", e);
-            // 실패 시 Bad Request 응답
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("error", "Failed to register banner: " + e.getMessage()));
         }
-    }
-
-    @GetMapping("/banners/{tab}")
-    public ResponseEntity<?> selectBanner(@PathVariable("tab") String tab) {
-        int num = Integer.parseInt(tab);
-        List<GetBannerDTO> bannerList = bannerService.findAllByCate(num);
-
-        return ResponseEntity.ok().body(bannerList);
-    }
-
-    @DeleteMapping("/banners")
-    public ResponseEntity<?> deleteBanner(@RequestBody List<Long> ids) {
-        Boolean success = bannerService.deleteBannersById(ids);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", success);
-        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/banner/{id}/{state}")
     public ResponseEntity<?> changeBannerState(@PathVariable("id") Long id, @PathVariable("state") Integer state) {
         Banner banner = bannerService.updateBannerState(id, state);
         return ResponseEntity.ok().body(banner);
+    }
+
+    @DeleteMapping("/banners")
+    public ResponseEntity<?> deleteBanner(@RequestBody List<Long> ids) {
+        Boolean success = bannerService.deleteBannersById(ids);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/basic/{type}")
+    public ResponseEntity<?> updateBanner(@RequestBody Banner banner) {
+        return null;
     }
 
 }

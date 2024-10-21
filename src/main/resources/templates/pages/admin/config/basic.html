@@ -63,26 +63,38 @@
                     <tr>
                         <th>헤더 로고</th>
                         <td>
-                            <input class="inp" type="file" value="롯데 ON ">
-                            <span>크기 370 x 76 권장 </span>
+                            <input class="inp" type="file" value="롯데 ON " onchange="readURL(this,'header');">
+                            <span>크기 370 x 76 권장 </span><img id="headerpreview" style="max-width: 400px; display: none"/>
+                            <button type="button" id="headerDeleteBtn" style="display: none;" onclick="resetUpload('header')">삭제</button>
                         </td>
                     </tr>
                     <tr>
                         <th>푸터 로고</th>
                         <td>
-                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택">
-                            <span>크기 155 x 36 권장</span>
+                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택" onchange="readURL(this,'footer');">
+                            <span>크기 155 x 36 권장</span><img id="footerpreview" style="max-width: 200px; display: none">
+                            <button type="button" id="footerDeleteBtn" style="display: none;" onclick="resetUpload('footer')">삭제</button>
                         </td>
                     </tr>
                     <tr>
                         <th>파비콘</th>
                         <td>
-                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택">
-                            <span>크기 32 x 32 권장</span>
+                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택" onchange="readURL(this,'favicon');">
+                            <span>크기 32 x 32 권장</span><img id="faviconpreview" style="max-width: 50px; max-height: 50px; display: none"/>
+                            <button type="button" id="faviconDeleteBtn" style="display: none;" onclick="resetUpload('favicon')">삭제</button>
                         </td>
                     </tr>
                 </table>
                 <article class="btn">
+                    <button id="view-versions" onclick="toggleMenu()">수정 내역 보기</button>
+                    <div id="dropdown-menu" class="dropdown-hidden">
+                        <ul>
+                            <li>10.20 13:32:04 저장됨</li>
+                            <li>10.20 06:01:58 저장됨</li>
+                            <li>10.19 23:43:19 저장됨</li>
+                            <li>10.15 16:21:41 저장됨</li>
+                        </ul>
+                    </div>
                     <button>수정하기</button>
                 </article>
             </section>
@@ -134,7 +146,6 @@
                     <tr>
                         <th>업무시간</th>
                         <td>
-                            <!-- <input class="inp" type="time" min="08:00" max="18:00"> -->
                             <input class="inp" type="time" id="start" name="start_time" value="08:00">
                             ~
                             <input class="inp" type="time" id="end" name="end_time" value="18:00">
@@ -174,4 +185,77 @@
     </main>
     <footer th:replace="layout/admin/footer.html"></footer>
 </body>
+<script>
+
+    // 특정 요소들을 가져오는 공통 함수
+    function getElements(type) {
+        let elements = {};
+        if (type === "header") {
+            elements.input = document.getElementById('headerInput');
+            elements.preview = document.getElementById('headerpreview');
+            elements.deleteBtn = document.getElementById('headerDeleteBtn');
+        } else if (type === "footer") {
+            elements.input = document.getElementById('footerInput');
+            elements.preview = document.getElementById('footerpreview');
+            elements.deleteBtn = document.getElementById('footerDeleteBtn');
+        } else if (type === "favicon") {
+            elements.input = document.getElementById('faviconInput');
+            elements.preview = document.getElementById('faviconpreview');
+            elements.deleteBtn = document.getElementById('faviconDeleteBtn');
+        }
+        return elements;
+    }
+
+    function resetUpload(type) {
+        const { input, preview, deleteBtn } = getElements(type);
+        if (!input || !preview || !deleteBtn) return;
+
+        input.value = "";
+        preview.src = "";
+        preview.style.display = 'none';
+        deleteBtn.style.display = 'none';
+    }
+
+    function readURL(input, type) {
+        const { preview, deleteBtn } = getElements(type);
+        if (!preview || !deleteBtn) return;
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'inline-block';
+                deleteBtn.style.display = 'inline-block';  // 이미지가 보일 때 삭제 버튼 표시
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            resetUpload(type);
+        }
+    }
+
+    function toggleMenu() {
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const isHidden = dropdownMenu.classList.contains('dropdown-hidden');
+
+        // 메뉴를 토글
+        if (isHidden) {
+            dropdownMenu.classList.remove('dropdown-hidden');
+            dropdownMenu.classList.add('dropdown-visible');
+        } else {
+            dropdownMenu.classList.remove('dropdown-visible');
+            dropdownMenu.classList.add('dropdown-hidden');
+        }
+    }
+
+    // 클릭 외 다른 영역을 누르면 메뉴를 닫음
+    document.addEventListener('click', function(event) {
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const button = document.getElementById('view-versions');
+
+        if (!dropdownMenu.contains(event.target) && !button.contains(event.target)) {
+            dropdownMenu.classList.remove('dropdown-visible');
+            dropdownMenu.classList.add('dropdown-hidden');
+        }
+    });
+</script>
 </html>

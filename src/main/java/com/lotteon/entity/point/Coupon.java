@@ -36,10 +36,13 @@ public class Coupon {
     private String couponExpiration;
 
     @Column(name = "coupon_min_price")
+
     private Integer couponMinPrice;
+
 
     @Column(name = "coupon_caution", columnDefinition = "TEXT")
     private String couponCaution;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_issuer")
@@ -85,4 +88,5 @@ public class Coupon {
                 .couponUseCount(couponUseCount)
                 .build();
     }
+
 }
