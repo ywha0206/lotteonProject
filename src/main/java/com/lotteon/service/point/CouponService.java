@@ -54,7 +54,6 @@ public class CouponService {
                 .couponState("발급중")
                 .couponIssueCount(0)
                 .couponUseCount(0)
-
                 .build();
 
         couponRepository.save(coupon);
