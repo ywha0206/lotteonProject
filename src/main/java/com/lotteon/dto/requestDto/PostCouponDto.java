@@ -15,4 +15,5 @@ public class PostCouponDto {
     private Integer couponMinPrice;
     private String couponExpiration;
     private String couponCaution;
+    private Long id;
 }

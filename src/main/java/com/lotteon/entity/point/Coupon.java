@@ -71,13 +71,20 @@ public class Coupon {
         } else {
             realOption = "원 할인";
         }
+        String issuer ;
+        if(member.getMemRole().equals("admin")){
+            issuer = "운영자";
+        } else {
+            issuer = member.getSeller().getSellCompany();
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = sdf.format(couponRdate);
 
         return GetCouponDto.builder()
                 .couponExpiration(couponExpiration)
                 .couponIssueCount(couponIssueCount)
-                .couponIssuer("운영자")
+                .couponIssuer(issuer)
                 .couponRdate(formattedDate)
                 .couponState(couponState)
                 .id(id)
@@ -86,7 +93,17 @@ public class Coupon {
                 .couponDiscountOption(realOption)
                 .couponName(couponName)
                 .couponUseCount(couponUseCount)
+                .couponCaution(couponCaution)
                 .build();
     }
+
+    public void updateCouponState(){
+        if(couponState.equals("종료")){
+            couponState = "발급중";
+        } else {
+            couponState = "종료";
+        }
+    }
+
 
 }
