@@ -8,10 +8,14 @@ import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -31,95 +35,99 @@ public class CartService {
     private final ProductOptionRepository productOptionRepository;
 
     @Transactional
-    public String insertCart(PostCartDto postCartDto) {
+    public ResponseEntity<?> insertCart(PostCartDto postCartDto) {
 
-//        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-//                                                                .getAuthentication()
-//                                                                .getPrincipal();
-//
-//        //유저 조회, 없으면 던져
-//        long memberId = Long.parseLong(auth.getUsername());
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                                                                .getAuthentication()
+                                                                .getPrincipal();
 
-        long memberId = 1;
-        Optional<Member> optMember = memberRepository.findById(memberId);
-
-            //.orElseThrow(() -> new RuntimeException("Customer not found"));
-        Member member = optMember.get();
-        long custId = member.getCustomer().getId();
-
+        long custId = auth.getUser().getCustomer().getId();
 
         //장바구니 조회 없으면 생성
         Optional<Cart> optCart = cartRepository.findByCustId(custId);
 
+        Cart cart = null;
         if(!optCart.isPresent()) {
-            Cart cart = Cart.builder().custId(custId).build();
+            cart = Cart.builder().custId(custId).build();
             cartRepository.save(cart);
+        }else{
+            cart = optCart.get();
         }
-        Cart cart = optCart.get();
+
         log.info("장바구니 조회한거"+cart.toString());
-
-        long prodId = postCartDto.getProdId();
-
-        //상품 조회하고 상품옵션 조회해서
-        productRepository.findById(prodId);//엥?여기서 익셉션으로 넘어감
-
-        System.out.println(productRepository.findById((long)1).get());
-
+// ===============================================================================================================
+//
+//        long prodId = postCartDto.getProdId();
+//
+//        //상품 조회
+//        Optional<Product> optProduct = productRepository.findById(prodId);
 //        Product product = optProduct.get();
-//        log.info("vmf프로덕트 보자"+product.toString());
-//        double total = product.getProdPrice() * postCartDto.getQuantity();
 //
-//        Optional<ProductOption> optProdOption = productOptionRepository.findByProduct(product);
+//        //카트 아이템에 상품이 있는지 조회하고
+//        List<CartItem> cartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
+//        log.info(cartItems.toString());
 //
-//        CartItem cartItem = CartItem.builder()
-//                                    .cart(optCart.get())
+//        // 카트 아이템에 있는 상품의 옵션이 현재 선택한 옵션과 일치하는지 비교
+//        List<Long> selectedOptionsIds = cartItem.getSelectedOptions().stream()
+//                .map(CartItemOption::getProdOptionId) // CartItemOption에서 prodOptionId 추출
+//                .collect(Collectors.toList());
+//
+//        // PostCartDto에서 넘어온 옵션들과 비교
+//        boolean isSameOptions = selectedOptionsIds.containsAll(postCartDto.getOptions())
+//                && postCartDto.getOptions().containsAll(selectedOptionsIds);
+//
+//        if (isSameOptions) {
+//            // 옵션이 동일하면 수량과 가격을 업데이트
+//            double updatePrice = product.getProdPrice() * postCartDto.getQuantity();
+//            int updateQuantity = postCartDto.getQuantity() + cartItem.getQuantity();
+//
+//            cartItem.setQuantity(updateQuantity);
+//            cartItem.setTotalPrice(updatePrice);
+//        } else {
+//            // 옵션이 다르면 다른 처리 (새로운 CartItem 생성 등)
+//        }
+//
+//
+//        //카트 아이템에 있는 상품의 옵션이 현재 선택한 옵션과 일치하면 상품의 옵션과 수량을 업데이트
+//
+//        postCartDto.getOptions();
+//        for (CartItem cartItem : cartItems) {
+//
+//            if(cartItem.getSelectedOptions().equals(selectedOptions) && product.getId().equals(postCartDto.getProdId())) {
+//
+//                double updatePrice = product.getProdPrice() * postCartDto.getQuantity();
+//                int updateQuantity = postCartDto.getQuantity()+cartItem.getQuantity();
+//
+//                cartItem.setQuantity(updateQuantity);
+//                cartItem.setTotalPrice(updatePrice);
+//
+//                return ResponseEntity.ok().body("update");
+//
+//            }else {
+//
+//                CartItem savedcartItem = CartItem.builder()
+//                                    .cart(cart)
 //                                    .product(product)
 //                                    .quantity(postCartDto.getQuantity())
-//                                    .productOption(optProdOption.get())
-//                                    .totalPrice(total)
+//                                    .totalPrice(postCartDto.getTotalPrice())
 //                                    .build();
 //
-//        cartItemRepository.save(cartItem);
-
-//============================================================================================================
-//        //장바구니 아이템 있으면 수정 없으면 추가
-//        CartItem cartItem ;
-//        Product prod = productRepository.findById(postCartDto.getProdId()).orElse(null);
-//        List<CartItem> optCartItem = cartItemRepository.findAllByCartAndProduct(cart, prod);
-//            System.out.println(optCartItem);
-//        if (optCartItem.isPresent()) {
-//            cartItem = optCartItem.get();
-//            int dtoQuan = postCartDto.getQuantity();
-//            int entityQuan = cartItem.getQuantity();
-//            int totalQuan = dtoQuan + entityQuan;
+//                cartItemRepository.save(savedcartItem);
 //
-//            cartItem.setQuantity(totalQuan);
-//        }else{
-//            Product product = productRepository.findById(postCartDto.getProdId())
-//                    .orElseThrow(() -> new RuntimeException("Product not found"));
+//                //카트 아이템 옵션
+//                postCartDto.getOptions().forEach(option -> {
+//                    CartItemOption cartItemOption = CartItemOption.builder()
+//                            .prodOptionId(option)
+//                            .cartItem(cartItem)
+//                            .build();
+//                    cartItemOptionRepository.save(cartItemOption);
+//                } );
 //
-//            cartItem = CartItem.builder()
-//                    .cart(cart)
-//                    .product(product)
-//                    .quantity(postCartDto.getQuantity())
-//                    .totalPrice(product.getProdPrice() * postCartDto.getQuantity())
-//                    .build();
-//            CartItem cartItem1 = cartItemRepository.save(cartItem);
-//
-//            //카트 아이템 옵션
-//            postCartDto.getOptions().forEach(option -> {
-//                CartItemOption cartItemOption = CartItemOption.builder()
-//                        .prodOptionId(option)
-//                        .cartItem(cartItem1)
-//                        .build();
-//                cartItemOptionRepository.save(cartItemOption);
-//            } );
+//                return ResponseEntity.ok().body("insert");
+//            }
 //        }
-
-
-
-        return "ss";
-
+//        return ResponseEntity.ok().body("?");
+    return null;
     }
 }
 

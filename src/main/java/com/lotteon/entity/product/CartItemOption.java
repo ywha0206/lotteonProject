@@ -18,6 +18,7 @@ public class CartItemOption {
     // 다대일 관계: CartItem -> CartItemOption
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_item_id")
+    @ToString.Exclude
     private CartItem cartItem;
 
     @Column(name = "option_id")

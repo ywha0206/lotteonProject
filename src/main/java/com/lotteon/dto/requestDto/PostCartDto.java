@@ -17,6 +17,7 @@ public class PostCartDto {
     private long prodId;
     private int quantity;
     private List<Long> options;
+    private double totalPrice;
 
 
 

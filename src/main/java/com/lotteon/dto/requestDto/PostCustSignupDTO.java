@@ -13,7 +13,6 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class PostCustSignupDTO { // post customer 일반회원 회원가입
-
     private String  memId;          // 아이디
     private String  memPwd;         // 비밀번호
     private String  custName;       // 이름
