@@ -73,12 +73,11 @@ public class ImageService {
         List<String> uploadedFiles = new ArrayList<>();
 
         for (MultipartFile file : files) {
+            String path = null;
             if (!file.isEmpty()) {
-                String path = upload(file);
-                if(path != null) {
-                    uploadedFiles.add(path);
-                }
+                path = upload(file);
             }
+            uploadedFiles.add(path);
         }
         log.info(uploadedFiles);
         return uploadedFiles;
