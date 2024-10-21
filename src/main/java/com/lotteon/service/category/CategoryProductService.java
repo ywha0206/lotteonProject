@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +56,7 @@ public class CategoryProductService {
         }
     }
 
+
     public List<GetCategoryDto> findCategory() {
         List<CategoryProduct> categoryProducts = categoryProductRepository.findAllByCategoryLevel(1);
         System.out.println(categoryProducts);
@@ -70,8 +69,10 @@ public class CategoryProductService {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
         List<CategoryProduct> cates = categoryProducts.getChildren();
 
-        List<GetCategoryDto> dtos = cates.stream().map(v->v.toGetCategoryDto()).toList();
-        System.out.println(dtos);
+        List<GetCategoryDto> dtos = cates.stream()
+                .sorted(Comparator.comparing(CategoryProduct::getCategoryOrder))
+                .map(CategoryProduct::toGetCategoryDto)
+                .toList();
 
         return dtos;
     }
@@ -89,5 +90,62 @@ public class CategoryProductService {
 
 
         return map;
+    }
+
+    public String deleteCategory(Long id) {
+        CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
+        if(categoryProducts.getProductMappings().isEmpty()){
+            categoryProductRepository.deleteById(id);
+            return "SU";
+        } else {
+            return "FA";
+        }
+    }
+
+    public void insertProdCate() {
+        Product product = productRepository.findById((long)1).orElse(null);
+        List<CategoryProduct> categoryProduct1 = categoryProductRepository.findAllByCategoryId((long)28);
+        categoryProduct1.stream().forEach(v-> System.out.println(v.getParent().getCategoryId()));
+
+//        categoryProdMapperRepository.save(categoryProduct);
+
+    }
+
+    public void postCategory(GetCategoryDto getCategoryDto) {
+        Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(getCategoryDto.getId());
+
+        if(categoryProduct.isEmpty()){
+            return;
+        }
+
+        List<CategoryProduct> children = categoryProduct.get().getChildren();
+
+        int newCategoryOrder = children.isEmpty()
+                ? 1
+                : children.get(children.size() - 1).getCategoryOrder() + 1;
+
+        CategoryProduct newCategoryProduct = CategoryProduct.builder()
+                .categoryLevel(categoryProduct.get().getCategoryLevel() + 1)
+                .categoryName(getCategoryDto.getName())
+                .categoryOrder(newCategoryOrder)
+                .parent(categoryProduct.get())
+                .build();
+
+        categoryProductRepository.save(newCategoryProduct);
+
+    }
+
+    public void putCategory(GetCategoryDto getCategoryDto) {
+        Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(Long.parseLong(getCategoryDto.getName()));
+        Optional<CategoryProduct> categoryParent = categoryProductRepository.findById(getCategoryDto.getId());
+        if(categoryProduct.get().getCategoryLevel() > categoryParent.get().getCategoryLevel()){
+            categoryProduct.get().updateParent(categoryParent.get());
+        } else if (categoryProduct.get().getCategoryLevel() == categoryParent.get().getCategoryLevel() 
+                && categoryProduct.get().getParent()==categoryParent.get().getParent()
+        ){
+            categoryProduct.get().replaceOrder(categoryParent.get());
+        }
+
+
     }
 }

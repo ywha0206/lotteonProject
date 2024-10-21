@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @ToString
@@ -28,6 +30,10 @@ public class CategoryProduct {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_id")
     private CategoryProduct parent;
+
+    @Column(name = "category_order")
+    @Setter
+    private Integer categoryOrder;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "parent")
@@ -53,5 +59,26 @@ public class CategoryProduct {
                 .build();
     }
 
+    public void updateParent(CategoryProduct categoryProduct){
+        List<CategoryProduct> children = categoryProduct.getChildren();
 
+        this.parent = categoryProduct;
+        this.categoryOrder = children.isEmpty()
+                ? 1
+                : children.stream()
+                .max(Comparator.comparing(CategoryProduct::getCategoryOrder))
+                .map(child -> child.getCategoryOrder() + 1)
+                .orElse(1);
+    }
+
+
+    public void replaceOrder(CategoryProduct otherCategory) {
+        int tempOrder = this.getCategoryOrder();
+
+        // 현재 객체의 categoryOrder 값을 otherCategory의 값으로 설정
+        this.categoryOrder = otherCategory.getCategoryOrder();
+
+        // otherCategory의 categoryOrder 값을 임시로 저장된 값으로 설정
+        otherCategory.setCategoryOrder(tempOrder);
+    }
 }

@@ -1,57 +1,58 @@
-.container {
+#lsh-container .container {
     width: 800px;
     margin: 0 auto;
 }
 
-.header-title{
+#lsh-container .header-title{
     margin-top: 50px;
 }
 
-.header-gubun {
+#lsh-container .header-gubun {
     width: 1200px;
     height: 3px;
     background-image: url(/images/Vector.png);
     margin-bottom: 30px;
 }
 
-.header-gubun-bottom {
+#lsh-container .header-gubun-bottom {
     width: 1200px;
     height: 3px;
     background-image: url(/images/login-gubun-bottom.png);
     margin-top: 30px;
 }
 
-.main {
+#lsh-container .main {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 300px;
 }
 
-.main-inp {
+#lsh-container .main-inp {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 500px;
 }
 
-.main-img img {
+#lsh-container .main-img img {
     width: 400px;
     height: 200px;
     cursor: pointer;
 }
 
-.inp-top {
+#lsh-container .inp-top {
     display: flex;
 }
 
-.inp-bottom {
+#lsh-container .inp-bottom {
     display: flex;
     gap: 20px;
     font-size: 10px;
     margin-top: 30px;
 }
 
-.login-btn {
+#lsh-container .login-btn {
     background-image: url(/images/login-btn.png);
     width: 70px;
     height: 70px;
@@ -64,15 +65,19 @@
     cursor: pointer;
 }
 
-.login-btn:hover{
+#lsh-container .login-btn:hover{
     opacity: 0.8;
 }
 
-.label {
+#lsh-container .label {
     font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    align-items: center;
 }
 
-.inp {
+#lsh-container .inp {
     width: 180px;
     float: right;
     margin-left: 30px;
@@ -81,35 +86,44 @@
     border-radius: 5px;
 }
 
-.top-left {
+#lsh-container .top-left {
     display: flex;
     flex-direction: column;
     gap: 15px;
     justify-content: center;
 }
 
-.inp-bottom .link {
+#lsh-container .inp-bottom .link {
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
 }
 
-.auto {
+#lsh-container .auto {
     position: relative;
     top: 1px;
 }
 
-.award-logos {
+#lsh-container .award-logos {
     display: flex;
     gap: 5px;
-    width: 800px;
-    margin: 0 auto;
+    width: 1200px;
+    /*margin: 0 auto;*/
     margin-top: 50px;
 }
 
-.container .logo img{
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
+#lsh-container .label {
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    align-items: center;
 }
+
+
+/*#lsh-container > .container > .logo > img{*/
+/*    width: 50px;*/
+/*    height: 50px;*/
+/*    cursor: pointer;*/
+/*}*/

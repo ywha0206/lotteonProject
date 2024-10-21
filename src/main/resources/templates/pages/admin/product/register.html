@@ -10,32 +10,29 @@
     const productInfo = new FormData(document.getElementById('productInfo'));
     const detail = new FormData(document.getElementById('detail'));
 
-
+    const productAll = new FormData();
 
        e.preventDefault();
-       console.log("123123");
         for (const [key, value] of prodCate.entries()) {
-            console.log(key, value)
+            productAll.append(`postProdCateMapperDTO.${key}`, value)
         }
         for (const [key, value] of productInfo.entries()) {
-            console.log(key, value)
+            productAll.append(`postProductDTO.${key}`, value)
         }
         for (const [key, value] of detail.entries()) {
-            console.log(key, value)
+            productAll.append(`postProdDetailDTO.${key}`, value)
         }
 
-        const prodData = Object.fromEntries(productInfo.entries());
+        for (const [key, value] of productAll.entries()) {
+            console.log(key, value)
+        }
 
         fetch('/admin/prod/info', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json' // JSON 형식으로 전송
-            },
-            body: JSON.stringify(prodData)
+            body: productAll
         })
             .then(resp => resp.json())
             .then(data => {
-                console.log("22222221 : " + data);
                 if (data.success) {
                     alert('결제 정보가 등록되었습니다!');
                 } else {
@@ -179,6 +176,30 @@
         </form>
         <form id="detail">
         <div class="main3">
+            <div class="main-title">상품 옵션</div>
+            <div class="main-description">상품 옵션은 선택사항입니다. </div>
+            <div class="options">
+                <table class="tb1 tb4" border="1">
+                    <tr class="tr_option">
+                        <th>옵션</th>
+                        <td class="optionTD">
+                            <div class="option_inputs">
+                                <input type="text" class="option_input option_input_name" placeholder="옵션명">
+                                <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                                <input type="text" class="option_input option_input_price" placeholder="추가금액">
+                            </div>
+                            <button  class="btnOption btn_blue" type="button" onclick="addOption(event)">세부옵션추가</button>
+
+                         </td>
+                    </tr>
+                </table>
+            </div>
+            <button  class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
+            <button type="button" id="check" class="addoption" onclick="addParent(event)">옵션추가</button><span class="limit3"></span>
+        </div>
+
+
+        <div class="main3">
             <div class="main-title">상품정보 제공고시</div>
             <div class="main-description">[전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거하여 반드시 등록해야 합니다. </div>
 
@@ -214,4 +235,90 @@
         </div>
     </section>
 </main>
+
+
+<script>
+    function addOption(event){
+        // 클릭된 버튼의 부모 td를 찾습니다.
+        const td = event.target.parentElement;
+
+        // 새로운 입력 세트를 추가할 td 생성
+        const newInputs = document.createElement('div'); // div로 여러 input 묶음
+
+        const row = event.target.closest('tr'); // 클릭된 버튼이 있는 tr을 찾습니다.
+        const inputs = row.querySelectorAll('input'); // 해당 tr 내의 모든 인풋을 찾습니다.
+
+        const option1 = inputs[0].value; // 첫 번째 인풋의 값을 가져옵니다.
+
+        if(!option1.trim()){
+            alert('옵션명을 입력해주세요.')
+            console.log(event)
+            return;
+        }
+
+        // 새로운 입력 세트 추가
+        newInputs.innerHTML = `
+            <div class="option_inputs">
+                <input type="text" style="opacity:0" class="option_input option_input_name" value="${option1}">
+                <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                <input type="text" class="option_input option_input_price" placeholder="추가금액">
+            </div>
+        `;
+
+        // 기존 td 내에 새로운 입력 세트 추가
+        td.appendChild(newInputs);
+    }
+
+    let cnt = 0;
+    function addParent(event) {
+        const options = document.querySelector('.tb4'); // tbody를 선택하는 대신 tb4로 바로 작업
+        const limit3 = document.querySelector('.limit3');
+
+        // 새로운 옵션 행(tr) 추가
+        const newTr = document.createElement('tr');
+        newTr.innerHTML = `
+            <th>옵션</th>
+            <td class="optionTD">
+                <div class="option_inputs">
+                    <input type="text" class="option_input option_input_name" placeholder="옵션명">
+                    <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                    <input type="text" class="option_input option_input_price" placeholder="추가금액">
+                </div>
+                <button class="btnOption" type="button" onclick="addOption(event)">세부옵션추가</button>
+
+            </td>
+        `;
+
+        // 테이블에 새로운 행 추가
+        options.appendChild(newTr);
+
+        cnt++;
+        if(cnt == 2){
+            event.preventDefault();
+            limit3.innerText = ' 옵션은 3개까지만 가능합니다';
+            document.getElementById('check').disabled = true;
+            return;
+        }
+
+    }
+    function confirmOption(event) {
+        let submitData = [];
+
+        document.querySelectorAll('.option_inputs').forEach(v => {
+            let name = v.querySelector('.option_input_name').value;
+            let value = v.querySelector('.option_input_value').value;
+            let price = v.querySelector('.option_input_price').value;
+
+            let jsonData = {
+                name: name,
+                value: value,
+                price: price
+            };
+
+            submitData.push(jsonData);
+        });
+        console.log(submitData)
+    }
+
+</script>
 <footer th:replace="layout/admin/footer.html"></footer>

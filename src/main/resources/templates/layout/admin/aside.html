@@ -10,7 +10,8 @@
     <aside id="sidebar">
         <div class="navi">
             <li onclick="openMenu(event, 'menu1')">환경설정</li>
-            <div class="menues" id="menu1">
+            <div th:classappend="${config} == 'config' ? 'open' : ''"
+                    class="menues" id="menu1">
                 <a th:href="@{/admin/config/basics}">- 기본설정</a>
                 <a th:href="@{/admin/config/banners}">- 배너관리</a>
                 <a th:href="@{/admin/config/terms}">- 약관관리</a>
@@ -19,43 +20,45 @@
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu2')">상점관리</li>
-            <div class="menues" id="menu2">
+            <div th:classappend="${config} == 'shop' ? 'open' : ''"  class="menues" id="menu2">
                 <a th:href="@{/admin/shop/shop}">- 상점목록</a>
                 <a th:href="@{/admin/shop/income}">- 매출현황</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu3')">회원관리</li>
-            <div class="menues" id="menu3">
+            <div th:classappend="${config} == 'user' ? 'open' : ''"  class="menues" id="menu3">
                 <a th:href="@{/admin/user/user}">- 회원목록</a>
                 <a th:href="@{/admin/user/point}">- 포인트관리</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu4')">상품관리</li>
-            <div class="menues" id="menu4">
-                <a th:href="@{/admin/prod/prodect}">- 상품현황</a>
+            <div th:classappend="${config} == 'product' ? 'open' : ''"  class="menues" id="menu4">
+                <a th:href="@{/admin/prod/products}">- 상품현황</a>
                 <a th:href="@{/admin/prod/product/post}">- 상품등록</a>
                 <a th:href="@{/admin/prod/category}">- 카테고리</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu5')">주문관리</li>
-            <div class="menues" id="menu5">
+            <div th:classappend="${config} == 'order' ? 'open' : ''" class="menues" id="menu5">
                 <a th:href="@{/admin/order/orders}">- 주문현황</a>
                 <a th:href="@{/admin/order/deliverys}">- 배송현황</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu6')">쿠폰관리</li>
-            <div class="menues" id="menu6">
+            <div th:classappend="${config} == 'coupon' ? 'open' : ''"
+                 class="menues" id="menu6">
                 <a th:href="@{/admin/coupon/coupons}">- 쿠폰목록</a>
                 <a th:href="@{/admin/coupon/issuearances}">- 쿠폰발급신청현황</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu7')">고객센터</li>
-            <div class="menues" id="menu7">
+            <div th:classappend="${config} == 'cs' ? 'open' : ''"
+                    class="menues" id="menu7">
                 <a th:href="@{/admin/cs/notices}">- 공지사항</a>
                 <a th:href="@{/admin/cs/faqs}">- 자주묻는질문</a>
                 <a th:href="@{/admin/cs/qnas}">- 문의하기</a>

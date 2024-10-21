@@ -18,26 +18,35 @@ import java.util.List;
 public class AdminConfigController {
     private final BannerService bannerService;
 
+    private String getSideValue() {
+        return "config";  // 실제 config 값을 여기에 설정합니다.
+    }
+
     @GetMapping("/index")
     public String index(Model model) {
+        model.addAttribute("config", getSideValue());
         return "pages/admin/index";
     }
     @GetMapping("/basics")
     public String basic(Model model) {
+        model.addAttribute("config", getSideValue());
         return "pages/admin/config/basic";
     }
     @GetMapping("/banners")
     public String banner(Model model) {
-        List<GetBannerDTO> bannerList = bannerService.findAllByCate(4);
+        List<GetBannerDTO> bannerList = bannerService.findAllByCate(1);
         model.addAttribute("bannerList", bannerList);
+        model.addAttribute("config", getSideValue());
         return "pages/admin/config/banner";
     }
     @GetMapping("/terms")
     public String terms(Model model) {
+        model.addAttribute("config", getSideValue());
         return "pages/admin/config/term";
     }
     @GetMapping("/versions")
     public String version(Model model) {
+        model.addAttribute("config", getSideValue());
         return "pages/admin/config/version";
     }
 

@@ -7,57 +7,37 @@
             <h3 class="header-title">약관동의</h3>
             <div class="header-gubun"></div>
             <div class="box box1">
+            <th:block th:each="t : ${terms}" th:if="${t.termsName.trim()!='위치정보 이용약관'}">
                 <div class="title">
                     <span class="red">( 필수 )</span>
-                    <span>이용약관</span>
+                    <span th:text="${t.termsName}"></span>
                 </div>
                 <!-- 이용약관 -->
-                <textarea readonly class="content" th:text="${terms.termsContent}"></textarea>
+                <textarea readonly class="content" th:text="${t.termsContent}"></textarea>
                 <div class="essential-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
+                    <label style="font-size: 16px; letter-spacing: -0.5px" for="">
+                        <input style="margin-top: 10px;" type="checkbox"> 동의하기
                     </label>
                 </div>
-            </div>
-            <div class="box box2">
-                <div class="title">
-                    <span class="red">( 필수 )</span>
+            </th:block>
+                <th:block th:each="t : ${terms}" th:if="${t.termsName.trim()=='위치정보 이용약관'}">
+                    <div class="title">
+                        <span class="blue">( 선택 )</span>
+                        <span th:text="${t.termsName}"></span>
+                    </div>
                     <!-- 이용약관 -->
-                    <span>전자금융 이용약관</span>
-                </div>
-                <textarea readonly class="content"></textarea>
-                <div class="essential-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
-                    </label>
-                </div>
-            </div>
-            <div class="box box3">
-                <div class="title">
-                    <span class="red">( 필수 )</span>
-                    <span>개인정보 수집 동의</span>
-                </div>
-                <textarea readonly class="content"></textarea>
-                <div class="essential-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
-                    </label>
-                </div>
-            </div>
-            <div class="box box4">
-                <div class="title">
-                    <span class="blue">( 선택 )</span>
-                    <span>위치정보 이용약관</span>
-                </div>
-                <textarea readonly class="content"></textarea>
-                <div class="not-required-check check">
-                    <label for="">
-                        <input type="checkbox"> 동의하기
-                    </label>
-                </div>
-            </div>
+                    <textarea readonly class="content" th:text="${t.termsContent}"></textarea>
+                    <div class="not-required-check check">
+                        <label for="">
+                            <input type="checkbox"> 동의하기
+                        </label>
+                    </div>
+                </th:block>
 
-            <a th:href="@{/auth/customer}" disabled id="next-btn" class="next-btn">동의하기</a>
+            </div>
+            <div class="signup">
+                <a th:href="@{/auth/customer}" disabled id="next-btn" class="btnSignUp next-btn">동의하기</a>
+            </div>
         </div>
     </form>
 </main>
