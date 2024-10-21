@@ -21,9 +21,11 @@ public class CommonController {
         model.addAttribute("appVersion", appVersion);
     }
 
+    @ModelAttribute
     public void getAuthentication(Authentication auth, Model model) {
         if(auth != null && auth.getPrincipal() != null) {
             model.addAttribute("user", auth.getPrincipal());
+
         }else{
             model.addAttribute("user",null);
         }

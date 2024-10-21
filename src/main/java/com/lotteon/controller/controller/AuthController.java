@@ -57,8 +57,7 @@ public class AuthController {
 
     // 2. 회원가입 (일반회원 정보입력)
     @PostMapping("/customer")
-    public String customer(
-             PostCustSignupDTO postCustSignupDTO) {
+    public String customer(PostCustSignupDTO postCustSignupDTO) {
         log.info("Register Controller - UserDTO :"+postCustSignupDTO.toString());
         customerService.insertCustomer(postCustSignupDTO);
 

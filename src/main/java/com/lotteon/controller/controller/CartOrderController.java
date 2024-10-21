@@ -35,12 +35,19 @@ public class CartOrderController {
     }
 
     @PostMapping("/cart")
-    public String cart(PostCartDto postCartDto){
-        System.out.println("컨트롤러접속");
-        System.out.println(postCartDto);
-        String result = cartService.insertCart(postCartDto);
-        //return "redirect:/pages/cart";
-        return null;
+    public String cart(PostCartDto postCartDto, Model model) {
+
+        ResponseEntity result = cartService.insertCart(postCartDto);
+        log.info(result.getBody());
+
+        if(result.getBody().equals("insert")){
+            model.addAttribute(true);
+            return "redirect:/prod/cart";
+        }else {
+            model.addAttribute(false);
+            return "redirect:/prod/product";
+        }
+
     }
 
     @GetMapping("/cart/direct")

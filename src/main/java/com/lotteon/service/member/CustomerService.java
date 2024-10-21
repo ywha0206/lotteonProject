@@ -41,7 +41,10 @@ public class CustomerService {
             memberRepository.save(member);
 
             String addr = postCustSignupDTO.getAddr1()+"/"+postCustSignupDTO.getAddr2()+"/"+postCustSignupDTO.getAddr3();
+
             Customer customer = Customer.builder()
+                    .custBirth(postCustSignupDTO.getCustBirth())
+                    .custEmail(postCustSignupDTO.getCustEmail())
                     .member(member)
                     .build();
 
