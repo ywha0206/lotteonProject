@@ -7,6 +7,7 @@ import com.lotteon.entity.member.Member;
 import com.lotteon.repository.article.QnaRepository;
 import com.lotteon.repository.category.CategoryArticleRepository;
 import com.lotteon.repository.member.MemberRepository;
+import com.lotteon.service.category.CategoryArticleService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,7 +26,7 @@ public class QnaService {
     private final QnaRepository qnaRepository;
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
-    private final CategoryArticleRepository categoryArticleRepository;
+    private final CategoryArticleService categoryArticleService;
 
 
     // QnA 글 작성
@@ -45,11 +46,8 @@ public class QnaService {
         articleDto.setMemId(memberId);
 
         // 카테고리 설정 (1차, 2차 카테고리)
-        CategoryArticle cate1 = categoryArticleRepository.findById(articleDto.getCate1Id())
-                .orElseThrow(() -> new RuntimeException("Category 1 not found with id: " + articleDto.getCate1Id()));
-        CategoryArticle cate2 = categoryArticleRepository.findById(articleDto.getCate2Id())
-                .orElseThrow(() -> new RuntimeException("Category 2 not found with id: " + articleDto.getCate2Id()));
-
+        CategoryArticle cate1 = categoryArticleService.getCategoryById(articleDto.getCate1Id());
+        CategoryArticle cate2 = categoryArticleService.getCategoryById(articleDto.getCate2Id());
 
         // 회원 정보 설정
         Member member = memberRepository.findById(memberId)
