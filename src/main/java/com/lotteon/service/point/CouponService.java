@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -89,6 +90,7 @@ public class CouponService {
         coupon.updateCouponState();
     }
 
+
     public Page<GetCouponDto> findAllCouponsBySearch(int page, String searchType, String keyword) {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -102,33 +104,38 @@ public class CouponService {
             } else if (searchType.equals("couponName")) {
                 Page<Coupon> coupons = couponRepository.findAllByCouponNameContainingOrderByIdDesc(keyword, pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
+                System.out.println(dtos);
             } else {
-                Seller seller = sellerRepository.findBySellCompanyContaining(keyword);
-                Member member = seller.getMember();
+                Optional<Seller> seller = sellerRepository.findBySellCompany(keyword);
+                if(seller.isEmpty()){
+                    Page<Coupon> coupons = couponRepository.findAllByOrderByIdDesc(pageable);
+                    dtos = coupons.map(Coupon::toGetCouponDto);
+                    return dtos;
+                }
+                Member member = seller.get().getMember();
 
                 Page<Coupon> coupons = couponRepository.findAllByMemberOrderByIdDesc(member, pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
             }
-            return dtos;
         } else {
             Member member = auth.getUser();
-//            Page<Coupon> coupons = couponRepository.findAllByMemberOrderByIdDesc(member,pageable);
-//            dtos = coupons.map(Coupon::toGetCouponDto);
+
             if (searchType.equals("id")) {
                 Page<Coupon> coupons = couponRepository.findAllByIdAndMemberOrderByIdDesc(Long.parseLong(keyword),member, pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
             } else if (searchType.equals("couponName")) {
-                Page<Coupon> coupons = couponRepository.findAllByCouponNameAndMemberContainingOrderByIdDesc(keyword,member, pageable);
+                Page<Coupon> coupons = couponRepository.findAllByCouponNameAndMemberOrderByIdDesc(keyword,member, pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
             } else {
-                Seller seller = sellerRepository.findBySellCompanyContaining(keyword);
+                Seller seller = sellerRepository.findBySellCompany(keyword).orElseThrow(()->new NoSuchElementException("Seller with id " + keyword + " not found."));
+
                 Member member2 = seller.getMember();
 
                 Page<Coupon> coupons = couponRepository.findAllByMemberOrderByIdDesc(member2, pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
             }
-            return dtos;
         }
+        return dtos;
 
     }
 }

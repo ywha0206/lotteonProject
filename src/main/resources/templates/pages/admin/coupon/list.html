@@ -26,9 +26,9 @@
         <section class="categoryProduct">
             <form th:action="@{/admin/coupon/coupons}" method="get" class="order-search">
                 <select name="searchType">
-                    <option value="id">쿠폰번호</option>
-                    <option value="couponName">쿠폰명</option>
-                    <option value="couponIssuer">발급자</option>
+                    <option th:selected="${searchType=='id'}" value="id">쿠폰번호</option>
+                    <option th:selected="${searchType=='couponName'}" value="couponName">쿠폰명</option>
+                    <option th:selected="${searchType=='couponIssuer'}" th:if="${searchCondition=='admin'}" value="couponIssuer">발급자</option>
                 </select>
                 <input name="keyword" type="text" placeholder="검색어입력">
                 <button type="submit">검색</button>

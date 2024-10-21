@@ -24,7 +24,7 @@ public class AdminCouponController {
     private final CouponService couponService;
 
     private String getSideValue() {
-        return "coupon";  // 실제 config 값을 여기에 설정합니다.
+        return "coupon";
     }
 
     @GetMapping("/coupons")
@@ -44,10 +44,13 @@ public class AdminCouponController {
         if(auth.getUser().getMemRole().equals("admin")) {
             issuer = "관리자";
             model.addAttribute("issuer",issuer);
+            model.addAttribute("searchCondition","admin");
         } else if(auth.getUser().getMemRole().equals("seller")) {
             issuer = auth.getUser().getSeller().getSellCompany();
             model.addAttribute("issuer",issuer);
+            model.addAttribute("searchCondition","seller");
         }
+
         if(!searchType.equals("0")&&!keyword.equals("0")) {
             Page<GetCouponDto> coupons = couponService.findAllCouponsBySearch(page,searchType,keyword);
             model.addAttribute("coupons", coupons);
@@ -56,6 +59,7 @@ public class AdminCouponController {
             model.addAttribute("memId",auth.getUser().getId());
             model.addAttribute("searchType",searchType);
             model.addAttribute("keyword",keyword);
+
             return "pages/admin/coupon/list";
         }
 

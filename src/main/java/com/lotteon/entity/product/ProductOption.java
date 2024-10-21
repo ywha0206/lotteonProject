@@ -24,6 +24,9 @@ public class ProductOption {
     @ToString.Exclude
     private Product product;
 
+    @Column(name = "prod_option_state")
+    private int optionState; // 필수옵션인지 아닌지
+
     @Column(name = "prod_option_name")
     private String optionName; // 예: "사이즈", "색상"
     @Column(name = "prod_option_value")
