@@ -67,14 +67,13 @@ public class BannerService {
         }
     }
 
+    @Transactional
     public Banner updateBannerState(Long id, Integer state) {
-        Banner banner = bannerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Banner banner = bannerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Banner not found"));
 
-        log.info("unchanged : "+banner);
-        log.info("state : "+state);
         banner.updateBannerState(state);
-        log.info("changed : "+banner);
 
-        return bannerRepository.save(banner);
+        return banner;
     }
 }
