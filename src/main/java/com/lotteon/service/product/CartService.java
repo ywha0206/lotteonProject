@@ -1,17 +1,13 @@
 package com.lotteon.service.product;
 
-import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartDto;
-import com.lotteon.entity.member.Customer;
+import com.lotteon.entity.member.Member;
 import com.lotteon.entity.product.*;
-import com.lotteon.repository.member.CustomerRepository;
+import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +23,7 @@ public class CartService {
 
     private final ModelMapper modelMapper;
 
-    private final CustomerRepository customerRepository;
+    private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final CartItemOptionRepository cartItemOptionRepository;
@@ -45,10 +41,11 @@ public class CartService {
 //        long memberId = Long.parseLong(auth.getUsername());
 
         long memberId = 1;
-        Optional<Customer> optCustomer = customerRepository.findByMemberId(memberId);
+        Optional<Member> optMember = memberRepository.findById(memberId);
+
             //.orElseThrow(() -> new RuntimeException("Customer not found"));
-        Customer customer = optCustomer.get();
-        long custId = customer.getId();
+        Member member = optMember.get();
+        long custId = member.getCustomer().getId();
 
 
         //장바구니 조회 없으면 생성
@@ -64,7 +61,7 @@ public class CartService {
         long prodId = postCartDto.getProdId();
 
         //상품 조회하고 상품옵션 조회해서
-//        productRepository.findById(prodId);//엥?여기서 익셉션으로 넘어감
+        productRepository.findById(prodId);//엥?여기서 익셉션으로 넘어감
 
         System.out.println(productRepository.findById((long)1).get());
 

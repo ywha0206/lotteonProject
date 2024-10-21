@@ -1,6 +1,11 @@
 package com.lotteon.service.member;
 
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.entity.member.Customer;
+import com.lotteon.entity.member.Member;
+import com.lotteon.entity.member.Seller;
+import com.lotteon.repository.member.CustomerRepository;
+import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,19 +23,30 @@ public class CustomerService {
     private final PasswordEncoder passwordEncoder;
     private final TermsRepository termsRepository;
     private final ModelMapper modelMapper;
+    private final MemberRepository memberRepository;
+    private final CustomerRepository customerRepository;
 
+    @Transactional
     public void insertCustomer(PostCustSignupDTO postCustSignupDTO) {
         try {
-            log.info("PostCustSignupDTO : " + postCustSignupDTO);
 
-            // 비밀번호 암호화
-//            String encoded = passwordEncoder.encode(postCustSignupDTO.getMemberPw());
-//            postCustSignupDTO.setMemberPw(encoded);
-//
-//            // 데이터베이스 저장 (Repository 사용)
-//            userRepository.save(postCustSignupDTO.toEntity());
 
-            log.info("사용자가 성공적으로 등록되었습니다: " + postCustSignupDTO.getCustEmail());
+            Member member = Member.builder()
+                    .memPwd(passwordEncoder.encode(postCustSignupDTO.getMemPwd()))
+                    .memUid(postCustSignupDTO.getMemId())
+                    .memRole("customer")
+                    .memState("basic")
+                    .build();
+
+            memberRepository.save(member);
+
+            String addr = postCustSignupDTO.getAddr1()+"/"+postCustSignupDTO.getAddr2()+"/"+postCustSignupDTO.getAddr3();
+            Customer customer = Customer.builder()
+                    .member(member)
+                    .build();
+
+            customerRepository.save(customer);
+
         } catch (Exception e) {
             // 예외 발생 시 로그 출력 및 에러 처리
             log.error("사용자 등록 중 오류가 발생했습니다.: ", e);

@@ -59,16 +59,10 @@ public class AuthController {
     @PostMapping("/customer")
     public String customer(
              PostCustSignupDTO postCustSignupDTO) {
-//        log.info("Register Controller - UserDTO :"+PostCustSignupDTO.toString());
-//        System.out.println(postCustSignupDTO 4
-//        String regip= req.getRemoteAddr();
-//        PostCustSignupDTO.setRegip(regip);
-//        customerService.insertCustomer(PostCustSignupDTO);
-//        return "redirect:/user/login?success=200";
+        log.info("Register Controller - UserDTO :"+postCustSignupDTO.toString());
+        customerService.insertCustomer(postCustSignupDTO);
 
-
-//        return "redirect:pages/auth/login/customer";
-        return "pages/auth/customer";
+        return "redirect:/auth/login/view";
     }
 
     // 회원가입 (판매회원 정보입력)
