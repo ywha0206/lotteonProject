@@ -38,7 +38,7 @@
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input class="inp" type="text" value="롯데 ON ">
+                            <input class="inp" type="text" value="롯데 ON " id="configTitle">
                         </td>
                     </tr>
                     <tr>
@@ -46,12 +46,14 @@
                             부제
                         </th>
                         <td>
-                            <input class="inp" type="text" value="더 나은 쇼핑을 위한 선택">
+                            <input class="inp" type="text" value="더 나은 쇼핑을 위한 선택" id="configSub">
                         </td>
                     </tr>
                 </table>
                 <article class="btn">
-                    <button>수정하기</button>
+                    <input type="hidden" id="configId" value="1">
+                    <input type="hidden" id="updater" th:value="${#authentication.principal.user.memUid}">
+                    <button onclick="patch('siteInfo')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -63,7 +65,7 @@
                     <tr>
                         <th>헤더 로고</th>
                         <td>
-                            <input class="inp" type="file" value="롯데 ON " onchange="readURL(this,'header');">
+                            <input class="inp" type="file" onchange="readURL(this,'header');" id="configHeaderLogo">
                             <span>크기 370 x 76 권장 </span><img id="headerpreview" style="max-width: 400px; display: none"/>
                             <button type="button" id="headerDeleteBtn" style="display: none;" onclick="resetUpload('header')">삭제</button>
                         </td>
@@ -71,7 +73,7 @@
                     <tr>
                         <th>푸터 로고</th>
                         <td>
-                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택" onchange="readURL(this,'footer');">
+                            <input class="inp" type="file" onchange="readURL(this,'footer');" id="configFooterLogo">
                             <span>크기 155 x 36 권장</span><img id="footerpreview" style="max-width: 200px; display: none">
                             <button type="button" id="footerDeleteBtn" style="display: none;" onclick="resetUpload('footer')">삭제</button>
                         </td>
@@ -79,7 +81,7 @@
                     <tr>
                         <th>파비콘</th>
                         <td>
-                            <input class="inp" type="file" value="더 나은 쇼핑을 위한 선택" onchange="readURL(this,'favicon');">
+                            <input class="inp" type="file" onchange="readURL(this,'favicon');" id="configFabicon">
                             <span>크기 32 x 32 권장</span><img id="faviconpreview" style="max-width: 50px; max-height: 50px; display: none"/>
                             <button type="button" id="faviconDeleteBtn" style="display: none;" onclick="resetUpload('favicon')">삭제</button>
                         </td>
@@ -95,7 +97,7 @@
                             <li>10.15 16:21:41 저장됨</li>
                         </ul>
                     </div>
-                    <button>수정하기</button>
+                    <button onclick="patch('siteLogo')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -130,7 +132,7 @@
                     </tr>
                 </table>
                 <article class="btn">
-                    <button>수정하기</button>
+                    <button onclick="patch('fLotte')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -161,7 +163,7 @@
                     </tr>
                 </table>
                 <article class="btn">
-                    <button>수정하기</button>
+                    <button onclick="patch('fCs')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -178,7 +180,7 @@
                     </tr>
                 </table>
                 <article class="btn">
-                    <button>수정하기</button>
+                    <button onclick="patch('copy')">수정하기</button>
                 </article>
             </section>
         </div>
@@ -257,5 +259,81 @@
             dropdownMenu.classList.add('dropdown-hidden');
         }
     });
+    function patchConfig(formData){
+        fetch(`/admin/config/basic/site`, {
+            method: 'PATCH',
+            body: formData
+        })
+            .then(resp => {
+                console.log(resp);
+                if (!resp.ok) {
+                    return resp.json().then(err => {
+
+                        console.error('Server responded with an error:', err); // 추가된 로그
+                        // 오류 응답을 자세히 로그에 남김
+                        throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
+                    });
+                }
+                return resp.json();
+            })
+            .then(data => {
+                console.log('Response Data:', data);
+                if(data.id>0){
+                    alert('성공적으로 수정되었습니다.')
+                    document.getElementById('configId').value = data.id;
+                }
+            })
+            .catch(err => {
+                console.error('Error : '.err);
+                alert('오류가 발생했습니다. 다시 시도해주세요.');
+            })
+    }
+    function patch(type){
+        if(!confirm("정말 변경하시겠습니까?")){return;}
+
+        const updater = document.getElementById('updater').value;
+        const formData = new FormData();
+        if(type==="siteInfo"){
+            const configTitle = document.getElementById('configTitle').value;
+            const configSub = document.getElementById('configSub').value;
+            let jsonData = {
+                "updater" : updater,
+                "type" : 2,
+                "strColumn1" : configTitle,
+                "strColumn2" : configSub
+            };
+            formData.append('patch',JSON.stringify(jsonData));
+            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
+
+            patchConfig(type,formData);
+        }
+        else if(type==="siteLogo"){
+            const configId = document.getElementById('configId').value;
+
+            let jsonData = {
+                "id" : +configId,
+                "type" : 3,
+                "strColumn1" : null,
+                "strColumn2" : null,
+                "filesColumn" : null,
+                "updater" : updater
+            };
+            // 파일 선택 요소들 가져오기
+            const headerFile = document.getElementById('configHeaderLogo').files[0];
+            const footerFile = document.getElementById('configFooterLogo').files[0];
+            const faviconFile = document.getElementById('configFabicon').files[0];
+            formData.append('file1', headerFile);
+            formData.append('file2', footerFile);
+            formData.append('file3', faviconFile);
+            formData.append('patch', JSON.stringify(jsonData));
+            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
+
+            patchConfig(type,formData);
+        }
+        else if(type==="fLotte"){}
+        else if(type==="fCs"){}
+        else if(type==="copy"){}
+    }
+
 </script>
 </html>
