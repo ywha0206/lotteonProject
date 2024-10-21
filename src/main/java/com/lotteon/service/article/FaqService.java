@@ -50,7 +50,6 @@ public class FaqService {
                 .build();
 
         // 3. FAQ 저장
-        faqRepository.save(faq);
     }
 
     // FAQ 목록 조회 (카테고리별)
