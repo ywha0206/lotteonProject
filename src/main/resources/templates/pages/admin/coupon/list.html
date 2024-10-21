@@ -43,29 +43,38 @@
                     <th>발급일</th>
                     <th>관리</th>
                 </tr>
-                <tr>
-                    <td onclick="openCouponPopup(1)" style="text-decoration: underline; cursor:pointer;">10121111</td>
-                    <td>abc1</td>
-                    <td>김유신</td>
-                    <td>OOO</td>
-                    <td>2</td>
-                    <td>102,999</td>
-                    <td>신용카드</td>
-                    <td style="color: #00B050;">결제완료</td>
-                    <td>2024.10.16<br>00:00:00</td>
-                    <td onclick="openCouponPopup(2)" style="cursor:pointer">배송하기</td>
-                    <td>종료</td>
+                <tr th:each="coupon : ${coupons}">
+                    <td onclick="openCouponPopup(1)" th:text="${coupon.id}" style="text-decoration: underline; cursor:pointer;">10121111</td>
+                    <td th:text="${coupon.couponType}">abc1</td>
+                    <td th:text="${coupon.couponName}">김유신</td>
+                    <td th:text="${coupon.couponDiscount} + ${coupon.couponDiscountOption}">OOO</td>
+                    <td th:text="${coupon.couponExpiration}">2</td>
+                    <td th:text="${coupon.couponIssuer}">102,999</td>
+                    <td th:text="${coupon.couponIssueCount}">신용카드</td>
+                    <td th:text="${coupon.couponUseCount}" style="color: #00B050;">결제완료</td>
+                    <td th:text="${coupon.couponState}">2024.10.16<br>00:00:00</td>
+                    <td th:text="${coupon.couponRdate}">배송하기</td>
+                    <td onclick="updateCouponState(1)" th:if="${coupon.couponState=='발급중'}"
+                    ><button class="active-btn"
+                             style="cursor: pointer; border: 1px solid #0070C0; color: #0070C0; padding: 3px 1px; background-color: transparent;"
+                    >종료</button>
+                    </td>
+                    <td onclick="updateCouponState(2)" th:if="${coupon.couponState=='종료'}">
+                        <button class="active-btn"
+                                style="cursor: pointer; border: 1px solid #0070C0; color: #0070C0; padding: 3px 1px; background-color: transparent;"
+                        >활성화</button>
+                    </td>
                 </tr>
 
             </table>
             <div class="page">
-                <a href="#">이전</a>
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#">다음</a>
+                <a class="none" th:href="@{/admin/coupon/coupons(page=0)}"><<</a>
+                <a class="none" th:href="@{/admin/coupon/coupons(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                <a class="none" th:href="@{/admin/coupon/coupons(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+                <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                <a class="none" th:href="@{/admin/coupon/coupons(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                <a class="none" th:href="@{/admin/coupon/coupons(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                <a class="none" th:href="@{/admin/coupon/coupons(page=${totalPages - 1})}" >>></a>
             </div>
         </section>
         <div class="green2"><button onclick="openCouponPopup(2)"  class="btn_green2">등록하기</button></div>
@@ -130,7 +139,7 @@
                 <table class="tb4">
                     <tr>
                         <th>발급처</th>
-                        <td><input readonly value="2" id="memId"></td>
+                        <td><input readonly value="6" id="memId"></td>
                     </tr>
                     <tr>
                         <th>쿠폰명</th>
@@ -200,6 +209,15 @@
         })
         if(resp.status===200){
             window.location.href = "/admin/coupon/coupons"
+        }
+
+    }
+
+    async function updateCouponState(a){
+        if(a===1) {
+            console.log("발급종료버튼")
+        } else if (a===2){
+            console.log("발급다시하기버튼")
         }
 
     }
