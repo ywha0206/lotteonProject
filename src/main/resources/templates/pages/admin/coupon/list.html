@@ -1,6 +1,7 @@
 <link rel="stylesheet" th:href="@{/css/admin/coupon/list.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <link rel="stylesheet" th:href="@{/css/reset.css}">
+<script th:src="@{/js/axios.min.js}"></script>
 <header th:replace="layout/admin/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px">
     <aside th:replace="layout/admin/aside.html"></aside>
@@ -129,46 +130,47 @@
                 <table class="tb4">
                     <tr>
                         <th>발급처</th>
-                        <td><input value="101200000"></td>
-                    </tr>
-                    <tr>
-                        <th>쿠폰종류</th>
-                        <td><input value="101200000"></td>
+                        <td><input readonly value="2" id="memId"></td>
                     </tr>
                     <tr>
                         <th>쿠폰명</th>
-                        <td><input value="101200000"></td>
-                    </tr>
-                    <tr>
-                        <th>기본주소</th>
-                        <td><input value="101200000"></td>
+                        <td><input id="couponName"></td>
                     </tr>
                     <tr>
                         <th>혜택</th>
                         <td>
-                            <select>
-                                <option>1000원 할인</option>
-                                <option>2000원 할인</option>
-                                <option>3000원 할인</option>
-                                <option>10% 할인</option>
-                                <option>20% 할인</option>
-                                <option>50% 할인</option>
-                                <option>배송비 무료</option>
+                            <select id="couponDiscount">
+                                <option value="1000/w">1000원 할인</option>
+                                <option value="2000/w">2000원 할인</option>
+                                <option value="3000/w">3000원 할인</option>
+                                <option value="10/p">10% 할인</option>
+                                <option value="20/p">20% 할인</option>
+                                <option value="50/p">50% 할인</option>
+                                <option value="1000/d">배송비 1000원 할인</option>
+                                <option value="2000/d">배송비 2000원 할인</option>
+                                <option value="3000/d">배송비 3000원 할인</option>
+                                <option value="all/d">배송비 무료</option>
                             </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>최소적용금액</th>
+                        <td>
+                            <input id="couponMinPrice">
                         </td>
                     </tr>
                     <tr>
                         <th>사용기간</th>
                         <td>
-                            <input type="date"> ~ <input type="date">
+                            <input id="couponExpiration1" type="date"> ~ <input id="couponExpiration2" type="date">
                         </td>
                     </tr>
                     <tr>
                         <th>유의사항</th>
-                        <td><textarea readonly>ddddd</textarea></td>
+                        <td><textarea id="couponCaution"></textarea></td>
                     </tr>
                 </table>
-                <div class="btns"><button>등록하기</button></div>
+                <div class="btns"><button onclick="postCoupon(event)">등록하기</button></div>
             </div>
             `
         }
@@ -179,5 +181,26 @@
     function closeShopPopup() {
         popup.style.display = "none";
         bg.style.display = "none";
+    }
+
+    async function postCoupon(event) {
+        const submitData = {
+            'memId' : document.getElementById('memId').value,
+            'couponName' : document.getElementById('couponName').value,
+            'couponDiscount' : document.getElementById('couponDiscount').value,
+            'couponMinPrice' : document.getElementById('couponMinPrice').value,
+            'couponExpiration' : document.getElementById('couponExpiration1').value + '~' + document.getElementById('couponExpiration2').value,
+            'couponCaution' : document.getElementById('couponCaution').value
+        }
+
+        const resp = await axios.post("/admin/coupon/coupon",submitData,{
+            headers : {
+                "Content-Type" : "application/json"
+            }
+        })
+        if(resp.status===200){
+            window.location.href = "/admin/coupon/coupons"
+        }
+
     }
 </script>
