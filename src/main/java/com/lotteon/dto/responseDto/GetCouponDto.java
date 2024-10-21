@@ -22,4 +22,5 @@ public class GetCouponDto {
     private int couponUseCount;
     private String couponState;
     private String couponRdate;
+    private String couponCaution;
 }
