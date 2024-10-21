@@ -39,4 +39,6 @@ public class CategoryArticle {
     @ToString.Exclude
     @OneToMany(mappedBy = "parent")
     private List<CategoryArticle> children;
+
+
 }

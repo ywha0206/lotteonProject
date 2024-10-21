@@ -30,22 +30,27 @@ public class CustomerService {
     public void insertCustomer(PostCustSignupDTO postCustSignupDTO) {
         try {
 
-
+            // Member 객체 생성 및 저장 (멤버 DB에 아이디, 비번 저장)
             Member member = Member.builder()
-                    .memPwd(passwordEncoder.encode(postCustSignupDTO.getMemPwd()))
                     .memUid(postCustSignupDTO.getMemId())
-                    .memRole("customer")
-                    .memState("basic")
+                    .memPwd(passwordEncoder.encode(postCustSignupDTO.getMemPwd()))
+                    .memRole("customer") // 기본 사용자 유형 "customer"
+                    .memState("basic")   // 기본 계정 상태 "basic"
                     .build();
 
             memberRepository.save(member);
-
+            // Addr1 + Addr2 + Addr3 = 부산광역시 + 부산진구 + 부전동
             String addr = postCustSignupDTO.getAddr1()+"/"+postCustSignupDTO.getAddr2()+"/"+postCustSignupDTO.getAddr3();
 
+            // Customer 객체 생성 및 저장
             Customer customer = Customer.builder()
-                    .custBirth(postCustSignupDTO.getCustBirth())
-                    .custEmail(postCustSignupDTO.getCustEmail())
                     .member(member)
+                    .custName(postCustSignupDTO.getCustName())
+                    .custGender(postCustSignupDTO.getCustGender() != null ? postCustSignupDTO.getCustGender() : false)  // null일 때 false로 처리
+                    .custEmail(postCustSignupDTO.getCustEmail())
+                    .custHp(postCustSignupDTO.getCustHp())
+                    .custAddr(postCustSignupDTO.getAddr1() + "/" + postCustSignupDTO.getAddr2() + "/" + postCustSignupDTO.getAddr3())
+                    .custPoint(0)
                     .build();
 
             customerRepository.save(customer);
