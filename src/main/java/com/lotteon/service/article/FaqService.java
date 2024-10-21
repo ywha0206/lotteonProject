@@ -34,21 +34,9 @@ public class FaqService {
 
     public void writeFaq(String cate1, String cate2, String title, String content) {
         // 1. CategoryArticleRepository에서 cate1과 cate2에 해당하는 카테고리를 찾고 값이 없으면 바로 예외를 던짐
-        CategoryArticle category1 = categoryArticleRepository.findByCate1(cate1)
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다: " + cate1));
-        CategoryArticle category2 = categoryArticleRepository.findByCate2(cate2)
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 2를 찾을 수 없습니다: " + cate2));
 
-        // 2. Faq 엔티티를 생성하여 저장
-        Faq faq = Faq.builder()
-                .cate1(category1)
-                .cate2(category2)
-                .faqTitle(title)
-                .faqContent(content)
-                .build();
 
         // 3. FAQ 저장
-        faqRepository.save(faq);
     }
 
     // FAQ 목록 조회 (카테고리별)
