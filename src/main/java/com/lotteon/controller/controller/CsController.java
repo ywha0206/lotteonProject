@@ -2,6 +2,7 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.entity.category.CategoryArticle;
+import com.lotteon.repository.category.CategoryArticleRepository;
 import com.lotteon.service.article.FaqService;
 import com.lotteon.service.article.QnaService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ public class CsController {
 
     private final FaqService faqService;
     private final QnaService qnaService;
+    private final CategoryArticleRepository categoryArticleRepository;
+
 
     @GetMapping("/index")
     public String join(Model model) {
@@ -71,6 +74,9 @@ public class CsController {
         log.info("문의하기 글 작성 완료, ID: " + qnaId);
         return "redirect:/cs/qnas";  // 작성 후 목록 페이지로 이동
     }
+
+
+
 
 
 }

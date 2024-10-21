@@ -5,6 +5,7 @@ import com.lotteon.entity.article.Faq;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.repository.article.FaqRepository;
 import com.lotteon.repository.category.CategoryArticleRepository;
+import com.lotteon.service.category.CategoryArticleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,23 @@ import java.util.stream.Collectors;
 public class FaqService {
     private final FaqRepository faqRepository;
     private final CategoryArticleRepository categoryArticleRepository;
+    private final CategoryArticleService categoryArticleService;
     private final ModelMapper modelMapper;
 
-    public void writeFaq(String cate1, String cate2, String title, String content) {
-        // 1. CategoryArticleRepository에서 cate1과 cate2에 해당하는 카테고리를 찾고 값이 없으면 바로 예외를 던짐
+    public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
+        // 1. CategoryArticleRepository에서 카테고리 이름으로 카테고리를 찾음
+        CategoryArticle category1 = categoryArticleRepository.findByCategoryName(categoryName1)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다: " + categoryName1));
+        CategoryArticle category2 = categoryArticleRepository.findByCategoryName(categoryName2)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 2를 찾을 수 없습니다: " + categoryName2));
 
+        // 2. Faq 엔티티 생성 및 저장
+        Faq faq = Faq.builder()
+                .cate1(category1)
+                .cate2(category2)
+                .faqTitle(title)
+                .faqContent(content)
+                .build();
 
         // 3. FAQ 저장
     }
