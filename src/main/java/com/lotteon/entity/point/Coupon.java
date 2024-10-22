@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @ToString
@@ -60,6 +62,11 @@ public class Coupon {
     @Column(name = "coupon_rdate")
     @CreationTimestamp
     private Timestamp couponRdate;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "coupon")
+    @Builder.Default
+    @ToString.Exclude
+    private List<CustomerCoupon> customerCoupons = new ArrayList<>();
 
     public GetCouponDto toGetCouponDto() {
 
