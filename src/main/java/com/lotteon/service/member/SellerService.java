@@ -1,6 +1,8 @@
 package com.lotteon.service.member;
 
 import com.lotteon.dto.requestDto.PostAdminSellerDto;
+import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.dto.requestDto.PostSellerSignupDTO;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.repository.member.MemberRepository;
@@ -25,6 +27,7 @@ public class SellerService {
     private final MemberRepository memberRepository;
     private final SellerRepository sellerRepository;
 
+    // 0. 관리자 판매자 등록
     public void postSeller(PostAdminSellerDto postAdminSellerDto) {
 
         Member member = Member.builder()
@@ -50,4 +53,47 @@ public class SellerService {
         sellerRepository.save(seller);
 
     }
+
+    @Transactional
+    public void insertSeller(PostSellerSignupDTO postSellerSignupDTO){
+        try {
+            // Member 객체 생성 및 저장 (멤버 DB에 아이디, 비번 저장)
+            Member member = Member.builder()
+                    .memUid(postSellerSignupDTO.getMemId())
+                    .memPwd(passwordEncoder.encode(postSellerSignupDTO.getMemPwd()))
+                    .memRole("customer") // 기본 사용자 유형 "customer"
+                    .memState("basic")   // 기본 계정 상태 "basic"
+                    .build();
+
+            memberRepository.save(member);
+
+            // Seller 객체 생성 및 저장 (판매자 DB에 회사명,대표,사업자등록번호,통신판매업번호,전화번호,팩스,주소(7)저장)
+            Seller seller = Seller.builder()
+                    .member(member)
+                    .sellAddr(postSellerSignupDTO.getSellAddr())
+                    .sellCompany(postSellerSignupDTO.getSellCompany())
+                    .sellFax(postSellerSignupDTO.getSellFax())
+                    .sellGrade(postSellerSignupDTO.getSellGrade())
+                    .build();
+
+
+
+
+
+        } catch (Exception e) {
+            // 예외 발생 시 로그 출력 및 에러 처리
+            log.error("사용자 등록 중 오류가 발생했습니다.: ", e);
+
+            // 필요한 경우 사용자에게 에러 정보를 리턴하거나 예외를 다시 던질 수 있습니다.
+            throw new RuntimeException("다시 시도해 주세요.");
+
+
+        }
+    }
+
+
+
+
+
+
 }

@@ -1,7 +1,7 @@
 <link rel="stylesheet" th:href="@{/css/auth/signup.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <script th:src="@{/js/validation.js}"></script>
-<header th:replace="layout/main/header.html"></header>
+<header th:replace="~{layout/main/header.html}"></header>
 <main>
     <form action=""                                                                                                         >
         <div class="container">
@@ -16,7 +16,7 @@
                 <!-- 이용약관 -->
                 <textarea readonly class="content" th:text="${t.termsContent}"></textarea>
                 <div class="essential-check check">
-                    <label style="font-size: 16px; letter-spacing: -0.5px" for="">
+                    <label style="font-size: 16px; letter-spacing: -0.5px" for="place">
                         <input style="margin-top: 10px;" type="checkbox"> 동의하기
                     </label>
                 </div>
@@ -47,7 +47,7 @@
         </div>
     </form>
 </main>
-<footer th:replace="layout/main/footer.html"></footer>
+<footer th:replace="~{layout/main/footer.html}"></footer>
 
 
 
@@ -89,6 +89,7 @@
 
         function submitData(){
             const hiddenInput = document.getElementById('placeHidden')
+            console.log(hiddenInput.value);  // hidden input의 값 확인
             let url = "/auth/customer/" + hiddenInput.value;
             window.location.href = url;
         }

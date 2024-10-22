@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Controller
@@ -46,33 +47,42 @@ public class AuthController {
         List<GetTermsResponseDto> getterms = termsService.selectTerms(termsType);
         log.info(getterms);
         model.addAttribute("terms", getterms); // 뷰에서 보이는 거
-        model.addAttribute("termsType", termsType); // 뷰에서 보이는 거
+        model.addAttribute("termsType", termsType); // customer일 때만 조회
         return "pages/auth/signup";
     }
 
-    // 2. 회원가입 (일반회원 정보입력) | optional : 선택약관 동의 여부
+    // 2-1. 회원가입 (일반회원 정보입력) | optional : 선택약관 동의 여부
     // 체크박스 선택 여부에 따라 true=1, false=0
     @GetMapping("/customer/{optional}")
-    public String customer(@PathVariable String optional, Model model) {
-        log.info("체크박스 선택 여부에 따라 true=1, false=0 >>>>>>>" + optional);
+    public String customer(@PathVariable Optional<Boolean> optional, Model model) {
+        Boolean isOptional = optional.orElse(false);  // 값이 없으면 기본값 false
+        log.info("체크박스 선택 여부에 따라 true=1, false=0 >>>>>>> " + optional);
+        model.addAttribute("custOptional", optional);
         return "pages/auth/customer";
     }
 
-    // 2. 회원가입 (일반회원 정보입력)
+    // 2-1. 회원가입 (일반회원 정보입력)
     @PostMapping("/customer")
     public String customer(PostCustSignupDTO postCustSignupDTO) {
 
-        log.info("Register Controller - UserDTO :"+postCustSignupDTO.toString());
+        log.info("일반회원 정보입력 :" + postCustSignupDTO.toString());
         customerService.insertCustomer(postCustSignupDTO);
 
         return "redirect:/auth/login/view";
     }
 
-    // 회원가입 (판매회원 정보입력)
+    // 2-2. 회원가입 (판매회원 정보입력)
     @GetMapping("/seller")
     public String seller(){
+
         return "pages/auth/seller";
     }
 
+    // 2-2. 회원가입 (판매회원 정보입력)
+    @PostMapping("/seller")
+    public String seller(PostCustSignupDTO postCustSignupDTO){
+
+        return "redirect:/auth/login/view";
+    }
 
 }
