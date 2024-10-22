@@ -25,4 +25,8 @@ public class ProductStock {
 
     @Column(name = "prod_stock_name")
     private String prodOptionName;
+
+    @Column(name = "prod_stock_value")
+    private String prodOptionValue;
+
 }
