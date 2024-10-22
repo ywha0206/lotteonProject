@@ -41,13 +41,13 @@ public class AuthController {
         return "pages/auth/join";
     }
     
-    // 1. 이용약관 Terms
+    // 1. 이용약관 Terms (termsType = 일반 customer,판매자 seller)
     @GetMapping("/signup")
     public String signUp(@RequestParam String termsType, Model model) {
         List<GetTermsResponseDto> getterms = termsService.selectTerms(termsType);
         log.info(getterms);
         model.addAttribute("terms", getterms); // 뷰에서 보이는 거
-        model.addAttribute("termsType", termsType); // customer일 때만 조회
+        model.addAttribute("termsType", termsType); // customer일 때만 선택 약관 조회
         return "pages/auth/signup";
     }
 
@@ -55,7 +55,6 @@ public class AuthController {
     // 체크박스 선택 여부에 따라 true=1, false=0
     @GetMapping("/customer/{optional}")
     public String customer(@PathVariable Optional<Boolean> optional, Model model) {
-        Boolean isOptional = optional.orElse(false);  // 값이 없으면 기본값 false
         log.info("체크박스 선택 여부에 따라 true=1, false=0 >>>>>>> " + optional);
         model.addAttribute("custOptional", optional);
         return "pages/auth/customer";
@@ -65,7 +64,7 @@ public class AuthController {
     @PostMapping("/customer")
     public String customer(PostCustSignupDTO postCustSignupDTO) {
 
-        log.info("일반회원 정보입력 :" + postCustSignupDTO.toString());
+        log.info("일반회원 정보입력 : " + postCustSignupDTO.toString());
         customerService.insertCustomer(postCustSignupDTO);
 
         return "redirect:/auth/login/view";
@@ -86,3 +85,5 @@ public class AuthController {
     }
 
 }
+
+
