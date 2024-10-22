@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @ToString
@@ -30,7 +31,7 @@ public class Point {
 
     @Column(name = "point_rdate")
     @CreationTimestamp
-    private Timestamp pointRdate;
+    private LocalDate pointRdate;
 
     @Column(name = "point_var")
     private int pointVar;
@@ -39,5 +40,5 @@ public class Point {
     private String pointEtc;
 
     @Column(name = "point_expiration")
-    private Timestamp pointExpiration;
+    private LocalDate pointExpiration;
 }

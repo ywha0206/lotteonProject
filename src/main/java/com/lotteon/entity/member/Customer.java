@@ -50,4 +50,7 @@ public class Customer {
     @Column(name = "cust_term_option")
     private Boolean custTermOption;
 
+    public void updatePoint(int point){
+        this.custPoint = point;
+    }
 }
