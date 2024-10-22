@@ -17,16 +17,19 @@ public class FCs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cs_hp1")
-    private String hp1;
+    @Column(name = "cs_hp")
+    private String hp;
 
-    @Column(name = "cs_hp2")
-    private String hp2;
 
-    @Column(name = "cs_time1")
-    private String time1;
+    @Column(name = "cs_email")
+    private String email;
 
-    @Column(name = "cs_time2")
-    private String time2;
+    @Column(name = "cs_stime")
+    private String stime;
 
+    @Column(name = "cs_etime")
+    private String etime;
+
+    @Column(name = "cs_call")
+    private String call;
 }

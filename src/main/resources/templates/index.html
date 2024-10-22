@@ -1,7 +1,7 @@
 
     <link rel="stylesheet" as="style" crossorigin th:href="@{https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css}" /> <!-- 가변 다이나믹 서브셋 (fontfamily : pretendard) -->
-    <link th:href="@{css/reset.css}" rel="stylesheet">
-    <link th:href="@{css/main.css}" rel="stylesheet">
+    <link th:href="@{/css/reset.css}" rel="stylesheet">
+    <link th:href="@{/css/main.css}" rel="stylesheet">
     <script th:src="@{/js/main.js}"></script>
     <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
 <header th:replace="layout/main/header.html"></header>
@@ -24,15 +24,7 @@
                                 <div class="dep2">
                                     <button onclick="closePopupCategory()">X</button>
                                     <ul class="cf flex" id="data-response">
-<!--                                        <li class="dep2_line"><a href="#" target="_blank" class="d2_tit cf">여성패션-->
-<!--                                            <ul class="dep3 cf">-->
-<!--                                                <li><a href="#" target="_blank">여성패션1</a></li>-->
-<!--                                                <li><a href="#" target="_blank">여성패션2</a></li>-->
-<!--                                                <li><a href="#" target="_blank">여성패션3</a></li>-->
-<!--                                                <li><a href="#" target="_blank">여성패션4</a></li>-->
-<!--                                                <li><a href="#" target="_blank">여성패션5</a></li>-->
-<!--                                            </ul>-->
-<!--                                        </a></li>-->
+
                                     </ul>
                                 </div>
                             </a>
@@ -106,22 +98,24 @@
             <section id="sec">
 
                 <div id="mainSlider">
-                    <div class="simg"><a href="#">
-                        <img src="/images/980x300.jpg" alt="메인슬라이더1">
-                        <ul class="cf">
-                            <li class="prev"><a href="#"></a></li><!-- .prev -->
-                            <li class="next"><a href="#"></a></li><!-- .next -->
-                        </ul>
-                        <!-- <p class="prev"><a href="#"></a></p>
-                        <p class="next"><a href="#"></a></p> -->
-                        <div class="pager cf">
+                    <div class="simg">
+                        <a href="#">
+                            <img th:src="@{/images/980x300.jpg}" alt="메인슬라이더1">
                             <ul class="cf">
-                                <li><a href="#" class="on">1</a></li><!-- .on -->
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
+                                <li class="prev"><a href="#"></a></li><!-- .prev -->
+                                <li class="next"><a href="#"></a></li><!-- .next -->
                             </ul>
-                        </div><!-- .pager -->
-                    </a></div><!-- .btnL -->
+                            <!-- <p class="prev"><a href="#"></a></p>
+                            <p class="next"><a href="#"></a></p> -->
+                            <div class="pager cf">
+                                <ul class="cf">
+                                    <li><a href="#" class="on">1</a></li><!-- .on -->
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                </ul>
+                            </div>
+                        </a>
+                    </div>
                 </div><!-- .mainSlider -->
 
                 <div class="cont1">
@@ -376,3 +370,24 @@
 </div><!--#wrap-->
 <footer th:replace="layout/main/footer.html"></footer>
 <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
+<link th:href="@{/js/jquery.bxslider.min.css}" rel="stylesheet" />
+<script th:src="@{/js/jquery.bxslider.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        $('.mainSlider1 ul').bxSlider({
+            auto: true,
+            autoControls: true,
+            autoControlsCombine: true,
+            stopAutoOnClick: true,
+            pager: true
+        });
+        $('.mainSlider2 ul').bxSlider({
+            auto: true,
+            autoControls: true,
+            autoControlsCombine: true,
+            stopAutoOnClick: true,
+            pager: true,
+            pagerType: 'short'
+        });
+    });
+</script>

@@ -20,7 +20,7 @@ public class Config {
     private Long id;
 
     @Column(name = "version_id")
-    private Long configVersion;
+    private String configVersion;
 
     @Column(name = "config_title")
     private String configTitle;
@@ -37,8 +37,6 @@ public class Config {
     @Column(name = "config_fabicon")
     private String configFabicon;
 
-
-
     @Column(name = "config_update_version")
     private int configUpdateVersion;
 
@@ -52,8 +50,11 @@ public class Config {
     @CreationTimestamp
     private Timestamp configCreatedAt;
 
+    @Column(name = "config_is_used")
+    private boolean configIsUsed;
+
     public void patchSiteVersion(String version){
-        this.configVersion = Long.parseLong(version);
+        this.configVersion = version;
         this.configUpdateLocation = 1;
     }
 
@@ -67,11 +68,24 @@ public class Config {
         if (headerLogo != null) {this.configHeaderLogo = headerLogo;}
         if (footerLogo != null) {this.configFooterLogo = footerLogo;}
         if (fabicon != null) {this.configFabicon = fabicon;}
-        this.configUpdateLocation = 3;
+        configUpdateLocation = 3;
     }
 
     public void update(String user) {
         this.configUpdatedAdmin = user;
         this.configUpdateVersion += 1;
+    }
+    public Config copyConfig() {
+        this.configIsUsed = false;
+        return Config.builder()
+                .configVersion(this.configVersion)
+                .configTitle(this.configTitle)
+                .configSub(this.configSub)
+                .configHeaderLogo(this.configHeaderLogo)
+                .configFooterLogo(this.configFooterLogo)
+                .configFabicon(this.configFabicon)
+                .configUpdateVersion(this.configUpdateVersion)
+                .configIsUsed(true)
+                .build();
     }
 }

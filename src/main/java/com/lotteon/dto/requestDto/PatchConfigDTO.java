@@ -1,10 +1,9 @@
 package com.lotteon.dto.requestDto;
 
-
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -13,8 +12,7 @@ import java.util.List;
 public class PatchConfigDTO {
     private Long id;
     private int type;
-    private String strColumn1;
-    private String strColumn2;
-    private List<MultipartFile> filesColumn;
     private String updater;
+    private String title;
+    private String sub;
 }

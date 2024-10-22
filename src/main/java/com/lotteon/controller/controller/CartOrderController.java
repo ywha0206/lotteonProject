@@ -1,6 +1,7 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.PostCartDto;
+import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.service.category.CategoryProductService;
@@ -9,6 +10,7 @@ import com.lotteon.service.product.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +31,13 @@ public class CartOrderController {
     private final CategoryProductService categoryProductService;
 
     @GetMapping("/cart")
-    public String join(Model model) {
+    public String join(Model model, HttpSession session) {
+
+        List<GetCartDto> cartItems = cartService.selectCart(session);
+
+        log.info("카트 아이템 데이터 구조 좀 보자 "+cartItems);
+        model.addAttribute("cartItems", cartItems);
+
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
         model.addAttribute("category1", category1);
@@ -42,6 +50,9 @@ public class CartOrderController {
         ResponseEntity result = cartService.insertCart(postCartDto, session);
         log.info(result.getBody());
 
+        if(result.getStatusCode() == HttpStatus.UNAUTHORIZED){
+            return "redirect:/prod/cart";
+        }
 
 
         Cart cart = (Cart) result.getBody();

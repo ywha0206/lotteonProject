@@ -2,7 +2,9 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.responseDto.GetCouponDto;
+import com.lotteon.dto.responseDto.GetCustomerCouponDto;
 import com.lotteon.service.point.CouponService;
+import com.lotteon.service.point.CustomerCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import java.util.List;
 public class AdminCouponController {
 
     private final CouponService couponService;
+    private final CustomerCouponService customerCouponService;
 
     private String getSideValue() {
         return "coupon";
@@ -73,8 +76,21 @@ public class AdminCouponController {
     }
 
     @GetMapping("/issuearances")
-    public String issuances(Model model) {
+    public String issuances(
+            Model model,
+            @RequestParam(name = "page", defaultValue = "0") int page
+    ) {
         model.addAttribute("config", getSideValue());
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        if(auth.getUser().getMemRole().equals("admin")) {
+            Page<GetCustomerCouponDto> custCoupons = customerCouponService.findAll(page);
+            model.addAttribute("custCoupons", custCoupons);
+        } else {
+
+        }
+
         return "pages/admin/coupon/issuearance";
     }
 
