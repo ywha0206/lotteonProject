@@ -3,6 +3,7 @@ package com.lotteon.service.product;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartDto;
 import com.lotteon.dto.responseDto.CartSessionDto;
+import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.*;
 import com.lotteon.repository.member.MemberRepository;
@@ -136,6 +137,48 @@ public class CartService {
         }
 
         return ResponseEntity.ok().body("insert");
+    }
+
+    public List<GetCartDto> selectCart(HttpSession session) {
+
+        // 1. 인증된 사용자 정보 가져오기
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        // 2. 사용자 ID로 카트 조회
+        long custId = auth.getUser().getCustomer().getId();
+        Optional<Cart> cartOptional = cartRepository.findByCustId(custId);
+
+        // 3. 카트가 없으면 빈 리스트 반환
+        if (!cartOptional.isPresent()) {
+            return Collections.emptyList();  // 카트가 없을 경우
+        }
+
+        Cart cart = cartOptional.get();
+
+        // 4. 카트에 담긴 아이템 목록을 조회
+        List<CartItem> cartItems = cart.getItems();
+        List<GetCartDto> cartDtoList = new ArrayList<>();
+
+        // 5. 각 카트 아이템을 DTO로 변환
+        for (CartItem cartItem : cartItems) {
+            Product product = cartItem.getProduct();  // 카트 아이템에 연결된 상품
+
+            // 6. DTO로 변환
+            GetCartDto getCartDto = GetCartDto.builder()
+                    .cartItemId(cartItem.getId())
+                    .quantity(cartItem.getQuantity())
+                    .totalPrice(cartItem.getTotalPrice())
+                    .product(product)  // 상품 정보를 포함
+                    .build();
+
+            // 7. DTO 리스트에 추가
+            cartDtoList.add(getCartDto);
+        }
+
+        // 8. DTO 리스트 반환
+        return cartDtoList;
     }
 }
 

@@ -1,0 +1,202 @@
+<link rel="stylesheet" th:href="@{/css/admin/cs/recruit/list.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main>
+  <aside th:replace="layout/admin/aside.html"></aside>
+  <section id="admin-product-list" class="container">
+    <div id="search_input">
+      <nav class="qna-nav">
+        <h3>채용하기 목록</h3>
+        <p>HOME > 고객센터 > <strong>채용하기</strong></p>
+      </nav>
+      <form
+              action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}"
+              class="search"
+      >
+        <input type="hidden" name="content" value="list" />
+        <input type="hidden" name="cateNo" value="${cate.cateNo}" />
+        <select class="recruit cate" name="recruitCate" onchange="firstOption()">
+          <option>채용번호</option>
+          <option value="user">채용부서</option>
+          <option value="coupon">채용형태</option>
+          <option value="order">상태</option>
+        </select>
+        <input class="recruit" placeholder="검색어 입력"/>
+        <button class="btnsearch">검색</button>
+      </form>
+    </div>
+    <article>
+      <table class="tb1" style="width: 100%">
+        <tr>
+          <th style="width: 5%"><input type="checkbox" id="selectAll" /></th>
+          <th style="width: 5%">번호</th>
+          <th>채용부서</th>
+          <th>경력사항</th>
+          <th>채용형태</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>상태</th>
+          <th>모집기간</th>
+          <th>작성일</th>
+        </tr>
+
+        <tr onclick="openRecruitPopup(1)">
+          <td><input type="checkbox" /></td>
+          <td>120</td>
+          <td>광고사업</td>
+          <td>경력 4~5년</td>
+          <td>정규직</td>
+          <td>광고 플랫폼 기획</td>
+          <td>관리자</td>
+          <td class="status_ing">모집 중</td>
+          <td>0000-00-00 ~ 0000-00-00</td>
+          <td>0000-00-00 00.00.00</td>
+        </tr>
+
+        <tr onclick="openRecruitPopup(1)">
+          <td><input type="checkbox" /></td>
+          <td>119</td>
+          <td>광고사업</td>
+          <td>경력 4~5년</td>
+          <td>정규직</td>
+          <td>광고 플랫폼 기획</td>
+          <td>관리자</td>
+          <td class="status_ing">모집 중</td>
+          <td>0000-00-00 ~ 0000-00-00</td>
+          <td>0000-00-00 00.00.00</td>
+        </tr>
+
+        <tr onclick="openRecruitPopup(1)">
+          <td><input type="checkbox" /></td>
+          <td>118</td>
+          <td>광고사업</td>
+          <td>경력 4~5년</td>
+          <td>정규직</td>
+          <td>광고 플랫폼 기획</td>
+          <td>관리자</td>
+          <td class="status_end">종료</td>
+          <td>0000-00-00 ~ 0000-00-00</td>
+          <td>0000-00-00 00.00.00</td>
+        </tr>
+
+        <tr onclick="openRecruitPopup(1)">
+          <td><input type="checkbox" /></td>
+          <td>117</td>
+          <td>광고사업</td>
+          <td>경력 4~5년</td>
+          <td>정규직</td>
+          <td>광고 플랫폼 기획</td>
+          <td>관리자</td>
+          <td class="status_end">종료</td>
+          <td>0000-00-00 ~ 0000-00-00</td>
+          <td>0000-00-00 00.00.00</td>
+        </tr>
+        <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
+      </table>
+    </article>
+
+    <div class="button-group">
+      <button class="button--delete">선택삭제</button>
+      <button class="btn_blue" onclick="openRecruitPopup(1)">채용등록</button>
+    </div>
+    <!-- 페이지 네비게이션 -->
+    <div class="paging">
+      <a href="#" class="prev">이전</a>
+      <a href="#">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <!--페이지 이전 다음 글자 누를 수 있게-->
+      <a href="#" class="next">다음</a>
+    </div>
+    <div class="popup"></div>
+    <div class="popupbg"></div>
+  </section>
+
+</main>
+<footer th:replace="layout/admin/footer.html"></footer>
+<script>
+  const popup = document.querySelector('.popup')
+  const bg = document.querySelector('.popupbg')
+  function openRecruitPopup(a) {
+    if(a===1){
+      popup.innerHTML = `
+            <div class="header">
+                <div class="title">채용등록 </div>
+                <div onclick="closeShopPopup()" class="btn">X</div>
+            </div>
+            <div style="margin: 20px; margin-bottom: 30px;">
+                <table class="tb4">
+                    <tr>
+                        <th>제목</th>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <th>채용부서</th>
+                        <td>
+                            <select>
+                                <option value="">채용부서 선택</option>
+                                <option value="">광고사업</option>
+                                <option value="">IT</option>
+                                <option value="">운영</option>
+                                <option value="">마케팅</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>경력사항</th>
+                        <td>
+                            <select>
+                                <option value="">경력사항 선택</option>
+                                <option value="">신입</option>
+                                <option value="">경력</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>채용형태</th>
+                        <td>
+                            <select>
+                                <option value="">채용형태 선택</option>
+                                <option value="">계약직</option>
+                                <option value="">정규직</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>모집기간</th>
+                        <td><input type="date"> ~ <input type="date"></td>
+                    </tr>
+                    <tr>
+                        <th>비고</th>
+                        <td><textarea></textarea></td>
+                    </tr>
+                </table>
+                <div class="popup_btn">
+                    <button class="btn_gray">취소</button>
+                    <button class="btn_green">등록</button>
+                </div>
+            </div>
+            `
+    } else {
+      popup.innerHTML = `
+            <div class="header">
+                <div class="title">배송입력 <span style="color: white">1012000000</span></div>
+                <div onclick="closeShopPopup()" class="btn">X</div>
+            </div>
+            <div style="margin: 20px; margin-bottom: 30px;">
+
+                <div class="btns"><button>등록하기</button></div>
+            </div>
+            `
+    }
+    popup.style.display = "block";
+    bg.style.display = "flex";
+  }
+
+  function closeShopPopup() {
+    popup.style.display = "none";
+    bg.style.display = "none";
+  }
+</script>
+
