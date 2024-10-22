@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FLotteRepository extends JpaRepository<FLotte, Long> {
+    FLotte findTopByOrderByIdDesc();
 }
