@@ -1,9 +1,7 @@
 package com.lotteon.controller.controller;
 
-import com.lotteon.dto.responseDto.GetBannerDTO;
-import com.lotteon.dto.responseDto.GetConfigDTO;
-import com.lotteon.service.config.BannerService;
-import com.lotteon.service.config.ConfigService;
+import com.lotteon.dto.responseDto.*;
+import com.lotteon.service.config.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -20,6 +18,9 @@ import java.util.List;
 public class AdminConfigController {
     private final BannerService bannerService;
     private final ConfigService configService;
+    private final FLotteService flotteService;
+    private final FCsService fcsService;
+    private final CopyrightService copyrightService;
 
     private String getSideValue() {
         return "config";  // 실제 config 값을 여기에 설정합니다.
@@ -33,8 +34,16 @@ public class AdminConfigController {
     @GetMapping("/basics")
     public String basic(Model model) {
         GetConfigDTO ConfigDTO = configService.getUsedConfig();
+        GetFLotteDTO fLotteDTO = flotteService.getRecentFLotte();
+        fLotteDTO.splitAddress();
+        GetFCsDTO fCsDTO = fcsService.getRecentFCs();
+        GetCopyrightDTO copyrightDTO = copyrightService.getRecentCopyright();
+
         model.addAttribute("config", getSideValue());
         model.addAttribute("site", ConfigDTO);
+        model.addAttribute("fLotte", fLotteDTO);
+        model.addAttribute("fCs", fCsDTO);
+        model.addAttribute("copy", copyrightDTO);
         return "pages/admin/config/basic";
     }
     @GetMapping("/banners")

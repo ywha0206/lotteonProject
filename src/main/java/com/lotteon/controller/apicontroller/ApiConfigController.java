@@ -2,14 +2,10 @@ package com.lotteon.controller.apicontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lotteon.dto.requestDto.PatchConfigDTO;
-import com.lotteon.dto.requestDto.PatchLogoDTO;
-import com.lotteon.dto.requestDto.PostBannerDTO;
+import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetBannerDTO;
-import com.lotteon.entity.config.Banner;
-import com.lotteon.entity.config.Config;
-import com.lotteon.service.config.BannerService;
-import com.lotteon.service.config.ConfigService;
+import com.lotteon.entity.config.*;
+import com.lotteon.service.config.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -27,6 +23,9 @@ import java.util.*;
 public class ApiConfigController {
     private final BannerService bannerService;
     private final ConfigService configService;
+    private final FLotteService flotteService;
+    private final FCsService fcsService;
+    private final CopyrightService copyrightService;
 
     @GetMapping("/banners/{tab}")
     public ResponseEntity<?> selectBanner(@PathVariable("tab") String tab) {
@@ -98,9 +97,33 @@ public class ApiConfigController {
         return ResponseEntity.ok().body(config);
     }
     @PatchMapping("/info")
-    public ResponseEntity<?> updateSiteInfo(@RequestBody PatchConfigDTO configDTO) {
+    public ResponseEntity<?> updateSiteInfo(@ModelAttribute PatchConfigDTO configDTO) {
         Config config = configService.updateInfo(configDTO);
         return ResponseEntity.ok().body(config);
+    }
+
+    @PostMapping("/footer")
+    public ResponseEntity<?> updateFooter(@ModelAttribute PostFLotteDTO postDTO) {
+        FLotte fLotte = flotteService.updateFooter(postDTO);
+        return ResponseEntity.ok().body(fLotte);
+    }
+    @PostMapping("/cs")
+    public ResponseEntity<?> updateCs(@ModelAttribute PostFCsDTO postDTO) {
+        FCs fCs = fcsService.updateCS(postDTO);
+        return ResponseEntity.ok().body(fCs);
+    }
+
+    @PostMapping("/copy")
+    public ResponseEntity<?> updateCopyright(@RequestParam("id") Long id,
+                                             @RequestParam("copy") String copy) {
+        Copyright copyright = copyrightService.updateCopyright(id, copy);
+        return ResponseEntity.ok().body(copyright);
+    }
+    @PostMapping("/version")
+    public ResponseEntity<?> insertVersion(@ModelAttribute("id") Long id,
+                                             @RequestParam("copy") String copy) {
+        Copyright copyright = copyrightService.updateCopyright(id, copy);
+        return ResponseEntity.ok().body(copyright);
     }
 
 }

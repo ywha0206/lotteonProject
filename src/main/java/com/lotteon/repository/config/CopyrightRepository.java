@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CopyrightRepository extends JpaRepository<Copyright, Long> {
+    Copyright findTopByOrderByIdDesc();
 }

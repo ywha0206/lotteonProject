@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FCsRepository extends JpaRepository<FCs, Long> {
+    FCs findTopByOrderByIdDesc();
 }
