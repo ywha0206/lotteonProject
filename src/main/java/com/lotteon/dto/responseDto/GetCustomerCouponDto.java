@@ -17,5 +17,10 @@ public class GetCustomerCouponDto {
     private String couponName;
     private String memUid;
     private int custCouponState;
+    private String couponState;
     private String custCouponUdate;
+    private String user;
+    private String couponDiscount;
+    private String couponExpiration;
+    private String couponCaution;
 }
