@@ -109,27 +109,27 @@
                 <table class="tb2">
                     <tr>
                         <th>상호명</th>
-                        <td><input class="inp" type="text" value="롯데쇼핑주식회사"></td>
+                        <td><input class="inp" type="text" name="busiCompany" th:value="${fLotte.busiCompany}"></td>
                     </tr>
                     <tr>
                         <th>대표이사</th>
-                        <td><input class="inp" type="text" value="이상훈"></td>
+                        <td><input class="inp" type="text" name="busiRepresentative" th:value="${fLotte.busiRepresentative}"></td>
                     </tr>
                     <tr>
                         <th>사업자등록번호</th>
-                        <td><input class="inp" type="text" value="123-12-12345"></td>
+                        <td><input class="inp" type="text" name="busiCode" th:value="${fLotte.busiCode}"></td>
                     </tr>
                     <tr>
                         <th>통신판매업신고</th>
-                        <td><input class="inp" type="text" value="2021-양산-1234"></td>
+                        <td><input class="inp" type="text" name="busiOrderCode" th:value="${fLotte.busiOrderCode}"></td>
                     </tr>
                     <tr>
                         <th>기본주소</th>
-                        <td><input class="inp" type="text" value="서울특별시 강남구 테헤란로 507"></td>
+                        <td><input class="inp" type="text" name="busiAddr" th:value="${fLotte.busiAddr1}"></td>
                     </tr>
                     <tr>
                         <th>상세주소</th>
-                        <td><input class="inp" type="text" value="1002호"></td>
+                        <td><input class="inp" type="text" name="busiAddr" th:value="${fLotte.busiAddr2}"></td>
                     </tr>
                 </table>
                 </form>
@@ -146,23 +146,23 @@
                 <table class="tb2">
                     <tr>
                         <th>전화번호</th>
-                        <td><input class="inp" type="text" value="010-5555-4444"></td>
+                        <td><input class="inp" type="text" name="hp" th:value="${fCs.hp}"></td>
                     </tr>
                     <tr>
                         <th>업무시간</th>
                         <td>
-                            <input class="inp" type="time" id="start" name="start_time" value="08:00">
+                            <input class="inp" type="time" id="start" name="stime" th:value="${fCs.stime}">
                             ~
-                            <input class="inp" type="time" id="end" name="end_time" value="18:00">
+                            <input class="inp" type="time" id="end" name="etime" th:value="${fCs.etime}">
                         </td>
                     </tr>
                     <tr>
                         <th>이메일</th>
-                        <td><input class="inp" type="text" value="lotteon@lotteon.net"></td>
+                        <td><input class="inp" type="text" name="email" th:value="${fCs.email}"></td>
                     </tr>
                     <tr>
                         <th>전자금융거래 분쟁담당</th>
-                        <td><input class="inp" type="text" value="1234-1234"></td>
+                        <td><input class="inp" type="text" name="call" th:value="${fCs.call}"></td>
                     </tr>
                 </table>
                 </form>
@@ -179,7 +179,7 @@
                     <tr>
                         <th>카피라이트</th>
                         <td>
-                            <input type="text" class="inp" value="CopyrightLotteOn. All rights reserved">
+                            <input type="text" class="inp" id="copyright" th:value="${copy.copy}" th:data-copyid="${copy.id}">
                         </td>
                     </tr>
                 </table>
@@ -331,20 +331,24 @@
             await fetchBasic('PATCH',`/admin/config/logo`, formData);
 
         }
-        // else if(type==="fLotte"){
-        //     const fLotteFormData = new FormData(document.getElementById("fLotte"));
-        //     await fetchBasic('POST',`/admin/config/footer`,fLotteFormData);
-        // }
-        // else if(type==="fCs"){
-        //
-        //     const fCsFormData = new FormData(document.getElementById("fCs"));
-        //     await fetchBasic('POST',`/admin/config/cs`,fCsFormData);
-        // }
-        // else if(type==="copy"){
-        //     const copy = document.getElementById("copyright").value;
-        //     formData.append("copy",copy);
-        //     await fetchBasic('POST',`/admin/config/copyright`,formData);
-        // }
+        else if(type==="fLotte"){
+            const fLotteFormData = new FormData(document.getElementById("fLotte"));
+            console.log('Form Data:', ...fLotteFormData.entries()); // 폼 데이터 출력
+            await fetchBasic('POST',`/admin/config/footer`,fLotteFormData);
+        }
+        else if(type==="fCs"){
+
+            const fCsFormData = new FormData(document.getElementById("fCs"));
+            console.log('Form Data:', ...fCsFormData.entries()); // 폼 데이터 출력
+            await fetchBasic('POST',`/admin/config/cs`,fCsFormData);
+        }
+        else if(type==="copy"){
+            const copy = document.getElementById("copyright");
+            formData.append("copy",copy.value);
+            formData.append("id", copy.dataset.copyid)
+            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
+            await fetchBasic('POST',`/admin/config/copy`,formData);
+        }
     }
 
 </script>

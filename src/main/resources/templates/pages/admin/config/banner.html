@@ -172,17 +172,19 @@
 
 
     <script>
-        const popup = document.querySelector('.popup')
-        const bg = document.querySelector('.popupbg')
-
+        const popup = document.querySelector('.popup');
+        const bg = document.querySelector('.popupbg');
+        const body = document.getElementsByTagName('body')[0];
         function openBanner(){
-            popup.style.display = 'block'
-            bg.style.display = 'block'
-        }
+            popup.style.display = 'block';
+            bg.style.display = 'block';
+            body.style.overflow = 'hidden';
+        };
         function closeBanner(){
-            popup.style.display = 'none'
-            bg.style.display = 'none'
-        }
+            popup.style.display = 'none';
+            bg.style.display = 'none';
+            body.style.overflow = 'auto';
+        };
         document.getElementById('start-time').addEventListener('focus', function() {
             this.showPicker();
         });
