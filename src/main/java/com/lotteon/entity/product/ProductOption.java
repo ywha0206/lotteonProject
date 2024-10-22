@@ -33,7 +33,5 @@ public class ProductOption {
     private String optionValue; // 예: "S", "M", "L"
     @Column(name = "additionalPrice")
     private Double additionalPrice; // 추가 가격 (옵션 선택 시 가격 증가분)
-    @Column(name = "prod_option_stock")
-    private int stock;
 
 }
