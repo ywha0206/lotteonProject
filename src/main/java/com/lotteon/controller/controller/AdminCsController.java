@@ -76,6 +76,11 @@ public class AdminCsController {
         return "pages/admin/cs/qna/write";
     }
 
+    @GetMapping("/recruits")
+    public String recruits(Model model) {
+        model.addAttribute("config", getSideValue());
+        return "pages/admin/cs/recruit/list";
+    }
     // FAQ 작성
     @PostMapping("/faq/write")
     public String writeFaq(@RequestParam("faqCate") String category1,
