@@ -63,7 +63,7 @@
           <th>배송비</th>
           <th>총합</th>
         </tr>
-        <tr>
+        <tr th:each="cartItem : ${cartItems}">
           <td><input type="checkbox" class="checkbox" /></td>
           <td>
             <div class="img">
@@ -74,7 +74,7 @@
               </div>
             </div>
           </td>
-          <td>1</td>
+          <td th:text="${cartItem.quantity}">1</td>
           <td>27,000</td>
           <td>5%</td>
           <td>270</td>
