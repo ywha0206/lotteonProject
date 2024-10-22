@@ -147,19 +147,19 @@ section {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #868686;
-    opacity: 0.2;
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: 999;
 }
 
 .popup {
     position: fixed;
-    top: 50px;
-    left: 368px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 800px;
     background-color: white;
     z-index: 1000;
-    height: 550px;
+    height: 450px;
 }
 
 .popup .header {
@@ -209,13 +209,7 @@ section {
 }
 
 .tb2 td {
-    padding-left: 10px;
-}
-
-.tb2 .td {
-
-    padding: 50px 15px;
-
+    padding: 10px;
 }
 
 .td div {
@@ -227,11 +221,11 @@ section {
     display: none; /* 스크롤바 숨기기 */
 }
 
-.popup .btns {
+.popup>.btns {
     width: 100%;
     display: flex;
     justify-content: center;
-    /* margin-top: 80px; */
+    margin-top: 0;
 }
 
 .popup .submit-btn {
@@ -259,14 +253,14 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
+    height: 320px;
 }
 
 .ta {
-    width: 600px;
+    width: 100%;
     height: 200px;
     overflow: scroll;
-
+    border: 1px solid #BFBFBF;
 }
 
 .ta::-webkit-scrollbar {

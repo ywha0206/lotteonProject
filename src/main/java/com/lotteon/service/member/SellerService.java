@@ -70,15 +70,17 @@ public class SellerService {
             // Seller 객체 생성 및 저장 (판매자 DB에 회사명,대표,사업자등록번호,통신판매업번호,전화번호,팩스,주소(7)저장)
             Seller seller = Seller.builder()
                     .member(member)
-                    .sellAddr(postSellerSignupDTO.getSellAddr())
-                    .sellCompany(postSellerSignupDTO.getSellCompany())
-                    .sellFax(postSellerSignupDTO.getSellFax())
-                    .sellGrade(postSellerSignupDTO.getSellGrade())
+                    .sellCompany(postSellerSignupDTO.getSellCompany())               // 회사명
+                    .sellRepresentative(postSellerSignupDTO.getSellRepresentative()) // 대표
+                    .sellGrade(postSellerSignupDTO.getSellGrade())                   // 판매자 회원 등급
+                    .sellBusinessCode(postSellerSignupDTO.getSellBusinessCode())     // 사업자등록번호
+                    .sellOrderCode(postSellerSignupDTO.getSellOrderCode())           // 통신판매업번호
+                    .sellHp(postSellerSignupDTO.getSellHp())                         // 전화번호
+                    .sellFax(postSellerSignupDTO.getSellFax())                       // 팩스번호
+                    .sellAddr(postSellerSignupDTO.getSellAddr())                     // 회사주소
                     .build();
 
-
-
-
+            sellerRepository.save(seller);
 
         } catch (Exception e) {
             // 예외 발생 시 로그 출력 및 에러 처리
@@ -86,8 +88,6 @@ public class SellerService {
 
             // 필요한 경우 사용자에게 에러 정보를 리턴하거나 예외를 다시 던질 수 있습니다.
             throw new RuntimeException("다시 시도해 주세요.");
-
-
         }
     }
 
