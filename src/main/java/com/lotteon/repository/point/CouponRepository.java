@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
@@ -21,4 +23,10 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findAllByIdAndMemberOrderByIdDesc(long l,Member member, Pageable pageable);
 
     Page<Coupon> findAllByCouponNameAndMemberOrderByIdDesc(String keyword, Member member, Pageable pageable);
+
+    List<Coupon> findAllByCouponNameContaining(String keyword);
+
+    List<Coupon> findAllByMember(Member user);
+
+    List<Coupon> findAllByMemberAndCouponNameContaining(Member user, String keyword);
 }

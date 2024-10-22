@@ -78,18 +78,27 @@ public class AdminCouponController {
     @GetMapping("/issuearances")
     public String issuances(
             Model model,
-            @RequestParam(name = "page", defaultValue = "0") int page
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "searchType", defaultValue = "0") String searchType,
+            @RequestParam(name = "keyword", defaultValue = "0") String keyword
     ) {
         model.addAttribute("config", getSideValue());
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
+        Page<GetCustomerCouponDto> custCoupons;
         if(auth.getUser().getMemRole().equals("admin")) {
-            Page<GetCustomerCouponDto> custCoupons = customerCouponService.findAll(page);
-            model.addAttribute("custCoupons", custCoupons);
+            custCoupons = customerCouponService.findAll(page,searchType,keyword);
         } else {
-
+            custCoupons = customerCouponService.findAllBySeller(page,searchType,keyword);
         }
+        model.addAttribute("custCoupons", custCoupons);
+        model.addAttribute("searchCondition",auth.getUser().getMemRole());
+        model.addAttribute("page",page);
+        model.addAttribute("totalPages",custCoupons.getTotalPages());
+        model.addAttribute("memId",auth.getUser().getId());
+        model.addAttribute("searchType",searchType);
+        model.addAttribute("keyword",keyword);
 
         return "pages/admin/coupon/issuearance";
     }

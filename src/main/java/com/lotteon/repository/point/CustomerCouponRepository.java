@@ -17,6 +17,17 @@ public interface CustomerCouponRepository extends JpaRepository<CustomerCoupon, 
 
     List<CustomerCoupon> findAllByCoupon(Coupon coupon);
 
-
     Page<CustomerCoupon> findAllByOrderByCouponStateAscCouponUDateDesc(Pageable pageable);
+
+    Page<CustomerCoupon> findAllByIdOrderByCouponStateAscCouponUDateDesc(Long id, Pageable pageable);
+
+    Page<CustomerCoupon> findAllByCouponOrderByCouponStateAscCouponUDateDesc(Coupon coupon, Pageable pageable);
+
+    Page<CustomerCoupon> findAllByCustomer(Customer customer, Pageable pageable);
+
+    Page<CustomerCoupon> findAllByCouponAndIdOrderByCouponStateAscCouponUDateDesc(Coupon coupon, long l, Pageable pageable);
+
+    Page<CustomerCoupon> findAllByCouponAndCouponIdOrderByCouponStateAscCouponUDateDesc(Coupon coupon, long l, Pageable pageable);
+
+    Page<CustomerCoupon> findAllByCouponAndCustomerOrderByCouponStateAscCouponUDateDesc(Coupon coupon, Customer customer, Pageable pageable);
 }

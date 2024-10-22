@@ -55,6 +55,10 @@ public class CustomerCoupon {
         this.couponState = 0;
     }
 
+    public void updateCustCouponStateMinus() {
+        this.couponState = 1;
+    }
+
     public GetCustomerCouponDto toGetCustomerCouponDto(){
         String uDate;
         if(couponUDate==null){
@@ -73,4 +77,48 @@ public class CustomerCoupon {
                 .custCouponUdate(uDate)
                 .build();
     }
+
+    public GetCustomerCouponDto toGetCustomerCouponDto1(){
+        String uDate;
+        if(couponUDate==null){
+            uDate = "미사용";
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            uDate = couponUDate.format(formatter);
+        }
+        String realOption;
+        if(coupon.getCouponDiscountOption().equals("p")) {
+            realOption = "% 할인";
+        } else if (coupon.getCouponDiscountOption().equals("d")){
+            realOption = "배달비 할인";
+        } else {
+            realOption = "원 할인";
+        }
+        String state ;
+        if(couponState==1){
+            state = "미사용";
+        } else if(couponState==2){
+            state = "사용";
+        } else{
+            state = "비활성";
+        }
+
+        return GetCustomerCouponDto.builder()
+                .couponId(coupon.getId())
+                .id(id)
+                .couponName(coupon.getCouponName())
+                .couponType(coupon.getCouponType())
+                .custCouponState(couponState)
+                .memUid(customer.getMember().getMemUid())
+                .custCouponUdate(uDate)
+                .couponName(coupon.getCouponName())
+                .user(coupon.getMember().getMemUid())
+                .couponDiscount(coupon.getCouponDiscount()+realOption)
+                .couponExpiration(coupon.getCouponExpiration())
+                .couponCaution(coupon.getCouponCaution())
+                .couponState(state)
+                .build();
+    }
+
+
 }
