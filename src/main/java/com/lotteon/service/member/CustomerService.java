@@ -4,8 +4,10 @@ import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
+import com.lotteon.entity.point.Point;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
+import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -25,6 +30,7 @@ public class CustomerService {
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final CustomerRepository customerRepository;
+    private final PointRepository pointRepository;
 
     @Transactional
     public void insertCustomer(PostCustSignupDTO postCustSignupDTO) {
@@ -50,10 +56,17 @@ public class CustomerService {
                     .custEmail(postCustSignupDTO.getCustEmail())
                     .custHp(postCustSignupDTO.getCustHp())
                     .custAddr(postCustSignupDTO.getAddr1() + "/" + postCustSignupDTO.getAddr2() + "/" + postCustSignupDTO.getAddr3())
-                    .custPoint(0)
                     .build();
 
             customerRepository.save(customer);
+            //상훈 작업부분 포인트추가
+            Point point = this.insertPoint(customer);
+
+            pointRepository.save(point);
+
+            int updatePoint = this.updateCustomerPoint(customer);
+            customer.updatePoint(updatePoint);
+            //상훈 작업부분 포인트추가 끝
 
         } catch (Exception e) {
             // 예외 발생 시 로그 출력 및 에러 처리
@@ -63,8 +76,35 @@ public class CustomerService {
             throw new RuntimeException("다시 시도해 주세요.");
         }
     }
+    //상훈 작업부분 포인트추가
+    private int updateCustomerPoint(Customer customer) {
+        List<Point> points = pointRepository.findAllByCustId(customer.getId());
+        System.out.println(points);
+        int point = 0;
 
+        for(Point v : points ){
+            if(v.getPointType()==1){
+                point = point+v.getPointVar();
+            } else if(v.getPointType()==2){
+                point = point-v.getPointVar();
+            }
+        }
+        return point;
+    }
 
+    private Point insertPoint(Customer customer) {
+        LocalDate today = LocalDate.now().plusMonths(1);
 
+        Point point = Point.builder()
+                .custId(customer.getId())
+                .pointType(1)
+                .pointEtc("회원가입 축하 포인트 적립")
+                .pointVar(1000)
+                .pointExpiration(today)
+                .build();
+
+        return point;
+    }
+    //상훈 작업부분 포인트추가 끝
 
 }
