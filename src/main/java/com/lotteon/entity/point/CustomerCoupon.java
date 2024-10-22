@@ -1,6 +1,7 @@
 package com.lotteon.entity.point;
 
 import com.lotteon.dto.responseDto.GetCustomerCouponDto;
+import com.lotteon.dto.responseDto.GetMyCouponDto;
 import com.lotteon.entity.member.Customer;
 import jakarta.persistence.*;
 import lombok.*;
@@ -118,6 +119,41 @@ public class CustomerCoupon {
                 .couponCaution(coupon.getCouponCaution())
                 .couponState(state)
                 .build();
+    }
+
+    public GetMyCouponDto toGetMyCouponDto(){
+        String uDate;
+        if(couponUDate==null){
+            uDate = "미사용";
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            uDate = couponUDate.format(formatter);
+        }
+        String realOption;
+        if(coupon.getCouponDiscountOption().equals("p")) {
+            realOption = "% 할인";
+        } else if (coupon.getCouponDiscountOption().equals("d")){
+            realOption = "배달비 할인";
+        } else {
+            realOption = "원 할인";
+        }
+        String state ;
+        if(couponState==1){
+            state = "사용가능";
+        } else if(couponState==2){
+            state = "사용";
+        } else{
+            state = "비활성화";
+        }
+
+        return GetMyCouponDto.builder()
+                .couponName(coupon.getCouponName())
+                .couponDiscount(coupon.getCouponDiscount()+realOption)
+                .couponMinPrice(coupon.getCouponMinPrice())
+                .couponState(state)
+                .couponExpiration(coupon.getCouponExpiration())
+                .build();
+
     }
 
 

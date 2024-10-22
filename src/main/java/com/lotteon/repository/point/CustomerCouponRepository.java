@@ -30,4 +30,6 @@ public interface CustomerCouponRepository extends JpaRepository<CustomerCoupon, 
     Page<CustomerCoupon> findAllByCouponAndCouponIdOrderByCouponStateAscCouponUDateDesc(Coupon coupon, long l, Pageable pageable);
 
     Page<CustomerCoupon> findAllByCouponAndCustomerOrderByCouponStateAscCouponUDateDesc(Coupon coupon, Customer customer, Pageable pageable);
+
+    int countCustomerCouponsByCustomer(Customer customer);
 }
