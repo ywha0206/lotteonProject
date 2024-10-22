@@ -1,7 +1,9 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.responseDto.GetBannerDTO;
+import com.lotteon.dto.responseDto.GetConfigDTO;
 import com.lotteon.service.config.BannerService;
+import com.lotteon.service.config.ConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import java.util.List;
 @Log4j2
 public class AdminConfigController {
     private final BannerService bannerService;
+    private final ConfigService configService;
 
     private String getSideValue() {
         return "config";  // 실제 config 값을 여기에 설정합니다.
@@ -29,7 +32,9 @@ public class AdminConfigController {
     }
     @GetMapping("/basics")
     public String basic(Model model) {
+        GetConfigDTO ConfigDTO = configService.getUsedConfig();
         model.addAttribute("config", getSideValue());
+        model.addAttribute("site", ConfigDTO);
         return "pages/admin/config/basic";
     }
     @GetMapping("/banners")

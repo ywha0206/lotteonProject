@@ -1,13 +1,17 @@
 package com.lotteon.service.config;
 
 import com.lotteon.dto.requestDto.PatchConfigDTO;
+import com.lotteon.dto.requestDto.PatchLogoDTO;
+import com.lotteon.dto.responseDto.GetConfigDTO;
 import com.lotteon.entity.config.Config;
 import com.lotteon.repository.config.ConfigRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,23 +19,42 @@ import java.util.List;
 public class ConfigService {
     private final ConfigRepository configRepository;
     private final ImageService imageService;
+    private final ModelMapper modelMapper;
 
-    public Config updateConfig(PatchConfigDTO patchDTO) {
-        Config existingConfig = configRepository.findById(patchDTO.getId())
+
+    public GetConfigDTO getUsedConfig() {
+        Optional<Config> opt = configRepository.findByConfigIsUsed(true);
+        if (opt.isPresent()) {
+            Config config = opt.get();
+            return modelMapper.map(config, GetConfigDTO.class);
+        }
+        return null;
+    }
+
+    public Config updateInfo(PatchConfigDTO configDTO){
+        Config existingConfig = configRepository.findById(configDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Config not found"));
 
-        Config newConfig = existingConfig;
-
-        if(patchDTO.getType()==1){ //siteVersion
-            newConfig.patchSiteVersion(patchDTO.getStrColumn1());
-        }else if(patchDTO.getType()==2) { //siteInfo
-            newConfig.patchSiteInfo(patchDTO.getStrColumn1(), patchDTO.getStrColumn2());
-        }else if(patchDTO.getType()==3) { // logo
-            List<String> filename = imageService.uploadImages(patchDTO.getFilesColumn());
-            newConfig.patchSiteLogo(filename.get(0),filename.get(1),filename.get(2));
-        }
-        newConfig.update(patchDTO.getUpdater());
+        Config newConfig = existingConfig.copyConfig();
+        newConfig.patchSiteInfo(configDTO.getTitle(), configDTO.getSub());
+        newConfig.update(configDTO.getUpdater());
 
         return configRepository.save(newConfig);
     }
+
+    public Config updateLogo(PatchLogoDTO logoDTO) {
+        Config existingConfig = configRepository.findById(logoDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Config not found"));
+
+        String file1name = imageService.uploadImage(logoDTO.getFile1());
+        String file2name = imageService.uploadImage(logoDTO.getFile2());
+        String file3name = imageService.uploadImage(logoDTO.getFile3());
+
+        Config newConfig = existingConfig.copyConfig();
+        newConfig.patchSiteLogo(file1name,file2name,file3name);
+        newConfig.update(logoDTO.getUpdater());
+
+        return configRepository.save(newConfig);
+    }
+
 }
