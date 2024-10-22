@@ -113,7 +113,7 @@ public class ProductService {
                 .optionName(optionDTO.getOptionName())
                 .optionValue(optionDTO.getOptionValue())
                 .additionalPrice(optionDTO.getAdditionalPrice())
-                .stock(optionDTO.getStock())
+//                .stock(optionDTO.getStock())
                 .build();
 
         productOptionRepository.save(productOption);
