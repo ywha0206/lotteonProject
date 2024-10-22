@@ -3,6 +3,7 @@ package com.lotteon.controller.apicontroller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotteon.dto.requestDto.PatchConfigDTO;
+import com.lotteon.dto.requestDto.PatchLogoDTO;
 import com.lotteon.dto.requestDto.PostBannerDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.entity.config.Banner;
@@ -17,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 @RestController
@@ -74,32 +72,34 @@ public class ApiConfigController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping(value = {"/basic/site"}, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> updateBanner(@RequestPart("patch") String patchJson,
-                                          @RequestPart(value = "file1" , required = false) MultipartFile file1,
-                                          @RequestPart(value = "file2" , required = false) MultipartFile file2,
-                                          @RequestPart(value = "file3" , required = false) MultipartFile file3)
-    {
+    @PatchMapping(value = {"/logo"}, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> updateBanner(@RequestPart("logoDTO") String logoJson,
+                                          @RequestPart(value = "file1",required = false) MultipartFile file1,
+                                          @RequestPart(value = "file2",required = false) MultipartFile file2,
+                                          @RequestPart(value = "file3",required = false) MultipartFile file3) {
 
         log.info("updateConfig...");
+
         ObjectMapper objectMapper = new ObjectMapper();
-        PatchConfigDTO patchConfigDTO;
+        PatchLogoDTO patchLogoDTO;
         try {
-            patchConfigDTO = objectMapper.readValue(patchJson, PatchConfigDTO.class);
+            patchLogoDTO = objectMapper.readValue(logoJson, PatchLogoDTO.class);
         } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("error", "Invalid Json Data: " + e.getMessage()));
         }
-        log.info("patchData : {}" , patchConfigDTO);
+        if(file1!=null) patchLogoDTO.setFile1(file1);
+        if(file2!=null) patchLogoDTO.setFile2(file2);
+        if(file3!=null) patchLogoDTO.setFile3(file3);
+        log.info("patchData : {}" , patchLogoDTO);
 
-        List<MultipartFile> files = null;
-        files.add(file1);
-        files.add(file2);
-        files.add(file3);
-        if(patchConfigDTO.getType()==3){patchConfigDTO.setFilesColumn(files);}
+        Config config = configService.updateLogo(patchLogoDTO);
 
-        Config config = configService.updateConfig(patchConfigDTO);
-
+        return ResponseEntity.ok().body(config);
+    }
+    @PatchMapping("/info")
+    public ResponseEntity<?> updateSiteInfo(@RequestBody PatchConfigDTO configDTO) {
+        Config config = configService.updateInfo(configDTO);
         return ResponseEntity.ok().body(config);
     }
 

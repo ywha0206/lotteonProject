@@ -10,11 +10,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PatchConfigDTO {
+public class PatchLogoDTO {
     private Long id;
-    private int type;
-    private String strColumn1;
-    private String strColumn2;
-    private List<MultipartFile> filesColumn;
     private String updater;
+    private MultipartFile file1;
+    private MultipartFile file2;
+    private MultipartFile file3;
 }

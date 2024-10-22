@@ -25,7 +25,7 @@
                 <table class="tb1">
                     <tr>
                         <th>사이트 버전</th>
-                        <td>1.0.1-RELEASE</td>
+                        <td>[[${site.configVersion}]]</td>
                     </tr>
                 </table>
             </section>
@@ -38,7 +38,7 @@
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input class="inp" type="text" value="롯데 ON " id="configTitle">
+                            <input class="inp" type="text" th:value="${site.configTitle}" id="configTitle">
                         </td>
                     </tr>
                     <tr>
@@ -46,12 +46,12 @@
                             부제
                         </th>
                         <td>
-                            <input class="inp" type="text" value="더 나은 쇼핑을 위한 선택" id="configSub">
+                            <input class="inp" type="text" th:value="${site.configSub}" id="configSub">
                         </td>
                     </tr>
                 </table>
                 <article class="btn">
-                    <input type="hidden" id="configId" value="1">
+                    <input type="hidden" id="configId" th:value="${site.id}">
                     <input type="hidden" id="updater" th:value="${#authentication.principal.user.memUid}">
                     <button onclick="patch('siteInfo')">수정하기</button>
                 </article>
@@ -105,6 +105,7 @@
                 <article class="dis1">
                     푸터에 노출되는 기업정보 입니다.
                 </article>
+                <form id="fLotte">
                 <table class="tb2">
                     <tr>
                         <th>상호명</th>
@@ -131,6 +132,7 @@
                         <td><input class="inp" type="text" value="1002호"></td>
                     </tr>
                 </table>
+                </form>
                 <article class="btn">
                     <button onclick="patch('fLotte')">수정하기</button>
                 </article>
@@ -140,6 +142,7 @@
                 <article class="dis1">
                     푸터에 노출되는 고객센터 정보 입니다.
                 </article>
+                <form id="fCs">
                 <table class="tb2">
                     <tr>
                         <th>전화번호</th>
@@ -162,6 +165,7 @@
                         <td><input class="inp" type="text" value="1234-1234"></td>
                     </tr>
                 </table>
+                </form>
                 <article class="btn">
                     <button onclick="patch('fCs')">수정하기</button>
                 </article>
@@ -259,18 +263,17 @@
             dropdownMenu.classList.add('dropdown-hidden');
         }
     });
-    function patchConfig(formData){
-        fetch(`/admin/config/basic/site`, {
-            method: 'PATCH',
+
+    async function fetchBasic(type,url,formData){
+        fetch(url, {
+            method: type,
             body: formData
         })
             .then(resp => {
                 console.log(resp);
                 if (!resp.ok) {
                     return resp.json().then(err => {
-
                         console.error('Server responded with an error:', err); // 추가된 로그
-                        // 오류 응답을 자세히 로그에 남김
                         throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
                     });
                 }
@@ -286,53 +289,62 @@
             .catch(err => {
                 console.error('Error : '.err);
                 alert('오류가 발생했습니다. 다시 시도해주세요.');
-            })
+            });
     }
-    function patch(type){
+
+    async function patch(type){
         if(!confirm("정말 변경하시겠습니까?")){return;}
 
+        const configId = document.getElementById('configId').value;
         const updater = document.getElementById('updater').value;
         const formData = new FormData();
+
         if(type==="siteInfo"){
             const configTitle = document.getElementById('configTitle').value;
             const configSub = document.getElementById('configSub').value;
-            let jsonData = {
-                "updater" : updater,
-                "type" : 2,
-                "strColumn1" : configTitle,
-                "strColumn2" : configSub
-            };
-            formData.append('patch',JSON.stringify(jsonData));
-            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
 
-            patchConfig(type,formData);
+            formData.append("id", +configId);
+            formData.append("type", 2);
+            formData.append("updater", updater);
+            formData.append("title", configTitle);
+            formData.append("sub", configSub);
+
+            await fetchBasic('PATCH',`/admin/config/info`,formData);
+
         }
         else if(type==="siteLogo"){
-            const configId = document.getElementById('configId').value;
-
-            let jsonData = {
+            const jsonData = {
                 "id" : +configId,
-                "type" : 3,
-                "strColumn1" : null,
-                "strColumn2" : null,
-                "filesColumn" : null,
                 "updater" : updater
             };
-            // 파일 선택 요소들 가져오기
+
             const headerFile = document.getElementById('configHeaderLogo').files[0];
             const footerFile = document.getElementById('configFooterLogo').files[0];
             const faviconFile = document.getElementById('configFabicon').files[0];
-            formData.append('file1', headerFile);
-            formData.append('file2', footerFile);
-            formData.append('file3', faviconFile);
-            formData.append('patch', JSON.stringify(jsonData));
-            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
 
-            patchConfig(type,formData);
+            if(headerFile) formData.append('file1', headerFile);
+            if(footerFile) formData.append('file2', footerFile);
+            if(faviconFile) formData.append('file3', faviconFile);
+
+            formData.append('logoDTO', JSON.stringify(jsonData));
+
+            await fetchBasic('PATCH',`/admin/config/logo`, formData);
+
         }
-        else if(type==="fLotte"){}
-        else if(type==="fCs"){}
-        else if(type==="copy"){}
+        // else if(type==="fLotte"){
+        //     const fLotteFormData = new FormData(document.getElementById("fLotte"));
+        //     await fetchBasic('POST',`/admin/config/footer`,fLotteFormData);
+        // }
+        // else if(type==="fCs"){
+        //
+        //     const fCsFormData = new FormData(document.getElementById("fCs"));
+        //     await fetchBasic('POST',`/admin/config/cs`,fCsFormData);
+        // }
+        // else if(type==="copy"){
+        //     const copy = document.getElementById("copyright").value;
+        //     formData.append("copy",copy);
+        //     await fetchBasic('POST',`/admin/config/copyright`,formData);
+        // }
     }
 
 </script>
