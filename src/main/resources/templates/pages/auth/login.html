@@ -1,6 +1,8 @@
 
 <link rel="stylesheet" th:href="@{/css/auth/login.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<script th:src="@{/js/validation.js}"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <header th:replace="layout/main/header.html"></header>
 <main>
     <div id="lsh-container">
@@ -12,7 +14,7 @@
                     <div class="top-left">
                         <div class="inp-id">
                             <label class="label-id label">아이디 <input name="userName" class="id inp" type="text"></label>
-                        </div>
+                        </div><!-- .inp-id -->
                         <div class="inp-pwd">
                             <label class="label-pwd label">비밀번호<input name="pwd" class="pwd inp" type="password"></label>
                         </div><!-- inp-pwd -->
