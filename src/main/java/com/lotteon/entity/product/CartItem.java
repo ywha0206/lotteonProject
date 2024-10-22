@@ -20,20 +20,26 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
+    @ToString.Exclude
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prod_id")
+    @ToString.Exclude
     private Product product;
 
-    @Setter
     @Column(name = "cart_item_quantity")
     private int quantity;
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "prod_option_id")
 //    private ProductOption productOption;
 
+    @Setter
     @Column(name = "total_price")
     private Double totalPrice;
 

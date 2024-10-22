@@ -29,6 +29,7 @@ public class CustomerService {
     @Transactional
     public void insertCustomer(PostCustSignupDTO postCustSignupDTO) {
         try {
+
             // Member 객체 생성 및 저장 (멤버 DB에 아이디, 비번 저장)
             Member member = Member.builder()
                     .memUid(postCustSignupDTO.getMemId())

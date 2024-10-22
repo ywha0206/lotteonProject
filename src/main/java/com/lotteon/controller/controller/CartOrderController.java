@@ -2,9 +2,11 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.PostCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.entity.product.Cart;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.product.CartService;
 import com.lotteon.service.product.ProductService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +37,24 @@ public class CartOrderController {
     }
 
     @PostMapping("/cart")
-    public String cart(PostCartDto postCartDto){
-        System.out.println("컨트롤러접속");
-        System.out.println(postCartDto);
-        String result = cartService.insertCart(postCartDto);
-        //return "redirect:/pages/cart";
-        return null;
+    public String cart(PostCartDto postCartDto, Model model, HttpSession session) {
+
+        ResponseEntity result = cartService.insertCart(postCartDto, session);
+        log.info(result.getBody());
+
+
+
+        Cart cart = (Cart) result.getBody();
+        ResponseEntity result2 = cartService.insertCartItem(postCartDto,cart);
+
+        if(result2.getBody().equals("insert")){
+            model.addAttribute(true);
+            return "redirect:/prod/cart";
+        }else {
+            model.addAttribute(false);
+            return "redirect:/prod/product";
+        }
+
     }
 
     @GetMapping("/cart/direct")

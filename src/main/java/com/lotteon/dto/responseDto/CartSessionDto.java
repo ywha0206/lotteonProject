@@ -1,27 +1,18 @@
-package com.lotteon.dto.requestDto;
+package com.lotteon.dto.responseDto;
 
-import com.lotteon.entity.product.CartItemOption;
 import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class PostCartDto {
-
-    private long custId;
+public class CartSessionDto {
     private long prodId;
     private int quantity;
     private List<Long> options;
-    private double totalPrice;
-
-
-
-
 
 }
-
