@@ -17,7 +17,7 @@ public class MyController {
     public String index(Model model) {
         return "pages/my/index";
     }
-    @GetMapping("/coupon")
+    @GetMapping("/coupons")
     public String coupon(Model model) {
         return "pages/my/coupon";
     }
@@ -25,19 +25,19 @@ public class MyController {
     public String info(Model model) {
         return "pages/my/info";
     }
-    @GetMapping("/order")
+    @GetMapping("/orders")
     public String order(Model model) {
         return "pages/my/order";
     }
-    @GetMapping("/point")
+    @GetMapping("/points")
     public String point(Model model) {
         return "pages/my/point";
     }
-    @GetMapping("/qna")
+    @GetMapping("/qnas")
     public String qna(Model model) {
         return "pages/my/qna";
     }
-    @GetMapping("/review")
+    @GetMapping("/reviews")
     public String review(Model model) {
         return "pages/my/review";
     }
