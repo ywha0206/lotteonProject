@@ -54,6 +54,9 @@ public class Customer {
     @Column(name = "cust_event_checker")
     private int custEventChecker;
 
+    @Column(name = "cust_grade")
+    private String custGrade;
+
     @OneToOne(mappedBy = "customer")
     @ToString.Exclude
     private AttendanceEvent attendanceEvent;
