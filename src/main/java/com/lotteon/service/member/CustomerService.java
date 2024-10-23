@@ -1,5 +1,6 @@
 package com.lotteon.service.member;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
@@ -16,6 +17,7 @@ import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,6 +124,16 @@ public class CustomerService {
                 .pointExpiration(today)
                 .build();
 
+        return point;
+    }
+
+    public int findByCustomer() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Customer customer = auth.getUser().getCustomer();
+        int point = customer.getCustPoint();
         return point;
     }
     //상훈 작업부분 포인트추가 끝

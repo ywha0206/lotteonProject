@@ -25,6 +25,12 @@ public class AttendanceEvent {
     @JoinColumn(name = "cust_id")
     private Customer customer;
 
+    @Column(name = "attendance_state")
+    private int attendanceState;
+
+    @Column(name = "attendance_middle_state")
+    private int attendanceMiddleState;
+
     public void updateEventReset(){
         this.attendanceDays = 1;
         this.attendanceSequence = 1;
@@ -36,6 +42,22 @@ public class AttendanceEvent {
     }
 
     public void updateEventComplete(){
+        this.attendanceState = 1;
+    }
+
+    public void updateEventSequenceEnd() {
         this.attendanceSequence = 2;
+    }
+
+    public void updateEventSequenceZero() {
+        this.attendanceSequence = 0;
+    }
+
+    public void updateEventSequenceOne() {
+        this.attendanceSequence = 1;
+    }
+
+    public void updateEventMiddleState() {
+        this.attendanceMiddleState = 1;
     }
 }
