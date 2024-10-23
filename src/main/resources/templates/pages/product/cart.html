@@ -1,6 +1,69 @@
 <link rel="stylesheet" th:href="@{/css/product/cart.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <script th:src="@{/js/main.js}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnDel = document.querySelector('#btnDel');
+    const selectAllCheckbox = document.querySelector('.checkboxAll');
+    const itemCheckboxes = document.querySelectorAll('.checkboxItem');
+
+    // 전체 선택 체크박스 클릭 시
+    selectAllCheckbox.addEventListener('change', function() {
+      itemCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+      });
+    });
+
+    // 개별 체크박스 클릭 시 전체 선택 체크박스 상태 업데이트
+    itemCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if ([...itemCheckboxes].every(item => item.checked)) {
+          selectAllCheckbox.checked = true;
+        } else {
+          selectAllCheckbox.checked = false;
+        }
+      });
+    });
+
+    btnDel.addEventListener('click', function (e){
+      e.preventDefault();
+
+      // 선택된 체크박스들 중에서 value를 가져옴
+      const selectedValues = [...document.querySelectorAll('.checkboxItem')]
+              .filter(checkbox => checkbox.checked)
+              .map(checkbox => checkbox.value);
+
+      if (selectedValues.length > 0) {
+        console.log('선택된 항목의 ID들:', selectedValues);  // 선택된 체크박스의 value들 출력
+        // 여기서 서버로 선택된 ID들을 전송하거나, UI에서 삭제 처리를 할 수 있습니다.
+
+        fetch('/prod/cart',{
+          method:'DELETE',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"cartItemIds":selectedValues})
+        })
+                .then(resp => resp.json())
+                .then(data =>{
+                    console.log(data);
+                    if(data>0 && data!=null){
+                      alert('선택한 상품을 장바구니에서 삭제하였습니다.')
+                      location.reload();
+                    }
+                }).catch();
+
+      } else {
+        alert('선택된 항목이 없습니다.');
+      }
+
+    });
+
+
+
+  });//dom
+
+</script>
 <header th:replace="layout/main/header.html"></header>
 <main style="margin-top: 140px; gap: 0">
   <aside id="aside" style="margin: 0; margin-right: 30px">
@@ -56,7 +119,7 @@
           <col style="width: 10%" />
         </colgroup>
         <tr>
-          <th><input type="checkbox" class="checkbox" /></th>
+          <th><input type="checkbox" class="checkboxAll" /></th>
           <th>상품이미지</th>
           <th>상품명</th>
           <th>옵션</th>
@@ -68,10 +131,14 @@
           <th>총합</th>
         </tr>
         <tr th:each="cartItem : ${cartItems}">
-          <td><input type="checkbox" class="checkbox" /></td>
+          <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
           <td>
             <div class="img">
               <img src="https://via.placeholder.com/74x69" />
+              <div class="name_desc">
+                <span>상품명</span> <br />
+                <span>상품설명</span>
+              </div>
             </div>
           </td>
           <td><div class="name_desc">
@@ -90,7 +157,7 @@
         </tr>
       </table>
       <!-- .tb1-->
-      <button class="btnDel"><a href="#">선택삭제</a></button>
+      <button class="btnDel" id="btnDel"><a href="#">선택삭제</a></button>
       <div class="total">
         <table class="tb2">
           <tr>
