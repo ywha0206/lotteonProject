@@ -1,10 +1,12 @@
 package com.lotteon.service.member;
 
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Point;
+import com.lotteon.repository.member.AttendanceEventRepository;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.point.PointRepository;
@@ -31,6 +33,7 @@ public class CustomerService {
     private final MemberRepository memberRepository;
     private final CustomerRepository customerRepository;
     private final PointRepository pointRepository;
+    private final AttendanceEventRepository attendanceEventRepository;
 
     @Transactional
     public void insertCustomer(PostCustSignupDTO postCustSignupDTO) {
@@ -52,6 +55,7 @@ public class CustomerService {
             Customer customer = Customer.builder()
                     .member(member)
                     .custName(postCustSignupDTO.getCustName())
+                    .custEventChecker(0)
                     .custGender(postCustSignupDTO.getCustGender() != null ? postCustSignupDTO.getCustGender() : false)  // null일 때 false로 처리
                     .custEmail(postCustSignupDTO.getCustEmail())
                     .custHp(postCustSignupDTO.getCustHp())
@@ -66,6 +70,9 @@ public class CustomerService {
 
             int updatePoint = this.updateCustomerPoint(customer);
             customer.updatePoint(updatePoint);
+
+            AttendanceEvent attendanceEvent = this.createAttendanceEvent(customer);
+            attendanceEventRepository.save(attendanceEvent);
             //상훈 작업부분 포인트추가 끝
 
         } catch (Exception e) {
@@ -76,8 +83,17 @@ public class CustomerService {
             throw new RuntimeException("다시 시도해 주세요.");
         }
     }
+
+    private AttendanceEvent createAttendanceEvent(Customer customer) {
+        return AttendanceEvent.builder()
+                .attendanceDays(0)
+                .attendanceSequence(1)
+                .customer(customer)
+                .build();
+    }
+
     //상훈 작업부분 포인트추가
-    private int updateCustomerPoint(Customer customer) {
+    public int updateCustomerPoint(Customer customer) {
         List<Point> points = pointRepository.findAllByCustId(customer.getId());
         System.out.println(points);
         int point = 0;
