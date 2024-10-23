@@ -55,6 +55,14 @@ public class BannerService {
 
         return bannerList;
     }
+    public List<GetBannerDTO> findAll() {
+        List<Banner> banners = bannerRepository.findAll();
+        List<GetBannerDTO> bannerList =
+                banners.stream()
+                        .map(Entity -> modelMapper.map(Entity, GetBannerDTO.class))
+                        .toList();
+        return bannerList;
+    }
     public boolean deleteBannersById(List<Long> bannerIds) {
         try {
             for(Long bannerId : bannerIds) {
