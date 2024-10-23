@@ -6,6 +6,8 @@ import com.lotteon.dto.responseDto.CartSessionDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.impl.CartItemOptionRepositoryImpl;
+import com.lotteon.repository.impl.CartItemRepositoryImpl;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.product.*;
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +39,8 @@ public class CartService {
     private final CartItemOptionRepository cartItemOptionRepository;
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final CartItemRepositoryImpl cartItemRepositoryImpl;
+    private final CartItemOptionRepositoryImpl cartItemOptionRepositoryImpl;
 
     @Transactional
     public ResponseEntity<?> insertCart(PostCartDto postCartDto, HttpSession session) {
@@ -83,18 +87,16 @@ public class CartService {
         List<ProductOption> prodOptions = product.getOptions();//프로덕트 옵션 뽑기
         List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
 
-        log.info("1. 프로덕트 옵션 뽑기  : "+prodOptions.toString());
-        log.info("2. 카트와 프로덕트로 조회한 카트 아이템 : "+existingCartItems);
         //프로덕트 옵션과 dto 옵션이 일치하는지 확인
         log.info("prod Options : "+prodOptions.toString());
 
         List<Long> dtoOptions = postCartDto.getOptions();
-        log.info("3. 디티오로 넘어온 옵션 리스트 dtoOptions : "+dtoOptions.toString());
+        log.info("dtoOptions : "+dtoOptions.toString());
 
         List<Long> matchOption = postCartDto.getOptions().stream()
                 .filter(dto -> prodOptions.stream().anyMatch(prod -> Objects.equals(dto, prod.getId()))).collect(Collectors.toList());
 
-        log.info("4. 디티오로 넘어온 옵션이 프로덕트 옵션에 있나요? matchOptions : "+matchOption.toString());
+        log.info("matchOptions : "+matchOption.toString());
 
         CartItem existingCartItem = null;
         for (CartItem cartItem : existingCartItems) {
@@ -110,8 +112,6 @@ public class CartService {
                 break;
             }
         }
-
-
         if (existingCartItem != null) {
             int newQuantity = existingCartItem.getQuantity() + postCartDto.getQuantity();
             double newPrice = newQuantity * product.getProdPrice();
@@ -165,7 +165,6 @@ public class CartService {
         List<CartItem> cartItems = cart.getItems();
         List<GetCartDto> cartDtoList = new ArrayList<>();
 
-
         // 5. 각 카트 아이템을 DTO로 변환
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();  // 카트 아이템에 연결된 상품
@@ -190,6 +189,21 @@ public class CartService {
 
         // 8. DTO 리스트 반환
         return cartDtoList;
+    }
+
+    public Long deleteCartItem(Map<String, List<Long>> cartItemIds) {
+        List<Long> cartItems = cartItemIds.get("cartItemIds");
+        log.info("카트리스트 잘 뽑았나요?"+cartItems.toString());
+        Long deletedOption = cartItemOptionRepositoryImpl.deleteCartItemOptionsByCartItemId(cartItems);
+        log.info("카트아이템 옵션부터 삭제해야 돼 했니? "+deletedOption);
+
+        if(deletedOption!=null){
+            Long deletedCount = cartItemRepositoryImpl.deleteCartItemsByCartItemId(cartItems);
+            return deletedCount;
+        }else{
+            return null;
+        }
+
     }
 }
 

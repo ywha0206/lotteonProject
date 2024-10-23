@@ -54,6 +54,8 @@
     text-indent: 5px;
 }
 
+.resultId{ display: inline-block; color:#eb413f; margin-top:4px;}
+
 .tb2 {
     width: 1000px;
     border-top: 2px solid #bfbfbf;

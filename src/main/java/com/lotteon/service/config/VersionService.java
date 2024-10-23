@@ -6,6 +6,7 @@ import com.lotteon.dto.responseDto.PageResponseDTO;
 import com.lotteon.entity.config.Version;
 import com.lotteon.repository.config.VersionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -30,8 +32,8 @@ public class VersionService {
     public PageResponseDTO<GetVersionDTO> getPagedVersionList(int page) {
         int size = 5;
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
-        Page<Version> versionPage = versionRepository.findAll(pageable);
-        List<GetVersionDTO> versionList = versionPage.getContent().stream().map(version -> modelMapper.map(version,GetVersionDTO.class)).toList();
+        Page<GetVersionDTO> versionPage = versionRepository.findAllVersionsWithMemberUid(pageable);
+        List<GetVersionDTO> versionList = versionPage.getContent();
         int total = (int) versionPage.getTotalElements();
 
         return PageResponseDTO.<GetVersionDTO>builder()
@@ -40,5 +42,17 @@ public class VersionService {
                 .dtoList(versionList)
                 .size(size)
                 .build();
+    }
+
+    public boolean deleteVersionsById(List<Long> VersionIds) {
+        try {
+            for(Long VersionId : VersionIds) {
+                versionRepository.deleteById(VersionId);
+            }
+            return true;
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 }

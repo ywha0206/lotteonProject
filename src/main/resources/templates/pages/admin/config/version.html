@@ -34,12 +34,14 @@
             <td>
               <input type="checkbox" class="inp select" />
             </td>
-            <td>[[${i.index}]]</td>
+            <td>[[${resp.startNo-i.index}]]</td>
             <td>[[${version.verName}]]</td>
-            <td>[[${version.mem_id}]]</td>
-            <td>[[${version.verRdate}]]</td>
+            <td>[[${version.memUid}]]</td>
+            <td>[[${#strings.substring(version.verRdate,0,19)}]]</td>
             <td>
-              <button onclick="getVersion(event)" th:data-name="${version.verName}" th:data-content="${version.verContent}">[ 확인 ]</button>
+              <button onclick="getVersionPopup(event)"
+                      th:data-name="${version.verName}"
+                      th:data-content="${version.verContent}">[ 확인 ]</button>
             </td>
           </tr>
 
@@ -49,17 +51,24 @@
           <button class="delete-btn">선택삭제</button>
           <button onclick="postVersion()" class="insert-btn">등록</button>
         </div>
-        <div class="page">
-          <a href="#" class="first"><<</a>
-          <a class="on" href="#">1</a>
-          <a href="#">2</a>
-          <a href="#">3</a>
-          <a href="#">4</a>
-          <a href="#">5</a>
-          <a href="#" class="last">>></a>
+        <div class="page" th:if="${not #lists.isEmpty(resp.dtoList)}">
+
+          <th:block th:if="${resp.prev}">
+            <a th:href="@{/admin/config/versions/{pg}(pg=${resp.start - 1})}"
+               class="first"><<</a>
+          </th:block>
+          <th:block th:each="num:${#numbers.sequence(resp.start, resp.end)}">
+            <a th:class="${num == resp.pg} ? 'on' : 'num'"
+               th:href="@{/admin/config/versions/{pg}(pg=${num})}">[[${num}]]</a>
+          </th:block>
+          <th:block th:if="${resp.next}">
+            <a th:href="@{/admin/config/versions/{pg}(pg=${resp.end + 1})}"
+               class="last">>></a>
+          </th:block>
+
         </div>
       </section>
-
+      <input type="hidden" id="appVer" th:value="${appVersion}">
       <input type="hidden" id="mem_id" th:value="${#authentication.principal.user.id}">
       <div class="popup"></div>
       <div class="bg"></div>
@@ -76,7 +85,7 @@
       const content = document.getElementById("content");
       const body = document.getElementsByTagName('body')[0];
 
-      function getVersion(e) {
+      function getVersionPopup(e) {
         const verName = e.target.dataset.name;
         const verContent = e.target.dataset.content;
         popup.innerHTML = `
@@ -96,11 +105,11 @@
                         <th>변경확인</th>
                         <td class="td">
                             <div id="content">
-                                ${verContent}
+                                <textarea class="ta" disabled style="outline: none;border: none;background: #FFF">${verContent}</textarea>
                             </div>
                         </td>
                     </tr>
-                    
+
                 </table>
             </div>
             <div class="btns">
@@ -120,6 +129,7 @@
 
       function postVersion() {
         const userId = document.getElementById('mem_id').value;
+        const appVersion = document.getElementById('appVer').value;
         popup.innerHTML = `
                 <div class="header">
                 <div class="title">버전확인</div>
@@ -132,7 +142,7 @@
                     <tr>
                         <th>버전</th>
                         <td id="title">
-                           <input class="inp" type=text name="verName">
+                           <input class="inp" type=text name="verName" value="${appVersion}">
                         </td>
                     </tr>
                     <tr>
