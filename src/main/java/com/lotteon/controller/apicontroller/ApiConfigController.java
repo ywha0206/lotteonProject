@@ -123,7 +123,6 @@ public class ApiConfigController {
     @PostMapping("/version")
     public ResponseEntity<?> insertVersion(@ModelAttribute PostVersionDTO postDTO) {
         Version version = versionService.insertVersion(postDTO);
-
         return ResponseEntity.ok().body(version);
     }
     @DeleteMapping("/versions")

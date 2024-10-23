@@ -44,18 +44,22 @@
       <!-- .navi-->
       <table class="tb1">
         <colgroup>
-          <col style="width: 3%" />
-          <col style="width: 32%" />
+          <col style="width: 7%" />
           <col style="width: 10%" />
-          <col style="width: 15%" />
+          <col style="width: 25%" />
           <col style="width: 10%" />
+          <col style="width: 5%" />
+          <col style="width: 10%" />
+          <col style="width: 5%" />
           <col style="width: 10%" />
           <col style="width: 10%" />
           <col style="width: 10%" />
         </colgroup>
         <tr>
           <th><input type="checkbox" class="checkbox" /></th>
+          <th>상품이미지</th>
           <th>상품명</th>
+          <th>옵션</th>
           <th>수량</th>
           <th>판매가</th>
           <th>할인</th>
@@ -68,17 +72,20 @@
           <td>
             <div class="img">
               <img src="https://via.placeholder.com/74x69" />
-              <div class="name_desc">
-                <span>상품명</span> <br />
-                <span>상품설명</span>
-              </div>
             </div>
           </td>
+          <td><div class="name_desc">
+            <span th:text="${cartItem.product.prodName}">상품명</span> <br />
+            <span th:text="${cartItem.product.prodSummary}">상품설명</span>
+          </div></td>
+          <td><div class="cartOptions" th:each="cartItemOption, stat : ${cartItem.cartItemOption}">
+            <span th:text="${cartItemOption.optionValue}">S</span>
+          </div></td>
           <td th:text="${cartItem.quantity}">1</td>
-          <td>27,000</td>
-          <td>5%</td>
-          <td>270</td>
-          <td>무료배송</td>
+          <td th:text="${cartItem.product.prodPrice}">27,000</td>
+          <td th:text="${cartItem.product.prodDiscount}">5%</td>
+          <td th:text="${cartItem.product.prodPoint}">270</td>
+          <td  th:text="${cartItem.product.prodDeliver}">무료배송</td>
           <td>25,650</td>
         </tr>
       </table>
