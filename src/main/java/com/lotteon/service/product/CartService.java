@@ -83,16 +83,18 @@ public class CartService {
         List<ProductOption> prodOptions = product.getOptions();//프로덕트 옵션 뽑기
         List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
 
+        log.info("1. 프로덕트 옵션 뽑기  : "+prodOptions.toString());
+        log.info("2. 카트와 프로덕트로 조회한 카트 아이템 : "+existingCartItems);
         //프로덕트 옵션과 dto 옵션이 일치하는지 확인
         log.info("prod Options : "+prodOptions.toString());
 
         List<Long> dtoOptions = postCartDto.getOptions();
-        log.info("dtoOptions : "+dtoOptions.toString());
+        log.info("3. 디티오로 넘어온 옵션 리스트 dtoOptions : "+dtoOptions.toString());
 
         List<Long> matchOption = postCartDto.getOptions().stream()
                 .filter(dto -> prodOptions.stream().anyMatch(prod -> Objects.equals(dto, prod.getId()))).collect(Collectors.toList());
 
-        log.info("matchOptions : "+matchOption.toString());
+        log.info("4. 디티오로 넘어온 옵션이 프로덕트 옵션에 있나요? matchOptions : "+matchOption.toString());
 
         CartItem existingCartItem = null;
         for (CartItem cartItem : existingCartItems) {
@@ -108,6 +110,8 @@ public class CartService {
                 break;
             }
         }
+
+
         if (existingCartItem != null) {
             int newQuantity = existingCartItem.getQuantity() + postCartDto.getQuantity();
             double newPrice = newQuantity * product.getProdPrice();
@@ -161,15 +165,22 @@ public class CartService {
         List<CartItem> cartItems = cart.getItems();
         List<GetCartDto> cartDtoList = new ArrayList<>();
 
+
         // 5. 각 카트 아이템을 DTO로 변환
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();  // 카트 아이템에 연결된 상품
+            List<Long> sellectedOptions = cartItem.getSelectedOptions().stream()
+                    .map(cartItemOption ->  cartItemOption.getProdOptionId()).toList();
+
+            List<ProductOption> options = sellectedOptions.stream()
+                    .map(sellectedOption -> productOptionRepository.findById(sellectedOption).orElse(null)).toList();
 
             // 6. DTO로 변환
             GetCartDto getCartDto = GetCartDto.builder()
                     .cartItemId(cartItem.getId())
                     .quantity(cartItem.getQuantity())
                     .totalPrice(cartItem.getTotalPrice())
+                    .cartItemOption(options)
                     .product(product)  // 상품 정보를 포함
                     .build();
 
