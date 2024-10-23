@@ -34,7 +34,6 @@ public class CartOrderController {
     public String join(Model model, HttpSession session) {
 
         List<GetCartDto> cartItems = cartService.selectCart(session);
-
         log.info("카트 아이템 데이터 구조 좀 보자 "+cartItems);
         model.addAttribute("cartItems", cartItems);
 
