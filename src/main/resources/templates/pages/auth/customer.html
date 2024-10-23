@@ -1,18 +1,22 @@
 
 <link rel="stylesheet" th:href="@{/css/auth/customer.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<script th:src="@{/js/validation.js}"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <header th:replace="layout/main/header.html"></header>
 <main>
     <div class="container">
         <h3 class="header-title">일반 회원가입</h3>
         <div class="header-gubun"></div>
         <form class="customer" action="/auth/customer" method="post">
+            <input type="hidden" name="option" th:value="${isOptional}"/>
             <table class="tb1">
                 <tr>
                     <th>아이디</th>
                     <td>
-                        <input id="id" name="memId" type="text">
-                        <span>영문 , 숫자 4~12자리 설정</span>
+                        <input id="id" name="memId" type="text" placeholder="아이디 입력" required/>
+                        <span class="noti_txt1">영문 , 숫자 4~12자리 설정</span>
+                        <span id="resultUid" class="resultId"></span>
                     </td>
                 </tr>
                 <tr>
