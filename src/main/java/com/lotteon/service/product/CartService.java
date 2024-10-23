@@ -6,6 +6,8 @@ import com.lotteon.dto.responseDto.CartSessionDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.impl.CartItemOptionRepositoryImpl;
+import com.lotteon.repository.impl.CartItemRepositoryImpl;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.product.*;
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +39,8 @@ public class CartService {
     private final CartItemOptionRepository cartItemOptionRepository;
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final CartItemRepositoryImpl cartItemRepositoryImpl;
+    private final CartItemOptionRepositoryImpl cartItemOptionRepositoryImpl;
 
     @Transactional
     public ResponseEntity<?> insertCart(PostCartDto postCartDto, HttpSession session) {
@@ -83,6 +87,7 @@ public class CartService {
         List<ProductOption> prodOptions = product.getOptions();//프로덕트 옵션 뽑기
         List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
 
+        log.info("1. 프로덕트 뽑기  : "+product);
         log.info("1. 프로덕트 옵션 뽑기  : "+prodOptions.toString());
         log.info("2. 카트와 프로덕트로 조회한 카트 아이템 : "+existingCartItems);
         //프로덕트 옵션과 dto 옵션이 일치하는지 확인
@@ -103,6 +108,7 @@ public class CartService {
             List<Long> existingOptionIds = existingOptions.stream()
                     .map(CartItemOption::getProdOptionId)
                     .collect(Collectors.toList());
+            log.info("5. 카트아이템에서 선택한 옵션과 뭘 비교하는 거지? "+existingOptionIds.toString());
 
             // 선택된 옵션 리스트가 동일한지 비교
             if (new HashSet<>(existingOptionIds).containsAll(matchOption) && new HashSet<>(matchOption).containsAll(existingOptionIds)) {
@@ -110,6 +116,8 @@ public class CartService {
                 break;
             }
         }
+
+        log.info("6. 선택된 옵션이 동일한지 확인한 후... "+existingCartItem);
 
 
         if (existingCartItem != null) {
@@ -190,6 +198,21 @@ public class CartService {
 
         // 8. DTO 리스트 반환
         return cartDtoList;
+    }
+
+    public Long deleteCartItem(Map<String, List<Long>> cartItemIds) {
+        List<Long> cartItems = cartItemIds.get("cartItemIds");
+        log.info("카트리스트 잘 뽑았나요?"+cartItems.toString());
+        Long deletedOption = cartItemOptionRepositoryImpl.deleteCartItemOptionsByCartItemId(cartItems);
+        log.info("카트아이템 옵션부터 삭제해야 돼 했니? "+deletedOption);
+
+        if(deletedOption!=null){
+            Long deletedCount = cartItemRepositoryImpl.deleteCartItemsByCartItemId(cartItems);
+            return deletedCount;
+        }else{
+            return null;
+        }
+
     }
 }
 

@@ -60,3 +60,17 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+def queryDslDir = "src/main/generated"
+
+sourceSets {
+    main.java.srcDirs queryDslDir
+}
+
+tasks.withType(JavaCompile) {
+    options.generatedSourceOutputDirectory = file(queryDslDir)
+}
+
+clean {
+    delete file(queryDslDir)
+}
