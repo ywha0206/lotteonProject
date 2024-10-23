@@ -6,7 +6,9 @@ import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Point;
+
 import com.lotteon.repository.member.AttendanceEventRepository;
+
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.point.PointRepository;
@@ -34,6 +36,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final PointRepository pointRepository;
     private final AttendanceEventRepository attendanceEventRepository;
+
 
     @Transactional
     public void insertCustomer(PostCustSignupDTO postCustSignupDTO) {
@@ -73,6 +76,7 @@ public class CustomerService {
 
             AttendanceEvent attendanceEvent = this.createAttendanceEvent(customer);
             attendanceEventRepository.save(attendanceEvent);
+
             //상훈 작업부분 포인트추가 끝
 
         } catch (Exception e) {
@@ -92,7 +96,6 @@ public class CustomerService {
                 .build();
     }
 
-    //상훈 작업부분 포인트추가
     public int updateCustomerPoint(Customer customer) {
         List<Point> points = pointRepository.findAllByCustId(customer.getId());
         System.out.println(points);
