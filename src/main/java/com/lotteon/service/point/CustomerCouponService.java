@@ -3,6 +3,7 @@ package com.lotteon.service.point;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustCouponDto;
 import com.lotteon.dto.responseDto.GetCustomerCouponDto;
+import com.lotteon.dto.responseDto.GetMyCouponDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.point.Coupon;
@@ -316,5 +317,30 @@ public class CustomerCouponService {
         GetCustomerCouponDto dto = customerCoupon.get().toGetCustomerCouponDto1();
 
         return dto;
+    }
+
+    public int findAllCntByCustomer() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        int cnt = customerCouponRepository.countCustomerCouponsByCustomer(auth.getUser().getCustomer());
+        return cnt;
+    }
+
+    public Page<GetMyCouponDto> findAllByCustomer(int page) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Pageable pageable = PageRequest.of(page,10);
+
+
+        Page<CustomerCoupon> coupons = customerCouponRepository.findAllByCustomer(auth.getUser().getCustomer(),pageable);
+        if(coupons.getTotalElements()==0){
+            return null;
+        }
+        Page<GetMyCouponDto> dtos = coupons.map(CustomerCoupon::toGetMyCouponDto);
+
+        return dtos;
     }
 }

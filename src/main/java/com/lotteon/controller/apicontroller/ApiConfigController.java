@@ -26,6 +26,7 @@ public class ApiConfigController {
     private final FLotteService flotteService;
     private final FCsService fcsService;
     private final CopyrightService copyrightService;
+    private final VersionService versionService;
 
     @GetMapping("/banners/{tab}")
     public ResponseEntity<?> selectBanner(@PathVariable("tab") String tab) {
@@ -120,10 +121,10 @@ public class ApiConfigController {
         return ResponseEntity.ok().body(copyright);
     }
     @PostMapping("/version")
-    public ResponseEntity<?> insertVersion(@ModelAttribute("id") Long id,
-                                             @RequestParam("copy") String copy) {
-        Copyright copyright = copyrightService.updateCopyright(id, copy);
-        return ResponseEntity.ok().body(copyright);
+    public ResponseEntity<?> insertVersion(@ModelAttribute PostVersionDTO postDTO) {
+        Version version = versionService.insertVersion(postDTO);
+
+        return ResponseEntity.ok().body(version);
     }
 
 }

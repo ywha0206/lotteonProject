@@ -1,11 +1,18 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.dto.responseDto.GetCustomerCouponDto;
+import com.lotteon.dto.responseDto.GetMyCouponDto;
+import com.lotteon.service.point.CouponService;
+import com.lotteon.service.point.CustomerCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/my")
@@ -13,12 +20,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class MyController {
 
+    private final CouponService couponService;
+    private final CustomerCouponService customerCouponService;
+
+    @ModelAttribute
+    public void commonAttributes(Model model) {
+        int hasCoupon = customerCouponService.findAllCntByCustomer();
+        model.addAttribute("hasCoupon", hasCoupon);
+    }
+
     @GetMapping(value = {"","/","/index"})
     public String index(Model model) {
         return "pages/my/index";
     }
     @GetMapping("/coupons")
-    public String coupon(Model model) {
+    public String coupon(
+            Model model,
+            @RequestParam(name = "page",defaultValue = "0") int page
+    ) {
+        Page<GetMyCouponDto> coupons = customerCouponService.findAllByCustomer(page);
+        if(coupons==null){
+            model.addAttribute("noItem",true);
+            return "pages/my/coupon";
+        }
+        model.addAttribute("noItem",false);
+        model.addAttribute("coupons", coupons);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", coupons.getTotalPages());
+
         return "pages/my/coupon";
     }
     @GetMapping("/info")

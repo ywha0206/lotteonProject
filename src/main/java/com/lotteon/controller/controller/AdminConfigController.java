@@ -4,9 +4,11 @@ import com.lotteon.dto.responseDto.*;
 import com.lotteon.service.config.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class AdminConfigController {
     private final FLotteService flotteService;
     private final FCsService fcsService;
     private final CopyrightService copyrightService;
+    private final VersionService versionService;
 
     private String getSideValue() {
         return "config";  // 실제 config 값을 여기에 설정합니다.
@@ -48,7 +51,7 @@ public class AdminConfigController {
     }
     @GetMapping("/banners")
     public String banner(Model model) {
-        List<GetBannerDTO> bannerList = bannerService.findAllByCate(1);
+        List<GetBannerDTO> bannerList = bannerService.findAll();
         model.addAttribute("bannerList", bannerList);
         model.addAttribute("config", getSideValue());
         return "pages/admin/config/banner";
@@ -60,6 +63,15 @@ public class AdminConfigController {
     }
     @GetMapping("/versions")
     public String version(Model model) {
+        PageResponseDTO<GetVersionDTO> page = versionService.getPagedVersionList(1);
+        model.addAttribute("resp", page);
+        model.addAttribute("config", getSideValue());
+        return "pages/admin/config/version";
+    }
+    @GetMapping("/versions/{pg}")
+    public String version(@PathVariable(value = "pg") Integer pg, Model model) {
+        PageResponseDTO<GetVersionDTO> page = versionService.getPagedVersionList(pg);
+        model.addAttribute("resp", page);
         model.addAttribute("config", getSideValue());
         return "pages/admin/config/version";
     }

@@ -2,6 +2,7 @@ package com.lotteon.entity.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
 import java.time.LocalDate;
 
@@ -50,4 +51,14 @@ public class Customer {
     @Column(name = "cust_term_option")
     private Boolean custTermOption;
 
+    @Column(name = "cust_event_checker")
+    private int custEventChecker;
+
+    @OneToOne(mappedBy = "customer")
+    @ToString.Exclude
+    private AttendanceEvent attendanceEvent;
+
+    public void updatePoint(int point){
+        this.custPoint = point;
+    }
 }
