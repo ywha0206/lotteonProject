@@ -54,4 +54,5 @@ public class VersionService {
             log.error(e.getMessage());
             return false;
         }
+    }
 }
