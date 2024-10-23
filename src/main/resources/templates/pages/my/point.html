@@ -13,22 +13,24 @@
       <article class="byDate">
         <span class="tit">기간별조회</span>
         <ul class="date_3ea">
-          <li><a href="#">1주일</a></li>
-          <li><a href="#">15일</a></li>
-          <li><a href="#">1개월</a></li>
+          <li><a th:classappend="${type == 'date' && keyword == '7'} ? 'on' : ''" th:href="@{/my/points(page=0,type='date',keyword=7)}">1주일</a></li>
+          <li><a th:classappend="${type == 'date' && keyword == '15'} ? 'on' : ''" th:href="@{/my/points(page=0,type='date',keyword=15)}">15일</a></li>
+          <li><a th:classappend="${type == 'date' && keyword == '30'} ? 'on' : ''" th:href="@{/my/points(page=0,type='date',keyword=30)}">1개월</a></li>
         </ul>
         <ul class="date_5ea">
-          <li><a href="#" class="5month_before">5월</a></li>
-          <li><a href="#" class="4month_before">6월</a></li>
-          <li><a href="#" class="3month_before">7월</a></li>
-          <li><a href="#" class="2month_before">8월</a></li>
-          <li><a href="#" class="1month_before">9월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '5'} ? 'on' : ''" th:href="@{/my/points(page=0,type='month',keyword=5)}" class="5month_before">5월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '6'} ? 'on' : ''" th:href="@{/my/points(page=0,type='month',keyword=6)}">6월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '7'} ? 'on' : ''" th:href="@{/my/points(page=0,type='month',keyword=7)}">7월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '8'} ? 'on' : ''" th:href="@{/my/points(page=0,type='month',keyword=8)}">8월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '9'} ? 'on' : ''" th:href="@{/my/points(page=0,type='month',keyword=9)}">9월</a></li>
         </ul>
-        <p>
-          <input type="date" max="9999-12-31" /><span>~</span
-        ><input type="date" max="9999-12-31" />
-        </p>
-        <button class="btnConfirm">조회하기</button>
+        <form th:action="@{/my/points}">
+          <input type="hidden" name="type" value="custom">
+          <input type="hidden" id="keyword" name="keyword" />
+          <input type="date" id="startDate" max="9999-12-31" /><span>~</span><input id="endDate" type="date" max="9999-12-31" />
+          <button onclick="combineDates()" type="submit" class="btnConfirm">조회하기</button>
+        </form>
+
       </article>
       <article>
         <table th:if="${noItem == false}" border="0" class="point">
@@ -62,13 +64,13 @@
         </div>
 
         <div class="page">
-          <a class="none" th:href="@{/my/points(page=0)}"><<</a>
-          <a class="none" th:href="@{/my/points(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
-          <a class="none" th:href="@{/my/points(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+          <a class="none" th:href="@{/my/points(page=0,type=${type},keyword=${keyword})}"><<</a>
+          <a class="none" th:href="@{/my/points(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+          <a class="none" th:href="@{/my/points(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
           <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
-          <a class="none" th:href="@{/my/points(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
-          <a class="none" th:href="@{/my/points(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-          <a class="none" th:href="@{/my/points(page=${totalPages - 1})}" >>></a>
+          <a class="none" th:href="@{/my/points(page=${page + 1},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+          <a class="none" th:href="@{/my/points(page=${page + 2},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+          <a class="none" th:href="@{/my/points(page=${totalPages - 1},type=${type},keyword=${keyword})}" >>></a>
         </div>
       </article>
     </section>
@@ -76,4 +78,11 @@
   </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+<script>
+  function combineDates() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    document.getElementById('keyword').value = startDate + '~' + endDate;
+  }
+</script>
 

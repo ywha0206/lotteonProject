@@ -68,15 +68,24 @@ public class MyController {
     @GetMapping("/points")
     public String point(
             Model model,
-            @RequestParam(name = "page",defaultValue = "0") int page
+            @RequestParam(name = "page",defaultValue = "0") int page,
+            @RequestParam(name = "type",defaultValue = "0") String type,
+            @RequestParam(name = "keyword",defaultValue = "0") String keyword
             ) {
-        Page<GetPointsDto> points = pointService.findAllByCustomer(page);
+        Page<GetPointsDto> points;
+        if(!type.equals("0")&&!keyword.equals("0")){
+            points = pointService.findAllBySearch(page,type,keyword);
+        } else {
+            points = pointService.findAllByCustomer(page);
+        }
         if(points.isEmpty()){
             model.addAttribute("noItem",true);
             return "pages/my/point";
         }
         model.addAttribute("noItem",false);
         model.addAttribute("points", points);
+        model.addAttribute("type", type);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", points.getTotalPages());
 
