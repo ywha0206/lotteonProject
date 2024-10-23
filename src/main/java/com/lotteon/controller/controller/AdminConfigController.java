@@ -36,16 +36,10 @@ public class AdminConfigController {
     }
     @GetMapping("/basics")
     public String basic(Model model) {
-        GetConfigDTO ConfigDTO = configService.getUsedConfig();
-        GetFLotteDTO fLotteDTO = flotteService.getRecentFLotte();
-        fLotteDTO.splitAddress();
-        GetFCsDTO fCsDTO = fcsService.getRecentFCs();
+
         GetCopyrightDTO copyrightDTO = copyrightService.getRecentCopyright();
 
         model.addAttribute("config", getSideValue());
-        model.addAttribute("site", ConfigDTO);
-        model.addAttribute("fLotte", fLotteDTO);
-        model.addAttribute("fCs", fCsDTO);
         model.addAttribute("copy", copyrightDTO);
         return "pages/admin/config/basic";
     }

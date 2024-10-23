@@ -27,8 +27,8 @@ public class PageResponseDTO<T> {
         this.dtoList = dtoList;
 
         this.startNo = total - ((pg - 1) * size);
-        this.end = (int) (Math.ceil(this.pg / (double)size)) * size;
-        this.start = this.end - size-1;
+        this.end = (int) (Math.ceil((double) this.pg / (double)size)) * size;
+        this.start = this.end - (size-1);
 
         int last = (int) (Math.ceil(total / (double)size));
         this.end = Math.min(end, last);

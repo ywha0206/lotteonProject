@@ -126,5 +126,11 @@ public class ApiConfigController {
 
         return ResponseEntity.ok().body(version);
     }
-
+    @DeleteMapping("/versions")
+    public ResponseEntity<?> deleteVersion(@RequestBody List<Long> ids) {
+        Boolean success = versionService.deleteVersionsById(ids);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        return ResponseEntity.ok(response);
+    }
 }
