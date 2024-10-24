@@ -16,4 +16,7 @@ public class GetAddressDto {
     private String payment;
     private int state;
     private String addrNick;
+    private String request;
+    private String name;
+    private String hp;
 }

@@ -22,28 +22,90 @@ body{height: 100vh;}
 #my > main  .banner {width: 810px; height: 86px;}
 
 #my .address-box {
-    border: 1px solid black;
-    padding: 10px;
-    width: 300px;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    width: 220px;
+    height: 350px;
     cursor:pointer;
-    &:hover {
-        background-color: #7f7f7f;
-        color: white;
-    }
+    /*&:hover {*/
+    /*    background-color: #7f7f7f;*/
+    /*    color: white;*/
+    /*}*/
+    border-radius: 15px;
 }
 #my .on {
-    background-color: #7f7f7f;
-    color: white;
-    border: 1px solid black;
-    padding: 10px;
-    width: 300px;
-    cursor:pointer;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    width: 220px;
+    height: 350px;
+    border-radius: 15px;
+    background-color: #cccccc;
+}
+
+.new-addr {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    width: 220px;
+    height: 350px;
+    border-radius: 15px;
 }
 
 #my .address-wrapper {
     margin-top: 30px;
     display: flex;
-    flex-direction: column;
     gap: 20px;
     align-items: center;
+    justify-content: center;
+    width: 810px;
+    overflow: hidden;
+}
+
+#my .address-name{
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+#my .card-bottom-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#my .right-box {
+    font-size: 15px;
+}
+
+#my .right-box button {
+    background-color: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    &:hover {
+        background-color: #7f7f7f;
+        color: white;
+    }
+}
+
+#my .add-btn {
+    margin-top: 70px;
+    background-color: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    font-size: 15px;
+}
+
+#my .x-btn {
+    position: relative;
+    top: -330px;
+    left: 151px;
+    padding: 2px 5px;
+    border-radius: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: black;
+    &:hover {
+        opacity: 0.8;
+    }
 }

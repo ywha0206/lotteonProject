@@ -34,6 +34,8 @@ public class QAddress extends EntityPathBase<Address> {
 
     public final StringPath paymentType = createString("paymentType");
 
+    public final StringPath request = createString("request");
+
     public QAddress(String variable) {
         this(Address.class, forVariable(variable), INITS);
     }

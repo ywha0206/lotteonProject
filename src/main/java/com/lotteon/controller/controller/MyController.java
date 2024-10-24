@@ -115,6 +115,7 @@ public class MyController {
     public String address(Model model) {
         List<GetAddressDto> addrs = addressService.findAllByCustomer();
         model.addAttribute("addrs",addrs);
+        model.addAttribute("number",addrs.size());
         return "pages/my/address";
     }
 }
