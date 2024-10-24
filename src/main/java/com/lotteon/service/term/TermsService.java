@@ -39,14 +39,11 @@ public class TermsService {
 
     public List<GetTermsResponseDto> selectTerms(String termsType) {
         List<Terms> terms = termsRepository.findAllByTermsTypeContains(termsType);
-        System.out.println("Terms list: " + terms);
 
         // List<Terms> -> List<GetTermsResponseDto>
         List<GetTermsResponseDto> getTermsResponseDtoList = terms.stream()
                 .map(term -> modelMapper.map(term, GetTermsResponseDto.class))
                 .collect(Collectors.toList());
-
-        System.out.println("DTO List: " + getTermsResponseDtoList);
         return getTermsResponseDtoList;
     }
 
@@ -62,7 +59,6 @@ public class TermsService {
 //    }
 
     public Terms modifyTerms(PostTermsDTO postTermsDTO) {
-        log.info("Modify terms: " + postTermsDTO.getId());
         Terms terms = termsRepository.findById(postTermsDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("terms not found"));
 

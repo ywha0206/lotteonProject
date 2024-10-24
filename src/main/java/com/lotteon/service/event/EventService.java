@@ -11,16 +11,20 @@ import com.lotteon.repository.point.PointRepository;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.CustomerCouponService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EventService {
 
     private final AttendanceEventRepository attendanceEventRepository;
@@ -39,6 +43,9 @@ public class EventService {
         if (event == null) {
             event = this.insertEvent(event,customer);
             attendanceEventRepository.save(event);
+        }
+        if(event.getAttendanceToday()==1){
+            return "done";
         }
         if(event.getAttendanceSequence()==2){
             return "complete";
@@ -82,6 +89,7 @@ public class EventService {
                 .attendanceDays(0)
                 .attendanceState(0)
                 .attendanceMiddleState(0)
+                .attendanceToday(0)
                 .build();
     }
 
@@ -92,6 +100,11 @@ public class EventService {
                 .getPrincipal();
         Customer customer = auth.getUser().getCustomer();
         AttendanceEvent newEvent = attendanceEventRepository.findByCustomer(customer);
+        if(result.equals("done")){
+            AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
+            int count = event.getAttendanceDays();
+            return count;
+        }
         if(result.equals("complete")){
             this.updateCustomerPoint(100);
             return 7;

@@ -18,4 +18,5 @@ public class GetPointsDto {
     private int pointVar;
     private String pointEtc;
     private String pointExpiration;
+    private String warningExpiration;
 }

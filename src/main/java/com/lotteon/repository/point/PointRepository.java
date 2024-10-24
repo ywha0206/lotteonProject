@@ -16,4 +16,8 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Page<Point> findAllByCustId(Long id, Pageable pageable);
 
     Page<Point> findAllByCustIdAndPointRdateBetweenOrderByPointRdateAsc(Long id, LocalDate varDay, LocalDate today, Pageable pageable);
+
+    Page<Point> findAllByCustIdAndPointRdateBetweenOrderByPointExpirationAsc(Long id, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+    Page<Point> findAllByCustIdOrderByPointExpiration(Long id, Pageable pageable);
 }

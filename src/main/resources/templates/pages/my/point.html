@@ -43,12 +43,12 @@
             <th>유효기간</th>
           </tr>
           <tr th:each="point : ${points}">
-            <th th:text="${point.rdate}">날짜</th>
-            <th th:text="${point.pointType}">구분</th>
-            <th th:text="${point.orderId}">주문번호</th>
-            <th th:text="${point.pointVar}">적립금액</th>
-            <th th:text="${point.pointEtc}">비고</th>
-            <th th:text="${point.pointExpiration}">유효기간</th>
+            <td th:text="${point.rdate}">날짜</td>
+            <td th:text="${point.pointType}">구분</td>
+            <td th:text="${point.orderId}">주문번호</td>
+            <td th:text="${point.pointVar}">적립금액</td>
+            <td th:text="${point.pointEtc}">비고</td>
+            <td th:classappend="${point.warningExpiration == 'active'} ? 'warning' : ''" th:text="${point.pointExpiration}">유효기간</td>
           </tr>
         </table>
         <div th:if="${noItem==true}"
@@ -63,14 +63,14 @@
           적립 내역이 없습니다.
         </div>
 
-        <div class="page">
+        <div th:if="${noItem==false}" class="page">
           <a class="none" th:href="@{/my/points(page=0,type=${type},keyword=${keyword})}"><<</a>
           <a class="none" th:href="@{/my/points(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
           <a class="none" th:href="@{/my/points(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
           <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
           <a class="none" th:href="@{/my/points(page=${page + 1},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
           <a class="none" th:href="@{/my/points(page=${page + 2},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-          <a class="none" th:href="@{/my/points(page=${totalPages - 1},type=${type},keyword=${keyword})}" >>></a>
+          <a class="none" th:href="@{/my/points(page=${totalPages - 1},type=${type},keyword=${keyword})}">>></a>
         </div>
       </article>
     </section>
