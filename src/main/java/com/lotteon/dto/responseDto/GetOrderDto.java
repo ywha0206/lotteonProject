@@ -5,6 +5,8 @@ import com.lotteon.dto.responseDto.cartOrder.CartItemOptionDto;
 import com.lotteon.dto.responseDto.cartOrder.ProductDto;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -12,5 +14,5 @@ import lombok.*;
 public class GetOrderDto {
     private ProductDto products;
     private CartItemDto cartItems;
-    private CartItemOptionDto cartItemOptions;
+    private List<CartItemOptionDto> cartItemOptions;
 }

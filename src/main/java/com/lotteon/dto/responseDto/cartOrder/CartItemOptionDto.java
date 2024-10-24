@@ -2,8 +2,12 @@ package com.lotteon.dto.responseDto.cartOrder;
 
 import com.lotteon.entity.product.Product;
 import jakarta.persistence.*;
-import lombok.ToString;
+import lombok.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 public class CartItemOptionDto {
 
     private Long id;

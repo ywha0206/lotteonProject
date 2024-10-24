@@ -2,11 +2,10 @@ package com.lotteon.service.member;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
-import com.lotteon.dto.responseDto.cartOrder.GetOrderUserDto;
+import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
-import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Point;
 
 import com.lotteon.repository.member.AttendanceEventRepository;
@@ -139,8 +138,24 @@ public class CustomerService {
     }
     //상훈 작업부분 포인트추가 끝
 
-    public GetOrderUserDto selectedOrderCustomer(){
-        return null;
+    public UserOrderDto selectedOrderCustomer(){
+
+        MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = auth.getUser();
+        String address = member.getCustomer().getCustAddr();
+        String[] addr = address.split("/");
+
+        UserOrderDto user = UserOrderDto.builder()
+                                        .memUid(member.getMemUid())
+                                        .custName(member.getCustomer().getCustName())
+                                        .custHp(member.getCustomer().getCustHp())
+                                        .custZip(addr[0])
+                                        .custAddr1(addr[1])
+                                        .custAddr2(addr[2])
+                                        .build();
+
+
+        return user;
     }
 
 }
