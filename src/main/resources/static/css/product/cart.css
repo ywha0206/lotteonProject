@@ -79,8 +79,8 @@ input:focus{outline: none;}
 .name_desc > span {display: flex; flex-direction: column; line-height: 1px;}
 .name_desc > span:last-child {color: #7f7f7f;}
 .tb1 td:last-child{color: #c00000;}
-.cartOptions {display: flex; justify-content: center;}
-.cartOptions>span{margin: 3px 2px;}
+.cartOptions div {display: flex; justify-content: center;}
+.cartOptions span{margin: 3px 2px;}
 .cartOptions>select {width: 50px; height: 25px; margin-top: 2px;}
 
 /* 선택 삭제 버튼 */
@@ -106,7 +106,7 @@ input:focus{outline: none;}
 
 .btn_order {width: 198px; height: 41px; 
             border: none; color: #fff; margin: 25px 0 0 47px;
-            background-color: #cc3434;        
+            background-color: #cc3434;        text-align: center; line-height: 41px;
 }
 
 .btn_order > a {font-size: 20px;}
