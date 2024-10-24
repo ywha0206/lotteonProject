@@ -35,6 +35,8 @@ public class FaqService {
     private final ModelMapper modelMapper;
 
     public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
+        System.out.println("categoryName1 = " + categoryName1);
+
         // 1. CategoryArticleRepository에서 카테고리 이름으로 카테고리를 찾음
         CategoryArticle category1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(categoryName1,1,2)
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다: " + categoryName1));
@@ -87,5 +89,17 @@ public class FaqService {
         System.out.println("faqPage.getContent() = " + faqPage.getContent());
 
         return faqPage.map(ArticleDto::fromEntity);
+
     }
+
+
+
+    // FAQ 상세보기 기능 추가
+    public ArticleDto getFaqById(Long id) {
+        // ID를 통해 FAQ 조회
+        return faqRepository.findById(id)
+                .map(ArticleDto::fromEntity) // DTO로 변환
+                .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다."));
+    }
+
 }

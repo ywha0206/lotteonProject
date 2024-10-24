@@ -1,5 +1,5 @@
-  <link rel="stylesheet" th:href="@{/css/admin/cs/faq/list.css}">
-  <link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/admin/cs/faq/list.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
@@ -10,13 +10,10 @@
         <h3>자주묻는질문 목록</h3>
         <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
       </nav>
-      <form
-              action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}"
-              class="search"
-      >
+      <form action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}" class="search">
         <input type="hidden" name="content" value="list" />
         <input type="hidden" name="cateNo"  />
-        <!-- - 공지사항 유형 선택할 때마다 목록 출력, 갱신 됨 -->
+        <!-- 1차 선택 -->
         <select class="faqCate" name="faqCate" onchange="firstOption()">
           <option>1차선택</option>
           <option value="user">회원</option>
@@ -27,8 +24,8 @@
           <option value="travel">여행/숙박/항공</option>
           <option value="safe">안전결제</option>
         </select>
+        <!-- 2차 선택 -->
         <select class="faqType" name="faqType" onchange="redirectToCateType()">
-
           <option>2차선택</option>
           <option value="regi">가입</option>
           <option value="leave">탈퇴</option>
@@ -49,41 +46,40 @@
           <th>날짜</th>
           <th>관리</th>
         </tr>
-        <!-- <th:block th:if="${pageResponseDTO.getDtoList().size() == 0}" >
-                                     <tr>
-                                         <td colspan="7" class="td_first"><a  th:href="@{/article/list(pg=1)}">일치하는 내용이 없습니다.</a></td>
-                                     </tr>
-                                  </th:block> -->
         <tr th:each="faq : ${faqs}">
           <td><input type="checkbox"/></td>
           <td th:text="${faq.id}">7777</td>
-          <td th:text="${faq.cate1.categoryName}">회원</td>
-          <td th:text="${faq.cate2.categoryName}">가입</td>
-          <td style="text-align: left" th:text="${faq.title}">삭제 수정 버튼이 될까요 되길 기도해 ~</td>
+
+          <!-- 한글 변환 후 출력 -->
+          <td class="cate1" th:data-value="${faq.cate1.categoryName}">회원</td>
+          <td class="cate2" th:data-value="${faq.cate2.categoryName}" th:data-parent="${faq.cate1.categoryName}">가입</td>
+
+          <!-- 글 제목을 클릭하면 해당 글의 상세보기 페이지로 이동 -->
+          <td style="text-align: left">
+            <a th:href="@{'faq/view/' + ${faq.id}}" th:text="${faq.title}">글 제목이 표시됩니다</a>
+          </td>
+
           <td th:text="${faq.views}">120</td>
           <td th:text="${faq.rdate}">00.00.00</td>
           <td>
-            <button type="button" th:data-id="${faq.id}" class="delete-btn">[삭제]</button>
+            <button type="button" th:data-id="${faq.id}" class="delete-btn" >[삭제]</button>
             <button type="button" th:data-id="${faq.id}" class="modify-btn">[수정]</button>
           </td>
         </tr>
 
-        <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
       </table>
     </article>
 
     <div class="button-group">
       <button class="button--delete">선택삭제</button>
-      <a href="/admin/cs/faq/write" class="button--write">작성하기</a> <!-- 작성 페이지로 이동 -->
+      <a href="/admin/cs/faq/write" class="button--write">작성하기</a>
     </div>
 
-    <!-- 페이지 네비게이션 -->
     <div class="paging">
       <a href="#" class="prev">이전</a>
       <a href="#">1</a>
       <a href="#">2</a>
       <a href="#">3</a>
-      <!--페이지 이전 다음 글자 누를 수 있게-->
       <a href="#" class="next">다음</a>
     </div>
   </section>
@@ -91,113 +87,109 @@
 <footer th:replace="layout/admin/footer.html"></footer>
 </body>
 
-  <script>
-    // 1차 선택에 따라 2차 선택 항목을 제공하는 객체
-    const secondOptions = {
-      "user": [
-        {value: "regi", text: "가입"},
-        {value: "leave", text: "탈퇴"},
-        {value: "info", text: "회원정보"},
-        {value: "login", text: "로그인"}
-      ],
-      "coupon": [
-        {value: "lpoint", text: "L.POINT"},
-        {value: "coupon", text: "쿠폰"},
-        {value: "event", text: "이벤트/경품"},
-        {value: "attendance", text: "출석체크"},
-        {value: "gift", text: "사은품"}
-      ],
-      "order": [
-        {value: "orderMethod", text: "주문방법"},
-        {value: "orderChange", text: "주문변경"},
-        {value: "paymentMethod", text: "결제방법"},
-        {value: "easyPayment", text: "간편결제"},
-        {value: "giftReceive", text: "선물받기"},
-        {value: "mobileGift", text: "모바일상품권"},
-        {value: "phonePayment", text: "휴대폰결제"},
-        {value: "applePay", text: "애플페이"}
-      ],
-      "delivery": [
-        {value: "delivery", text: "배송"},
-        {value: "deliveryFee", text: "배송비"},
-        {value: "deliveryMethod", text: "배송방법"},
-        {value: "deliverySchedule", text: "배송일정"},
-        {value: "deliveryAddress", text: "배송지"},
-        {value: "todayArrival", text: "오늘도착"},
-        {value: "overseas", text: "해외직구"},
-        {value: "notReceived", text: "미수령신고"},
-        {value: "recipient", text: "수취인"},
-        {value: "purchaseConfirm", text: "구매확정"}
-      ],
-      "cancel": [
-        {value: "orderCancel", text: "주문취소"},
-        {value: "refundMethod", text: "환불방법"},
-        {value: "cardRefund", text: "카드환불"},
-        {value: "refundSchedule", text: "환불일정"},
-        {value: "phoneRefund", text: "휴대폰결제환불"}
-      ],
-      "travel": [
-        {value: "ecoupon", text: "e쿠폰"},
-        {value: "flight", text: "항공"},
-        {value: "accommodation", text: "숙박"},
-        {value: "ticket", text: "티켓"}
-      ],
-      "safe": [
-        {value: "policyViolation", text: "법령 및 정책위반 상품"},
-        {value: "ipViolation", text: "지적재산권침해"},
-        {value: "serviceViolation", text: "서비스 이용규칙 위반"},
-        {value: "adViolation", text: "표시광고"}
-      ]
-    };
+<script>
+  // 1차 카테고리와 2차 카테고리를 한글로 변환하는 객체
+  const firstCategoryMap = {
+    "user": "회원",
+    "coupon": "쿠폰/이벤트",
+    "order": "주문/결제",
+    "delivery": "배송",
+    "cancel": "취소/반품/환불",
+    "travel": "여행/숙박/항공",
+    "safe": "안전결제"
+  };
 
-    // 1차 선택에 따라 2차 선택을 동적으로 변경하는 함수
-    document.querySelector(".faqCate").addEventListener("change", function() {
-      const selectedValue = this.value;
-      const select2 = document.querySelector(".faqType");
-      select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>'; // 초기화
+  const secondCategoryMap = {
+    "user": {
+      "regi": "가입",
+      "leave": "탈퇴",
+      "info": "회원정보",
+      "login": "로그인"
+    },
+    "coupon": {
+      "lpoint": "L.POINT",
+      "coupon": "쿠폰",
+      "event": "이벤트/경품",
+      "attendance": "출석체크",
+      "gift": "사은품"
+    },
+    "order": {
+      "orderMethod": "주문방법",
+      "orderChange": "주문변경",
+      "paymentMethod": "결제방법",
+      "easyPayment": "간편결제",
+      "giftReceive": "선물받기",
+      "mobileGift": "모바일상품권",
+      "phonePayment": "휴대폰결제",
+      "applePay": "애플페이"
+    },
+    "delivery": {
+      "delivery": "배송",
+      "deliveryFee": "배송비",
+      "deliveryMethod": "배송방법",
+      "deliverySchedule": "배송일정",
+      "deliveryAddress": "배송지",
+      "todayArrival": "오늘도착",
+      "overseas": "해외직구",
+      "notReceived": "미수령신고",
+      "recipient": "수취인",
+      "purchaseConfirm": "구매확정"
+    },
+    "cancel": {
+      "orderCancel": "주문취소",
+      "refundMethod": "환불방법",
+      "cardRefund": "카드환불",
+      "refundSchedule": "환불일정",
+      "phoneRefund": "휴대폰결제환불"
+    },
+    "travel": {
+      "ecoupon": "e쿠폰",
+      "flight": "항공",
+"accommodation": "숙박",
+"ticket": "티켓"
+},
+"safe": {
+"policyViolation": "법령 및 정책위반 상품",
+"ipViolation": "지적재산권침해",
+"serviceViolation": "서비스 이용규칙 위반",
+"adViolation": "표시광고"
+}
+};
 
-      if (secondOptions[selectedValue]) {
-        secondOptions[selectedValue].forEach(option => {
-          const newOption = document.createElement("option");
-          newOption.value = option.value;
-          newOption.text = option.text;
-          select2.appendChild(newOption);
-        });
-      }
-    });
+// 동적 카테고리 기능 (1차 선택에 따라 2차 선택 항목을 제공)
+document.querySelector(".faqCate").addEventListener("change", function() {
+const selectedValue = this.value;
+const select2 = document.querySelector(".faqType");
+select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>'; // 초기화
 
-    // 삭제 버튼 클릭 이벤트
-    document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        const faqId = this.getAttribute('data-id'); // FAQ ID 가져오기
-        const confirmDelete = confirm('정말로 이 FAQ를 삭제하시겠습니까?');
+if (secondCategoryMap[selectedValue]) {
+Object.keys(secondCategoryMap[selectedValue]).forEach(key => {
+const optionText = secondCategoryMap[selectedValue][key];
+const newOption = document.createElement("option");
+newOption.value = key;
+newOption.text = optionText;
+select2.appendChild(newOption);
+});
+}
+});
 
-        if (confirmDelete) {
-          // 서버로 삭제 요청 보내기 (AJAX 또는 폼 제출 방식)
-          fetch(`/admin/cs/faq/delete/${faqId}`, {
-            method: 'DELETE'
-          })
-                  .then(response => {
-                    if (response.ok) {
-                      alert('삭제되었습니다.');
-                      location.reload();  // 페이지 새로고침
-                    } else {
-                      alert('삭제에 실패했습니다. 다시 시도해주세요.');
-                    }
-                  })
-                  .catch(error => {
-                    console.error('Error:', error);
-                    alert('오류가 발생했습니다.');
-                  });
-        }
-      });
-    });
+// 리스트에서 1차 및 2차 카테고리 한글 변환
+document.addEventListener('DOMContentLoaded', function() {
+// 1차 카테고리 한글 변환
+document.querySelectorAll('.cate1').forEach(function(item) {
+const value = item.getAttribute('data-value');
+item.textContent = firstCategoryMap[value] || value;
+});
 
-    // 수정 버튼 클릭 이벤트
-    document.querySelectorAll('.modify-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        const faqId = this.getAttribute('data-id');
-        window.location.href = `/admin/cs/faq/modify/${faqId}`; // 수정 페이지로 이동
-      });
-    });
-  </script>
+// 2차 카테고리 한글 변환
+document.querySelectorAll('.cate2').forEach(function(item) {
+const value = item.getAttribute('data-value');
+const parent = item.getAttribute('data-parent');
+if (secondCategoryMap[parent]) {
+item.textContent = secondCategoryMap[parent][value] || value;
+} else {
+item.textContent = value;
+}
+});
+});
+</script>
