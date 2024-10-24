@@ -75,7 +75,6 @@ public class BannerService {
         }
     }
 
-    @Transactional
     public Banner updateBannerState(Long id, Integer state) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Banner not found"));

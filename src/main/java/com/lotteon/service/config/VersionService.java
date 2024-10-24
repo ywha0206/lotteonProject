@@ -46,11 +46,11 @@ public class VersionService {
 
     public boolean deleteVersionsById(List<Long> VersionIds) {
         try {
-            for(Long VersionId : VersionIds) {
+            for (Long VersionId : VersionIds) {
                 versionRepository.deleteById(VersionId);
             }
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             return false;
         }

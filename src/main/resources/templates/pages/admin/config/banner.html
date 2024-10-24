@@ -48,11 +48,11 @@
                     </thead>
                     <tbody>
                     <th:block th:each="b:${bannerList}">
-                        <tr th:class="${'list'+b.bannerLocation + ' list'}">
+                        <tr th:class="${'list'+b.bannerLocation + ' list'}" style="display: table-row;">
                         <td class="checkbox">
                             <input type="checkbox" class="select">
                         </td>
-                        <td class="no">[[${b.id}]]</td>
+                        <td class="id" th:data-id="${b.id}"><span></span></td>
                         <td>
                             <div class="imgBox">
                                 <img th:src="@{'/file/'+${b.bannerImg}}" alt="" class="bannerImg">
@@ -452,7 +452,7 @@
 
                 for (let checkbox of selectedCheckboxes) {
                     const row = checkbox.closest('tr');
-                    const bannerNo = row.querySelector('.no').innerText.trim();
+                    const bannerNo = row.querySelector('.id').dataset.id;
                     console.log(bannerNo);
                     selectedIds.push(bannerNo);
                 }
