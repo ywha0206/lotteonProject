@@ -36,6 +36,8 @@ public class QCustomer extends EntityPathBase<Customer> {
 
     public final BooleanPath custGender = createBoolean("custGender");
 
+    public final StringPath custGrade = createString("custGrade");
+
     public final StringPath custHp = createString("custHp");
 
     public final StringPath custName = createString("custName");
