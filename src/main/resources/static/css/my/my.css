@@ -46,7 +46,7 @@ body{height: 100vh;}
 #my article > table  * {font-family: '돋움';color: #444; text-align: center;}
 #my article > table th {padding: 6px;background-color: #a5a7a5;box-sizing: border-box;color: #fff; font-weight: 600;}
 #my article > table td {padding: 10px;border-bottom: 1px solid #aaa;box-sizing: border-box;overflow: hidden; padding: 20px 0;}
-
+#my article > table .warning {color:red;}
 #my table.order td:nth-of-type(2) *,
 #my table.review td:nth-of-type(3),
 #my table.qna td:nth-of-type(4){text-align: left;}

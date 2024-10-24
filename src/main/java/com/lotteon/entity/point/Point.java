@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @ToString
@@ -44,6 +45,9 @@ public class Point {
     private LocalDate pointExpiration;
 
     public GetPointsDto toGetPointsDto() {
+        LocalDate today = LocalDate.now();
+
+
         String order;
         if(orderId==null){
             order="주문번호없음";
@@ -55,6 +59,12 @@ public class Point {
             expiration = "사용기간만료";
         } else {
             expiration = String.valueOf(pointExpiration);
+        }
+        String warning;
+        if (ChronoUnit.DAYS.between(today, pointExpiration) < 7) {
+            warning = "active";
+        } else {
+            warning = "none-active";
         }
 
         String type ;
@@ -74,6 +84,7 @@ public class Point {
                 .pointType(type)
                 .pointVar(pointVar)
                 .pointEtc(pointEtc)
+                .warningExpiration(warning)
                 .build();
     }
 }
