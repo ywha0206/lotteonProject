@@ -22,7 +22,7 @@ public class AttendenceController {
         String result = eventService.updateEvent();
 
         int days = eventService.findEvent(result);
-
+        model.addAttribute("days", days);
         return "pages/event/attendance";
     }
 }

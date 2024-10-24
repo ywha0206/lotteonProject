@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.entity.config.*;
+import com.lotteon.entity.term.Terms;
 import com.lotteon.service.config.*;
+import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ public class ApiConfigController {
     private final FCsService fcsService;
     private final CopyrightService copyrightService;
     private final VersionService versionService;
+    private final TermsService termsService;
 
     @GetMapping("/banners/{tab}")
     public ResponseEntity<?> selectBanner(@PathVariable("tab") String tab) {
@@ -131,5 +134,10 @@ public class ApiConfigController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/term")
+    public ResponseEntity<?> modifyTerm(@ModelAttribute PostTermsDTO postDTO) {
+        Terms terms = termsService.modifyTerms(postDTO);
+        return ResponseEntity.ok().body(terms);
     }
 }

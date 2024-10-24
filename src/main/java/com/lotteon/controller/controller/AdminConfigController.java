@@ -2,6 +2,7 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.dto.responseDto.*;
 import com.lotteon.service.config.*;
+import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -19,11 +20,9 @@ import java.util.List;
 @Log4j2
 public class AdminConfigController {
     private final BannerService bannerService;
-    private final ConfigService configService;
-    private final FLotteService flotteService;
-    private final FCsService fcsService;
     private final CopyrightService copyrightService;
     private final VersionService versionService;
+    private final TermsService termsService;
 
     private String getSideValue() {
         return "config";  // 실제 config 값을 여기에 설정합니다.
@@ -52,6 +51,8 @@ public class AdminConfigController {
     }
     @GetMapping("/terms")
     public String terms(Model model) {
+        List<GetTermsResponseDto> terms = termsService.selectAllTerms();
+        model.addAttribute("terms", terms);
         model.addAttribute("config", getSideValue());
         return "pages/admin/config/term";
     }
