@@ -251,7 +251,7 @@
           <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDiscount, 1, 'COMMA') : 0}]] %</td>
           <td>[[${cartItem.product.prodPoint}]] P</td>
           <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDeliver, 1, 'COMMA') : 0}]]원</td>
-          <td>[[${cartItem != null ? #numbers.formatInteger((cartItem.product.prodPrice * cartItem.quantity * (1-(cartItem.product.prodDiscount / 100))+cartItem.product.prodDeliver), 1, 'COMMA') : 0}]]원</td>
+          <td>[[${cartItem != null ? #numbers.formatInteger((cartItem.product.prodPrice * cartItem.quantity * (1-(cartItem.product.prodDiscount / 100))), 1, 'COMMA') : 0}]]원</td>
         </tr>
       </table>
       <!-- .tb1-->

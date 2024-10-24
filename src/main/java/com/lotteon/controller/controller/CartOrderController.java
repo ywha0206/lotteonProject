@@ -95,10 +95,9 @@ public class CartOrderController {
         model.addAttribute("orders", orders);
         model.addAttribute("customer", customer);
 
-
-
         return "pages/product/order";
     }
+
 
     @GetMapping("/order/complete")
     public String orderComplete(Model model) {
