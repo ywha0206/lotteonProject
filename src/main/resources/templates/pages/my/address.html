@@ -1,0 +1,142 @@
+<link rel="stylesheet" th:href="@{/css/my/address.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<script th:src="@{/js/axios.min.js}"></script>
+<header th:replace="layout/main/header.html"></header>
+<th:block th:replace="layout/my/modal"></th:block>
+<main>
+    <div id="my">
+        <th:block th:replace="layout/my/aside.html"></th:block>
+        <main>
+            <th:block th:replace="layout/my/banner.html"></th:block>
+            <section>
+                <h3>배송지 설정</h3>
+                <div class="address-wrapper">
+                    <div th:classappend="${addr.state==1} ? 'on' : ''" th:each="addr : ${addrs}" class="address-box">
+                        <div th:text="${addr.addrNick}" class="address-name" style="margin-top: 30px; font-size: 17px">
+                            기본배송지
+                        </div>
+                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.name} + ' / '">이상훈 /</span><span th:text="${addr.hp}"> 010-1234-1515</span></div>
+                        <div style="margin-bottom: 5px; height: 25px;"><span th:text="${addr.addr2}"></span><span th:text="'(' + ${addr.addr1} + ')'"></span></div>
+                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.addr3}">우남 101 - 1202호</span></div>
+                        <div style="margin-bottom: 69px; height: 25px;">요청사항 :<span th:text="${addr.request}">문앞에 둬주세요</span></div>
+                        <div class="card-bottom-box">
+                            <div class="left-box">
+                                <img style="width: 95px; height:39px; margin-left: -14px" th:src="@{/images/lotteon-deliver-logo.png}">
+                            </div>
+                            <div class="right-box" style="display: flex; justify-content: center; align-items: center; font-size: 12px;">
+                                <button onclick="addressPopup(event,2)" th:data-id="${addr.id}" style="padding: 1px 5px;">수정</button>
+                            </div>
+                        </div>
+                        <button onclick="deleteAddress(event)" th:data-id="${addr.id}" class="x-btn" th:if="${addr.addrNick != '기본배송지'}" >삭제</button>
+                    </div>
+                    <div th:if="${number < 3}" style="display: flex; justify-content: center; align-items: center; font-size: 50px; padding: 0px;" class="new-addr">
+                        <button onclick="addressPopup(event,1)" class="noItem" style="border: none; background-color: transparent;">+</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+<script>
+    function addressPopup(event,a){
+        if(a===1){
+            const newAddr = document.querySelector('.new-addr')
+
+            newAddr.innerHTML = `
+            <div class="new-addr">
+                <div class="address-name" style="margin-top: 30px; font-size: 17px">
+                    <input id="addrNick2" style="width: 120px; border:none;" placeholder="배송지 별명">
+                </div>
+                <input id="addr22" style="margin-bottom: 5px; border:none;" placeholder="주소">
+                <input id="addr12" style="margin-bottom: 5px; border:none;" placeholder="우편번호">
+                <input id="addr32" style="margin-bottom: 5px; border:none;" placeholder="상세주소">
+                <input id="request2" style="margin-bottom: 30px; border:none;" placeholder="요청사항"><br>
+                기본배송지 설정 : <input id="basicState2" type="checkbox" style="margin-bottom: 5px; border:none;"><br>
+                <button onclick="addAddress()" class="add-btn" style="padding: 1px 5px;">추가</button>
+            </div>
+        `
+        } else if(a===2){
+            const id = event.target.dataset.id;
+            event.target.parentElement.parentElement.parentElement.innerHTML = `
+
+            <div class="address-name" style="margin-top: 30px; font-size: 17px">
+                <input id="addrNick3" style="width: 120px; border:none;" placeholder="배송지 별명">
+            </div>
+            <input id="addr23" style="margin-bottom: 5px; border:none;" placeholder="주소">
+            <input id="addr13" style="margin-bottom: 5px; border:none;" placeholder="우편번호">
+            <input id="addr33" style="margin-bottom: 5px; border:none;" placeholder="상세주소">
+            <input id="request3" style="margin-bottom: 30px; border:none;" placeholder="요청사항"><br>
+            기본배송지 설정 : <input id="basicState3" type="checkbox" style="margin-bottom: 5px; border:none;"><br>
+            <button onclick="putAddress(event)" data-id="${id}" class="add-btn" style="padding: 1px 5px;">수정</button>
+
+        `
+
+        }
+
+    }
+
+    async function deleteAddress(event){
+        const id = event.target.dataset.id;
+
+        try {
+            const resp = await axios.delete("/my/address",{
+                params: {
+                    'id' : id
+                },
+                headers : {
+                    "Content-type" : "application/json"
+                }
+            })
+            window.location.href = '/my/address'
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async function addAddress(){
+        const submitData = {
+            'addrNick' : document.getElementById('addrNick2').value,
+            'addr' : document.getElementById('addr12').value + '/' + document.getElementById('addr22').value + '/' + document.getElementById('addr32').value,
+            'request' : document.getElementById('request2').value,
+            'basicState' : document.getElementById('basicState2').checked
+        }
+        try {
+            const resp = await axios.post("/my/address",submitData,{
+                headers: {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.status===200){
+                window.location.href = "/my/address"
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async function putAddress(event){
+        const submitData = {
+            'addrNick' : document.getElementById('addrNick3').value,
+            'addr' : document.getElementById('addr13').value + '/' + document.getElementById('addr23').value + '/' + document.getElementById('addr33').value,
+            'request' : document.getElementById('request3').value,
+            'basicState' : document.getElementById('basicState3').checked,
+            'id' : event.target.dataset.id
+        }
+        console.log(submitData)
+        try {
+            const resp = await axios.put("/my/address",submitData,{
+                headers: {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.status===200){
+                window.location.href = "/my/address"
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+</script>
+

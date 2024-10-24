@@ -1,8 +1,10 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.dto.responseDto.GetAddressDto;
 import com.lotteon.dto.responseDto.GetCustomerCouponDto;
 import com.lotteon.dto.responseDto.GetMyCouponDto;
 import com.lotteon.dto.responseDto.GetPointsDto;
+import com.lotteon.service.member.AddressService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.service.point.CustomerCouponService;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/my")
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class MyController {
     private final CustomerCouponService customerCouponService;
     private final CustomerService customerService;
     private final PointService pointService;
+    private final AddressService addressService;
 
     @ModelAttribute
     public void commonAttributes(Model model) {
@@ -38,6 +43,13 @@ public class MyController {
 
     @GetMapping(value = {"","/","/index"})
     public String index(Model model) {
+        Page<GetPointsDto> points = pointService.findAllByCustomer(0);
+        if(points.isEmpty()){
+            model.addAttribute("noPoint",true);
+            return "pages/my/index";
+        }
+        model.addAttribute("points", points);
+        model.addAttribute("noPoint",false);
         return "pages/my/index";
     }
     @GetMapping("/coupons")
@@ -98,5 +110,12 @@ public class MyController {
     @GetMapping("/reviews")
     public String review(Model model) {
         return "pages/my/review";
+    }
+    @GetMapping("/address")
+    public String address(Model model) {
+        List<GetAddressDto> addrs = addressService.findAllByCustomer();
+        model.addAttribute("addrs",addrs);
+        model.addAttribute("number",addrs.size());
+        return "pages/my/address";
     }
 }

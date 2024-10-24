@@ -75,7 +75,6 @@ public class BannerService {
         }
     }
 
-    @Transactional
     public Banner updateBannerState(Long id, Integer state) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Banner not found"));
@@ -83,5 +82,17 @@ public class BannerService {
         banner.updateBannerState(state);
 
         return banner;
+    }
+
+    public List<GetBannerDTO> selectUsingBannerAt(int bannerLocation) {
+        List<Banner> banners = bannerRepository.findAllByBannerLocationAndBannerState(bannerLocation,1);
+        List<GetBannerDTO> bannerList =
+                banners.stream()
+                        .map(Entity->modelMapper.map(Entity,GetBannerDTO.class))
+                        .toList();
+
+        log.info(bannerList.toString());
+
+        return bannerList;
     }
 }
