@@ -6,8 +6,7 @@
 
 ### [LotteOn - 더 나은 쇼핑의 발견](http://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:8080/)
 
-## 팀 정보
-- **팀명**: 2조
+## Team 2
 - **팀장**: 이상훈
 - **팀원**:
   - 박경림
