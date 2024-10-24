@@ -3,28 +3,75 @@
 <script th:src="@{/js/main.js}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const btnDel = document.querySelector('#btnDel');
     const selectAllCheckbox = document.querySelector('.checkboxAll');
     const itemCheckboxes = document.querySelectorAll('.checkboxItem');
+    const qtyElement = document.querySelector('.qty');
+    const priceElement = document.querySelector('.price');
+    const discountElement = document.querySelector('.discount');
+    const deliverElement = document.querySelector('.deliver');
+    const pointElement = document.querySelector('.point');
+    const realTotalElement = document.querySelector('.realtotal');
 
     // 전체 선택 체크박스 클릭 시
     selectAllCheckbox.addEventListener('change', function() {
+      const isChecked = selectAllCheckbox.checked; // 전체 체크박스가 체크되었는지 확인
       itemCheckboxes.forEach(checkbox => {
-        checkbox.checked = selectAllCheckbox.checked;
+        checkbox.checked = isChecked; // 전체 체크박스의 상태를 개별 체크박스에 반영
       });
+      updateSelectedItems();  // 전체 선택 시에도 선택된 항목 업데이트
     });
 
-    // 개별 체크박스 클릭 시 전체 선택 체크박스 상태 업데이트
+    // 개별 체크박스 상태 변경 시 선택된 항목을 업데이트
     itemCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', function() {
-        if ([...itemCheckboxes].every(item => item.checked)) {
-          selectAllCheckbox.checked = true;
-        } else {
-          selectAllCheckbox.checked = false;
-        }
+        const allChecked = [...itemCheckboxes].every(item => item.checked); // 모든 체크박스가 체크되었는지 확인
+        selectAllCheckbox.checked = allChecked; // 전체 선택 체크박스 상태 갱신
+        updateSelectedItems(); // 상태 변경 시마다 선택된 항목 업데이트
       });
     });
 
+    // 체크된 항목들 업데이트
+    function updateSelectedItems() {
+      const selectedItems = [...document.querySelectorAll('.checkboxItem')]
+              .filter(checkbox => checkbox.checked)  // 체크된 항목만 필터링
+              .map(checkbox => {
+                const tr = checkbox.closest('tr');
+                const quantity = parseInt(tr.querySelector('td:nth-child(5)').textContent.trim(), 10); // 수량을 숫자로 변환
+                const price = parseInt(tr.querySelector('td:nth-child(6)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 상품금액
+                const discount = parseFloat(tr.querySelector('td:nth-child(7)').textContent.trim().replace('%', '')); // 할인 (퍼센트)
+                const point = parseInt(tr.querySelector('td:nth-child(8)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 포인트
+                const deliver = parseInt(tr.querySelector('td:nth-child(9)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 배송비
+                const totalPrice = parseInt(tr.querySelector('td:nth-child(10)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 총금액
+
+                return {
+                  quantity,
+                  price,
+                  discount,
+                  point,
+                  deliver,
+                  totalPrice
+                };
+              });
+
+      // 수량, 가격, 할인금액, 배송비, 포인트, 실제 총합 계산
+      const totalQuantity = selectedItems.reduce((acc, item) => acc + item.quantity, 0);
+      const price = selectedItems.reduce((acc, item) => acc + item.price, 0);
+      const totalPrice = selectedItems.reduce((acc, item) => acc + item.totalPrice, 0);
+      const totalDiscount = selectedItems.reduce((acc, item) => acc + (item.price * item.quantity * item.discount / 100), 0);
+      const totalDeliver = selectedItems.reduce((acc, item) => acc + item.deliver, 0);
+      const totalPoint = selectedItems.reduce((acc, item) => acc + item.point * item.quantity, 0); // 포인트 합계
+      const realTotal = totalPrice + totalDeliver;
+
+      // 계산된 값들을 DOM에 업데이트
+      qtyElement.innerText = totalQuantity.toLocaleString(); // 콤마 추가
+      priceElement.innerText = price.toLocaleString(); // 가격에 콤마 추가
+      discountElement.innerText = totalDiscount.toLocaleString(); // 할인금액에 콤마 추가
+      deliverElement.innerText = totalDeliver.toLocaleString(); // 배송비에 콤마 추가
+      pointElement.innerText = selectedItems.length > 0 ? totalPoint.toLocaleString() + 'P' : 0; // 포인트 합계
+      realTotalElement.innerText = realTotal.toLocaleString(); // 실제 총합에 콤마 추가
+
+      console.log('현재 선택된 항목들:', selectedItems);  // 선택된 항목 출력
+    }
 
     btnDel.addEventListener('click', function (e){
       e.preventDefault();
@@ -155,7 +202,7 @@
           <col style="width: 10%" />
           <col style="width: 25%" />
           <col style="width: 10%" />
-          <col style="width: 10%" />
+          <col style="width: 5%" />
           <col style="width: 10%" />
           <col style="width: 7%" />
           <col style="width: 7%" />
@@ -187,24 +234,24 @@
           </div></td>
           <td>
             <div class="cartOptions">
-              <!-- 옵션이 있는 경우 반복문 실행 -->
-              <th:block th:if="${#lists.size(cartItem.cartItemOption) > 0}">
-                <div th:each="cartItemOption, stat : ${cartItem.cartItemOption}">
-                  <span th:text="${cartItemOption.optionValue}">S</span>
-                </div>
-              </th:block>
-              <!-- 옵션이 없을 경우 "옵션없음" 출력 -->
-              <th:block th:if="${#lists.size(cartItem.cartItemOption) == 0}">
+<!--              &lt;!&ndash; 옵션이 있는 경우 반복문 실행 &ndash;&gt;-->
+<!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) > 0}">-->
+<!--                <div th:each="cartItemOption, stat : ${cartItem.cartItemOption}">-->
+<!--                  <span th:text="${cartItemOption.optionValue}">S</span>-->
+<!--                </div>-->
+<!--              </th:block>-->
+<!--              &lt;!&ndash; 옵션이 없을 경우 "옵션없음" 출력 &ndash;&gt;-->
+<!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) == 0}">-->
                 <span>옵션없음</span>
-              </th:block>
+<!--              </th:block>-->
             </div>
           </td>
-          <td th:text="${cartItem.quantity}">1</td>
-          <td th:text="${cartItem.product.prodPrice}">27,000</td>
-          <td th:text="${cartItem.product.prodDiscount}">5%</td>
-          <td th:text="${cartItem.product.prodPoint}">270</td>
-          <td  th:text="${cartItem.product.prodDeliver}">무료배송</td>
-          <td>25,650</td>
+          <td>[[${cartItem.quantity}]]</td>
+          <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodPrice, 1, 'COMMA') : 0}]]원</td>
+          <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDiscount, 1, 'COMMA') : 0}]] %</td>
+          <td>[[${cartItem.product.prodPoint}]] P</td>
+          <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDeliver, 1, 'COMMA') : 0}]]원</td>
+          <td>[[${cartItem != null ? #numbers.formatInteger((cartItem.product.prodPrice * cartItem.quantity * (1-(cartItem.product.prodDiscount / 100))+cartItem.product.prodDeliver), 1, 'COMMA') : 0}]]원</td>
         </tr>
       </table>
       <!-- .tb1-->
@@ -213,31 +260,31 @@
         <div class="total">
           <table class="tb2">
             <tr>
-              <th colspan="2">전체합계</th>
+              <th class="th">전체합계</th>
             </tr>
             <tr>
-              <td>상품수</td>
-              <td>1</td>
+              <th>상품수</th>
+              <td class="data qty">0</td>
             </tr>
             <tr>
-              <td>상품금액</td>
-              <td>27,000</td>
+              <th>상품금액</th>
+              <td class="data price">0</td>
             </tr>
             <tr>
-              <td>할인금액</td>
-              <td>-1,350</td>
+              <th>할인금액</th>
+              <td class="data discount">0</td>
             </tr>
             <tr>
-              <td>배송비</td>
-              <td>0</td>
+              <th>배송비</th>
+              <td class="data deliver">0</td>
             </tr>
             <tr>
-              <td>전체주문금액</td>
-              <td>25,650</td>
+              <th>적립 포인트</th>
+              <td class="data point">0</td>
             </tr>
             <tr>
-              <td>적립 포인트</td>
-              <td>270</td>
+              <th>전체주문금액</th>
+              <td class="red data realtotal">0</td>
             </tr>
           </table>
         <!-- .tb2-->

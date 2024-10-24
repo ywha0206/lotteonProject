@@ -93,14 +93,15 @@ input:focus{outline: none;}
 }
 
 /* 전체합계 */
-.total_yh{    width: 100%;}
+.total_yh{    width: 90%;}
 .total {width: 291px; height: 300px; margin-left: auto; margin-right: 20px;
         border: 2px solid #d9d9d9;padding: 20px 30px;}
-.tb2 {width: 277px; height: auto; }
-.tb2 th{text-align: left; font-size: 16px;height: 30px;
+.tb2 {width: 200px; height: auto; }
+.tb2 .th{text-align: left; font-size: 16px;height: 30px;
         font-weight: 700;}
-.tb2 td {font-size: 14px; height: 25px;}
-.tb2 tr:nth-of-type(6) > td:last-child {color: #c00000;}
+.tb2 th {font-size: 14px; height: 25px; width: 40px!important;}
+.tb2 .red {color: #c00000;}
+.tb2 .data{width: 30px; margin-left: 10px; text-align: right;}
 
 .btn_order {width: 198px; height: 41px; 
             border: none; color: #fff; margin-top: 30px; margin-left: 12px;
