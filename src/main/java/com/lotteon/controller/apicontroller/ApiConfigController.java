@@ -137,6 +137,7 @@ public class ApiConfigController {
     }
     @PostMapping("/term")
     public ResponseEntity<?> modifyTerm(@ModelAttribute PostTermsDTO postDTO) {
+
         Terms terms = termsService.modifyTerms(postDTO);
         return ResponseEntity.ok().body(terms);
     }

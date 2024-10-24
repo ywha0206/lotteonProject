@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public interface TermsRepository extends JpaRepository<Terms,Long> {
 
     // termsType에 따라 약관을 조회
-    public List<Terms> findAllByTermsType(String termsType);
+    public List<Terms> findAllByTermsTypeContains(String termsType);
 
 
 }
