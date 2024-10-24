@@ -6,6 +6,7 @@ import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,15 +38,12 @@ public class TermsService {
 
 
     public List<GetTermsResponseDto> selectTerms(String termsType) {
-        List<Terms> terms = termsRepository.findAllByTermsType(termsType);
-        System.out.println("Terms list: " + terms);
+        List<Terms> terms = termsRepository.findAllByTermsTypeContains(termsType);
 
         // List<Terms> -> List<GetTermsResponseDto>
         List<GetTermsResponseDto> getTermsResponseDtoList = terms.stream()
                 .map(term -> modelMapper.map(term, GetTermsResponseDto.class))
                 .collect(Collectors.toList());
-
-        System.out.println("DTO List: " + getTermsResponseDtoList);
         return getTermsResponseDtoList;
     }
 

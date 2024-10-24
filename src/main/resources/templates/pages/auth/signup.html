@@ -15,7 +15,7 @@
                     <span th:text="${t.termsName}"></span>
                 </div>
                 <!-- 이용약관 -->
-                <textarea readonly class="content" th:text="${t.termsContent}"></textarea>
+                <div readonly class="content" th:utext="${t.termsContent}"></div>
                 <div class="essential-check check">
                     <label for="place"><input style="margin-top: 10px;" type="checkbox"></label>
                     <span class="chk_txt">동의하기</span>
@@ -27,7 +27,7 @@
                     <span th:text="${t.termsName}"></span>
                 </div><!-- .title -->
                 <!-- 이용약관 textarea -->
-                <textarea readonly class="content" th:text="${t.termsContent}"></textarea>
+                <div class="content" th:utext="${t.termsContent}"></div>
                 <div class="not-required-check check">
                     <!-- 선택약관 동의여부  -->
                     <!-- 체크박스 선택 여부에 따라 true=1, false=0  -->
