@@ -1,6 +1,7 @@
 package com.lotteon.entity.member;
 
 import com.lotteon.dto.responseDto.GetAddressDto;
+import com.lotteon.dto.responseDto.PostAddressDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,9 @@ public class Address {
     @Column(name = "basic_state")
     private Integer basicState;
 
+    @Column(name = "basic_request")
+    private String request;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cust_id")
     private Customer customer;
@@ -50,6 +54,26 @@ public class Address {
                 .payment(payment)
                 .id(id)
                 .addrNick(addrNick)
+                .request(request)
+                .name(customer.getCustName())
+                .hp(customer.getCustHp())
                 .build();
+    }
+
+    public void updateAddress(PostAddressDto dto){
+        int state ;
+        if(dto.getBasicState()){
+            state = 1;
+        } else {
+            state = 0;
+        }
+        this.addrNick = dto.getAddrNick();
+        this.request = dto.getRequest();
+        this.address = dto.getAddr();
+        this.basicState = state;
+    }
+
+    public void offBasic() {
+        this.basicState = 0;
     }
 }
