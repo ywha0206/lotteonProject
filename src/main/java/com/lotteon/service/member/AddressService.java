@@ -114,4 +114,20 @@ public class AddressService {
         }
         addressRepository.delete(address.get());
     }
+
+    public void updateAddressState(Long id) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        Optional<Address> address = addressRepository.findById(id);
+
+        Optional<Address> addressState = addressRepository.findByCustomerAndBasicState(customer,1);
+        addressState.get().offBasic();
+        addressRepository.save(addressState.get());
+
+        address.get().updateStateTrue();
+        addressRepository.save(address.get());
+
+    }
 }

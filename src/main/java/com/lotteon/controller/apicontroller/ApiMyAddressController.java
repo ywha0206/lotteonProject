@@ -31,6 +31,14 @@ public class ApiMyAddressController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/address")
+    public ResponseEntity<?> patchAddress(
+            @RequestBody PostAddressDto dto
+    ){
+        addressService.updateAddressState(dto.getId());
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/address")
     public ResponseEntity<?> deleteAddress(
             @RequestParam Long id

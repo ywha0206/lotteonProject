@@ -19,7 +19,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 public class AdminCsController {
-
+    @ModelAttribute
+    public void pageIndex(Model model) {
+        model.addAttribute("config",getSideValue());
+    }
     private String getSideValue() {
         return "cs";  // 실제 config 값을 여기에 설정합니다.
     }
@@ -37,21 +40,21 @@ public String faqs(Model model, Pageable pageable) {
     List<ArticleDto> faqs = faqsPage.getContent();
     System.out.println("faqs = " + faqs);
     model.addAttribute("faqs", faqs);
-    model.addAttribute("config", getSideValue());
+    model.addAttribute("active","faqs");
 
     return "pages/admin/cs/faq/list";
 }
 
     @GetMapping("/faq")
     public String faq(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","faqs");
         return "pages/admin/cs/faq/view";
     }
 
 
     @GetMapping("/faq/write")
     public String faqWrite(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","faqs");
         return "pages/admin/cs/faq/write";
     }
 
@@ -61,7 +64,7 @@ public String faqs(Model model, Pageable pageable) {
     public String faqView(@PathVariable Long id, Model model) {
         ArticleDto faq = faqService.getFaqById(id); // 서비스에서 FAQ 가져오기
         model.addAttribute("faq", faq); // 모델에 FAQ 데이터 추가
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","faqs");
         return "pages/admin/cs/faq/view"; // 상세보기 페이지로 이동
     }
 
@@ -69,13 +72,13 @@ public String faqs(Model model, Pageable pageable) {
 
     @GetMapping("/faq/modify")
     public String faqModify(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","faqs");
         return "pages/admin/cs/faq/modify";
     }
 
     @GetMapping("/qnas")
     public String qnas(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","qnas");
         return "pages/admin/cs/qna/list";
     }
 
@@ -87,19 +90,19 @@ public String faqs(Model model, Pageable pageable) {
 
     @GetMapping("/qna")
     public String qnaView(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","qnas");
         return "pages/admin/cs/qna/view";
     }
 
     @GetMapping("/qna/write")
     public String qnaWrite(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","qnas");
         return "pages/admin/cs/qna/write";
     }
 
     @GetMapping("/recruits")
     public String recruits(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","recruits");
         return "pages/admin/cs/recruit/list";
     }
    /* // FAQ 작성

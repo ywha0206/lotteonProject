@@ -99,7 +99,7 @@ public class CustomerService {
     }
 
     public int updateCustomerPoint(Customer customer) {
-        List<Point> points = pointRepository.findAllByCustId(customer.getId());
+        List<Point> points = pointRepository.findAllByCustomer(customer);
         System.out.println(points);
         int point = 0;
 
@@ -117,7 +117,7 @@ public class CustomerService {
         LocalDate today = LocalDate.now().plusMonths(1);
 
         Point point = Point.builder()
-                .custId(customer.getId())
+                .customer(customer)
                 .pointType(1)
                 .pointEtc("회원가입 축하 포인트 적립")
                 .pointVar(1000)

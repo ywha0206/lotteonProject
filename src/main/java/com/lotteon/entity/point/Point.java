@@ -1,6 +1,7 @@
 package com.lotteon.entity.point;
 
 import com.lotteon.dto.responseDto.GetPointsDto;
+import com.lotteon.entity.member.Customer;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,8 +23,9 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cust_id")
-    private Long custId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cust_id")
+    private Customer customer;
 
     @Column(name = "order_id")
     private Long orderId;
@@ -85,6 +87,51 @@ public class Point {
                 .pointVar(pointVar)
                 .pointEtc(pointEtc)
                 .warningExpiration(warning)
+                .build();
+    }
+    public GetPointsDto toGetPointsDtoCustName() {
+        LocalDate today = LocalDate.now();
+
+        String order;
+        if(orderId==null){
+            order="주문번호없음";
+        } else {
+            order=String.valueOf(orderId);
+        }
+        String expiration;
+        if(pointType==2){
+            expiration = "사용기간만료";
+        } else {
+            expiration = String.valueOf(pointExpiration);
+        }
+        String warning;
+        if (ChronoUnit.DAYS.between(today, pointExpiration) < 7) {
+            warning = "active";
+        } else {
+            warning = "none-active";
+        }
+
+        String type ;
+        if(pointType==2){
+            type = "사용기간만료";
+        } else if(pointType==1){
+            type = "적립";
+        } else {
+            type = "사용";
+        }
+
+        return GetPointsDto.builder()
+                .id(id)
+                .orderId(order)
+                .rdate(pointRdate)
+                .pointExpiration(expiration)
+                .pointType(type)
+                .pointVar(pointVar)
+                .pointEtc(pointEtc)
+                .warningExpiration(warning)
+                .custName(customer.getCustName())
+                .custId(customer.getMember().getMemUid())
+                .point(customer.getCustPoint())
                 .build();
     }
 }
