@@ -2,6 +2,7 @@ package com.lotteon.service.member;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.dto.responseDto.cartOrder.GetOrderUserDto;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
@@ -137,5 +138,9 @@ public class CustomerService {
         return point;
     }
     //상훈 작업부분 포인트추가 끝
+
+    public GetOrderUserDto selectedOrderCustomer(){
+        return null;
+    }
 
 }

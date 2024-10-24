@@ -112,6 +112,8 @@ public class CartService {
                 break;
             }
         }
+
+
         if (existingCartItem != null) {
             int newQuantity = existingCartItem.getQuantity() + postCartDto.getQuantity();
             double newPrice = newQuantity * product.getProdPrice();
@@ -191,14 +193,13 @@ public class CartService {
         return cartDtoList;
     }
 
-    public Long deleteCartItem(Map<String, List<Long>> cartItemIds) {
-        List<Long> cartItems = cartItemIds.get("cartItemIds");
-        log.info("카트리스트 잘 뽑았나요?"+cartItems.toString());
-        Long deletedOption = cartItemOptionRepositoryImpl.deleteCartItemOptionsByCartItemId(cartItems);
+    public Long deleteCartItem(List<Long> cartItemIds) {
+
+        Long deletedOption = cartItemOptionRepositoryImpl.deleteCartItemOptionsByCartItemId(cartItemIds);
         log.info("카트아이템 옵션부터 삭제해야 돼 했니? "+deletedOption);
 
         if(deletedOption!=null){
-            Long deletedCount = cartItemRepositoryImpl.deleteCartItemsByCartItemId(cartItems);
+            Long deletedCount = cartItemRepositoryImpl.deleteCartItemsByCartItemId(cartItemIds);
             return deletedCount;
         }else{
             return null;
