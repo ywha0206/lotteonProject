@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -12,20 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @Log4j2
 public class AdminOrderController {
-
+    @ModelAttribute
+    public void pageIndex(Model model) {
+        model.addAttribute("config",getSideValue());
+    }
     private String getSideValue() {
         return "order";  // 실제 config 값을 여기에 설정합니다.
     }
 
     @GetMapping("/orders")
     public String orders(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","orders");
         return "pages/admin/order/list";
     }
 
     @GetMapping("/deliverys")
     public String deliverys(Model model) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","deliverys");
         return "pages/admin/order/delivery";
     }
 }

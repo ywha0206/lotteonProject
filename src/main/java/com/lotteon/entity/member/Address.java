@@ -76,4 +76,8 @@ public class Address {
     public void offBasic() {
         this.basicState = 0;
     }
+
+    public void updateStateTrue() {
+        this.basicState = 1;
+    }
 }

@@ -31,6 +31,11 @@ public class AdminCsNoticeController {
     private final NoticeService noticeService;
     private final CategoryArticleService categoryArticleService;
 
+    @ModelAttribute
+    public void pageIndex(Model model) {
+        model.addAttribute("config","cs");
+        model.addAttribute("active","notices");
+    }
     // 공지사항 목록 조회 (시간순 정렬 추가)
     @GetMapping("/notices")
     public String notices(Model model) {

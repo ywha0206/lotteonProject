@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,6 +31,11 @@ public class AdminCouponController {
         return "coupon";
     }
 
+    @ModelAttribute
+    public void pageIndex(Model model) {
+        model.addAttribute("config",getSideValue());
+    }
+
     @GetMapping("/coupons")
     public String coupons(
             Model model,
@@ -38,7 +44,7 @@ public class AdminCouponController {
             @RequestParam(name = "keyword", defaultValue = "0") String keyword
     ) {
 
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","coupons");
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
@@ -82,7 +88,7 @@ public class AdminCouponController {
             @RequestParam(name = "searchType", defaultValue = "0") String searchType,
             @RequestParam(name = "keyword", defaultValue = "0") String keyword
     ) {
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","issuearances");
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();

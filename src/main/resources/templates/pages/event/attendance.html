@@ -52,6 +52,8 @@
                     <img th:if="${days>=7}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
                     <img th:if="${days<7}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
                 </div>
+                <img th:if="${middle == true}" th:src="@{/images/event-stamp-on.png}" style="height: 200px; width: 200px; position: relative; top: -343px; left: -532px;">
+                <img th:if="${state == true}" th:src="@{/images/event-stamp-on.png}" style="height: 200px; width: 200px; position: relative; top: -343px; left: -523px;">
             </div>
             <div class="event-month">10월</div>
         </main>

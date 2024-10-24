@@ -151,7 +151,7 @@ public class EventService {
                 .pointVar(value)
                 .pointType(1)
                 .pointEtc("출석이벤트")
-                .custId(customer.getId())
+                .customer(customer)
                 .pointExpiration(today)
                 .build();
         pointRepository.save(point);
