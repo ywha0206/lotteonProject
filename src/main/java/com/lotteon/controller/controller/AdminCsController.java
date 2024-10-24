@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin/cs")
 @RequiredArgsConstructor
@@ -100,7 +102,7 @@ public String faqs(Model model, Pageable pageable) {
         model.addAttribute("config", getSideValue());
         return "pages/admin/cs/recruit/list";
     }
-    // FAQ 작성
+   /* // FAQ 작성
     @PostMapping("/faq/write")
     public String writeFaq(@RequestParam("faqCate") String category1,
                            @RequestParam("faqType") String category2,
@@ -112,6 +114,6 @@ public String faqs(Model model, Pageable pageable) {
         System.out.println("content = " + content);
         faqService.writeFaq(category1, category2, title, content);
         return "redirect:/admin/cs/faqs";
-    }
+    }*/
 
 }

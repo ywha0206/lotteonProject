@@ -34,7 +34,7 @@ public class FaqService {
     private final CategoryArticleService categoryArticleService;
     private final ModelMapper modelMapper;
 
-    public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
+   /* public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
         System.out.println("categoryName1 = " + categoryName1);
 
         // 1. CategoryArticleRepository에서 카테고리 이름으로 카테고리를 찾음
@@ -56,7 +56,7 @@ public class FaqService {
         // 3. FAQ 저장
         faqRepository.save(faq);  // DB에 저장
 
-    }
+    }*/
 
     // FAQ 목록 조회 (카테고리별)
     public Page<ArticleDto> getFaqs(CategoryArticle cate1, CategoryArticle cate2, int limit, Pageable pageable) {
@@ -91,7 +91,6 @@ public class FaqService {
         return faqPage.map(ArticleDto::fromEntity);
 
     }
-
 
 
     // FAQ 상세보기 기능 추가
