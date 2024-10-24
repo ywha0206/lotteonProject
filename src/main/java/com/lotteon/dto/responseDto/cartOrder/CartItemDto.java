@@ -16,9 +16,7 @@ import java.util.List;
 public class CartItemDto {
 
     private Long id;
-
-    private Cart cart;
-
+    private Long cartId;
     private int quantity;
 
 }

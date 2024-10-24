@@ -155,10 +155,10 @@
           <col style="width: 10%" />
           <col style="width: 25%" />
           <col style="width: 10%" />
-          <col style="width: 5%" />
           <col style="width: 10%" />
-          <col style="width: 5%" />
           <col style="width: 10%" />
+          <col style="width: 7%" />
+          <col style="width: 7%" />
           <col style="width: 10%" />
           <col style="width: 10%" />
         </colgroup>
@@ -208,41 +208,43 @@
         </tr>
       </table>
       <!-- .tb1-->
-      <button class="btnDel" id="btnDel"><a href="#">선택삭제</a></button>
-      <div class="total">
-        <table class="tb2">
-          <tr>
-            <th colspan="2">전체합계</th>
-          </tr>
-          <tr>
-            <td>상품수</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>상품금액</td>
-            <td>27,000</td>
-          </tr>
-          <tr>
-            <td>할인금액</td>
-            <td>-1,350</td>
-          </tr>
-          <tr>
-            <td>배송비</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td>전체주문금액</td>
-            <td>25,650</td>
-          </tr>
-          <tr>
-            <td>적립 포인트</td>
-            <td>270</td>
-          </tr>
-        </table>
+      <div class="total_yh">
+        <button class="btnDel" id="btnDel"><a href="#">선택삭제</a></button>
+        <div class="total">
+          <table class="tb2">
+            <tr>
+              <th colspan="2">전체합계</th>
+            </tr>
+            <tr>
+              <td>상품수</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>상품금액</td>
+              <td>27,000</td>
+            </tr>
+            <tr>
+              <td>할인금액</td>
+              <td>-1,350</td>
+            </tr>
+            <tr>
+              <td>배송비</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>전체주문금액</td>
+              <td>25,650</td>
+            </tr>
+            <tr>
+              <td>적립 포인트</td>
+              <td>270</td>
+            </tr>
+          </table>
         <!-- .tb2-->
         <div class="btn_order"><a th:href="@{/prod/order}" id="btnOrder">주문하기</a></div>
       </div>
-      <!-- .total-->
+        <!-- .total-->
+      </div>
     </main>
     <!-- main -->
   </div>
