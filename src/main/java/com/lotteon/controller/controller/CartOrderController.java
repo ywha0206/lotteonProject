@@ -1,12 +1,16 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.PostCartDto;
+import com.lotteon.dto.requestDto.PostCartSaveDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.GetOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.product.CartService;
-import com.lotteon.service.product.ProductService;
+import com.lotteon.service.product.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -29,6 +32,8 @@ public class CartOrderController {
 
     private final CartService cartService;
     private final CategoryProductService categoryProductService;
+    private final OrderService orderService;
+    private final CustomerService customerService;
 
     @GetMapping("/cart")
     public String join(Model model, HttpSession session) {
@@ -73,10 +78,25 @@ public class CartOrderController {
     }
 
     @GetMapping("/order")
-    public String order(Model model) {
+    public String order(Model model ,HttpSession session ) {
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
-
         model.addAttribute("category1", category1);
+
+        List<PostCartSaveDto> selectedProducts = (List<PostCartSaveDto>) session.getAttribute("selectedProducts");
+        log.info("주문서에서 선택한 상품 "+selectedProducts.toString());
+
+        UserOrderDto customer = customerService.selectedOrderCustomer();
+        log.info("유저 정보 "+customer.toString());
+
+
+        List<GetOrderDto> orders = orderService.selectedOrders(selectedProducts);
+        log.info("오더 정보 "+orders.toString());
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("customer", customer);
+
+
+
         return "pages/product/order";
     }
 

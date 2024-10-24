@@ -28,7 +28,7 @@ public class QFaq extends EntityPathBase<Faq> {
 
     public final StringPath faqContent = createString("faqContent");
 
-    public final DateTimePath<java.sql.Timestamp> faqRdate = createDateTime("faqRdate", java.sql.Timestamp.class);
+    public final DateTimePath<java.time.LocalDateTime> faqRdate = createDateTime("faqRdate", java.time.LocalDateTime.class);
 
     public final StringPath faqTitle = createString("faqTitle");
 

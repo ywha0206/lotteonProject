@@ -129,6 +129,8 @@ input:focus{outline: none;}
     height: 66px;
 }
 
+.tb1 > tbody > td > input[type="text"] {cursor: pointer;}
+
 .grade {
     text-indent: 6px;
     margin: 0 auto;
@@ -141,7 +143,13 @@ input:focus{outline: none;}
     appearance: none;
 }
 
-.condition {color: #00b050;}
+/*  회원 상태 (memState 정지,정상,휴면,탈퇴) */
+.condition {color: #00b050; cursor: pointer;}
+
+.stop{color:#67738e;} /* 정지 */
+.basic{color:#4075ff;} /* 정상 */
+.sleep{color:#b4c0d3;} /* 휴면 */
+.reave{color:#eb413f;} /* 탈퇴 */
 
 .td-admin input{
     border: none;
@@ -210,3 +218,95 @@ input:focus{outline: none;}
     font-weight: 600;
     text-decoration: underline;
 }
+
+
+/* popup 회원수정 */
+.popup .header-title{
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.popup .header-gubun {
+    height: 2px;
+    background-image: url(/images/Vector.png);
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+
+.popup::-webkit-scrollbar {
+    display: none;
+}
+
+/* tb4 style */
+.tb4 {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tb4 tr {
+
+}
+
+.tb4 th {
+    background-color: #F2F2F2;
+    width: 100px;
+    text-align: left;
+    padding-left: 10px;
+    height: 40px;
+}
+
+.tb4 td {
+    height: 40px;
+    padding-left: 10px;
+}
+
+.tb4 input {
+    border: 0.5px solid #BFBFBF;
+    height: 26px;
+    padding-left: 10px;
+    color: #808080;
+    outline: none;
+}
+
+.tb4 select {
+    border: 0.5px solid #BFBFBF;
+    height: 26px;
+    padding-left: 10px;
+    color: #808080;
+    outline: none;
+}
+
+.tb4 textarea {
+    border: 0.5px solid #BFBFBF;
+    height: auto;
+    min-height: 200px;
+    width: 90%;
+    outline: none;
+    padding: 10px;
+    color: #808080;
+}
+
+/*.btns {*/
+/*    width: 100%;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+
+/*}*/
+
+/*.btns button {*/
+/*    background-color: #00B050;*/
+/*    width: 100px;*/
+/*    height: 40px;*/
+/*    cursor: pointer;*/
+/*    color: white;*/
+/*    margin-top: 20px;*/
+/*    border: none;*/
+/*    outline: none;*/
+/*    &:hover {*/
+/*        opacity: 0.8;*/
+/*    }*/
+/*}*/
+
+
+
