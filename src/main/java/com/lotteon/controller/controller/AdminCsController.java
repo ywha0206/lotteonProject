@@ -8,10 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import java.util.List;
 
@@ -56,6 +55,18 @@ public String faqs(Model model, Pageable pageable) {
         return "pages/admin/cs/faq/write";
     }
 
+
+    // FAQ 상세 보기
+    @GetMapping("/faq/view/{id}")
+    public String faqView(@PathVariable Long id, Model model) {
+        ArticleDto faq = faqService.getFaqById(id); // 서비스에서 FAQ 가져오기
+        model.addAttribute("faq", faq); // 모델에 FAQ 데이터 추가
+        model.addAttribute("config", getSideValue());
+        return "pages/admin/cs/faq/view"; // 상세보기 페이지로 이동
+    }
+
+
+
     @GetMapping("/faq/modify")
     public String faqModify(Model model) {
         model.addAttribute("config", getSideValue());
@@ -91,7 +102,7 @@ public String faqs(Model model, Pageable pageable) {
         model.addAttribute("config", getSideValue());
         return "pages/admin/cs/recruit/list";
     }
-    // FAQ 작성
+   /* // FAQ 작성
     @PostMapping("/faq/write")
     public String writeFaq(@RequestParam("faqCate") String category1,
                            @RequestParam("faqType") String category2,
@@ -103,6 +114,6 @@ public String faqs(Model model, Pageable pageable) {
         System.out.println("content = " + content);
         faqService.writeFaq(category1, category2, title, content);
         return "redirect:/admin/cs/faqs";
-    }
+    }*/
 
 }

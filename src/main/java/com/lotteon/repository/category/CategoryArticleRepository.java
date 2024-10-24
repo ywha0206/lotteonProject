@@ -19,7 +19,7 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
 
     List<CategoryArticle> findAllByCategoryTypeAndCategoryLevel(int type, int level);
 
-    Optional<CategoryArticle> findByCategoryNameAndCategoryLevelAndCategoryType(String categoryName1, int i, int i1);
+
 }
 
 
