@@ -29,7 +29,7 @@ public class PointService {
 
         Customer customer = auth.getUser().getCustomer();
 
-        Page<Point> points = pointRepository.findAllByCustId(customer.getId(),pageable);
+        Page<Point> points = pointRepository.findAllByCustIdOrderByPointExpiration(customer.getId(),pageable);
         Page<GetPointsDto> dtos = points.map(v->v.toGetPointsDto());
 
         return dtos;
@@ -59,21 +59,21 @@ public class PointService {
         String eDate = keyword.substring(keyword.indexOf("~")+1);
         LocalDate startDate = LocalDate.parse(sDate);
         LocalDate endDate = LocalDate.parse(eDate);
-        Page<Point> points = pointRepository.findAllByCustIdAndPointRdateBetweenOrderByPointRdateAsc(customer.getId(),startDate,endDate,pageable);
+        Page<Point> points = pointRepository.findAllByCustIdAndPointRdateBetweenOrderByPointExpirationAsc(customer.getId(),startDate,endDate,pageable);
         return points;
     }
 
     private Page<Point> findAllByMonth(Pageable pageable, Customer customer, String keyword) {
         LocalDate today = LocalDate.now();
         LocalDate varDay = today.minusMonths(Integer.parseInt(keyword));
-        Page<Point> points = pointRepository.findAllByCustIdAndPointRdateBetweenOrderByPointRdateAsc(customer.getId(),varDay,today,pageable);
+        Page<Point> points = pointRepository.findAllByCustIdAndPointRdateBetweenOrderByPointExpirationAsc(customer.getId(),varDay,today,pageable);
         return points;
     }
 
     private Page<Point> findAllByDate(Pageable pageable, Customer customer, String keyword) {
         LocalDate today = LocalDate.now();
         LocalDate varDay = today.minusDays(Integer.parseInt(keyword));
-        Page<Point> points = pointRepository.findAllByCustIdAndPointRdateBetweenOrderByPointRdateAsc(customer.getId(),varDay,today,pageable);
+        Page<Point> points = pointRepository.findAllByCustIdAndPointRdateBetweenOrderByPointExpirationAsc(customer.getId(),varDay,today,pageable);
         return points;
     }
 }
