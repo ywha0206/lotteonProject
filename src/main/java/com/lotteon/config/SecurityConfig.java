@@ -60,7 +60,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .loginPage("/auth/login/view")  // 로그인 페이지 URL
                         .loginProcessingUrl("/auth/login")  // 로그인 인증 처리 URL (디비 처리)
                         .successHandler(customLoginFilter)
-                        .failureUrl("/auth/login?error=true")  // 로그인 실패 시 이동할 URL
+//                        .failureUrl("/auth/login?error=true")  // 로그인 실패 시 이동할 URL
                         .usernameParameter("userName")  // 사용자명 파라미터 이름
                         .passwordParameter("pwd")  // 비밀번호 파라미터 이름
                         .permitAll()  // 로그인 페이지는 인증 없이 접근 가능

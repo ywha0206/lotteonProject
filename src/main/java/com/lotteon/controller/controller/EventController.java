@@ -44,7 +44,6 @@ public class EventController {
     @GetMapping("/birth")
     public String birth(Model model) {
         eventService.issueCoupon();
-        model.addAttribute("birth", true);
-        return "index";
+        return "redirect:/index?birth=true";
     }
 }

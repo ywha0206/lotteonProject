@@ -50,7 +50,7 @@ public class AdminUserController {
 
         // 2-1. 회원목록 모델에 담아서 뷰에서 보기
         model.addAttribute("customers", cust2);
-        model.addAttribute("config", getSideValue());
+        model.addAttribute("active","user");
 
         // 3-1. 페이지네이션
         model.addAttribute("page",page);
