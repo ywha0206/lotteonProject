@@ -45,15 +45,21 @@ public class AdminUserController {
         List<GetAdminUserDTO> customers = authService.selectCustAll();
         log.info("민힁"+customers);
 
+        Page<GetAdminUserDTO> cust2 = authService.selectCustAll2(page);
+
         // 2. 회원목록 모델에 담아서 뷰에서 보기
-        model.addAttribute("customers", authService.selectCustAll());
-        model.addAttribute("active","user");
+
+        model.addAttribute("customers", cust2);
+        model.addAttribute("config", getSideValue());
+
 
         // 3. 페이지네이션
 
         model.addAttribute("page",page);
 //        model.addAttribute("totalPages",customers.getTotalPages());
-
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalPages",cust2.getTotalPages());
         // 6. 관리자 회원목록 으로 이동
         return "pages/admin/user/user";
     }
