@@ -113,10 +113,13 @@ input:focus{outline: none;}
 /*!* 결제 방법 *!*/
 .sub_tit4 {width: 418px; font-size: 16px; font-weight: 700;
     border-bottom: 1px solid #d9d9d9;}
-.tb4 input {margin-left: 40px; margin-top: 10px;}
-.tb4 input:nth-child(1) {margin-top: 20px;}
-.tb4 span{font-size: 14px;}
-.tb4 img {margin-top: 3px; margin-left: 5px;}
+.tb4 td{display: flex; margin-left: 30px;}
+.tb4 div{display: flex; flex-direction: column;}
+.tb4 div p{height: 30px; line-height: 30px; width: 100px;}
+.tb4 div:nth-of-type(2) p{width: 150px;}
+.tb4 img{margin-left: 5px; width: 50px;margin-top: 4px;}
+
+
 
 /* 전체합계 */
 .total {width: 291px; height: auto;
