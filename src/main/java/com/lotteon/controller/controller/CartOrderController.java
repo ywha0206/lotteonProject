@@ -7,6 +7,7 @@ import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.product.Cart;
+import com.lotteon.entity.product.OrderItem;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.product.CartService;
@@ -88,7 +89,6 @@ public class CartOrderController {
         UserOrderDto customer = customerService.selectedOrderCustomer();
         log.info("유저 정보 "+customer.toString());
 
-
         List<GetOrderDto> orders = orderService.selectedOrders(selectedProducts);
         log.info("오더 정보 "+orders.toString());
 
@@ -100,7 +100,12 @@ public class CartOrderController {
 
 
     @GetMapping("/order/complete")
-    public String orderComplete(Model model) {
+    public String orderComplete(Model model,HttpSession session) {
+
+        Long orderItemId = (Long) session.getAttribute("orderItemId");
+
+        orderService.selectedOrderComplete(orderItemId);
+
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
         model.addAttribute("category1", category1);
