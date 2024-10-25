@@ -8,6 +8,9 @@ import com.lotteon.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -79,4 +82,11 @@ public class AuthService implements UserDetailsService {
     }
 
 
+    public Page<GetAdminUserDTO> selectCustAll2(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Member> members = memberRepository.findAllByMemRoleOrderByIdDesc("customer",pageable);
+        Page<GetAdminUserDTO> dtos = members.map(v->v.toGetAdminUserDTO());
+
+        return dtos;
+    }
 }
