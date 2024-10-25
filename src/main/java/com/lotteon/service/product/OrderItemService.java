@@ -10,6 +10,7 @@ import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.product.OrderItemRepository;
 import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class OrderItemService {
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
 
-    public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto) {
+    public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session) {
         log.info("오더아이템 서비스 들어옴 ");
 
         Order order = orderService.insertOrder(orderDto);
@@ -73,8 +74,10 @@ public class OrderItemService {
             log.info("오더아이템디티오 엔티티로 변환 : "+savedorderItem);
 
             OrderItem returnorderItem= orderItemRepository.save(savedorderItem);
-
+            Long orderItemId = returnorderItem.getId();
             log.info("오더아이템 저장 성공 : "+returnorderItem);
+
+            session.setAttribute("orderItemId",orderItemId);
 
             if(returnorderItem==null){
                 return ResponseEntity.ok().body(false);

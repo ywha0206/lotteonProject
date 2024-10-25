@@ -53,14 +53,20 @@ public class ApiProductController {
 
 
     @PostMapping("/order")
-    public ResponseEntity order(@RequestBody PostOrderDto postOrderDto){
+    public ResponseEntity order(@RequestBody PostOrderDto postOrderDto, HttpSession session){
         log.info("컨트롤러에 들어왔나요?"+postOrderDto.toString());
+        List<PostCartSaveDto> selectedProducts = (List<PostCartSaveDto>) session.getAttribute("selectedProducts");
+        List<Long> cartItemIds = selectedProducts.stream().map(cartItemId -> cartItemId.getCartItemId()).toList();
+
+        log.info("카트 아이템 아이디 세션에 저장된 거 "+cartItemIds.toString());
 
         OrderDto orderDto = postOrderDto.getOrderDto();
         List<OrderItemDto> orderItemDto = postOrderDto.getOrderItemDto();
 
-        ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto);
+        ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session);
 
+        cartService.deleteCartItem(cartItemIds);
+        session.removeAttribute("selectedProducts");
         return orderItemResult;
     }
 
