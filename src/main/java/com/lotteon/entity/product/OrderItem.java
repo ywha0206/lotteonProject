@@ -3,6 +3,7 @@ package com.lotteon.entity.product;
 import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -38,9 +39,11 @@ public class OrderItem {
     private int total;
 
     @Column(name = "order_item_state1")
+    @ColumnDefault("0")
     private Boolean state1;
 
     @Column(name = "order_item_state2")
+    @ColumnDefault("0")
     private int state2;
 
     @Column(name = "order_item_discount")
