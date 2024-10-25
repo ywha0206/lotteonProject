@@ -17,19 +17,24 @@ public interface CustomerCouponRepository extends JpaRepository<CustomerCoupon, 
 
     List<CustomerCoupon> findAllByCoupon(Coupon coupon);
 
-    Page<CustomerCoupon> findAllByOrderByCouponStateAscCouponUDateDesc(Pageable pageable);
+//    Page<CustomerCoupon> findAllByOrderByCouponStateAscCouponUDateDesc(Pageable pageable);
 
     Page<CustomerCoupon> findAllByIdOrderByCouponStateAscCouponUDateDesc(Long id, Pageable pageable);
 
-    Page<CustomerCoupon> findAllByCouponOrderByCouponStateAscCouponUDateDesc(Coupon coupon, Pageable pageable);
+    Page<CustomerCoupon> findAllByCouponOrderByCouponStateAscIdDesc(Coupon coupon, Pageable pageable);
 
     Page<CustomerCoupon> findAllByCustomer(Customer customer, Pageable pageable);
 
-    Page<CustomerCoupon> findAllByCouponAndIdOrderByCouponStateAscCouponUDateDesc(Coupon coupon, long l, Pageable pageable);
+    Page<CustomerCoupon> findAllByCouponAndIdOrderByCouponStateAscIdDesc(Coupon coupon, long l, Pageable pageable);
 
-    Page<CustomerCoupon> findAllByCouponAndCouponIdOrderByCouponStateAscCouponUDateDesc(Coupon coupon, long l, Pageable pageable);
+    Page<CustomerCoupon> findAllByCouponAndCouponIdOrderByCouponStateAscIdDesc(Coupon coupon, long l, Pageable pageable);
 
-    Page<CustomerCoupon> findAllByCouponAndCustomerOrderByCouponStateAscCouponUDateDesc(Coupon coupon, Customer customer, Pageable pageable);
+    Page<CustomerCoupon> findAllByCouponAndCustomerOrderByCouponStateAscIdDesc(Coupon coupon, Customer customer, Pageable pageable);
 
     int countCustomerCouponsByCustomer(Customer customer);
+
+
+    Page<CustomerCoupon> findAllByOrderByCouponStateAscIdDesc(Pageable pageable);
+
+    Page<CustomerCoupon> findAllByIdOrderByCouponStateAscIdDesc(long l, Pageable pageable);
 }

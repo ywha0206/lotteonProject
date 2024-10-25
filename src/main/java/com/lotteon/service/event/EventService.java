@@ -4,11 +4,15 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.point.Coupon;
+import com.lotteon.entity.point.CustomerCoupon;
 import com.lotteon.entity.point.Point;
 import com.lotteon.repository.member.AttendanceEventRepository;
 import com.lotteon.repository.member.CustomerRepository;
+import com.lotteon.repository.point.CouponRepository;
+import com.lotteon.repository.point.CustomerCouponRepository;
 import com.lotteon.repository.point.PointRepository;
 import com.lotteon.service.member.CustomerService;
+import com.lotteon.service.point.CouponService;
 import com.lotteon.service.point.CustomerCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -32,6 +37,8 @@ public class EventService {
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
     private final CustomerCouponService customerCouponService;
+    private final CouponRepository couponRepository;
+    private final CustomerCouponRepository customerCouponRepository;
 
     public String updateEvent() {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
@@ -159,5 +166,28 @@ public class EventService {
         int points = customerService.updateCustomerPoint(customer);
         customer.updatePoint(points);
         customerRepository.save(customer);
+    }
+
+    public void issueCoupon() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Customer customer = auth.getUser().getCustomer();
+
+
+        Optional<Coupon> coupon = couponRepository.findById((long)7);
+        if(coupon.isEmpty()){
+            return;
+        }
+
+        CustomerCoupon customerCoupon = CustomerCoupon.builder()
+                .couponState(1)
+                .couponCnt(1)
+                .coupon(coupon.get())
+                .customer(customer)
+                .build();
+
+        customerCouponRepository.save(customerCoupon);
     }
 }

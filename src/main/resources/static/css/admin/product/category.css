@@ -109,7 +109,7 @@ li {list-style: none;}
 
 
 .navi2 {
-    border: 2px solid #dfdfdf;
+
     background-color: aliceblue;
 
 }
@@ -121,7 +121,7 @@ li {list-style: none;}
     display: flex;
     justify-content: space-between;
     padding-right: 5px;
-    background-color: aliceblue;
+    background-color: white;
     font-size: 16px;
 
     &:hover {
@@ -243,32 +243,31 @@ li {list-style: none;}
 .depth2 > li {
     font-size: 13px;
     padding-left: 30px;
-    background-color: ghostwhite;
+    background-color: white;
 }
 
 .depth3 > li {
     font-size: 13px;
     padding-left: 30px;
-    background-color: ivory;
+    background-color: rgb(248, 248, 248);
 }
 
 
 .depth3 {
     position: relative;
-    top: -133px;
+    top: -100px;
     left: 199px;
-    background-color: gainsboro;
     height: 0;
     /*width: 300px;*/
 }
 
-.depth2 {
+/*.depth2 {*/
 
-    background-color: gainsboro;
-    &:hover {
-        background-color: gainsboro;
-    }
-}
+/*    background-color: gainsboro;*/
+/*    &:hover {*/
+/*        background-color: gainsboro;*/
+/*    }*/
+/*}*/
 
 .add-category {
     display: flex;
@@ -298,7 +297,7 @@ li {list-style: none;}
     border: none;
     outline: none;
     padding: 20px;
-    background-color: antiquewhite;
+    background-color: floralwhite;
     color: black;
     margin-right: 20px;
     position: relative;

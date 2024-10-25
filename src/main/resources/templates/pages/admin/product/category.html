@@ -37,12 +37,12 @@
             </aside>
 
         </section>
-        <div class="advice-footer">
-            카테고리 메뉴 순서는 변경할때 드래그 앤 드롭으로 1차, 2차 카테고리 메뉴 이동 후 수정하기를 클릭합니다.
-        </div>
-        <div class="btn">
-            <button class="submit-btn" type="submit">수정하기</button>
-        </div>
+<!--        <div class="advice-footer">-->
+<!--            카테고리 메뉴 순서는 변경할때 드래그 앤 드롭으로 1차, 2차 카테고리 메뉴 이동 후 수정하기를 클릭합니다.-->
+<!--        </div>-->
+<!--        <div class="btn">-->
+<!--            <button class="submit-btn" type="submit">수정하기</button>-->
+<!--        </div>-->
     </div>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
@@ -139,6 +139,11 @@
 
     async function openThirdCategory(event) {
         let id = event.target.dataset.id
+        const allDepth3 = document.querySelectorAll('.cate2')
+        allDepth3.forEach(v=>{
+            v.style.backgroundColor = 'white'
+        })
+        event.target.style.backgroundColor = 'rgb(248, 248, 248)';
         const resetClass = document.querySelectorAll('.depth3')
         if (resetClass) {
             resetClass.forEach(v => v.innerHTML = ``)
