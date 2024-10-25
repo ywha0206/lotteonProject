@@ -63,6 +63,7 @@ public class BannerService {
                         .toList();
         return bannerList;
     }
+
     public boolean deleteBannersById(List<Long> bannerIds) {
         try {
             for(Long bannerId : bannerIds) {

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface  MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMemUid(String username);
     List<Member> findAllByMemRole(String role);
     Optional<Member> findByMemRole(String role);
