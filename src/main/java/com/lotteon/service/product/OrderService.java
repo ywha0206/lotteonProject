@@ -110,7 +110,5 @@ public class OrderService {
         return order;
     }
 
-    public void selectedOrderComplete(Long orderItemId) {
 
-    }
 }

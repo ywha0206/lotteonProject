@@ -2,10 +2,13 @@ package com.lotteon.service.product;
 
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Order;
 import com.lotteon.entity.product.OrderItem;
 import com.lotteon.entity.product.Product;
+import com.lotteon.repository.impl.OrderItemRepositoryImpl;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.product.OrderItemRepository;
 import com.lotteon.repository.product.OrderRepository;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +34,8 @@ public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
+    private final OrderItemRepositoryImpl orderItemRepositoryImpl;
+
 
     public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session) {
         log.info("오더아이템 서비스 들어옴 ");
@@ -40,7 +46,7 @@ public class OrderItemService {
         if(order==null){
             ResponseEntity.badRequest().body("로그인 해야 함");
         }
-
+        List<Long> orderItemIds = new ArrayList<>();
         for(OrderItemDto orderItem :orderItemDto){
             Optional<Product> optProduct = productRepository.findById(orderItem.getProductId());
 
@@ -77,12 +83,46 @@ public class OrderItemService {
             Long orderItemId = returnorderItem.getId();
             log.info("오더아이템 저장 성공 : "+returnorderItem);
 
-            session.setAttribute("orderItemId",orderItemId);
+            orderItemIds.add(orderItemId);
 
             if(returnorderItem==null){
                 return ResponseEntity.ok().body(false);
             }
         };
+
+        session.setAttribute("orderItemIds",orderItemIds);
         return ResponseEntity.ok().body(true);
+    }
+
+    public void selectedOrderComplete(List<Long> orderItemIds) {
+
+        log.info("오더아이템 컨트롤러에 들어오는지 확인 "+orderItemIds);
+        List<OrderItem> orderItems = orderItemRepositoryImpl.selectOrderItemsByOrderId(orderItemIds);
+        log.info("오더아이템 임플 결과 "+orderItems);
+
+        for(OrderItem orderItem : orderItems){
+
+            orderItem.getProduct().getProdListImg();
+            orderItem.getProduct().getProdName();
+            orderItem.getProduct().getProdSummary();
+            orderItem.getProduct().getProdPrice();
+            orderItem.getDiscount();
+            orderItem.getQuantity();
+            orderItem.getTotal();
+
+        }
+        Order order = orderItems.get(0).getOrder();
+
+
+        ResponseOrderDto responseOrderDto = ResponseOrderDto.builder()
+                .orderId(order.getId())
+                .custName(order.getCustomer().getCustName())
+                .custHp(order.getCustomer().getCustHp())
+                .OrderTotal(order.getOrderTotal())
+                .receiverName(order.getReceiverName())
+                .receiverHp(order.getReceiverHp())
+                .receiverAddr(order.getReceiverAddr())
+                .build();
+
     }
 }
