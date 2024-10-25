@@ -70,9 +70,10 @@ input:focus{outline: none;}
 
 /* tb1 */
 .tb1 {width: 797px; height: auto; border-top: 2.5px solid #000; margin: 0 auto; margin-top: 20px; border-collapse: collapse;}
-.tb1 th{height: 49px; border-bottom: 1px solid #bfbfbf;}
-.tb1 td{text-align: center; height: 101px; border-bottom: 1px solid #bfbfbf; font-size: 14px;}
-.img {display: flex; align-items: center;}
+.tb1 tr{ border-bottom: 1px solid #bfbfbf;}
+.tb1 th{height: 49px; text-align: center; }
+.tb1 td{text-align: center; height: 101px; font-size: 14px;}
+.img {display: flex; align-items: center; display: inline-block;}
 .img > img {margin-left: 20px; margin-right: 15px;}
 .name_desc > span {display: flex; flex-direction: column; line-height: 1px;}
 .name_desc > span:last-child {color: #7f7f7f;}
@@ -89,53 +90,48 @@ input:focus{outline: none;}
 
 /* 주문 정보 */
 .order_info {width: 450px; height: auto; float: left; margin: 21px 0 0 12px;}
+.order_info h2 {margin-bottom: 20px; text-indent: 10px; height: 30px; margin-top: 30px;}
 
 /* 배송 정보 */
 .sub_tit2 {width: 418px; font-size: 16px; font-weight: 700;
-           border-bottom: 1px solid #d9d9d9;
-           margin: 21px 0 0 12px;
-}
-.tb2 {width: 430px; height: auto; margin: 0 auto;}
+           border-bottom: 1px solid #d9d9d9;}
+.tb2 {width: 430px; height: auto; margin-left: 20px;}
 .tb2 td > input {width: 170px; height: 21px; margin-top: 3px;}
 .addr1, .addr2 {width: 317px !important; height: 21px;}
 .btn_zip {width: 71px; height: 30px; border: 1px solid #bfbfbf; background-color: #d9d9d9; font-size: 14px;}
 
 /* 할인 정보 */
 .sub_tit3 {width: 418px; font-size: 16px; font-weight: 700;
-    border-bottom: 1px solid #d9d9d9;
-    margin: 21px 0 0 12px;
-}
-.tb3 span {font-size: 14px; line-height: 17px; margin-left: 12px; color: #808080;}
+    border-bottom: 1px solid #d9d9d9;}
+.tb3 span {font-size: 14px; line-height: 17px; color: #808080;}
 .tb3 span:nth-of-type(1),.tb3 span:nth-of-type(2) {color: #000;}
-.point {width: 115px; height: 25px; margin-left: 60px; }
+.point {width: 115px; height: 25px; margin-left: 30px; }
 .btn_point {width: 71px; height: 30px; border: 1px solid #bfbfbf; background-color: #d9d9d9; font-size: 14px;}
-.tb3 {font-size: 16px;}
+.tb3 {font-size: 16px; margin-left: 20px;}
+.usedPoint{margin-right: 20px;}
 
-/* 결제 방법 */
+/*!* 결제 방법 *!*/
 .sub_tit4 {width: 418px; font-size: 16px; font-weight: 700;
-    border-bottom: 1px solid #d9d9d9;
-    margin: 21px 0 0 12px;
-}
+    border-bottom: 1px solid #d9d9d9;}
 .tb4 input {margin-left: 40px; margin-top: 10px;}
 .tb4 input:nth-child(1) {margin-top: 20px;}
 .tb4 span{font-size: 14px;}
 .tb4 img {margin-top: 3px; margin-left: 5px;}
 
 /* 전체합계 */
-.total {width: 291px; height: 294px; 
+.total {width: 291px; height: auto;
         border: 2px solid #d9d9d9; float: right;
-        margin-right: 16px; margin-top: 32px;
+         margin-top: 50px; margin-left: 40px;
+    padding: 30px 30px;
 }
-.tb5 {width: 277px; height: auto; margin: 14px 0 0 12px;}
-.tb5 th{text-align: left; font-size: 16px;
-        font-weight: 700; border-bottom: 1px solid #d9d9d9; 
-}
+.tb5 {width: 277px; height: auto; margin-bottom: 30px;}
+.tb5 th{text-align: left; font-size: 16px; height: 40px;
+        font-weight: 700;}
 .tb5 td {font-size: 14px; height: 25px;}
 .tb5 tr:nth-of-type(7) > td:last-child {color: #c00000;}
 
 .btn_order {width: 198px; height: 41px; 
-            border: none; color: #fff; margin: 25px 0 0 47px;
-            background-color: #cc3434;        
-}
+            border: none; color: #fff;
+            background-color: #cc3434;margin-left: 12px;}
 
 .btn_order > a {font-size: 20px;}

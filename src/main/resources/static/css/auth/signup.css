@@ -2,6 +2,7 @@
     width: 1200px;
     margin: 0 auto;
 }
+main{justify-content:center!important;}
 
 .header-title{
     margin-top: 50px;
@@ -41,6 +42,7 @@
     border: 2px solid #dcdcdc;
     background-color: #f2f2f2;
 }
+div.content>ol{ list-style: decimal!important;}
 
 .content::-webkit-scrollbar {
     display: none;

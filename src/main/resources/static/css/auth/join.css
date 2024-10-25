@@ -27,7 +27,7 @@
     width: 850px;
     margin: 0 auto;
     margin-top: 80px;
-    gap: 80px;
+    justify-content: space-around;
 }
 
 #join-container .main > .box {

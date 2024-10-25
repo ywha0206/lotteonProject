@@ -24,7 +24,13 @@ public class QAttendanceEvent extends EntityPathBase<AttendanceEvent> {
 
     public final NumberPath<Integer> attendanceDays = createNumber("attendanceDays", Integer.class);
 
+    public final NumberPath<Integer> attendanceMiddleState = createNumber("attendanceMiddleState", Integer.class);
+
     public final NumberPath<Integer> attendanceSequence = createNumber("attendanceSequence", Integer.class);
+
+    public final NumberPath<Integer> attendanceState = createNumber("attendanceState", Integer.class);
+
+    public final NumberPath<Integer> attendanceToday = createNumber("attendanceToday", Integer.class);
 
     public final QCustomer customer;
 

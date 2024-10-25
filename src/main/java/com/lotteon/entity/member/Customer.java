@@ -57,6 +57,8 @@ public class Customer {
     @Column(name = "cust_grade")
     private String custGrade; // 사용자 등급 (VVIP, VIP, Gold, Silver, Family)
 
+
+
     @OneToOne(mappedBy = "customer")
     @ToString.Exclude
     private AttendanceEvent attendanceEvent;

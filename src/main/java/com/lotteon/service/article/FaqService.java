@@ -34,13 +34,17 @@ public class FaqService {
     private final CategoryArticleService categoryArticleService;
     private final ModelMapper modelMapper;
 
-    public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
+   /* public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
+        System.out.println("categoryName1 = " + categoryName1);
+
         // 1. CategoryArticleRepository에서 카테고리 이름으로 카테고리를 찾음
-        CategoryArticle category1 = categoryArticleRepository.findByCategoryName(categoryName1)
+        CategoryArticle category1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(categoryName1,1,2)
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다: " + categoryName1));
-        CategoryArticle category2 = categoryArticleRepository.findByCategoryName(categoryName2)
+        CategoryArticle category2 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(categoryName2,2,2)
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 2를 찾을 수 없습니다: " + categoryName2));
 
+        System.out.println("category1 = " + category1.getCategoryId());
+        System.out.println("category2 = " + category2.getCategoryId());
         // 2. Faq 엔티티 생성 및 저장
         Faq faq = Faq.builder()
                 .cate1(category1)
@@ -52,7 +56,7 @@ public class FaqService {
         // 3. FAQ 저장
         faqRepository.save(faq);  // DB에 저장
 
-    }
+    }*/
 
     // FAQ 목록 조회 (카테고리별)
     public Page<ArticleDto> getFaqs(CategoryArticle cate1, CategoryArticle cate2, int limit, Pageable pageable) {
@@ -80,9 +84,21 @@ public class FaqService {
     }
 
 
+    public Page<ArticleDto> getAllFaqs(Pageable pageable) {
+        Page<Faq> faqPage = faqRepository.findAll(pageable);
+        System.out.println("faqPage.getContent() = " + faqPage.getContent());
+
+        return faqPage.map(ArticleDto::fromEntity);
+
+    }
 
 
-
-
+    // FAQ 상세보기 기능 추가
+    public ArticleDto getFaqById(Long id) {
+        // ID를 통해 FAQ 조회
+        return faqRepository.findById(id)
+                .map(ArticleDto::fromEntity) // DTO로 변환
+                .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다."));
+    }
 
 }

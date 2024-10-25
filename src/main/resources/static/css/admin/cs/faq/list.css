@@ -47,15 +47,22 @@ td {
   padding: 0 12px;
 }
 
-.button--delete {
-  width: 100px;
-  height: 40px;
-  background: #cfcfcf;
-  border: 0;
-  color: white;
-  font-weight: 700;
+/* 삭제 버튼과 수정 버튼을 텍스트처럼 보이게 설정 */
+.delete-btn, .modify-btn {
+  background: none;
+  border: none;
+  color: black;
+  text-decoration: none;
   cursor: pointer;
+  font-size: 14px;
+  display: block;  /* 한 줄에 하나씩 표시 */
+  margin-bottom: 5px;  /* 버튼 사이 간격 추가 */
 }
+
+.delete-btn:hover, .modify-btn:hover {
+  text-decoration: underline;  /* 호버 시 밑줄 표시 */
+}
+
 
 .button--write {
   width: 100px;

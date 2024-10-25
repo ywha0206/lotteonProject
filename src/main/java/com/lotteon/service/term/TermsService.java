@@ -1,9 +1,12 @@
 package com.lotteon.service.term;
 
+import com.lotteon.dto.requestDto.PostTermsDTO;
+import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,15 +38,12 @@ public class TermsService {
 
 
     public List<GetTermsResponseDto> selectTerms(String termsType) {
-        List<Terms> terms = termsRepository.findAllByTermsType(termsType);
-        System.out.println("Terms list: " + terms);
+        List<Terms> terms = termsRepository.findAllByTermsTypeContains(termsType);
 
         // List<Terms> -> List<GetTermsResponseDto>
         List<GetTermsResponseDto> getTermsResponseDtoList = terms.stream()
                 .map(term -> modelMapper.map(term, GetTermsResponseDto.class))
                 .collect(Collectors.toList());
-
-        System.out.println("DTO List: " + getTermsResponseDtoList);
         return getTermsResponseDtoList;
     }
 
@@ -57,6 +58,21 @@ public class TermsService {
 //                .collect(Collectors.toList());
 //    }
 
+    public Terms modifyTerms(PostTermsDTO postTermsDTO) {
+        Terms terms = termsRepository.findById(postTermsDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("terms not found"));
 
+        terms.setTermsContent(postTermsDTO.getTermsContent());
+
+        return termsRepository.save(terms);
+    }
+
+    public List<GetTermsResponseDto> selectAllTerms() {
+        List<Terms> terms = termsRepository.findAll();
+        System.out.println("Terms list: " + terms);
+        return terms.stream()
+                .map(Entity -> modelMapper.map(Entity, GetTermsResponseDto.class))
+                .toList();
+    }
 }
 

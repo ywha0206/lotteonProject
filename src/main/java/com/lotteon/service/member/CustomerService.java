@@ -1,10 +1,11 @@
 package com.lotteon.service.member;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
-import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Point;
 
 import com.lotteon.repository.member.AttendanceEventRepository;
@@ -16,6 +17,7 @@ import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,7 +99,7 @@ public class CustomerService {
     }
 
     public int updateCustomerPoint(Customer customer) {
-        List<Point> points = pointRepository.findAllByCustId(customer.getId());
+        List<Point> points = pointRepository.findAllByCustomer(customer);
         System.out.println(points);
         int point = 0;
 
@@ -115,7 +117,7 @@ public class CustomerService {
         LocalDate today = LocalDate.now().plusMonths(1);
 
         Point point = Point.builder()
-                .custId(customer.getId())
+                .customer(customer)
                 .pointType(1)
                 .pointEtc("회원가입 축하 포인트 적립")
                 .pointVar(1000)
@@ -124,6 +126,36 @@ public class CustomerService {
 
         return point;
     }
+
+    public int findByCustomer() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Customer customer = auth.getUser().getCustomer();
+        int point = customer.getCustPoint();
+        return point;
+    }
     //상훈 작업부분 포인트추가 끝
+
+    public UserOrderDto selectedOrderCustomer(){
+
+        MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = auth.getUser();
+        String address = member.getCustomer().getCustAddr();
+        String[] addr = address.split("/");
+
+        UserOrderDto user = UserOrderDto.builder()
+                                        .memUid(member.getMemUid())
+                                        .custName(member.getCustomer().getCustName())
+                                        .custHp(member.getCustomer().getCustHp())
+                                        .custZip(addr[0])
+                                        .custAddr1(addr[1])
+                                        .custAddr2(addr[2])
+                                        .build();
+
+
+        return user;
+    }
 
 }

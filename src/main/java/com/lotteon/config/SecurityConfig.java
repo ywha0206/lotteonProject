@@ -42,11 +42,17 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/admin/config/**").hasRole("admin")
 
                         .requestMatchers("/admin/cs/**").hasRole("admin")
-                        .requestMatchers("/my/**").authenticated()
+                        .requestMatchers("/my/**").hasRole("customer")
+                        .requestMatchers("/event/**").hasRole("customer")
 //                        .requestMatchers(HttpMethod.GET,"prod/order/**").authenticated()
 //                        .requestMatchers(HttpMethod.GET,"prod/cart/**").authenticated()
-                        .requestMatchers("/**","/event/**","/error/**", "/file/**", "/auth/**","/cs/**", "/company/**", "/prod/**","/policy/**").permitAll()
+                        .requestMatchers("/**","/error/**", "/file/**", "/auth/**","/cs/**", "/company/**", "/prod/**","/policy/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exection -> exection
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendRedirect("/"); // Redirect to main page on access denial
+                        })
                 )
                 .formLogin(login -> login
                         .loginPage("/auth/login/view")  // 로그인 페이지 URL
