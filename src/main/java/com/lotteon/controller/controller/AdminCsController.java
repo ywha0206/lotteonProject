@@ -1,7 +1,9 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.ArticleDto;
+import com.lotteon.dto.requestDto.PostRecruitDto;
 import com.lotteon.service.article.FaqService;
+import com.lotteon.service.article.RecruitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -14,11 +16,18 @@ import java.util.List;
 
 import java.util.List;
 
+/*
+*  이름 : 이상훈
+*  날짜 : 2024-10-25
+*  작업내용 : 채용목록 불러오기/ 페이징/ 검색
+* */
+
 @Controller
 @RequestMapping("/admin/cs")
 @RequiredArgsConstructor
 @Log4j2
 public class AdminCsController {
+    
     @ModelAttribute
     public void pageIndex(Model model) {
         model.addAttribute("config",getSideValue());
@@ -27,6 +36,7 @@ public class AdminCsController {
         return "cs";  // 실제 config 값을 여기에 설정합니다.
     }
     private final FaqService faqService;
+    private final RecruitService recruitService;
 
 
 /*    @GetMapping("/index")
@@ -101,8 +111,26 @@ public String faqs(Model model, Pageable pageable) {
     }
 
     @GetMapping("/recruits")
-    public String recruits(Model model) {
+    public String recruits(
+            Model model,
+            @RequestParam(value = "page",defaultValue = "0") int page,
+            @RequestParam(value = "searchType",defaultValue = "0") String searchType,
+            @RequestParam(value = "keyword",defaultValue = "0") String keyword
+
+    ) {
         model.addAttribute("active","recruits");
+        Page<PostRecruitDto> recruits;
+        if(!searchType.equals("0")&&!keyword.equals("0")) {
+            recruits = recruitService.findAllBySearch(searchType,keyword,page);
+        } else {
+            recruits = recruitService.findAll(page);
+        }
+        model.addAttribute("recruits", recruits);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", recruits.getTotalPages());
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
+
         return "pages/admin/cs/recruit/list";
     }
     // FAQ 작성
