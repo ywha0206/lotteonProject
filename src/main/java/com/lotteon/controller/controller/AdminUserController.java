@@ -24,6 +24,7 @@ public class AdminUserController {
 
     private final AuthService authService;
     private final PointService pointService;
+
     @ModelAttribute
     public void pageIndex(Model model) {
         model.addAttribute("config",getSideValue());
@@ -41,28 +42,29 @@ public class AdminUserController {
             @RequestParam(name = "keyword", defaultValue = "0") String keyword
 
     ) {
-        // 1. 회원 목록 customers에 담기
+        // 1-1. 회원 목록 customers에 담기
         List<GetAdminUserDTO> customers = authService.selectCustAll();
         log.info("민힁"+customers);
 
         Page<GetAdminUserDTO> cust2 = authService.selectCustAll2(page);
 
-        // 2. 회원목록 모델에 담아서 뷰에서 보기
-
+        // 2-1. 회원목록 모델에 담아서 뷰에서 보기
         model.addAttribute("customers", cust2);
         model.addAttribute("config", getSideValue());
 
-
-        // 3. 페이지네이션
-
+        // 3-1. 페이지네이션
         model.addAttribute("page",page);
-//        model.addAttribute("totalPages",customers.getTotalPages());
+        // model.addAttribute("totalPages",customers.getTotalPages());
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("totalPages",cust2.getTotalPages());
+
         // 6. 관리자 회원목록 으로 이동
         return "pages/admin/user/user";
     }
+
+
+
 
     // 2. 관리자 포인트 관리
     @GetMapping("/point")
@@ -85,8 +87,6 @@ public class AdminUserController {
         model.addAttribute("page",page);
         model.addAttribute("searchType",searchType);
         model.addAttribute("keyword",keyword);
-
-
 
         return "pages/admin/user/point";
     }

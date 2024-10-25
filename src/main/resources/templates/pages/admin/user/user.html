@@ -73,10 +73,14 @@
                     <td th:text="${cust.memUid}">아이디</td>
                     <td th:text="${cust.custName}">이름</td>
                     <td th:text="${cust.custGender}">성별</td>
-
-
+<!--                    <td th:text="${cust.custGender?'남':'여'}">성별</td>-->
+<!--                    <td th:if="${cust.custGender == 'false'}" th:data-id="${cust.custGender}">남</td>-->
+<!--                    <td th:if="${cust.custGender == 'true'}" th:data-id="${cust.custGender}">여-->
+<!--                    <td th:if="${cust.custGender == 0}" >남</td>-->
+<!--                    <td th:if="${cust.custGender == 1}">여</td>-->
+                    <!-- 회원 등급 (5가지 - VVIP, VIP, Gold, Silver, Family) -->
                     <td>
-                        <select name="search" class="grade usergrade" th:data-id="${cust.memUid}">
+                        <select name="search" class="grade custgrade" th:data-id="${cust.memUid}">
                             <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
                             <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
                             <option value="Gold" th:selected="${cust.custGrade}=='Gold'">Gold</option>
@@ -85,17 +89,12 @@
                         </select>
                     </td>
 
-
-
                     <td th:text="${cust.custPoint}">포인트</td>
                     <td th:text="${cust.custEmail}">이메일</td>
                     <td th:text="${cust.custHp}">휴대폰</td>
                     <td th:text="${cust.memRdate}">가입일</td>
-<!--                    <td th:text="${cust.memState}">상태</td>-->
-<!--                    <td onclick="stateChanger(event)" th:data-id="${cust.memUid}">관리</td>-->
-                    <!-- -->
-<!--                    <td class="condition" onclick="stateChanger(event)" th:data-id="${cust.memState}">정상</td>-->
-                    <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition stop">정지</td>
+                    <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
+                    <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition stop">중지</td>
                     <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition basic">정상</td>
                     <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition sleep">휴면</td>
                     <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
@@ -107,7 +106,7 @@
                 </tr>
                 </tbody>
 
-            </table><!-- .tb1 .ㄴuser-->
+            </table><!-- .tb1 .user-->
 
             <div class="btns">
                 <button class="delete-btn">선택수정</button>
@@ -174,7 +173,7 @@
                         <td><input readonly value="${cust.custGender}"></td>
                     </tr>
                     <td>
-                        <select name="search" class="grade usergrade" th:data-id="${cust.memUid}">
+                        <select name="search" class="grade custgrade" th:data-id="${cust.memUid}">
                             <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
                             <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
                             <option value="Gold" th:selected="${cust.custGrade}=='Gold'">Gold</option>
