@@ -44,26 +44,12 @@
             <input type="text" placeholder="키워드 검색">
         </div>
         <div class="recruit-table" data-aos="fade-up">
-            <a th:href="@{/apply/beauty-md}" class="recruit-card" data-aos="flip-left">
+            <a th:each="recruit : ${recruits}" class="recruit-card" data-aos="flip-left">
                 <div class="recruit-info">
-                    <h3>뷰티 (백화점, 명품) MD</h3>
-                    <span>영업 | MD | 경력 6~12년 | 정규직 | 롯데커머스 삼성오피스</span>
+                    <h3 th:text="${recruit.title}">뷰티 (백화점, 명품) MD</h3>
+                    <span th:text="${recruit.department} + ' | ' + ${recruit.career} + ' | ' + ${recruit.type} + ' | 기간 : ' + ${recruit.sdate} + ' ~ ' + ${recruit.edate}">영업 | MD | 경력 6~12년 | 정규직 | 롯데커머스 삼성오피스</span>
                 </div>
-                <div class="status">상시채용</div>
-            </a>
-            <a th:href="@{/apply/performance-marketer}" class="recruit-card" data-aos="flip-left">
-                <div class="recruit-info">
-                    <h3>퍼포먼스마케터 (Paid 광고)</h3>
-                    <span>마케팅 | 경력 4~12년 | 정규직 | 롯데커머스 삼성오피스</span>
-                </div>
-                <div class="status">상시 채용</div>
-            </a>
-            <a th:href="@{/apply/it-recruit}" class="recruit-card" data-aos="flip-left">
-                <div class="recruit-info">
-                    <h3>IT 인재 영입(신입)</h3>
-                    <span>IT | 경력 1~2년 | 정규직 | 롯데월드타워</span>
-                </div>
-                <div class="status">상시 채용</div>
+                <div th:if="${recruit.state == 1}" class="status">모집중</div>
             </a>
         </div>
     </section>
