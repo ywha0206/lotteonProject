@@ -46,9 +46,10 @@
 }
 
 .asideBg{
-    background-color: #f2f4f5;
+    background-color: #303644;
     border-radius: 10px;
     text-align: center;
+    color: white;
 }
 
 /*#sidebar::before {*/

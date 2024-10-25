@@ -29,3 +29,7 @@ main {
 #wrap > #navi {
     width: 800px;
 }
+
+.admin-btn{
+    border-radius: 5px;
+}

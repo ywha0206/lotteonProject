@@ -38,26 +38,29 @@ li {list-style: none;}
 }
 
 .order-search select {
-    border: 2px solid #BFBFBF;
+    border: 1px solid #BFBFBF;
     width: 108px;
     height: 32px;
     cursor: pointer;
     outline: none;
+    border-radius: 5px;
 }
 
 .order-search input {
-    border: 2px solid #BFBFBF;
+    border: 1px solid #BFBFBF;
     width: 108px;
     height: 32px;
     outline: none;
+    border-radius: 5px;
 }
 
 .order-search button {
-    border: 2px solid #BFBFBF;
-    width: 108px;
-    height: 32px;
+    background-color: #303644;
+    color: white;
+    width: 62px;
     cursor: pointer;
-    outline: none;
+    border-radius: 5px;
+    height: 30px;
 }
 
 .tb1 {

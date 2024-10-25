@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>공지사항 목록</title>
+
   <link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
   <link rel="stylesheet" th:href="@{/css/basic.css}">
-</head>
-<body>
+
 <header th:replace="layout/admin/header.html"></header>
-<main>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
   <aside th:replace="layout/admin/aside.html"></aside>
   <section id="admin-product-list" class="container">
     <div id="search_input">
@@ -202,5 +197,4 @@
     });
   });
 </script>
-</body>
-</html>
+

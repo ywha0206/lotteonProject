@@ -3,7 +3,7 @@
 <link rel="stylesheet" th:href="@{/css/reset.css}">
 <script th:src="@{/js/axios.min.js}"></script>
 <header th:replace="layout/admin/header.html"></header>
-<main style="margin: 0 auto; margin-bottom: 50px">
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
     <aside th:replace="layout/admin/aside.html"></aside>
     <div class="container">
         <div class="header">
@@ -21,14 +21,14 @@
 
         <section class="categoryProduct">
             <form th:action="@{/admin/coupon/issuearances}" method="get" class="order-search">
-                <select name="searchType">
+                <select name="searchType" class="admin-btn">
                     <option th:selected="${searchType=='id'}" value="id">발급번호</option>
                     <option th:selected="${searchType=='couponId'}" value="couponId">쿠폰번호</option>
                     <option th:selected="${searchType=='couponName'}" value="couponName">쿠폰명</option>
                     <option th:selected="${searchType=='customer'}" value="customer">사용자</option>
                 </select>
-                <input name="keyword" type="text" placeholder="검색어입력">
-                <button type="submit">검색</button>
+                <input class="admin-btn" name="keyword" type="text" placeholder="검색어입력">
+                <button class="" type="submit">검색</button>
             </form>
             <table class="tb1">
                 <tr>
