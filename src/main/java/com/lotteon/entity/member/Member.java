@@ -1,5 +1,6 @@
 package com.lotteon.entity.member;
 
+import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,4 +44,20 @@ public class Member {
 
     @OneToOne(mappedBy = "member")
     private Seller seller;
+
+    public GetAdminUserDTO toGetAdminUserDTO() {
+        return GetAdminUserDTO.builder()
+                .id(customer.getId()) // 번호
+                .memUid(String.valueOf(customer.getMember().getMemUid())) // 아이디
+                .custName(customer.getCustName()) // 이름
+                .custGender(customer.getCustGender()) // 성별
+                .custGrade(customer.getCustGrade()) // 등급
+                .custPoint(customer.getCustPoint()) // 포인트
+                .custEmail(customer.getCustEmail()) // 이메일
+                .custHp(customer.getCustHp()) // 휴대폰
+                .memRdate(memRdate) // 가입일
+                .memState(String.valueOf(memState))
+                .build();
+
+    }
 }

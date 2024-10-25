@@ -42,4 +42,11 @@ public class ApiProductController {
             return ResponseEntity.ok(true);
         }
     }
+
+
+    @PostMapping("/order")
+    public void order(){
+
+    }
+
 }
