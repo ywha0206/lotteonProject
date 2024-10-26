@@ -28,7 +28,17 @@
     text-decoration: none;
     color: black;
     font-size: 14px;
-    padding-left: 10px;
+    padding-left: 30px;
+    &:hover {
+        color: brown;
+    }
+}
+
+.menues.open a {
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    padding-left: 30px;
     &:hover {
         color: brown;
     }
@@ -41,14 +51,14 @@
 .navi li {
     padding: 20px 0;
     cursor: pointer;
-    /*padding-left: 20px;*/
+    padding-left: 30px;
     font-size: 15px;
+    margin-left: 20px;
 }
 
 .asideBg{
     background-color: #303644;
     border-radius: 10px;
-    text-align: center;
     color: white;
 }
 

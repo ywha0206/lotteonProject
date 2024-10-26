@@ -1,0 +1,80 @@
+<aside id="aside" style="margin: 0; margin-right: 30px">
+    <nav id="menu" class="menu">
+        <ul th:each="cate1 : ${category1}">
+            <li class="dep1">
+                <a href="#" class="m">
+                    <span onclick="openCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}" class="d1_tit">패션 · 의류 · 뷰티</span>
+                </a></li>
+        </ul>
+        <ul>
+
+            <li class="dep1">
+                <a href="#">
+                    <div class="dep2">
+                        <button onclick="closePopupCategory()">X</button>
+                        <ul class="cf flex" id="data-response">
+                        </ul>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </nav><!-- #memu .memu -->
+    <div class="memuBg"></div><!-- .memuBg -->
+    <div class="best">
+        <h3 class="tit_sty02 cf">
+            <img src="/images/ico_best.png" alt="베스트 상품 아이콘">
+            베스트 상품
+        </h3><!--.tit_sty02 -->
+        <ul class="bestRank">
+            <li><a href="#">
+                <div class="photo1">
+                    <img src="/images/144x120.png" class="bImg" alt="베스트 상품 이미지 1">
+                </div><!--.photo-->
+                <dl>
+                    <dt class="Btit cf">
+                        <p>베스트 상품명 1</p>
+                        <p class="oPrice cf">30,000원 </p>
+                        <em class="dis cf">10%&#8595;</em>
+                    </dt><!--.Btit-->
+                    <dd class="dPrice">
+                        27,000원
+                    </dd><!--.price-->
+                </dl>
+            </a></li>
+
+            <li class="cf"><a href="#">
+                <div class="photo2 pho">
+                    <img src="/images/60x60.png" class="bImg" alt="베스트 상품 이미지 2">
+                </div><!--.photo-->
+                <dl class="txt">
+                    <dt class="Btit cf">
+                        <p>베스트 상품명 2</p>
+                        <p class="oPrice cf">30,000원 </p>
+                        <em class="dis cf">10%&#8595;</em>
+                    </dt><!--.Btit-->
+                    <dd class="dPrice">
+                        27,000원
+                    </dd><!--.price-->
+                </dl>
+            </a></li>
+
+            <li class="cf"><a href="#">
+                <div class="photo3 pho">
+                    <img src="/images/60x60.png" class="bImg" alt="베스트 상품 이미지 2">
+                </div><!--.photo-->
+                <dl class="txt">
+                    <dt class="Btit cf">
+                        <p>베스트 상품명 3</p>
+                        <p class="oPrice cf">30,000원 </p>
+                        <em class="dis cf">10%&#8595;</em>
+                    </dt><!--.Btit-->
+                    <dd class="dPrice">
+                        27,000원
+                    </dd><!--.price-->
+                </dl>
+            </a></li>
+
+        </ul>
+    </div><!--.best-->
+</aside>
+

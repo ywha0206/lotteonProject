@@ -47,7 +47,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/my/**").hasRole("customer")
                         .requestMatchers("/event/**").hasRole("customer")
 //                        .requestMatchers(HttpMethod.GET,"prod/order/**").authenticated()
-//                        .requestMatchers(HttpMethod.GET,"prod/cart/**").authenticated()
+                        .requestMatchers(HttpMethod.GET,"prod/cart/**").authenticated()
                         .requestMatchers("/**","/error/**", "/file/**", "/auth/**","/cs/**", "/company/**", "/prod/**","/policy/**").permitAll()
                         .anyRequest().authenticated()
                 )

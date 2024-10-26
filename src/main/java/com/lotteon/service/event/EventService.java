@@ -81,11 +81,10 @@ public class EventService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void resetEventSequence(){
-        List<AttendanceEvent> attendanceEvents = attendanceEventRepository.findByAttendanceSequenceIn(Arrays.asList(0, 1));
+        List<AttendanceEvent> attendanceEvents = attendanceEventRepository.findAll();
         for(AttendanceEvent event : attendanceEvents){
             if(event.getAttendanceSequence()==1){
                 event.updateEventSequenceZero();
-
             } else if(event.getAttendanceSequence()==0){
                 event.updateEventSequenceOne();
             }
