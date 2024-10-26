@@ -40,11 +40,16 @@ public class EventService {
     private final CouponRepository couponRepository;
     private final CustomerCouponRepository customerCouponRepository;
 
-    public String updateEvent() {
+    private Customer getCustomer() {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
         Customer customer = auth.getUser().getCustomer();
+        return customer;
+    }
+
+    public String updateEvent() {
+        Customer customer = this.getCustomer();
 
         AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
         if (event == null) {
@@ -101,10 +106,7 @@ public class EventService {
 
 
     public int findEvent(String result) {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        Customer customer = auth.getUser().getCustomer();
+        Customer customer = this.getCustomer();
         AttendanceEvent newEvent = attendanceEventRepository.findByCustomer(customer);
         if(result.equals("done")){
             AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
@@ -145,13 +147,10 @@ public class EventService {
     }
 
     private void updateCustomerPoint(int value) {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+        Customer customer = this.getCustomer();
 
         LocalDate today = LocalDate.now().plusMonths(2);
 
-        Customer customer = auth.getUser().getCustomer();
 
         Point point = Point.builder()
                 .pointVar(value)
@@ -168,11 +167,7 @@ public class EventService {
     }
 
     public void issueCoupon() {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-
-        Customer customer = auth.getUser().getCustomer();
+        Customer customer = this.getCustomer();
 
 
         Optional<Coupon> coupon = couponRepository.findById((long)7);

@@ -7,9 +7,11 @@ import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.product.Cart;
+import com.lotteon.entity.product.OrderItem;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.product.CartService;
+import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class CartOrderController {
     private final CartService cartService;
     private final CategoryProductService categoryProductService;
     private final OrderService orderService;
+    private final OrderItemService orderItemService;
     private final CustomerService customerService;
 
     @GetMapping("/cart")
@@ -88,19 +91,24 @@ public class CartOrderController {
         UserOrderDto customer = customerService.selectedOrderCustomer();
         log.info("유저 정보 "+customer.toString());
 
-
         List<GetOrderDto> orders = orderService.selectedOrders(selectedProducts);
         log.info("오더 정보 "+orders.toString());
-
+//        Long orderId = orderService.getId()
         model.addAttribute("orders", orders);
         model.addAttribute("customer", customer);
+//        model.addAttribute("orderId",)
 
         return "pages/product/order";
     }
 
 
     @GetMapping("/order/complete")
-    public String orderComplete(Model model) {
+    public String orderComplete(Model model,HttpSession session) {
+
+        List<Long> orderItemIds = (List<Long>) session.getAttribute("orderItemIds");
+        log.info("오더아이템아이디 확인 "+orderItemIds);
+        orderItemService.selectedOrderComplete(orderItemIds);
+
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
         model.addAttribute("category1", category1);
