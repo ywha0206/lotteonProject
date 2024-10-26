@@ -1,12 +1,12 @@
 /* header */
 #wraper{width:100%; min-width:1200px; padding-top:120px;}
-#header{width:100%; height:90px; border-bottom:1px solid #ccc; transition:all 0.5s; background-color: white; position:fixed; top:0; left:0; z-index: 1000;}
+#header{width:100%; height:120px; border-bottom:1px solid #ccc; transition:all 0.5s; background-color: white; position:fixed; top:0; left:0; z-index: 1000;}
 #headerIn{width:1200px; margin:0 auto; position:relative;}
 
-.logo a img{display: inline-block; width: 135px; font-size:50px; margin-left: 40px; line-height:1em; padding-top:30px; transition:all 0.5s;}
+.logo a img{display: inline-block; width: 205px; font-size:50px; margin-left: 40px; line-height:1em; padding-top:30px; transition:all 0.5s;}
 
 .utill{position:absolute; top:10px; right:0; transition:all 0.5s;}
-.utill li{float:left; margin-left:12px;}
+.utill li{float:left; margin-left:20px;}
 .utill li a{color:#555;}
 
 .gnb{position:absolute; top:60px; right:0; transition:all 0.5s;}
@@ -16,9 +16,26 @@
 .gnb .on a{color:#f30;}
 
 /* 검색 bar */
-.search{position:absolute; top:27px; right:50%; margin-left: -175px; transition:all 0.5s;}
-.search input{width: 350px; height: 32px; text-indent: 13px; border-radius: 34px; border: 2.5px solid #ef2a23; background-color: #fff; text-overflow:ellipsis; /*  검색 칸 사이즈 초과시 ... 처리  */ }
-.search .ico_sch img{position:absolute; top:10px; right:15px;}
+.search{
+    position: absolute;
+    top: 12px;
+    right: 44%;
+    margin-left: -175px;
+    transition: all 0.5s;
+    padding-top: 34px}
+.search input{    width: 368px;
+    height: 44px;
+    text-indent: 13px;
+    border-radius: 34px;
+    border: 2.5px solid #ef2a23;
+    background-color: #fff;
+    text-overflow: ellipsis; /*  검색 칸 사이즈 초과시 ... 처리  */ }
+.search .ico_sch img{
+    position: absolute;
+    top: 10px;
+    right: 26px;
+    padding-top: 39px;
+}
 
 /* 스크롤이 발생할 때 변경될 #header 스타일 */
 #header.fix{height:80px; background:rgba(255,255,255,0.8); box-shadow:0 1px 5px rgba(0,0,0,0.3);}
@@ -31,7 +48,7 @@
 #header.fix .gnb .on a{color:#f30;}
 
 #header.fix .search{top:24px;}
-
+#header .img-header-link {cursor: pointer}
 /* 메인컨텐츠 본문영역 */
 /* main */
 #main{width: 100%; height: 2000px; display: flex; justify-content: center; /* 콘텐츠를 중앙에 배치 */}
@@ -54,7 +71,7 @@
     width: 980px;  padding: 30px 0px 0px 35px; height: 300px; border: 1px solid #ddd; background-color: #fff; box-sizing: border-box; z-index: 500; box-sizing: border-box;}
 
 #aside .menu ul .dep1 .dep2 .flex{display: flex; align-items: flex-start; /* 자식 요소가 컨테이너의 높이에 맞춰 늘어나지 않음 */}
-#aside .menu ul .dep1 .dep2 .d2_tit{font-size: 14px!important; font-weight: 700; display: block!important; width: 192px; float: left; margin-bottom: 3px;}
+#aside .menu ul .dep1 .dep2 .d2_tit{font-size: 16px!important; font-weight: 700; display: block!important; width: 192px; float: left; margin-bottom: 6px;}
 .dep2 button {
     position: relative;
     /* top: 220px; */
@@ -68,7 +85,11 @@
 #aside .menu ul .dep1 .dep2 .dep3{}
 #aside .menu ul .dep1 .dep2 .dep3{}
 #aside .menu ul .dep1 .dep2 .dep3 li{}
-#aside .menu ul .dep1 .dep2 .dep3 li a{display: block; width: 192px; color:#777; line-height: 2em; }
+#aside .menu ul .dep1 .dep2 .dep3 li a{font-size:13px; display: block; width: 192px; color:#777; line-height: 3em;
+    &:hover {
+        color: brown;
+    }
+}
 
 #aside .menuBg{width:100%; height:0; overflow:hidden; background:#ff9; border-bottom:1px solid #333; position:absolute; top:100px; left:0;}
 
@@ -220,7 +241,15 @@
 /* 스크롤시 생기는 top 버튼 */
 .btnTop{display:block; width:20px; height:80px;  background:#fff; border-radius:50px; text-align: center; border: 1px solid #bfbfbf; margin-left: 8px; font-size:16px; text-align:center; padding:20px; position:fixed; right:45px; bottom:45px;}
 
+.fade-in {
+    display: block; !important;/* Block으로 설정하여 CSS transition을 사용할 수 있도록 함 */
+    opacity: 0; !important;/* 초기 상태를 투명하게 설정 */
+    transition: opacity 0.7s ease-in; !important;/* opacity에 대한 부드러운 전환 추가 */
+}
 
+.fade-in.show {
+    opacity: 1; !important;/* show 클래스가 추가되면 불투명하게 설정 */
+}
 
 
 
