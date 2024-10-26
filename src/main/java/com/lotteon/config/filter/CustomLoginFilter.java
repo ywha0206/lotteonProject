@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -32,6 +33,7 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
     private final MemberRepository memberRepository;
     private final RequestCache requestCache = new HttpSessionRequestCache();
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private final SavedRequestAwareAuthenticationSuccessHandler defaultSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
@@ -45,7 +47,7 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
                 .getPrincipal();
         Customer customer = auth.getUser().getCustomer();
         if(customer == null) {
-            response.sendRedirect("/");
+            redirectStrategy.sendRedirect(request, response, "/");
             return;
         }
 
@@ -55,10 +57,9 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
         LocalDate birthDate = LocalDate.parse(birth);
 
         if (today.getMonth() == birthDate.getMonth() && today.getDayOfMonth() == birthDate.getDayOfMonth()) {
-            response.sendRedirect("/event/birth");
-
+            redirectStrategy.sendRedirect(request, response, "/event/birth");
         } else {
-            response.sendRedirect("/");
+            defaultSuccessHandler.onAuthenticationSuccess(request, response, authentication);
         }
 
     }

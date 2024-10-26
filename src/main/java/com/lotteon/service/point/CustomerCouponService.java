@@ -77,7 +77,7 @@ public class CustomerCouponService {
         customerCoupon.get().updateCustCouponCntMinus();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 2 0 * * ?")
     public void deleteCustCoupon(){
         LocalDate today = LocalDate.now();
 
@@ -91,7 +91,7 @@ public class CustomerCouponService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 1 0 * * ?")
     public void expirateCustCoupon(){
         LocalDate today = LocalDate.now();
 

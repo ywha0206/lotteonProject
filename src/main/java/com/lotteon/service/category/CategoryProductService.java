@@ -18,6 +18,8 @@ import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/*
+* 이름 : 이상훈
+* 날짜 : 2024-10-26
+* 작업내용 : 카테고리 출력 레디스 인메모리디비 사용하기
+* */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -70,15 +77,16 @@ public class CategoryProductService {
         }
     }
 
-
+    @Cacheable(value = "categoryCache", key = "'category'",cacheManager = "cacheManager")
     public List<GetCategoryDto> findCategory() {
+        System.out.println("디비접속후 카테고리 조회");
         List<CategoryProduct> categoryProducts = categoryProductRepository.findAllByCategoryLevel(1);
-        System.out.println(categoryProducts);
-        List<GetCategoryDto> dtos = categoryProducts.stream().map(v->v.toGetCategoryDto()).toList();
+        List<GetCategoryDto> dtos = categoryProducts.stream().map(v->v.toGetCategoryDto()).collect(Collectors.toList());
 
         return dtos;
     }
 
+    @Cacheable(value = "categoryCache", key = "'category2_' + #id",cacheManager = "cacheManager")
     public List<GetCategoryDto> findCategory2(Long id) {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
         List<CategoryProduct> cates = categoryProducts.getChildren();
@@ -86,11 +94,12 @@ public class CategoryProductService {
         List<GetCategoryDto> dtos = cates.stream()
                 .sorted(Comparator.comparing(CategoryProduct::getCategoryOrder))
                 .map(CategoryProduct::toGetCategoryDto)
-                .toList();
+                .collect(Collectors.toList());
 
         return dtos;
     }
 
+    @Cacheable(value = "categoryCache", key = "'category3_' + #id",cacheManager = "cacheManager")
     public Map<String,Object> findCategory3(Long id) {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
         List<CategoryProduct> cates = categoryProducts.getChildren();
@@ -98,14 +107,14 @@ public class CategoryProductService {
         cates.forEach(v->{
 
             List<CategoryProduct> cates2 = v.getChildren();
-            List<GetCategoryDto> dtos = cates2.stream().map(v2->v2.toGetCategoryDto()).toList();
+            List<GetCategoryDto> dtos = cates2.stream().map(v2->v2.toGetCategoryDto()).collect(Collectors.toList());
             map.put(v.getCategoryName(),dtos);
         });
 
 
         return map;
     }
-
+    @CacheEvict(value = "categoryCache", allEntries = true)
     public String deleteCategory(Long id) {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
         if(categoryProducts.getProductMappings().isEmpty()){
@@ -115,7 +124,7 @@ public class CategoryProductService {
             return "FA";
         }
     }
-
+    @CacheEvict(value = "categoryCache", allEntries = true)
     public void insertProdCate() {
         Product product = productRepository.findById((long)1).orElse(null);
         List<CategoryProduct> categoryProduct1 = categoryProductRepository.findAllByCategoryId((long)28);
@@ -124,7 +133,7 @@ public class CategoryProductService {
 //        categoryProdMapperRepository.save(categoryProduct);
 
     }
-
+    @CacheEvict(value = "categoryCache", allEntries = true)
     public void postCategory(GetCategoryDto getCategoryDto) {
         Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(getCategoryDto.getId());
 
@@ -148,7 +157,7 @@ public class CategoryProductService {
         categoryProductRepository.save(newCategoryProduct);
 
     }
-
+    @CacheEvict(value = "categoryCache", allEntries = true)
     public void putCategory(GetCategoryDto getCategoryDto) {
         Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(Long.parseLong(getCategoryDto.getName()));
         Optional<CategoryProduct> categoryParent = categoryProductRepository.findById(getCategoryDto.getId());
