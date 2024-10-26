@@ -12,7 +12,7 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 public class VisitorService {
-    private final StringRedisTemplate stringRedisTemplate;
+//    private final StringRedisTemplate stringRedisTemplate;
     private final RedisTemplate<String, Object> redisTemplate;
 
     // 방문자 수 증가 메서드
