@@ -17,4 +17,5 @@ public class UserOrderDto {
     private String custZip;
     private String custAddr1;
     private String custAddr2;
+    private Integer points;
 }

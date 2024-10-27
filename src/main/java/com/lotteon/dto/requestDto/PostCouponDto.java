@@ -16,4 +16,5 @@ public class PostCouponDto {
     private String couponExpiration;
     private String couponCaution;
     private Long id;
+    private Integer customerCouponExpiration;
 }

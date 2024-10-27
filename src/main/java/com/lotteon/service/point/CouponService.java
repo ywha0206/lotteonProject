@@ -53,7 +53,9 @@ public class CouponService {
                 .couponExpiration(postCouponDto.getCouponExpiration())
                 .couponType("주문상품할인")
                 .member(memId)
+                .customerCouponExpiration(postCouponDto.getCustomerCouponExpiration())
                 .couponState("발급중")
+                .couponBannerState(0)
                 .couponIssueCount(0)
                 .couponUseCount(0)
                 .build();
@@ -140,4 +142,12 @@ public class CouponService {
 
     }
 
+    public void updateCouponBannerState(Long id) {
+        Coupon coupon = couponRepository.findById(id).orElseThrow(()->new NoSuchElementException("Coupon with id " + id + " not found."));
+        if(coupon.getCouponBannerState()==0){
+            coupon.updateCouponBannerState(1);
+        } else {
+            coupon.updateCouponBannerState(0);
+        }
+    }
 }

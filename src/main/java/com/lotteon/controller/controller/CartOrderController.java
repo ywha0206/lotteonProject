@@ -5,15 +5,17 @@ import com.lotteon.dto.requestDto.PostCartSaveDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.GetCouponDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.product.Cart;
-import com.lotteon.entity.product.OrderItem;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.CustomerService;
+import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.product.CartService;
 import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
+import com.lotteon.service.product.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -38,6 +40,8 @@ public class CartOrderController {
     private final OrderService orderService;
     private final OrderItemService orderItemService;
     private final CustomerService customerService;
+    private final CustomerCouponService customerCouponService;
+    private final ProductService productService;
 
     @GetMapping("/cart")
     public String join(Model model, HttpSession session) {
@@ -96,6 +100,10 @@ public class CartOrderController {
         log.info("오더 정보 "+orders.toString());
         model.addAttribute("orders", orders);
         model.addAttribute("customer", customer);
+        List<Long> productIds = selectedProducts.stream().map(v->v.getProductId()).toList();
+        List<GetCouponDto> coupons = customerCouponService.findByCustomerAndSeller(productIds);
+        model.addAttribute("coupons",coupons);
+        
 
         return "pages/product/order";
     }
