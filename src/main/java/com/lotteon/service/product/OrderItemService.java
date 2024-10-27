@@ -3,6 +3,7 @@ package com.lotteon.service.product;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrderItemDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Order;
@@ -94,25 +95,27 @@ public class OrderItemService {
         return ResponseEntity.ok().body(true);
     }
 
-    public void selectedOrderComplete(List<Long> orderItemIds) {
+    public ResponseOrderDto selectedOrderComplete(List<Long> orderItemIds) {
 
         log.info("오더아이템 컨트롤러에 들어오는지 확인 "+orderItemIds);
         List<OrderItem> orderItems = orderItemRepositoryImpl.selectOrderItemsByOrderId(orderItemIds);
         log.info("오더아이템 임플 결과 "+orderItems);
 
+        List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
 
-            orderItem.getProduct().getProdListImg();
-            orderItem.getProduct().getProdName();
-            orderItem.getProduct().getProdSummary();
-            orderItem.getProduct().getProdPrice();
-            orderItem.getDiscount();
-            orderItem.getQuantity();
-            orderItem.getTotal();
-
+            ResponseOrderItemDto responseOrderItemDto = ResponseOrderItemDto.builder()
+                                                                        .prodListImg(orderItem.getProduct().getProdListImg())
+                                                                        .prodName(orderItem.getProduct().getProdName())
+                                                                        .prodSummary(orderItem.getProduct().getProdSummary())
+                                                                        .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
+                                                                        .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
+                                                                        .quantity(orderItem.getQuantity())
+                                                                        .totalPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
+                                                                        .build();
+            orderItemDtos.add(responseOrderItemDto);
         }
         Order order = orderItems.get(0).getOrder();
-
 
         ResponseOrderDto responseOrderDto = ResponseOrderDto.builder()
                 .orderId(order.getId())
@@ -122,7 +125,9 @@ public class OrderItemService {
                 .receiverName(order.getReceiverName())
                 .receiverHp(order.getReceiverHp())
                 .receiverAddr(order.getReceiverAddr())
+                .orderItemDtos(orderItemDtos)
                 .build();
 
+        return responseOrderDto;
     }
 }
