@@ -1,11 +1,13 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.responseDto.*;
+import com.lotteon.service.VisitorService;
 import com.lotteon.service.config.*;
 import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -24,6 +27,7 @@ public class AdminConfigController {
     private final CopyrightService copyrightService;
     private final VersionService versionService;
     private final TermsService termsService;
+    private final VisitorService visitorService;
 
     private String getSideValue() {
         return "config";  // 실제 config 값을 여기에 설정합니다.
@@ -36,6 +40,15 @@ public class AdminConfigController {
 
     @GetMapping("/index")
     public String index(Model model) {
+        String key = "visitor:count:" + LocalDate.now();
+        String yesterday = "visitor:count:" + LocalDate.now().minusDays(1);
+        Long todayCount = visitorService.getVisitorCount(key);
+        Long yesterdayCount = visitorService.getVisitorCount(yesterday);
+        Long weekCount = visitorService.getWeekVisitorCount();
+        model.addAttribute("todayCount", todayCount);
+        model.addAttribute("yesterdayCount", yesterdayCount);
+        model.addAttribute("weekCount", weekCount);
+
         return "pages/admin/index";
     }
     @GetMapping("/basics")
