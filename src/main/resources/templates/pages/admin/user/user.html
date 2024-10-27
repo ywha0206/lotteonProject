@@ -1,5 +1,13 @@
 <link rel="stylesheet" th:href="@{/css/admin/user/user.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<!--
+     날짜 : 2024/10/25 (금)
+     이름 : 김민희
+     내용 : 관리자 회원목록 출력을 위한 타임리프 구문 추가
+
+     수정이력
+      - 2025/10/27 (일) 김민희 - 회원수정 팝업호출 기능 추가
+-->
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
@@ -96,7 +104,7 @@
                     <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
 
                     <td class="td-admin">
-                        <input type="button" value="[ 수정 ]">
+                        <input type="button" value="[ 수정 ]" onclick="openCustUpdatePopup(event)" id="buttonId" th:data-id="${cust.id}">
                         <input type="button" value="[ 중지 ]">
                     </td>
                 </tr>
@@ -128,76 +136,90 @@
 <footer th:replace="layout/admin/footer.html"></footer>
 
 <script>
-    const popup = document.querySelector('.popup')
-    const bg = document.querySelector('.popupbg')
-    async function openCustPopup(event){
-        let url = "/admin/user/user?id=" + event.target.innerText;
+    // [ 수정 ] 버튼 클릭 시 팝업 호출
+    const popup = document.querySelector(".popup");
+    const bg = document.querySelector(".popupbg");
 
-        const resp = await axios.get(url,{
+    document.getElementById("buttonId").addEventListener("click", openCustUpdatePopup);
+
+    async function openCustUpdatePopup(event){
+        const id = event.target.dataset.id;
+        console.log(id);
+
+        fetch(`/admin/user/user/${id}`,{
+            method : 'GET',
             headers : {
                 "Content-Type" : "application/json"
             }
         })
+            .then(resp => {
+                console.log(resp);
+                if (!resp.ok) {
+                    return resp.json().then(err => {
+                        console.error('Server responded with an error:', err);
+                        throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
+                    });
+                }
+                return resp.json();
+            })
+            .then(data => {
+                console.log('Response Data:', data);
+                if(data.id>0){
+                    popup.innerHTML = `
 
-        const coupon = resp.data.coupon
-
-        popup.innerHTML = `
             <div class="header">
                 <div class="title">회원수정 <span style="color: white">1012000000</span></div>
                 <div onclick="closePopup()" class="btn">X</div>
             </div>
+
             <div style="margin: 20px; margin-bottom: 30px;">
                 <table class="tb4">
                     <tr>
                         <th>아이디</th>
-                        <td><input readonly value="${cust.memUid}" ></td>
+                        <td><input readonly value="${data.memUid}" ></td>
                     </tr>
                     <tr>
                         <th>이름</th>
-                        <td><input readonly value="${cust.custName}"></td>
+                        <td><input readonly value="${data.custName}"></td>
                     </tr>
                     <tr>
                         <th>성별</th>
-                        <td><input readonly value="${cust.custGender}"></td>
-                    </tr>
-                    <td>
-                        <select name="search" class="grade custgrade" th:data-id="${cust.memUid}">
-                            <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
-                            <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
-                            <option value="Gold" th:selected="${cust.custGrade}=='Gold'">Gold</option>
-                            <option value="Silver" th:selected="${cust.custGrade}=='Silver'">Silver</option>
-                            <option value="Family" th:selected="${cust.custGrade}=='Family'">Family</option>
-                        </select>
-                    </td>
-                    <tr>
-                        <th>이메일</th>
-                        <td><input readonly value="${cust.custEmail}"></td>
-                    </tr>
-                    <tr>
-                        <th>휴대폰</th>
-                        <td><input readonly value="${cust.custHp}"></td>
-                    </tr>
-                    <tr>
-                        <th>우편번호</th>
-                        <td><input readonly value="${coupon.couponName}"></td>
-                    </tr>
-                    <tr>
-                        <th>기본주소</th>
-                        <td><input readonly value="${coupon.couponDiscount}"></td>
-                    </tr>
-                    <tr>
-                        <th>상세주소</th>
                         <td>
-                            ${coupon.couponExpiration}
+                            <label for= ""><input value="true" type="radio" name="custGender">남</label>
+                            <label for=""><input value="false" type="radio" name="custGender">여</label>
                         </td>
                     </tr>
                     <tr>
+                        <th>등급</th>
+                        <td>${data.custGrade}</td>
+                    </tr>
+                    <tr>
+                        <th>이메일</th>
+                        <td><input readonly value="${data.custEmail}"></td>
+                    </tr>
+                    <tr>
+                        <th>휴대폰</th>
+                        <td><input readonly value="${data.custHp}"></td>
+                    </tr>
+                    <tr>
+                        <th>우편번호</th>
+                        <td><input readonly value="${data.custAddr1}"></td>
+                    </tr>
+                    <tr>
+                        <th>기본주소</th>
+                        <td><input readonly value="${data.custAddr2}"></td>
+                    </tr>
+                    <tr>
+                        <th>상세주소</th>
+                        <td><input readonly value="${data.custAddr3}"></td>
+                    </tr>
+                    <tr>
                         <th>가입일</th>
-                        <td><textarea readonly>${coupon.couponCaution}</textarea></td>
+                        <td>${data.memRdate}</td>
                     </tr>
                     <tr>
                         <th>최근 로그인 날짜</th>
-                        <td><textarea readonly>${coupon.couponCaution}</textarea></td>
+                        <td>${data.custAddr}</td>
                     </tr>
                     <tr>
                         <th>기타</th>
@@ -207,8 +229,15 @@
             </div>
             <div style="margin-bottom:20px" class="btns"><button onclick="closePopup(event)">닫기</button></div>
             `
-        popup.style.display = "block";
-        bg.style.display = "flex";
+                    popup.style.display = "block";
+                    bg.style.display = "flex";
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+            })
+
+
     }
 
     // 팝업 닫기
@@ -216,6 +245,7 @@
         popup.style.display = "none";
         bg.style.display = "none";
     }
+
     // 회원 상태 (4가지 - 정상, 중지, 휴면, 탈퇴) if문 스크립트
     async function stateChanger(event){
         const submitData = {

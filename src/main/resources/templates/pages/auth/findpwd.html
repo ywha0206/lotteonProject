@@ -59,12 +59,14 @@
 
     function view(div){
         div.querySelector('span').style.color = '#000';
-        div.getElementsByClassName('del-btn')[0].style.background = '#999';
+        div.getElementsByClassName('del-btn')[0].style.opacity = 1;
+        div.getElementsByClassName('del-btn')[0].style.cursor = 'pointer';
     }
 
     function unview(div){
         div.querySelector('span').style.color = '#FFF';
-        div.getElementsByClassName('del-btn')[0].style.background = '#FFF';
+        div.getElementsByClassName('del-btn')[0].style.opacity = 0;
+        div.getElementsByClassName('del-btn')[0].style.cursor = 'text';
     }
 
     function openSection(type){

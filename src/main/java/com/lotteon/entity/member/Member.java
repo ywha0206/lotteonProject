@@ -18,26 +18,26 @@ import java.sql.Timestamp;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 번호
 
     @Column(name = "mem_uid")
-    private String memUid;
+    private String memUid; // 아이디
 
     @Column(name = "mem_pwd")
-    private String memPwd;
+    private String memPwd; // 비밀번호
 
     @Column(name = "mem_role")
-    private String memRole;
+    private String memRole; // 사용자 유형 (admin, seller, buyer)
 
     @Column(name = "mem_rdate")
     @CreationTimestamp
-    private Timestamp memRdate;
+    private Timestamp memRdate; // 가입일
 
     @Column(name = "mem_state")
-    private String memState;
+    private String memState; // 계정 상태 (활성, 비활성) [로그인, 로그아웃]
 
     @Column(name = "mem_edate")
-    private Timestamp memSignout;
+    private Timestamp memSignout; // 탈퇴일자
 
     @OneToOne(mappedBy = "member")
     private Customer customer;
@@ -45,6 +45,7 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private Seller seller;
 
+    // Entity -> DTO 변환
     public GetAdminUserDTO toGetAdminUserDTO() {
         return GetAdminUserDTO.builder()
                 .id(customer.getId()) // 번호
@@ -56,7 +57,7 @@ public class Member {
                 .custEmail(customer.getCustEmail()) // 이메일
                 .custHp(customer.getCustHp()) // 휴대폰
                 .memRdate(memRdate) // 가입일
-                .memState(String.valueOf(memState))
+                .memState(String.valueOf(memState)) // 계정 상태 (4가지 - 정산, 중지, 휴면, 탈퇴)
                 .build();
 
     }

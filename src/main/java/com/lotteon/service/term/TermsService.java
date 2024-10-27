@@ -8,6 +8,8 @@ import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +60,7 @@ public class TermsService {
 //                .collect(Collectors.toList());
 //    }
 
+//    @CacheEvict(value = "termsCache", key = "'terms'")
     public Terms modifyTerms(PostTermsDTO postTermsDTO) {
         Terms terms = termsRepository.findById(postTermsDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("terms not found"));
@@ -67,9 +70,9 @@ public class TermsService {
         return termsRepository.save(terms);
     }
 
+//    @Cacheable(value = "termsCache", key = "'terms'", cacheManager = "cacheManager")
     public List<GetTermsResponseDto> selectAllTerms() {
         List<Terms> terms = termsRepository.findAll();
-        System.out.println("Terms list: " + terms);
         return terms.stream()
                 .map(Entity -> modelMapper.map(Entity, GetTermsResponseDto.class))
                 .toList();
