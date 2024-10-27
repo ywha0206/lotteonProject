@@ -14,7 +14,7 @@ public class Seller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 번호
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mem_id")
@@ -22,26 +22,33 @@ public class Seller {
     private Member member;
 
     @Column(name = "sell_grade")
-    private int sellGrade;
+    private int sellGrade; // 판매자 등급
 
     @Column(name = "sell_company")
-    private String sellCompany;
+    private String sellCompany; // 상호명
 
     @Column(name = "sell_representative")
-    private String sellRepresentative;
+    private String sellRepresentative; // 대표명
 
     @Column(name = "sell_business_code")
-    private String sellBusinessCode;
+    private String sellBusinessCode; // 사업자번호
 
     @Column(name = "sell_order_code")
-    private String sellOrderCode;
+    private String sellOrderCode; // 통신판매업번호
 
     @Column(name = "sell_hp")
-    private String sellHp;
+    private String sellHp; // 판매자 전화번호
 
     @Column(name = "sell_fax")
-    private String sellFax;
+    private String sellFax; // 팩스번호
 
     @Column(name = "sell_addr")
-    private String sellAddr;
+    private String sellAddr; // 판매자 주소
+    
+    // Entity -> DTO 변환
+
+
+
+    
+    
 }
