@@ -42,10 +42,13 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        Customer customer = auth.getUser().getCustomer();
+
+        MyUserDetails user = (MyUserDetails) authentication.getPrincipal();
+        Customer customer = user.getUser().getCustomer();
+        if(user.getUser().getMemRole().equals("admin")) {
+            redirectStrategy.sendRedirect(request, response, "/admin/config/index");
+            return;
+        }
         if(customer == null) {
             redirectStrategy.sendRedirect(request, response, "/");
             return;

@@ -2,8 +2,10 @@
     <link rel="stylesheet" as="style" crossorigin th:href="@{https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css}" /> <!-- 가변 다이나믹 서브셋 (fontfamily : pretendard) -->
     <link th:href="@{/css/reset.css}" rel="stylesheet">
     <link th:href="@{/css/main.css}" rel="stylesheet">
-    <script th:src="@{/js/main.js}"></script>
-    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
+    <script defer th:src="@{/js/main.js}"></script>
+    <script defer th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
+    <link th:href="@{/js/jquery.bxslider.min.css}" rel="stylesheet" />
+    <script defer th:src="@{/js/jquery.bxslider.min.js}"></script>
 <header th:replace="layout/main/header.html"></header>
 <div id="wrap">
     <main id="main">
@@ -98,25 +100,24 @@
             <section id="sec">
 
                 <div id="mainSlider">
-                    <div class="simg">
-                        <a th:href="@{/event/attendance}">
-                            <img th:src="@{/images/980x300.jpg}" alt="메인슬라이더1">
-                            <ul class="cf">
-                                <li class="prev"><a href="#"></a></li><!-- .prev -->
-                                <li class="next"><a href="#"></a></li><!-- .next -->
-                            </ul>
-                            <!-- <p class="prev"><a href="#"></a></p>
-                            <p class="next"><a href="#"></a></p> -->
-                            <div class="pager cf">
-                                <ul class="cf">
-                                    <li><a href="#" class="on">1</a></li><!-- .on -->
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                </ul>
-                            </div>
-                        </a>
-                    </div>
-                </div><!-- .mainSlider -->
+                    <ul class="bxslider">
+                        <li>
+                            <a th:href="@{/event/attendance}">
+                                <img style="width: 970px; height: 290px;" th:src="@{/images/980x300.jpg}" alt="메인슬라이더1">
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/event/coupon}">
+                                <img style="width: 970px; height: 290px;" th:src="@{/images/980x300-2.jpg}" alt="메인슬라이더2">
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/event/coupon}">
+                                <img style="width: 970px; height: 290px;" th:src="@{/images/980x300-3.jpg}" alt="메인슬라이더3">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
                 <div class="cont1">
                     <div class="inner">
@@ -369,9 +370,7 @@
     <a href="#" class="btnTop">TOP</a><!--.btnTop-->
 </div><!--#wrap-->
 <footer th:replace="layout/main/footer.html"></footer>
-<script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
-<link th:href="@{/js/jquery.bxslider.min.css}" rel="stylesheet" />
-<script th:src="@{/js/jquery.bxslider.min.js}"></script>
+
 <script>
     let birth = `[[${birth}]]` ;
     console.log(birth)
@@ -381,21 +380,15 @@
     }
 </script>
 <script>
-    $(document).ready(function() {
-        $('.mainSlider1 ul').bxSlider({
-            auto: true,
-            autoControls: true,
-            autoControlsCombine: true,
-            stopAutoOnClick: true,
-            pager: true
-        });
-        $('.mainSlider2 ul').bxSlider({
-            auto: true,
-            autoControls: true,
-            autoControlsCombine: true,
-            stopAutoOnClick: true,
-            pager: true,
-            pagerType: 'short'
+    $(document).ready(function(){
+        $('.bxslider').bxSlider({
+            auto: true, // 자동 슬라이드
+            pause: 3000, // 슬라이드 간의 대기 시간 (밀리초)
+            pager: true, // 페이지 네비게이션 표시
+            controls: true, // 이전/다음 버튼 표시
+            nextText: '다음', // 다음 버튼 텍스트
+            prevText: '이전', // 이전 버튼 텍스트
+            touchEnabled : (navigator.maxTouchPoints > 0)
         });
     });
 </script>

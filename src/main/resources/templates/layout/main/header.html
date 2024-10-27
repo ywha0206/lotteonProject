@@ -68,9 +68,9 @@
                 position: relative;
                 top: -18px;"
         >
-            <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}" style="width: 50px; height: 50px;"></a>
-            <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}" style="width: 50px; height: 50px;"></a>
-            <a><img class="img-header-link" th:src="@{/images/header-zzim.png}" style="width: 50px; height: 50px;"></a>
+            <a sec:authorize="!hasRole('admin')" th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}" style="width: 50px; height: 50px;"></a>
+            <a sec:authorize="!hasRole('admin')" th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}" style="width: 50px; height: 50px;"></a>
+            <a sec:authorize="!hasRole('admin')"><img class="img-header-link" th:src="@{/images/header-zzim.png}" style="width: 50px; height: 50px;"></a>
         </div>
     </header><!--#header-->
 </body>

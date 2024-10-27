@@ -133,8 +133,8 @@
 #mainSlider ul li.next:before {margin-top:-160px; margin-left: 900px; text-indent: -9999px; display: block; content: ''; width: 30px; height: 30px;  border-top: 2px solid #fff; border-right: 2px solid #fff; transform: rotate(45deg);}
 
 /* pager */
-#mainSlider .pager{position: relative; margin-left:465px;}
-#mainSlider .pager ul{position: absolute; bottom: 10px; opacity: 70%;}
+#mainSlider .pager{position: relative; margin-left:465px; z-index: 100;}
+#mainSlider .pager ul{position: absolute; bottom: 10px; opacity: 70%;  z-index: 100;}
 #mainSlider .pager ul li{float:left; margin-right: 10px;}
 #mainSlider .pager ul li:last-child{margin-right: 0;}
 #mainSlider .pager ul li.on{background: #ef2a23;}
