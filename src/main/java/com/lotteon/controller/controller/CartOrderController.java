@@ -5,6 +5,7 @@ import com.lotteon.dto.requestDto.PostCartSaveDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.entity.product.OrderItem;
@@ -93,10 +94,8 @@ public class CartOrderController {
 
         List<GetOrderDto> orders = orderService.selectedOrders(selectedProducts);
         log.info("오더 정보 "+orders.toString());
-//        Long orderId = orderService.getId()
         model.addAttribute("orders", orders);
         model.addAttribute("customer", customer);
-//        model.addAttribute("orderId",)
 
         return "pages/product/order";
     }
@@ -107,7 +106,9 @@ public class CartOrderController {
 
         List<Long> orderItemIds = (List<Long>) session.getAttribute("orderItemIds");
         log.info("오더아이템아이디 확인 "+orderItemIds);
-        orderItemService.selectedOrderComplete(orderItemIds);
+
+        ResponseOrderDto order = orderItemService.selectedOrderComplete(orderItemIds);
+        model.addAttribute("order", order);
 
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 

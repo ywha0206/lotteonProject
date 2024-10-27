@@ -65,7 +65,7 @@ public class ApiProductController {
 
         ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session);
 
-        //cartService.deleteCartItem(cartItemIds);
+        cartService.deleteCartItem(cartItemIds);
         session.removeAttribute("selectedProducts");
         return orderItemResult;
     }
