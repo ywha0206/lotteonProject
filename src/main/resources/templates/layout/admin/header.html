@@ -16,10 +16,16 @@
             <div class="top-link">
                 <a th:href="@{/}">홈</a>
                 <a th:href="@{/auth/logout}">로그아웃</a>
-                <a th:href="@{/admin/cs/index}">고객센터</a>
+                <a th:href="@{/cs/index}">고객센터</a>
             </div>
         </section>
-        <div class="logo">
+        <div onclick="getHome()" class="logo" style="cursor: pointer">
             <img th:src="@{'/file/'+${site.configHeaderLogo}}" style="width: 120px" alt="">
         </div>
 
+
+<script>
+    function getHome() {
+        window.location.href = "/admin/config/index"
+    }
+</script>

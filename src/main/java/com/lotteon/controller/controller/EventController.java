@@ -46,4 +46,10 @@ public class EventController {
         eventService.issueCoupon();
         return "redirect:/index?birth=true";
     }
+
+    @GetMapping("/coupon")
+    public String coupon(Model model) {
+
+        return "pages/event/coupon";
+    }
 }
