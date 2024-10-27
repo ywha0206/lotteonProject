@@ -50,6 +50,15 @@ public class ApiAdminCouponController {
         return ResponseEntity.ok("SU");
     }
 
+    @PatchMapping("/event")
+    public ResponseEntity<?> updateEvent (
+            @RequestBody PostCouponDto postCouponDto
+    ){
+        couponService.updateCouponBannerState(postCouponDto.getId());
+
+        return ResponseEntity.ok("SU");
+    }
+
     @PatchMapping("/cust")
     public ResponseEntity<?> updateCustCoupon (
             @RequestBody PostCouponDto postCouponDto

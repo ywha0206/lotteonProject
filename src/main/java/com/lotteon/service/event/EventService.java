@@ -117,7 +117,7 @@ public class EventService {
             this.updateCustomerPoint(100);
             return 7;
         } else if(result.equals("coupon")){
-            customerCouponService.postCustCoupon();
+            customerCouponService.postCustCoupon((long)6);
             newEvent.updateEventSequenceEnd();
             attendanceEventRepository.save(newEvent);
             return 7;
@@ -177,9 +177,9 @@ public class EventService {
 
         CustomerCoupon customerCoupon = CustomerCoupon.builder()
                 .couponState(1)
-                .couponCnt(1)
                 .coupon(coupon.get())
                 .customer(customer)
+                .couponExpiration(LocalDate.now().plusDays(coupon.get().getCustomerCouponExpiration()-1))
                 .build();
 
         customerCouponRepository.save(customerCoupon);

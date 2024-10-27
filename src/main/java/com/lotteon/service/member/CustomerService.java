@@ -152,6 +152,7 @@ public class CustomerService {
                                         .custZip(addr[0])
                                         .custAddr1(addr[1])
                                         .custAddr2(addr[2])
+                                        .points(member.getCustomer().getCustPoint())
                                         .build();
 
 

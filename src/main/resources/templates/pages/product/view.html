@@ -25,6 +25,12 @@
                                     <span>상호명</span>
                                     <span>상품번호 : 111111</span>
                                     <input type="hidden" value="2" name="prodId">
+                                    <span style="
+                                        cursor: pointer;
+                                        color: red;
+                                        border: 1px solid black;
+                                        padding: 2px 4px;
+                                     " data-id="9" onclick="getCustomerCoupon(event)">쿠폰 발급받기</span>
                                 </td>
                             </tr>
                             <tr>
@@ -228,5 +234,23 @@
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 <!-- #wrap -->
-</body>
-</html>
+<script>
+    async function getCustomerCoupon(event){
+        const submitData = {
+            'id' : event.target.dataset.id
+        }
+        console.log(submitData)
+        try {
+            const resp = await axios.post("/prod/customer/coupon",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            alert(resp.data)
+
+        } catch (e) {
+            alert("로그인이 필요합니다.")
+            window.location.href = "/auth/login/view"
+        }
+    }
+</script>

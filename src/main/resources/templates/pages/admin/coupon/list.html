@@ -39,7 +39,7 @@
                     <th>쿠폰종류</th>
                     <th>쿠폰명</th>
                     <th>혜택</th>
-                    <th>사용기간</th>
+                    <th>발급기간</th>
                     <th>발급자</th>
                     <th>발급수</th>
                     <th>사용수</th>
@@ -48,20 +48,26 @@
                     <th>관리</th>
                 </tr>
                 <tr th:each="coupon : ${coupons}">
-                    <td onclick="openCouponPopup(1,event)" th:data-id="${coupon.id}" th:text="${coupon.id}" style="text-decoration: underline; cursor:pointer;">10121111</td>
-                    <td th:text="${coupon.couponType}">abc1</td>
-                    <td th:text="${coupon.couponName}">김유신</td>
-                    <td th:text="${coupon.couponDiscount} + ${coupon.couponDiscountOption}">OOO</td>
-                    <td th:text="${coupon.couponExpiration}">2</td>
-                    <td th:text="${coupon.couponIssuer}">102,999</td>
-                    <td th:text="${coupon.couponIssueCount}">신용카드</td>
-                    <td th:text="${coupon.couponUseCount}" style="color: #00B050;">결제완료</td>
-                    <td th:text="${coupon.couponState}">2024.10.16<br>00:00:00</td>
-                    <td th:text="${coupon.couponRdate}">배송하기</td>
-                    <td th:if="${coupon.couponState=='발급중'}"
+                    <td onclick="openCouponPopup(1,event)" th:data-id="${coupon.id}" th:text="${coupon.id}" style="text-decoration: underline; cursor:pointer; width: 45px;">10121111</td>
+                    <td style="width:70px;" th:text="${coupon.couponType}">abc1</td>
+                    <td style="width: 140px;" th:text="${coupon.couponName}">김유신</td>
+                    <td style="width: 80px;" th:text="${coupon.couponDiscount} + ${coupon.couponDiscountOption}">OOO</td>
+                    <td style="width: 110px;" th:text="${coupon.couponExpiration}">2</td>
+                    <td style="width: 80px;" th:text="${coupon.couponIssuer}">102,999</td>
+                    <td style="width: 40px;" th:text="${coupon.couponIssueCount}">신용카드</td>
+                    <td style="color: #00B050; width:40px; " th:text="${coupon.couponUseCount}">결제완료</td>
+                    <td style="width: 50px;" th:text="${coupon.couponState}">2024.10.16<br>00:00:00</td>
+                    <td style="width: 80px;" th:text="${coupon.couponRdate}">배송하기</td>
+                    <td style="width:70px; display: flex; flex-direction: column; gap: 2px;justify-content: center;" th:if="${coupon.couponState=='발급중'}"
                     ><button onclick="updateCouponState(1,event)" th:data-id="${coupon.id}" class="active-btn"
                              style="cursor: pointer; border: 1px solid #0070C0; color: #0070C0; padding: 3px 1px; background-color: transparent;"
                     >종료</button>
+                        <button th:if="${coupon.couponBannerState == '이벤트'}" onclick="updateCouponState(3,event)" th:data-id="${coupon.id}"
+                                class="active-btn" style="cursor: pointer; border: 1px solid #0070C0; color: #0070C0; padding: 3px 1px; background-color: transparent;"
+                        >이벤트신청</button>
+                        <button th:if="${coupon.couponBannerState == '이벤트종료'}" onclick="updateCouponState(3,event)" th:data-id="${coupon.id}"
+                                class="active-btn" style="cursor: pointer; border: 1px solid #0070C0; color: #0070C0; padding: 3px 1px; background-color: transparent;"
+                        >이벤트종료</button>
                     </td>
                     <td th:data-id="${coupon.id}" th:if="${coupon.couponState=='종료'}">
                         <button onclick="updateCouponState(2,event)" th:data-id="${coupon.id}" class="active-btn"
@@ -131,7 +137,7 @@
                         <td><input value="${coupon.couponDiscount}${coupon.couponDiscountOption}"></td>
                     </tr>
                     <tr>
-                        <th>사용기간</th>
+                        <th>발행기간</th>
                         <td>
                             ${coupon.couponExpiration}
                         </td>
@@ -188,9 +194,15 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>사용기간</th>
+                        <th>발행기간</th>
                         <td>
                             <input id="couponExpiration1" type="date"> ~ <input id="couponExpiration2" type="date">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>발행 후 사용기간</th>
+                        <td>
+                            <input id="customerCouponExpiration" type="number" placeholder="일 단위로 적어주세요.">
                         </td>
                     </tr>
                     <tr>
@@ -218,7 +230,8 @@
             'couponDiscount' : document.getElementById('couponDiscount').value,
             'couponMinPrice' : document.getElementById('couponMinPrice').value,
             'couponExpiration' : document.getElementById('couponExpiration1').value + '~' + document.getElementById('couponExpiration2').value,
-            'couponCaution' : document.getElementById('couponCaution').value
+            'couponCaution' : document.getElementById('couponCaution').value,
+            'customerCouponExpiration' : document.getElementById('customerCouponExpiration').value
         }
 
         const resp = await axios.post("/admin/coupon/coupon",submitData,{
@@ -260,9 +273,25 @@
                 }
             })
 
-            console.log(resp.data)
             if(resp.data==="SU"){
                 window.location.href = "/admin/coupon/coupons"
+            }
+        } else if (a===3){
+            const submitData = {
+                "id" : event.target.dataset.id
+            }
+
+            try {
+                const resp = await axios.patch("/admin/coupon/event",submitData,{
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                })
+                if(resp.status===200){
+                    window.location.href = "/admin/coupon/coupons"
+                }
+            } catch (e) {
+
             }
         }
 

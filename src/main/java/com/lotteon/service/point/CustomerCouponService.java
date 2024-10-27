@@ -4,15 +4,21 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustCouponDto;
 import com.lotteon.dto.responseDto.GetCustomerCouponDto;
 import com.lotteon.dto.responseDto.GetMyCouponDto;
+import com.lotteon.dto.responseDto.cartOrder.GetCouponDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
+import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Coupon;
 import com.lotteon.entity.point.CustomerCoupon;
+import com.lotteon.entity.product.Product;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
+import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.point.CouponRepository;
 import com.lotteon.repository.point.CustomerCouponRepository;
+import com.lotteon.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.Period;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,24 +42,21 @@ public class CustomerCouponService {
     private final CouponRepository couponRepository;
     private final CustomerRepository customerRepository;
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
+    private final SellerRepository sellerRepository;
 
-    public void postCustCoupon(                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ) {
+
+    public void postCustCoupon(Long id) {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
 
-        Coupon coupon = couponRepository.findById((long)6).orElseThrow();
-
-        Optional<CustomerCoupon> customerCoupon = customerCouponRepository.findByCustomerAndCoupon(auth.getUser().getCustomer(),coupon);
-        if(customerCoupon.isPresent()){
-            this.updateCustCouponCnt(customerCoupon);
-            return;
-        }
+        Coupon coupon = couponRepository.findById(id).orElseThrow();
 
 
         CustomerCoupon newCustomerCoupon = CustomerCoupon.builder()
                 .coupon(coupon)
-                .couponCnt(1)
+                .couponExpiration(LocalDate.now().plusDays(coupon.getCustomerCouponExpiration()-1))
                 .couponState(1)
                 .customer(auth.getUser().getCustomer())
                 .build();
@@ -81,28 +84,32 @@ public class CustomerCouponService {
     public void deleteCustCoupon(){
         LocalDate today = LocalDate.now();
 
-        List<Coupon> coupons = couponRepository.findAll();
+        List<CustomerCoupon> customerCoupons = customerCouponRepository.findAllByCouponState(0);
+        List<CustomerCoupon> expiredCoupons = customerCoupons.stream()
+                .filter(coupon -> {
+                    LocalDate expirationDate = coupon.getCouponExpiration();
+                    return Period.between(expirationDate, today).toTotalMonths() >= 1; // 한 달 이상 차이
+                })
+                .toList();
 
-        for(Coupon coupon : coupons){
-            LocalDate end = LocalDate.parse(coupon.getCouponExpiration().substring(coupon.getCouponExpiration().indexOf("~")+1).trim());
-            if(today.isAfter(end.plusMonths(1))){
-                this.deleteExpirationCoupon(coupon);
-            }
-        }
+        customerCouponRepository.deleteAll(expiredCoupons);
+
+
     }
 
     @Scheduled(cron = "0 1 0 * * ?")
     public void expirateCustCoupon(){
         LocalDate today = LocalDate.now();
 
-        List<Coupon> coupons = couponRepository.findAll();
+        List<CustomerCoupon> customerCoupons = customerCouponRepository.findAll();
 
-        for(Coupon coupon : coupons){
-            LocalDate start = LocalDate.parse(coupon.getCouponExpiration().substring(0,coupon.getCouponExpiration().indexOf("~")));
-            LocalDate end = LocalDate.parse(coupon.getCouponExpiration().substring(coupon.getCouponExpiration().indexOf("~")+1));
-            if(today.isBefore(start) && today.isAfter(end)){
-                this.updateCustCouponState(coupon);
-            }
+        // 만료된 쿠폰 필터링
+        List<CustomerCoupon> expiredCoupons = customerCoupons.stream()
+                .filter(coupon -> coupon.getCouponExpiration().isBefore(today))
+                .toList();
+
+        for(CustomerCoupon customerCoupon : expiredCoupons){
+            customerCoupon.updateCustCouponState(0);
         }
     }
 
@@ -233,21 +240,16 @@ public class CustomerCouponService {
         return dtos;
     }
 
-    private void updateCustCouponState(Coupon coupon) {
-        List<CustomerCoupon> coupons = customerCouponRepository.findAllByCoupon(coupon);
-        coupons.forEach(CustomerCoupon::updateCustCouponState);
-    }
-
-
-    private void updateCustCouponCnt(Optional<CustomerCoupon> customerCoupon) {
-        CustomerCoupon updateCustomerCoupon = customerCoupon.get();
-        updateCustomerCoupon.updateCustCouponCnt();
-    }
-
-    private void deleteExpirationCoupon(Coupon coupon) {
-        List<CustomerCoupon> coupons = customerCouponRepository.findAllByCoupon(coupon);
-        customerCouponRepository.deleteAll(coupons);
-    }
+//    private void updateCustCouponState(Coupon coupon) {
+//        List<CustomerCoupon> coupons = customerCouponRepository.findAllByCoupon(coupon);
+//        coupons.forEach(v->v.updateCustCouponState(1));
+//    }
+//
+//
+//    private void deleteExpirationCoupon(Coupon coupon) {
+//        List<CustomerCoupon> coupons = customerCouponRepository.findAllByCoupon(coupon);
+//        customerCouponRepository.deleteAll(coupons);
+//    }
 
     private Page<GetCustomerCouponDto> findAllByCustomer(String keyword,Pageable pageable) {
         Optional<Member> member = memberRepository.findByMemUid(keyword);
@@ -300,11 +302,9 @@ public class CustomerCouponService {
             return;
         }
         if(customerCoupon.get().getCouponState()==1){
-            customerCoupon.get().updateCustCouponState();
+            customerCoupon.get().updateCustCouponState(0);
         } else if(customerCoupon.get().getCouponState()==0){
-            customerCoupon.get().updateCustCouponStateMinus();
-        } else {
-            customerCoupon.get().updateCustCouponState();
+            customerCoupon.get().updateCustCouponState(1);
         }
 
     }
@@ -342,5 +342,53 @@ public class CustomerCouponService {
         Page<GetMyCouponDto> dtos = coupons.map(CustomerCoupon::toGetMyCouponDto);
 
         return dtos;
+    }
+
+    @Cacheable(value = "dailyCoupon", key = "'daily_' + #id + '_' + #auth.user.id + '_' + T(java.time.LocalDate).now()", cacheManager = "cacheManager")
+    public String postDailyCoupon(Long id, MyUserDetails auth) {
+        Coupon coupon = couponRepository.findById(id).orElseThrow();
+
+        CustomerCoupon newCustomerCoupon = CustomerCoupon.builder()
+                .coupon(coupon)
+                .couponState(1)
+                .couponExpiration(LocalDate.now().plusDays(coupon.getCustomerCouponExpiration()-1))
+                .customer(auth.getUser().getCustomer())
+                .build();
+
+        customerCouponRepository.save(newCustomerCoupon);
+        return "쿠폰 발급 완료";
+    }
+
+    public List<GetCouponDto> findByCustomerAndSeller(List<Long> prodIds) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+
+        List<Member> sellers = this.getSellers(prodIds);
+        Set<CustomerCoupon> uniqueCoupons = new HashSet<>();
+        System.out.println(sellers);
+        for (Member member : sellers) {
+            List<CustomerCoupon> couponsFromMember = customerCouponRepository.findAllByCustomerAndCoupon_Member(customer, member);
+            uniqueCoupons.addAll(couponsFromMember);
+        }
+
+        List<CustomerCoupon> adminCoupons = customerCouponRepository.findAllByCustomerAndCoupon_Member_MemRole(customer, "admin");
+        uniqueCoupons.addAll(adminCoupons);
+        List<CustomerCoupon> combinedCoupons = new ArrayList<>(uniqueCoupons);
+
+        List<GetCouponDto> dtos = combinedCoupons.stream().map(CustomerCoupon::toCartGetCouponDto).toList();
+        return dtos;
+    }
+
+    private List<Member> getSellers(List<Long> prodIds) {
+        List<Member> members = new ArrayList<>();
+        for(Long prodId : prodIds){
+            Optional<Product> product = productRepository.findById(prodId);
+            Long sellId = product.get().getSellId();
+            Member member = memberRepository.findById(sellId).orElseThrow();
+            members.add(member);
+        }
+        return members;
     }
 }

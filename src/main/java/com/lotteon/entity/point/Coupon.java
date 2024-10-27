@@ -63,6 +63,12 @@ public class Coupon {
     @CreationTimestamp
     private Timestamp couponRdate;
 
+    @Column(name = "customer_coupont_expiration")
+    private Integer customerCouponExpiration;
+
+    @Column(name = "coupon_banner_state")
+    private Integer couponBannerState;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "coupon")
     @Builder.Default
     @ToString.Exclude
@@ -84,6 +90,12 @@ public class Coupon {
         } else {
             issuer = member.getSeller().getSellCompany();
         }
+        String banner;
+        if(couponBannerState==0){
+            banner = "이벤트";
+        } else {
+            banner = "이벤트종료";
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = sdf.format(couponRdate);
@@ -101,6 +113,7 @@ public class Coupon {
                 .couponName(couponName)
                 .couponUseCount(couponUseCount)
                 .couponCaution(couponCaution)
+                .couponBannerState(banner)
                 .build();
     }
 
@@ -113,4 +126,7 @@ public class Coupon {
     }
 
 
+    public void updateCouponBannerState(int a) {
+        this.couponBannerState = a;
+    }
 }
