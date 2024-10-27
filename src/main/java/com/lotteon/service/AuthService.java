@@ -2,7 +2,6 @@ package com.lotteon.service;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
-import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +77,34 @@ public class AuthService implements UserDetailsService {
         return cust;
     }
 
-    // 2. 관리자 회원목록 페이지 처리 (<이전 1,2,3 다음>)
+    // 2. 관리자 회원수정 (팝업호출 = select)
+    public GetAdminUserDTO popCust(Long id) {
+        Optional<Member> optMember = memberRepository.findById(id);
+        if(optMember.isPresent()) {
+            Member member = optMember.get();
+            String[] addr = member.getCustomer().getCustAddr().split("/");
+            return GetAdminUserDTO.builder()
+                    .id(member.getId())
+                    .memUid(member.getMemUid())
+                    .custName(member.getCustomer().getCustName())
+                    .custGrade(member.getCustomer().getCustGrade())
+                    .custGender(member.getCustomer().getCustGender())
+                    .custEmail(member.getCustomer().getCustEmail())
+                    .custHp(member.getCustomer().getCustHp())
+                    .memRdate(member.getMemRdate())
+                    .memState(member.getMemState())
+                    .custAddr1(addr[0])
+                    .custAddr2(addr[1])
+                    .custAddr3(addr[2])
+                    .build();
+        }
+       //Optional<Member> custPop = memberRepository.findByMemUid(selectCustDto.getMemUid());
+        return null;
+    }
+
+
+
+    // 3. 관리자 회원목록 페이지 처리 (<이전 1,2,3 다음>)
     public Page<GetAdminUserDTO> selectCustAll2(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Member> members = memberRepository.findAllByMemRoleOrderByIdDesc("customer",pageable);
@@ -89,7 +114,7 @@ public class AuthService implements UserDetailsService {
     }
 
 
-    // 3. 관리자 회원목록 선택삭제 기능
+    // 4. 관리자 회원목록 선택삭제 기능
     public boolean deleteCustsById(List<Long> deleteCustIds) {
         try{
             for (Long deleteCustId : deleteCustIds) {
