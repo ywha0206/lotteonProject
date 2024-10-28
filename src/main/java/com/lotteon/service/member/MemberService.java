@@ -1,5 +1,6 @@
 package com.lotteon.service.member;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
@@ -11,6 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -41,5 +45,14 @@ public class MemberService {
 //
 //
 
+    }
+
+    public void updateLastLoginDate(MyUserDetails user) {
+        Optional<Member> member = memberRepository.findById(user.getUser().getId());
+        if(member.isEmpty()){
+            return;
+        }
+        LocalDateTime today = LocalDateTime.now();
+        member.get().updateLastLogin(today);
     }
 }
