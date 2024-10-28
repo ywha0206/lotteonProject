@@ -60,60 +60,18 @@
                 position: relative;
                 top: -18px;"
         >
-            <div id="searchSlider">
-                <ul class="searchslider">
-                    <li>
-                        <a>
-                            1. 연관검색어1
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            2. 연관검색어2
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            3. 연관검색어3
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            4. 연관검색어4
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            5. 연관검색어5
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            6. 연관검색어6
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            7. 연관검색어7
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            8. 연관검색어8
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            
             <a sec:authorize="!hasRole('admin')" th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')" th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')"><img class="img-header-link" th:src="@{/images/header-zzim.png}" style="width: 50px; height: 50px;"></a>
         </div>
+
     </header><!--#header-->
 </body>
 
 <script>
     $(document).ready(function(){
-        $('.searchslider').bxSlider({
+        var slider = $('.searchslider').bxSlider({
             mode: 'vertical',
             auto: true, // 자동 슬라이드
             pause: 3000, // 슬라이드 간의 대기 시간 (밀리초)
@@ -121,7 +79,46 @@
             controls: true, // 이전/다음 버튼 표시
             nextText: '다음', // 다음 버튼 텍스트
             prevText: '이전', // 이전 버튼 텍스트
-            touchEnabled : (navigator.maxTouchPoints > 0)
+            touchEnabled: (navigator.maxTouchPoints > 0)
         });
+        $('.bx-wrapper').hover(
+            function() {
+                $(this).find('.bx-viewport').css('overflow', 'visible');
+            },
+            function() {
+                $(this).find('.bx-viewport').css('overflow', 'hidden');
+            }
+        );
+    });
+
+    // function hoverPopular(){
+    //     document.querySelector('.popular-box').style.display='flex'
+    // }
+    //
+    // function outPopular(){
+    //     document.querySelector('.popular-box').style.display='none'
+    // }
+    var isHovering = false; // 상태 변수를 추가하여 마우스 오버 여부를 추적
+
+    function hoverPopular() {
+        isHovering = true; // 마우스 오버 상태로 설정
+        $('.popular-box').show(); // 검색어 창 표시
+    }
+
+    function outPopular() {
+        if (!isHovering) {
+            $('.popular-box').hide(); // 마우스가 벗어나면 검색어 창 닫기
+        }
+    }
+
+    // 검색어 창에 마우스 오버 시 상태 변경
+    $('.popular-box').on('mouseover', function() {
+        isHovering = true;
+    });
+
+    // 검색어 창에 마우스 아웃 시 상태 변경
+    $('.popular-box').on('mouseleave', function() {
+        isHovering = false;
+        $('.popular-box').hide(); // 마우스가 벗어나면 검색어 창 닫기
     });
 </script>
