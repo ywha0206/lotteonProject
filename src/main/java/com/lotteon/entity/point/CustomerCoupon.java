@@ -179,7 +179,7 @@ public class CustomerCoupon {
                     .couponDiscountOption(realOption)
                     .couponMinPrice(coupon.getCouponMinPrice())
                     .couponDiscount(coupon.getCouponDiscount())
-                    .sellId(coupon.getMember().getSeller().getId())
+                    .sellId(coupon.getMember().getId())
                     .build();
         }
 

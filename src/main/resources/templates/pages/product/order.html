@@ -125,6 +125,7 @@
       }
 
       console.log(jsonData);
+      console.log(submitData)
 
       fetch('/prod/order',{
         method:'POST',
@@ -150,6 +151,8 @@
     })
 
   };
+  let submitData;
+
 
   async function adjustCoupon(event) {
     event.stopPropagation()
@@ -164,6 +167,7 @@
         const couponDiscount = selectedOption.dataset.discount;
         const couponOption = selectedOption.dataset.option;
         const sellId = selectedOption.dataset.id;
+        const couponId = selectedOption.dataset.couponid;
         const sellerIds = document.querySelectorAll('.couponMatchers')
         const matchingElements = Array.from(sellerIds).filter(v => v.dataset.sellid === sellId);
 
@@ -184,6 +188,7 @@
           if(couponOption === '원 배달비 할인'){
             dPlusDiscount(couponDiscount,allDeliver,deliverValue,orderPrice,priceValue,event)
           }
+          submitData = couponId
         } else {
           alert("판매자 쿠폰입니다. 쿠폰을 발급 한 해당 판매자 가격만 할인됩니다.")
           let adjustCouponPrice =0;
@@ -228,6 +233,7 @@
               }
             }
           }
+          submitData = couponId
         }
       }
     } else {
@@ -240,6 +246,7 @@
         const couponDiscount = selectedOption.dataset.discount;
         const couponOption = selectedOption.dataset.option;
         const sellId = selectedOption.dataset.id;
+        const couponId = selectedOption.dataset.couponid;
         const sellerIds = document.querySelectorAll('.couponMatchers')
         const matchingElements = Array.from(sellerIds).filter(v => v.dataset.sellid === sellId);
         const allDiscount = document.querySelector('.AllDiscount')
@@ -248,6 +255,8 @@
         let priceValue = orderPrice.innerText
         let discountValue = allDiscount.innerText
         let deliverValue = allDeliver.innerText
+
+
         if(couponType==='주문상품할인'){
           if (couponOption === '원 할인') {
             wMinusDiscount(couponDiscount,allDiscount,discountValue,orderPrice,priceValue,event)
@@ -258,6 +267,7 @@
           if(couponOption === '원 배달비 할인'){
             dMinusDiscount(couponDiscount,allDeliver,deliverValue,orderPrice,priceValue,event)
           }
+          submitData = ""
         } else {
           let adjustCouponPrice =0;
           let highestDeliver = 0;
@@ -291,9 +301,8 @@
               dMinusDiscount(highestDeliver,allDeliver,deliverValue,orderPrice,priceValue,event)
             }
           }
+          submitData = ""
         }
-
-
       }
     }
   }
@@ -543,7 +552,7 @@
               </td>
               <td class="usedPoint">
                 <input id="pointsId" type="number" th:max="${customer.points}" class="point" />
-                <button type="button" onclick="usePoint(event)" th:data-point="${customer.points}" class="btn_point">사용하기</button>
+                <button type="button" th:disabled="${customer.points < 5000}" onclick="usePoint(event)" th:data-point="${customer.points}" class="btn_point">사용하기</button>
               </td>
             </table>
             <table style="margin-top: 25px;" class="tb3">
@@ -554,6 +563,7 @@
                 <td class="usedPoint">
                   <select id="couponSelect" style="margin-left: 88px;" class="point">
                     <option
+                            th:data-couponid="${coupon.id}"
                             th:data-id="${coupon.sellId}"
                             th:data-type="${coupon.couponType}"
                             th:data-discount="${coupon.couponDiscount}"
