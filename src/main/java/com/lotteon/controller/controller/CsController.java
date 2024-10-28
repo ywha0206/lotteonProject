@@ -40,12 +40,10 @@ public class CsController {
     }
 
     // 개별 공지사항 상세 페이지 매핑 추가
-    @GetMapping("/notice/view/{id}")
-    public String notice(@PathVariable Long id, Model model) {
-        // NoticeService를 통해 공지사항 조회
-        Notice notice = noticeService.getNoticeById(id);
-        model.addAttribute("notice", notice);  // 모델에 공지사항 데이터 추가
-        return "pages/cs/notice/view";  // view.html 페이지로 이동
+    @GetMapping("/notice")
+    public String notice(Model model) {
+
+        return "pages/cs/notice/view";
     }
 
     @GetMapping("/faqs")
