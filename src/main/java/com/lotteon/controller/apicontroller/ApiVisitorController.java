@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 * 이름 : 이상훈
@@ -33,10 +35,16 @@ public class ApiVisitorController {
 
     // 현재 방문자 수 조회
     @GetMapping("/visitor-count")
-    public ResponseEntity<Long> getVisitorCount() {
+    public ResponseEntity<?> getVisitorCount() {
         String key = "visitor:count:" + LocalDate.now();
+        Map<String,Object> map = new HashMap<>();
+
         Long count = visitorService.getVisitorCount(key);
-        return ResponseEntity.ok(count);
+        Long weekCount = visitorService.getWeekVisitorCount();
+
+        map.put("count",count);
+        map.put("weekCount",weekCount);
+        return ResponseEntity.ok(map);
     }
 }
 

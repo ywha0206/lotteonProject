@@ -42,6 +42,9 @@ public class Seller {
     @Column(name = "sell_fax")
     private String sellFax; // 팩스번호
 
+    @Column(name = "sell_email")
+    private String sellEmail;
+
     @Column(name = "sell_addr")
     private String sellAddr; // 판매자 주소
     

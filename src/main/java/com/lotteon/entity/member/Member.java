@@ -4,9 +4,8 @@ import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @ToString
@@ -35,6 +34,12 @@ public class Member {
 
     @Column(name = "mem_state")
     private String memState; // 계정 상태 (활성, 비활성) [로그인, 로그아웃]
+
+    @Column(name = "mem_last_login_date")
+    private LocalDateTime memLastLoginDate;
+
+    @Column(name = "mem_etc")
+    private String memEtc;
 
     @Column(name = "mem_edate")
     private Timestamp memSignout; // 탈퇴일자

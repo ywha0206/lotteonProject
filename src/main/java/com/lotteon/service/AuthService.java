@@ -2,8 +2,12 @@ package com.lotteon.service;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
+import com.lotteon.entity.member.Seller;
+import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
+import com.lotteon.repository.member.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -26,6 +30,16 @@ public class AuthService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
+    private final CustomerRepository customerRepository;
+    private final SellerRepository sellerRepository;
+
+    public String matchingCheckByNameAndEmail(String name, String email) {
+        Optional<Customer> customer = customerRepository.findByCustNameAndCustEmail(name,email);
+        if(customer.isPresent()){
+            return "SU";
+        }
+        return "NF";
+    }
 
     // 0. 관리자 회원목록
     @Override
@@ -128,6 +142,13 @@ public class AuthService implements UserDetailsService {
     }
 
 
+    public String matchingCheckByBusinessAndEmail(String name, String email) {
+        Optional<Seller> seller = sellerRepository.findBySellBusinessCodeAndSellEmail(name,email);
+        if(seller.isPresent()){
+            return seller.get().getSellRepresentative();
+        }
+        return "NF";
+    }
 }
 
 
