@@ -40,7 +40,7 @@ public class OrderItem {
 
     @Column(name = "order_item_state1")
     @ColumnDefault("0")
-    private Boolean state1;
+    private int state1;
 
     @Column(name = "order_item_state2")
     @ColumnDefault("0")

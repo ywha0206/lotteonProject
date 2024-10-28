@@ -42,7 +42,7 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final com.lotteon.entity.member.QSeller seller;
 
-    public final BooleanPath state1 = createBoolean("state1");
+    public final NumberPath<Integer> state1 = createNumber("state1", Integer.class);
 
     public final NumberPath<Integer> state2 = createNumber("state2", Integer.class);
 
