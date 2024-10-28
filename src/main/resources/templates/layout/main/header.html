@@ -60,7 +60,7 @@
                 position: relative;
                 top: -18px;"
         >
-            
+
             <a sec:authorize="!hasRole('admin')" th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')" th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')"><img class="img-header-link" th:src="@{/images/header-zzim.png}" style="width: 50px; height: 50px;"></a>
@@ -70,55 +70,5 @@
 </body>
 
 <script>
-    $(document).ready(function(){
-        var slider = $('.searchslider').bxSlider({
-            mode: 'vertical',
-            auto: true, // 자동 슬라이드
-            pause: 3000, // 슬라이드 간의 대기 시간 (밀리초)
-            pager: true, // 페이지 네비게이션 표시
-            controls: true, // 이전/다음 버튼 표시
-            nextText: '다음', // 다음 버튼 텍스트
-            prevText: '이전', // 이전 버튼 텍스트
-            touchEnabled: (navigator.maxTouchPoints > 0)
-        });
-        $('.bx-wrapper').hover(
-            function() {
-                $(this).find('.bx-viewport').css('overflow', 'visible');
-            },
-            function() {
-                $(this).find('.bx-viewport').css('overflow', 'hidden');
-            }
-        );
-    });
-
-    // function hoverPopular(){
-    //     document.querySelector('.popular-box').style.display='flex'
-    // }
-    //
-    // function outPopular(){
-    //     document.querySelector('.popular-box').style.display='none'
-    // }
-    var isHovering = false; // 상태 변수를 추가하여 마우스 오버 여부를 추적
-
-    function hoverPopular() {
-        isHovering = true; // 마우스 오버 상태로 설정
-        $('.popular-box').show(); // 검색어 창 표시
-    }
-
-    function outPopular() {
-        if (!isHovering) {
-            $('.popular-box').hide(); // 마우스가 벗어나면 검색어 창 닫기
-        }
-    }
-
-    // 검색어 창에 마우스 오버 시 상태 변경
-    $('.popular-box').on('mouseover', function() {
-        isHovering = true;
-    });
-
-    // 검색어 창에 마우스 아웃 시 상태 변경
-    $('.popular-box').on('mouseleave', function() {
-        isHovering = false;
-        $('.popular-box').hide(); // 마우스가 벗어나면 검색어 창 닫기
-    });
+    
 </script>
