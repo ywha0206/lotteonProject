@@ -10,6 +10,7 @@ import com.lotteon.dto.responseDto.cartOrder.CartItemOptionDto;
 import com.lotteon.dto.responseDto.cartOrder.ProductDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
 import com.lotteon.entity.member.Customer;
+import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.*;
 import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final ProductOptionRepository productOptionRepository;
     private final CartItemOptionRepository cartItemOptionRepository;
     private final ModelMapper modelMapper;
@@ -126,7 +128,11 @@ public class OrderService {
     }
 
 
-    public Page<ResponseOrdersDto> selectedOrderList(Customer customer,int page) {
+    public Page<ResponseOrdersDto> selectedOrderList(int page) {
+
+        MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+
         log.info("오더 서비스 접속");
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
@@ -154,5 +160,18 @@ public class OrderService {
         });
 
         return responseOrdersDtos;
+    }
+
+    public Page<ResponseOrdersDto> selectedAdminOrders(int page) {
+
+        MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
+
+        Page<Order> orders = orderRepository.findAllByOrderItems_seller(seller,pageable);
+        log.info("오더서비스 셀러로 오더 뽑기"+orders.toString());
+
+
+        return null;
     }
 }
