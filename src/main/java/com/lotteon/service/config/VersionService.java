@@ -1,13 +1,16 @@
 package com.lotteon.service.config;
 
 import com.lotteon.dto.requestDto.PostVersionDTO;
+import com.lotteon.dto.responseDto.GetConfigDTO;
 import com.lotteon.dto.responseDto.GetVersionDTO;
 import com.lotteon.dto.responseDto.PageResponseDTO;
+import com.lotteon.entity.config.Config;
 import com.lotteon.entity.config.Version;
 import com.lotteon.repository.config.VersionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +25,16 @@ import java.util.List;
 @Transactional
 public class VersionService {
     private final VersionRepository versionRepository;
+    private final ConfigService configService;
     private final ModelMapper modelMapper;
 
+    @CacheEvict(value = "configCache", key = "'config'")
     public Version insertVersion(PostVersionDTO postVersionDTO) {
         Version version = modelMapper.map(postVersionDTO, Version.class);
+        Config existingConfig = modelMapper.map(configService.getUsedConfig(), Config.class);
+        Config newConfig = existingConfig.copyConfig();
+        newConfig.patchSiteVersion(postVersionDTO.getVerName());
+        newConfig.update("ID "+postVersionDTO.getMem_id());
         return versionRepository.save(version);
     }
 
