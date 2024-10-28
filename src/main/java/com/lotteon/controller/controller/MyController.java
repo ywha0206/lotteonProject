@@ -1,17 +1,22 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.responseDto.GetAddressDto;
 import com.lotteon.dto.responseDto.GetCustomerCouponDto;
 import com.lotteon.dto.responseDto.GetMyCouponDto;
 import com.lotteon.dto.responseDto.GetPointsDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.service.member.AddressService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.point.PointService;
+import com.lotteon.service.product.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -27,6 +33,7 @@ import java.util.List;
 @Log4j2
 public class MyController {
 
+    private final OrderService orderService;
     private final CouponService couponService;
     private final CustomerCouponService customerCouponService;
     private final CustomerService customerService;
@@ -74,7 +81,21 @@ public class MyController {
         return "pages/my/info";
     }
     @GetMapping("/orders")
-    public String order(Model model) {
+    public String order(Model model, Authentication authentication,
+                        @RequestParam(name = "page",defaultValue = "0") int page
+    ) {
+        log.info("마이페이지 오더 컨트롤러 접속 ");
+
+        MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        log.info(" 마이페이지 오더에서 커스터머 뽑기 "+customer);
+
+        Page<ResponseOrdersDto> orders = orderService.selectedOrderList(customer,page);
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", orders.getTotalPages());
+
         return "pages/my/order";
     }
     @GetMapping("/points")

@@ -142,9 +142,11 @@
 
     document.getElementById("buttonId").addEventListener("click", openCustUpdatePopup);
 
+
     async function openCustUpdatePopup(event){
         const id = event.target.dataset.id;
         console.log(id);
+
 
         fetch(`/admin/user/user/${id}`,{
             method : 'GET',
@@ -168,7 +170,7 @@
                     popup.innerHTML = `
 
             <div class="header">
-                <div class="title">회원수정 <span style="color: white">1012000000</span></div>
+                <div class="title">회원수정</div>
                 <div onclick="closePopup()" class="btn">X</div>
             </div>
 
@@ -185,13 +187,20 @@
                     <tr>
                         <th>성별</th>
                         <td>
-                            <label for= ""><input value="true" type="radio" name="custGender">남</label>
+
+                            <label for=""><input value="true" type="radio" name="custGender">남</label>
+
                             <label for=""><input value="false" type="radio" name="custGender">여</label>
                         </td>
                     </tr>
                     <tr>
                         <th>등급</th>
                         <td>${data.custGrade}</td>
+
+                    </tr>
+                    <tr>
+                        <th>상태</th>
+                        <td>${data.memState}</td>
                     </tr>
                     <tr>
                         <th>이메일</th>
@@ -227,7 +236,9 @@
                     </tr>
                 </table>
             </div>
-            <div style="margin-bottom:20px" class="btns"><button onclick="closePopup(event)">닫기</button></div>
+            <div style="margin-bottom:20px" class="btns">
+                <button onclick="closePopup(event)">수정하기
+            </button></div>
             `
                     popup.style.display = "block";
                     bg.style.display = "flex";
@@ -236,8 +247,6 @@
             .catch(err => {
                 console.error('Error:', err);
             })
-
-
     }
 
     // 팝업 닫기
