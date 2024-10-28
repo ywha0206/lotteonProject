@@ -50,11 +50,16 @@ public class MyController {
 
     @GetMapping(value = {"","/","/index"})
     public String index(Model model) {
+
+        Page<ResponseOrdersDto> orders = orderService.selectedOrderList(0);
+
+
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
         if(points.isEmpty()){
             model.addAttribute("noPoint",true);
             return "pages/my/index";
         }
+        model.addAttribute("orders", orders);
         model.addAttribute("points", points);
         model.addAttribute("noPoint",false);
         return "pages/my/index";
@@ -80,17 +85,13 @@ public class MyController {
     public String info(Model model) {
         return "pages/my/info";
     }
+
     @GetMapping("/orders")
-    public String order(Model model, Authentication authentication,
+    public String order(Model model,
                         @RequestParam(name = "page",defaultValue = "0") int page
     ) {
         log.info("마이페이지 오더 컨트롤러 접속 ");
-
-        MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
-        Customer customer = auth.getUser().getCustomer();
-        log.info(" 마이페이지 오더에서 커스터머 뽑기 "+customer);
-
-        Page<ResponseOrdersDto> orders = orderService.selectedOrderList(customer,page);
+        Page<ResponseOrdersDto> orders = orderService.selectedOrderList(page);
 
         model.addAttribute("orders", orders);
         model.addAttribute("page", page);

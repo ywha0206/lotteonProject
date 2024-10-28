@@ -7,7 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+/*
+    날짜: 2024/10/27
+    이름: 박연화
+    내용: responseOrderDto 생성
 
+    수정이력
+    - 2024/10/28 박연화 - admin orders에 출력될 memUid 추가
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -21,4 +28,7 @@ public class ResponseOrderDto {
     private String receiverAddr;
     private int OrderTotal;
     private List<ResponseOrderItemDto> orderItemDtos;
+
+//    추가 필드
+    private String memUid;
 }
