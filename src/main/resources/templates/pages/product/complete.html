@@ -3,32 +3,7 @@
 <script th:src="@{/js/main.js}"></script>
 <header th:replace="layout/main/header.html"></header>
 <main style="margin-top: 140px; gap: 0">
-  <aside id="aside" style="margin: 0; margin-right: 30px">
-    <nav id="menu" class="menu">
-      <ul th:each="cate1 : ${category1}">
-        <li class="dep1">
-          <a href="#" class="m">
-            <span onclick="openCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}" class="d1_tit">패션 · 의류 · 뷰티</span>
-          </a></li>
-      </ul>
-      <ul>
-
-        <li class="dep1">
-          <a href="#">
-            <div class="dep2">
-              <button onclick="closePopupCategory()">X</button>
-              <ul class="cf flex" id="data-response">
-              </ul>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </nav><!-- #memu .memu -->
-    <div class="memuBg"></div><!-- .memuBg -->
-
-
-
-  </aside>
+  <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
   <div id="wrap">
     <!-- .aside -->
     <main id="main" style="height: auto;">
@@ -64,20 +39,20 @@
           <th>수량</th>
           <th>총합</th>
         </tr>
-        <tr>
+        <tr th:each="orderItem : ${order.orderItemDtos}">
           <td>
             <div class="img">
               <img src="https://via.placeholder.com/74x69" />
               <div class="name_desc">
-                <span>상품명</span> <br />
-                <span>상품설명</span>
+                <span th:text="${orderItem.prodName}">상품명</span> <br />
+                <span th:text="${orderItem.prodSummary}">상품설명</span>
               </div>
             </div>
           </td>
-          <td>27,000</td>
-          <td>-1,350</td>
-          <td>1</td>
-          <td>25,650</td>
+          <td th:text="${orderItem.prodPrice}">27,000</td>
+          <td th:text="${orderItem.discount}">-1,350</td>
+          <td th:text="${orderItem.quantity}">1</td>
+          <td th:text="${orderItem.totalPrice}">25,650</td>
         </tr>
       </table>
       <!-- .tb1-->
@@ -97,7 +72,7 @@
           </tr>
           <tr>
             <td>총 결제금액</td>
-            <td style="color: #c00000">25,650원</td>
+            <td th:text="${order.orderTotal}" style="color: #c00000">25,650원</td>
           </tr>
         </table>
         <!-- .tb2-->
@@ -107,7 +82,7 @@
       <table class="tb3">
         <tr>
           <th>주문번호</th>
-          <td>1111111111</td>
+          <td th:text="${order.orderId}">1111111111</td>
         </tr>
         <tr>
           <th>결제방법</th>
@@ -115,7 +90,7 @@
         </tr>
         <tr>
           <th>주문자/연락처</th>
-          <td>홍길동 / 1111111111</td>
+          <td th:text="${order.custName}+' / '+${order.custHp}">홍길동 / 1111111111</td>
         </tr>
         <tr>
           <th>총 결제금액</th>
@@ -127,15 +102,15 @@
       <table class="tb4">
         <tr>
           <th>수취인</th>
-          <td>홍길동</td>
+          <td th:text="${order.receiverName}">홍길동</td>
         </tr>
         <tr>
           <th>연락처</th>
-          <td>11111111111</td>
+          <td th:text="${order.receiverHp}">11111111111</td>
         </tr>
         <tr>
           <th>배송지 주소</th>
-          <td>부산 금정구 123123 10층</td>
+          <td  th:text="${order.receiverAddr}">부산 금정구 123123 10층</td>
         </tr>
       </table>
       <!-- .tb4-->

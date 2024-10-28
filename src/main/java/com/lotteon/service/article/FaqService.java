@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +35,8 @@ public class FaqService {
     private final CategoryArticleService categoryArticleService;
     private final ModelMapper modelMapper;
 
-   /* public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
+    /* 관리자 cs 기능 */
+    public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
         System.out.println("categoryName1 = " + categoryName1);
 
         // 1. CategoryArticleRepository에서 카테고리 이름으로 카테고리를 찾음
@@ -56,7 +58,7 @@ public class FaqService {
         // 3. FAQ 저장
         faqRepository.save(faq);  // DB에 저장
 
-    }*/
+    }
 
     // FAQ 목록 조회 (카테고리별)
     public Page<ArticleDto> getFaqs(CategoryArticle cate1, CategoryArticle cate2, int limit, Pageable pageable) {
@@ -66,12 +68,18 @@ public class FaqService {
         return faqPage.map(faq -> modelMapper.map(faq, ArticleDto.class));
     }
 
-    // FAQ 상세 조회 (ID로 조회)
-    public ArticleDto getDetailById(Long id) {
-        Faq faq = faqRepository.findById(id).orElseThrow(() -> new RuntimeException("FAQ not found"));
-        return modelMapper.map(faq, ArticleDto.class); // FAQ -> DTO 변환
+
+
+    // FAQ 상세보기 기능 추가
+    public ArticleDto getFaqById(Long id) {
+        // ID를 통해 FAQ 조회
+        return faqRepository.findById(id)
+                .map(ArticleDto::fromEntity) // DTO로 변환
+                .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다."));
     }
 
+
+    /* 일반 cs 기능 */
     // 더보기 기능 (처음부터 10개 가져오는걸로 수정하기)
     public List<ArticleDto> getFaqsCount10(CategoryArticle cate1, CategoryArticle cate2) {
         Limit limit = Limit.of(10);
@@ -83,22 +91,26 @@ public class FaqService {
 
     }
 
-
+    /**
+     * faq를 페이지네이션으로 들고오는 함수
+     *
+     * @param pageable
+     * @return articleDTO 페이징
+     */
     public Page<ArticleDto> getAllFaqs(Pageable pageable) {
+        // 1. faqRepository에서 페이징 처리된 결과가 반환되게
         Page<Faq> faqPage = faqRepository.findAll(pageable);
         System.out.println("faqPage.getContent() = " + faqPage.getContent());
-
-        return faqPage.map(ArticleDto::fromEntity);
-
+        // 2. FAQ타입을 갖고있는 page를 ArticleDto타입을 갖는 page로 변환
+        Page<ArticleDto> result = faqPage.map(faq-> ArticleDto.fromEntity(faq));
+        return result;
     }
 
-
-    // FAQ 상세보기 기능 추가
-    public ArticleDto getFaqById(Long id) {
-        // ID를 통해 FAQ 조회
-        return faqRepository.findById(id)
-                .map(ArticleDto::fromEntity) // DTO로 변환
-                .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다."));
+    // FAQ 상세 조회 (ID로 조회)
+    public ArticleDto getDetailById(Long id) {
+        Faq faq = faqRepository.findById(id).orElseThrow(() -> new RuntimeException("FAQ not found"));
+        return modelMapper.map(faq, ArticleDto.class); // FAQ -> DTO 변환
     }
+
 
 }

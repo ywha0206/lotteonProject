@@ -1,7 +1,7 @@
 <link rel="stylesheet" th:href="@{/css/admin/config/banner.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
     <header th:replace="layout/admin/header.html"></header>
-    <main>
+    <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
         <aside th:replace="layout/admin/aside.html"></aside>
         <div class="container">
             <div class="header">
@@ -86,8 +86,8 @@
                     </tbody>
                 </table>
                 <div class="btns">
-                    <button class="delete-btn">선택삭제</button>
-                    <button onclick="openBanner()" class="insert-btn">배너등록</button>
+                    <button class="delete-btn admin-btn">선택삭제</button>
+                    <button onclick="openBanner()" class="insert-btn admin-btn">배너등록</button>
                 </div>
 
             </div>

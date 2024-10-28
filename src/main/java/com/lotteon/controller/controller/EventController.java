@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequiredArgsConstructor
 @Log4j2
-public class AttendenceController {
+public class EventController {
 
     private final EventService eventService;
     private final AttendanceEventRepository attendanceEventRepository;
@@ -39,5 +39,17 @@ public class AttendenceController {
         int days = eventService.findEvent(result);
         model.addAttribute("days", days);
         return "pages/event/attendance";
+    }
+
+    @GetMapping("/birth")
+    public String birth(Model model) {
+        eventService.issueCoupon();
+        return "redirect:/index?birth=true";
+    }
+
+    @GetMapping("/coupon")
+    public String coupon(Model model) {
+
+        return "pages/event/coupon";
     }
 }

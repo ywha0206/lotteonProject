@@ -56,89 +56,31 @@ li {list-style: none;}
 }
 
 #sidebar2 {
-    width: 200px;
+    width: 283px;
     height: auto;
-    /* background-color: #d9d9d9; */
+    background-color: #f2f3f7;
+    border-radius: 10px;
 
 }
-
-.subCate {
-    background-color: #f2f2f2;
-    width: 200px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 0;
-    overflow: hidden; /* 이 부분이 필요합니다 */
-    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
-}
-
-.thdCate {
-    background-color: #f2f2f2;
-    width: 200px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
-}
-
-.subCate div {
-    margin-left: 10px;
-}
-
-.subCate.open {
-    width: 196px;
-    max-height: 1000px; /* 메뉴에 따른 최대 높이 설정 */
-}
-
-.thdCate.open {
-    width: 196px;
-    max-height: none; /* 메뉴에 따른 최대 높이 설정 */
-}
-
-.subCate a {
-    text-decoration: none;
-    color: black;
-    font-size: 14px;
-    padding-left: 10px;
-}
-
 
 .navi2 {
-    border: 2px solid #dfdfdf;
-    background-color: aliceblue;
-
+    /*background-color: aliceblue;*/
 }
 
 .navi2 li {
     padding: 20px 0;
     cursor: pointer;
-    padding-left: 10px;
+    padding-left: 25px;
     display: flex;
     justify-content: space-between;
     padding-right: 5px;
-    background-color: aliceblue;
+    /*background-color: white;*/
     font-size: 16px;
 
     &:hover {
         color: blueviolet;
         opacity: 0.8;
     }
-}
-
-.subCate li {
-    padding: 5px 0;
-    cursor: pointer;
-    padding-left: 10px;
-    display: flex;
-    justify-content: space-between;
-    padding-right: 5px;
-    background-color: #ffffff;
-    font-size: 14px;
 }
 
 .advice-footer {
@@ -149,54 +91,6 @@ li {list-style: none;}
     padding: 20px;
     margin: 30px 0;
     color: #595959;
-}
-
-.addSub, .addThd {
-    display: flex;
-    /* gap: 3px; */
-    border: none;
-    cursor: pointer;
-    color: #909090;
-    align-items: center;
-    background-color: #f2f2f2;
-    &:hover {
-        .add-icon {
-            background-color: #8EB4E3;
-        }
-    }
-}
-
-.addSub{
-    margin-top: auto;
-}
-
-.addMain{
-    gap: 5px;
-    border: none;
-    padding: 10px 0;
-    padding-left: 10px;
-    padding-right: 5px;
-    border-bottom: 2px solid #dfdfdf;
-    background-color: #ffffff;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    margin-bottom: 20px;
-    &:hover {
-        .add-icon {
-            background-color: #8EB4E3;
-        }
-    }
-}
-
-.icon {
-    border: 1px solid #909090;
-    width: 15px;
-    height: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 
@@ -243,31 +137,26 @@ li {list-style: none;}
 .depth2 > li {
     font-size: 13px;
     padding-left: 30px;
-    background-color: ghostwhite;
+    background-color: white;
+    margin-right: 20px;
+    margin-left: 20px;
+    border-bottom: 1px solid lavenderblush;
 }
 
 .depth3 > li {
     font-size: 13px;
     padding-left: 30px;
-    background-color: ivory;
+    background-color: #f2f3f7;
+    border: 1px solid white;
+    border-radius: 7px;
 }
 
 
 .depth3 {
     position: relative;
-    top: -133px;
-    left: 199px;
-    background-color: gainsboro;
+    top: -100px;
+    left: 286px;
     height: 0;
-    /*width: 300px;*/
-}
-
-.depth2 {
-
-    background-color: gainsboro;
-    &:hover {
-        background-color: gainsboro;
-    }
 }
 
 .add-category {
@@ -280,32 +169,67 @@ li {list-style: none;}
 }
 
 .delete-categories {
-    background-image: url("/images/delete_category.png");
+    background-image: url(/images/delete_category.png);
     background-position: 50% 50%;
     background-size: 100% 100%;
-    width: 50px;
-    height: 50px;
-    position: fixed;
-    top: 50%;
-    left: 78%;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: 93%;
+    left: -61%;
     translate: -50% -50%;
-    opacity: 0;
+    opacity: 1;
     z-index: 1000;
+    margin-top: 20px;
 
 }
 
 .add-inp {
     border: none;
     outline: none;
-    padding: 20px;
-    background-color: antiquewhite;
+    padding: 5px 20px;
+    background-color: #f2f3f7;
     color: black;
     margin-right: 20px;
+    top: 2px;
+    border-radius: 10px;
+    left: -498px;
+    height: 38px;
     position: relative;
-    top: 59px;
-    /*display: none;*/
-    /*position: absolute;*/
-    /*top: 70%;*/
-    /*left: 50%;*/
-    /*translate: -50% -50%;*/
+    width: 230px;
+}
+
+.category-animate {
+    opacity: 0; /* 처음에는 안 보이게 설정 */
+    max-height: 0; /* 초기 높이를 0으로 설정하여 보이지 않도록 함 */
+    /*overflow: hidden; */
+    transition: max-height 1s ease, opacity 1s ease; /* 높이와 투명도에 애니메이션 효과 추가 */
+}
+
+/* 카테고리가 펼쳐질 때의 상태 */
+.category-animate.active {
+    opacity: 1; /* 보이게 설정 */
+    max-height: 500px; /* 최대 높이를 지정하여 요소가 펼쳐지게 함 (필요에 따라 높이 조정) */
+}
+
+.cate3 {
+    transition: background-color 1s ease; /* 배경색 전환 애니메이션 */
+}
+
+/* hover 시 배경색 변경 */
+.cate3:hover {
+    background-color: #e0e0e0; /* 호버 시 색 변경 */
+}
+
+.fade-in {
+    animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

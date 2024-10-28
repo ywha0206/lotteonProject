@@ -157,32 +157,7 @@
 </script>
 <header th:replace="layout/main/header.html"></header>
 <main style="margin-top: 140px; gap: 0">
-  <aside id="aside" style="margin: 0; margin-right: 30px">
-    <nav id="menu" class="menu">
-      <ul th:each="cate1 : ${category1}">
-        <li class="dep1">
-          <a href="#" class="m">
-            <span onclick="openCategory(event)" th:data-id="${cate1.id}" th:text="${cate1.name}" class="d1_tit">패션 · 의류 · 뷰티</span>
-          </a></li>
-      </ul>
-      <ul>
-
-        <li class="dep1">
-          <a href="#">
-            <div class="dep2">
-              <button onclick="closePopupCategory()">X</button>
-              <ul class="cf flex" id="data-response">
-              </ul>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </nav><!-- #memu .memu -->
-    <div class="memuBg"></div><!-- .memuBg -->
-
-
-
-  </aside>
+  <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
   <div id="wrap">
 
     <!-- .aside -->
@@ -221,38 +196,45 @@
           <th>배송비</th>
           <th>총합</th>
         </tr>
-        <tr th:each="cartItem : ${cartItems}" th:data-product-id="${cartItem.product.id}" th:data-quantity="${cartItem.quantity}">
-          <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
-          <td>
-            <div class="img">
-              <img src="https://via.placeholder.com/74x69" />
-            </div>
-          </td>
-          <td><div class="name_desc">
-            <span th:text="${cartItem.product.prodName}">상품명</span> <br />
-            <span th:text="${cartItem.product.prodSummary}">상품설명</span>
-          </div></td>
-          <td>
-            <div class="cartOptions">
-<!--              &lt;!&ndash; 옵션이 있는 경우 반복문 실행 &ndash;&gt;-->
-<!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) > 0}">-->
-<!--                <div th:each="cartItemOption, stat : ${cartItem.cartItemOption}">-->
-<!--                  <span th:text="${cartItemOption.optionValue}">S</span>-->
-<!--                </div>-->
-<!--              </th:block>-->
-<!--              &lt;!&ndash; 옵션이 없을 경우 "옵션없음" 출력 &ndash;&gt;-->
-<!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) == 0}">-->
-                <span>옵션없음</span>
-<!--              </th:block>-->
-            </div>
-          </td>
-          <td>[[${cartItem.quantity}]]</td>
-          <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodPrice, 1, 'COMMA') : 0}]]원</td>
-          <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDiscount, 1, 'COMMA') : 0}]] %</td>
-          <td>[[${cartItem.product.prodPoint}]] P</td>
-          <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDeliver, 1, 'COMMA') : 0}]]원</td>
-          <td>[[${cartItem != null ? #numbers.formatInteger((cartItem.product.prodPrice * cartItem.quantity * (1-(cartItem.product.prodDiscount / 100))), 1, 'COMMA') : 0}]]원</td>
-        </tr>
+        <th:block th:if="${!cartItems.isEmpty()}">
+          <tr th:each="cartItem : ${cartItems}" th:data-product-id="${cartItem.product.id}" th:data-quantity="${cartItem.quantity}">
+            <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
+            <td>
+              <div class="img">
+                <img src="https://via.placeholder.com/74x69" />
+              </div>
+            </td>
+            <td><div class="name_desc">
+              <span th:text="${cartItem.product.prodName}">상품명</span> <br />
+              <span th:text="${cartItem.product.prodSummary}">상품설명</span>
+            </div></td>
+            <td>
+              <div class="cartOptions">
+  <!--              &lt;!&ndash; 옵션이 있는 경우 반복문 실행 &ndash;&gt;-->
+  <!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) > 0}">-->
+  <!--                <div th:each="cartItemOption, stat : ${cartItem.cartItemOption}">-->
+  <!--                  <span th:text="${cartItemOption.optionValue}">S</span>-->
+  <!--                </div>-->
+  <!--              </th:block>-->
+  <!--              &lt;!&ndash; 옵션이 없을 경우 "옵션없음" 출력 &ndash;&gt;-->
+  <!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) == 0}">-->
+                  <span>옵션없음</span>
+  <!--              </th:block>-->
+              </div>
+            </td>
+            <td>[[${cartItem.quantity}]]</td>
+            <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodPrice, 1, 'COMMA') : 0}]]원</td>
+            <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDiscount, 1, 'COMMA') : 0}]] %</td>
+            <td>[[${cartItem.product.prodPoint}]] P</td>
+            <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.product.prodDeliver, 1, 'COMMA') : 0}]]원</td>
+            <td>[[${cartItem != null ? #numbers.formatInteger((cartItem.product.prodPrice * cartItem.quantity * (1-(cartItem.product.prodDiscount / 100))), 1, 'COMMA') : 0}]]원</td>
+          </tr>
+        </th:block>
+        <th:block th:unless="${!cartItems.isEmpty()}">
+          <tr>
+            <td colspan="10" style="color: #000;">장바구니에 담긴 상품이 없어요.</td>
+          </tr>
+        </th:block>
       </table>
       <!-- .tb1-->
       <div class="total_yh">

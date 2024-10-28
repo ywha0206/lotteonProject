@@ -42,23 +42,33 @@
 }
 
 .button--delete {
-  width: 100px;
-  height: 40px;
-  background: #cfcfcf;
-  border: 0;
-  color: white;
-  font-weight: 700;
+  background-color: red;
+  color: white !important;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 4px 2px;
   cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
 }
 
 .button--write {
-  width: 100px;
-  height: 40px;
-  background: #8bbedc;
-  border: 0;
-  color: white;
-  font-weight: 700;
+  background-color: #647264;
+  color: white !important;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 4px 2px;
   cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
 }
 
 .paging {
@@ -72,15 +82,45 @@
   appearance: none;
   text-indent: 5px;
   border: 1px solid #7b7b7b;
+  border-radius: 5px;
 }
 .cate{width: 100px;}
-.btnsearch{height: 30px; width: 60px; background-color: #c7c7c7; color: #fff; border: none;}
+.btnsearch{
+  background-color: #303644;
+  height: 30px;
+  color: white;
+  width: 62px;
+  cursor: pointer;
+  border-radius: 5px;}
 .btn {  height: 50px;  display: flex;  justify-content: center;  align-items: center;
   width: 50px;  cursor: pointer;  &:hover {    opacity: 0.8;  }}
 
 .popup_btn{display: flex; justify-content: center; margin-top: 20px;}
-.btn_blue{width: 100px; height: 40px; background-color: #8EB4E3; border: none; color: #fff;}
-.btn_gray{width: 80px;height: 30px; background-color: #BFBFBF; border: none; color: #fff;}
+.btn_blue{background-color: #647264;
+  color: white !important;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;}
+.btn_gray {
+  background-color: red;
+  color: white !important;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;}
 .btn_green{width: 80px; height: 30px; background-color: #14AE5C; border: none; color: #fff; margin-left: 5px;}
 
 .status_ing{color: #00b050; font-weight: 700;}
@@ -120,3 +160,11 @@ tr>th:nth-of-type(10),tr>td:nth-of-type(10){ width: 100px; }
 
 .tb4 textarea {  border: 1px solid #BFBFBF;  height: 150px;  width: 300px;  outline: none;
   padding: 10px;  color: #808080; resize: none;}
+
+.page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 10px;
+}

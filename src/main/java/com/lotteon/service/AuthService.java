@@ -2,7 +2,6 @@ package com.lotteon.service;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
-import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +27,7 @@ public class AuthService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
 
+    // 0. 관리자 회원목록
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optUser = memberRepository.findByMemUid(username);
@@ -39,11 +38,10 @@ public class AuthService implements UserDetailsService {
                     .user(optUser.get())
                     .build();
         }
-
-
         throw new UsernameNotFoundException("User not found with username: " + username);
     }
 
+    // 1. 관리자 회원목록 출력기능
     public List<GetAdminUserDTO> selectCustAll() {
         String role = "customer";
         List<Member> customers = memberRepository.findAllByMemRole(role);
@@ -69,8 +67,7 @@ public class AuthService implements UserDetailsService {
                 cust.add(dto);
             } else {
                 // null일 때 처리 방법
-                // 1. 기본값으로 처리 (예시)
-
+                // 1. 기본값으로 처리ㄴ
 
                 // 2. 혹은 생략할 수도 있습니다. (이 경우 아무 작업도 하지 않음)
                 // log.warn("Customer 정보가 없는 회원 ID: " + customer.getId());
@@ -78,10 +75,36 @@ public class AuthService implements UserDetailsService {
         });
 
         return cust;
+    }
 
+    // 2. 관리자 회원수정 (팝업호출 = select)
+    public GetAdminUserDTO popCust(Long id) {
+        Optional<Member> optMember = memberRepository.findById(id);
+        if(optMember.isPresent()) {
+            Member member = optMember.get();
+            String[] addr = member.getCustomer().getCustAddr().split("/");
+            return GetAdminUserDTO.builder()
+                    .id(member.getId())
+                    .memUid(member.getMemUid())
+                    .custName(member.getCustomer().getCustName())
+                    .custGrade(member.getCustomer().getCustGrade())
+                    .custGender(member.getCustomer().getCustGender())
+                    .custEmail(member.getCustomer().getCustEmail())
+                    .custHp(member.getCustomer().getCustHp())
+                    .memRdate(member.getMemRdate())
+                    .memState(member.getMemState())
+                    .custAddr1(addr[0])
+                    .custAddr2(addr[1])
+                    .custAddr3(addr[2])
+                    .build();
+        }
+       //Optional<Member> custPop = memberRepository.findByMemUid(selectCustDto.getMemUid());
+        return null;
     }
 
 
+
+    // 3. 관리자 회원목록 페이지 처리 (<이전 1,2,3 다음>)
     public Page<GetAdminUserDTO> selectCustAll2(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Member> members = memberRepository.findAllByMemRoleOrderByIdDesc("customer",pageable);
@@ -89,4 +112,42 @@ public class AuthService implements UserDetailsService {
 
         return dtos;
     }
+
+
+    // 4. 관리자 회원목록 선택삭제 기능
+    public boolean deleteCustsById(List<Long> deleteCustIds) {
+        try{
+            for (Long deleteCustId : deleteCustIds) {
+                memberRepository.deleteById(deleteCustId);
+            }
+            return true;
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -7,6 +7,8 @@ import com.lotteon.entity.config.Config;
 import com.lotteon.repository.config.ConfigRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class ConfigService {
     private final ModelMapper modelMapper;
 
 
+    @Cacheable(value = "configCache", key = "'config'", cacheManager = "cacheManager")
     public GetConfigDTO getUsedConfig() {
         Optional<Config> opt = configRepository.findByConfigIsUsed(true);
         if (opt.isPresent()) {
@@ -31,6 +34,7 @@ public class ConfigService {
         return null;
     }
 
+    @CacheEvict(value = "configCache", key = "'config'")
     public Config updateInfo(PatchConfigDTO configDTO){
         Config existingConfig = configRepository.findById(configDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Config not found"));
@@ -42,6 +46,7 @@ public class ConfigService {
         return configRepository.save(newConfig);
     }
 
+    @CacheEvict(value = "configCache", key = "'config'")
     public Config updateLogo(PatchLogoDTO logoDTO) {
         Config existingConfig = configRepository.findById(logoDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Config not found"));

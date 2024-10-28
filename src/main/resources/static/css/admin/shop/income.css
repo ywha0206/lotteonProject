@@ -66,17 +66,19 @@ input:focus{outline: none;}
 .search-option {
     width: 70px;
     text-align: center;
-    border: 2px solid #c7c7c7;
+    border: 1px solid #c7c7c7;
     outline: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    border-radius: 5px;
 }
 
 .search-keyword {
-    border: 2px solid #c7c7c7;
+    border: 1px solid #c7c7c7;
     outline: none;
     width: 150px;
+    border-radius: 5px;
 }
 
 .search-keyword::placeholder {
@@ -84,11 +86,11 @@ input:focus{outline: none;}
 }
 
 .search-btn {
-    border: 2px solid #c7c7c7;
-    background-color: #bfbfbf;
+    background-color: #303644;
     color: white;
     width: 62px;
     cursor: pointer;
+    border-radius: 5px;
 
     &:hover{
         opacity: 0.8;

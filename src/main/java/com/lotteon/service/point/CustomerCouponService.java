@@ -77,7 +77,7 @@ public class CustomerCouponService {
         customerCoupon.get().updateCustCouponCntMinus();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 2 0 * * ?")
     public void deleteCustCoupon(){
         LocalDate today = LocalDate.now();
 
@@ -91,7 +91,7 @@ public class CustomerCouponService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 1 0 * * ?")
     public void expirateCustCoupon(){
         LocalDate today = LocalDate.now();
 
@@ -117,7 +117,7 @@ public class CustomerCouponService {
                 default -> this.findAllByCustomer(keyword,pageable);
             };
         } else {
-            Page<CustomerCoupon> coupons = customerCouponRepository.findAllByOrderByCouponStateAscCouponUDateDesc(pageable);
+            Page<CustomerCoupon> coupons = customerCouponRepository.findAllByOrderByCouponStateAscIdDesc(pageable);
             dtos = coupons.map(CustomerCoupon::toGetCustomerCouponDto);
         }
         return dtos;
@@ -140,7 +140,7 @@ public class CustomerCouponService {
             List<Coupon> coupons = couponRepository.findAllByMember(auth.getUser());
             List<GetCustomerCouponDto> dtoss = new ArrayList<>();
             for(Coupon coupon : coupons){
-                Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscCouponUDateDesc(coupon,pageable);
+                Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscIdDesc(coupon,pageable);
                 List<GetCustomerCouponDto> dtosFromPage = pageCoupons.map(CustomerCoupon::toGetCustomerCouponDto).getContent();  // 각 페이지의 내용을 리스트로 변환
                 dtoss.addAll(dtosFromPage);
             }
@@ -161,7 +161,7 @@ public class CustomerCouponService {
             List<Coupon> coupons2 = couponRepository.findAllByMember(user);
             List<GetCustomerCouponDto> dtoss2 = new ArrayList<>();
             for(Coupon coupon : coupons){
-                Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscCouponUDateDesc(coupon,pageable);
+                Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscIdDesc(coupon,pageable);
                 List<GetCustomerCouponDto> dtosFromPage = pageCoupons.map(CustomerCoupon::toGetCustomerCouponDto).getContent();  // 각 페이지의 내용을 리스트로 변환
                 dtoss.addAll(dtosFromPage);
             }
@@ -173,7 +173,7 @@ public class CustomerCouponService {
             return dtos;
         }
         for(Coupon coupon : coupons){
-            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponAndCustomerOrderByCouponStateAscCouponUDateDesc(coupon,member.get().getCustomer(),pageable);
+            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponAndCustomerOrderByCouponStateAscIdDesc(coupon,member.get().getCustomer(),pageable);
             List<GetCustomerCouponDto> dtosFromPage = pageCoupons.map(CustomerCoupon::toGetCustomerCouponDto).getContent();  // 각 페이지의 내용을 리스트로 변환
             dtoss.addAll(dtosFromPage);
         }
@@ -189,7 +189,7 @@ public class CustomerCouponService {
         List<Coupon> coupons = couponRepository.findAllByMemberAndCouponNameContaining(user,keyword);
         List<GetCustomerCouponDto> dtoss = new ArrayList<>();
         for(Coupon coupon : coupons){
-            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscCouponUDateDesc(coupon,pageable);
+            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscIdDesc(coupon,pageable);
             List<GetCustomerCouponDto> dtosFromPage = pageCoupons.map(CustomerCoupon::toGetCustomerCouponDto).getContent();  // 각 페이지의 내용을 리스트로 변환
             dtoss.addAll(dtosFromPage);
         }
@@ -205,7 +205,7 @@ public class CustomerCouponService {
         List<Coupon> coupons = couponRepository.findAllByMember(user);
         List<GetCustomerCouponDto> dtoss = new ArrayList<>();
         for(Coupon coupon : coupons){
-            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponAndCouponIdOrderByCouponStateAscCouponUDateDesc(coupon,Long.parseLong(keyword),pageable);
+            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponAndCouponIdOrderByCouponStateAscIdDesc(coupon,Long.parseLong(keyword),pageable);
             List<GetCustomerCouponDto> dtosFromPage = pageCoupons.map(CustomerCoupon::toGetCustomerCouponDto).getContent();  // 각 페이지의 내용을 리스트로 변환
             dtoss.addAll(dtosFromPage);
         }
@@ -221,7 +221,7 @@ public class CustomerCouponService {
         List<Coupon> coupons = couponRepository.findAllByMember(user);
         List<GetCustomerCouponDto> dtoss = new ArrayList<>();
         for(Coupon coupon : coupons){
-            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponAndIdOrderByCouponStateAscCouponUDateDesc(coupon,Long.parseLong(keyword),pageable);
+            Page<CustomerCoupon> pageCoupons = customerCouponRepository.findAllByCouponAndIdOrderByCouponStateAscIdDesc(coupon,Long.parseLong(keyword),pageable);
             List<GetCustomerCouponDto> dtosFromPage = pageCoupons.map(CustomerCoupon::toGetCustomerCouponDto).getContent();  // 각 페이지의 내용을 리스트로 변환
             dtoss.addAll(dtosFromPage);
         }
@@ -252,7 +252,7 @@ public class CustomerCouponService {
     private Page<GetCustomerCouponDto> findAllByCustomer(String keyword,Pageable pageable) {
         Optional<Member> member = memberRepository.findByMemUid(keyword);
         if(member.isEmpty()){
-            Page<CustomerCoupon> coupons = customerCouponRepository.findAllByOrderByCouponStateAscCouponUDateDesc(pageable);
+            Page<CustomerCoupon> coupons = customerCouponRepository.findAllByOrderByCouponStateAscIdDesc(pageable);
             Page<GetCustomerCouponDto> dtos = coupons.map(CustomerCoupon::toGetCustomerCouponDto);
             return dtos;
         }
@@ -268,7 +268,7 @@ public class CustomerCouponService {
         List<GetCustomerCouponDto> dtoss = new ArrayList<>();  // 최종적으로 모든 DTO를 담을 리스트
 
         for (Coupon coupon : coupons) {
-            Page<CustomerCoupon> pageCoupon = customerCouponRepository.findAllByCouponOrderByCouponStateAscCouponUDateDesc(coupon, pageable);
+            Page<CustomerCoupon> pageCoupon = customerCouponRepository.findAllByCouponOrderByCouponStateAscIdDesc(coupon, pageable);
             List<GetCustomerCouponDto> dtosFromPage = pageCoupon.map(CustomerCoupon::toGetCustomerCouponDto).getContent();  // 각 페이지의 내용을 리스트로 변환
             dtoss.addAll(dtosFromPage);
         }
@@ -282,13 +282,13 @@ public class CustomerCouponService {
 
     private Page<GetCustomerCouponDto> findAllByCouponId(String keyword,Pageable pageable) {
         Coupon coupon = couponRepository.findById(Long.parseLong(keyword)).orElseThrow();
-        Page<CustomerCoupon> coupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscCouponUDateDesc(coupon,pageable);
+        Page<CustomerCoupon> coupons = customerCouponRepository.findAllByCouponOrderByCouponStateAscIdDesc(coupon,pageable);
         Page<GetCustomerCouponDto> dtos = coupons.map(CustomerCoupon::toGetCustomerCouponDto);
         return dtos;
     }
 
     private Page<GetCustomerCouponDto> findAllById(String keyword,Pageable pageable) {
-        Page<CustomerCoupon> coupons = customerCouponRepository.findAllByIdOrderByCouponStateAscCouponUDateDesc(Long.parseLong(keyword),pageable);
+        Page<CustomerCoupon> coupons = customerCouponRepository.findAllByIdOrderByCouponStateAscIdDesc(Long.parseLong(keyword),pageable);
         Page<GetCustomerCouponDto> dtos = coupons.map(CustomerCoupon::toGetCustomerCouponDto);
         return dtos;
     }

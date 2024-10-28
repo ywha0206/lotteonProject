@@ -1,7 +1,7 @@
 <link rel="stylesheet" th:href="@{/css/admin/config/basic.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
     <header th:replace="layout/admin/header.html"></header>
-    <main>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
         <aside th:replace="layout/admin/aside.html"></aside>
         <div class="container">
             <div class="header">
@@ -52,7 +52,7 @@
                 <article class="btn">
                     <input type="hidden" id="configId" th:value="${site.id}">
                     <input type="hidden" id="updater" th:value="${#authentication.principal.user.memUid}">
-                    <button onclick="patch('siteInfo')">수정하기</button>
+                    <button class="admin-btn" onclick="patch('siteInfo')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -66,7 +66,7 @@
                         <td>
                             <input class="inp" type="file" onchange="readURL(this,'header');" id="configHeaderLogo">
                             <span>크기 370 x 76 권장 </span><img id="headerpreview" style="max-width: 400px; display: none"/>
-                            <button type="button" id="headerDeleteBtn" style="display: none;" onclick="resetUpload('header')">삭제</button>
+                            <button type="button" id="headerDeleteBtn" class="admin-btn" style="display: none;" onclick="resetUpload('header')">삭제</button>
                         </td>
                     </tr>
                     <tr>
@@ -74,7 +74,7 @@
                         <td>
                             <input class="inp" type="file" onchange="readURL(this,'footer');" id="configFooterLogo">
                             <span>크기 155 x 36 권장</span><img id="footerpreview" style="max-width: 200px; display: none">
-                            <button type="button" id="footerDeleteBtn" style="display: none;" onclick="resetUpload('footer')">삭제</button>
+                            <button type="button" id="footerDeleteBtn" class="admin-btn" style="display: none;" onclick="resetUpload('footer')">삭제</button>
                         </td>
                     </tr>
                     <tr>
@@ -82,7 +82,7 @@
                         <td>
                             <input class="inp" type="file" onchange="readURL(this,'favicon');" id="configFabicon">
                             <span>크기 32 x 32 권장</span><img id="faviconpreview" style="max-width: 50px; max-height: 50px; display: none"/>
-                            <button type="button" id="faviconDeleteBtn" style="display: none;" onclick="resetUpload('favicon')">삭제</button>
+                            <button type="button" id="faviconDeleteBtn" class="admin-btn" style="display: none;" onclick="resetUpload('favicon')">삭제</button>
                         </td>
                     </tr>
                 </table>
@@ -96,7 +96,7 @@
                             <li>10.15 16:21:41 저장됨</li>
                         </ul>
                     </div>
-                    <button onclick="patch('siteLogo')">수정하기</button>
+                    <button class="admin-btn" onclick="patch('siteLogo')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -133,7 +133,7 @@
                 </table>
                 </form>
                 <article class="btn">
-                    <button onclick="patch('fLotte')">수정하기</button>
+                    <button class="admin-btn" onclick="patch('fLotte')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -166,7 +166,7 @@
                 </table>
                 </form>
                 <article class="btn">
-                    <button onclick="patch('fCs')">수정하기</button>
+                    <button class="admin-btn" onclick="patch('fCs')">수정하기</button>
                 </article>
             </section>
             <section class="s2">
@@ -183,7 +183,7 @@
                     </tr>
                 </table>
                 <article class="btn">
-                    <button onclick="patch('copy')">수정하기</button>
+                    <button class="admin-btn" onclick="patch('copy')">수정하기</button>
                 </article>
             </section>
         </div>
@@ -283,6 +283,7 @@
                 if(data.id>0){
                     alert('성공적으로 수정되었습니다.')
                     document.getElementById('configId').value = data.id;
+                    location.href="/admin/config/index";
                 }
             })
             .catch(err => {
@@ -332,20 +333,17 @@
         }
         else if(type==="fLotte"){
             const fLotteFormData = new FormData(document.getElementById("fLotte"));
-            console.log('Form Data:', ...fLotteFormData.entries()); // 폼 데이터 출력
             await fetchBasic('POST',`/admin/config/footer`,fLotteFormData);
         }
         else if(type==="fCs"){
 
             const fCsFormData = new FormData(document.getElementById("fCs"));
-            console.log('Form Data:', ...fCsFormData.entries()); // 폼 데이터 출력
             await fetchBasic('POST',`/admin/config/cs`,fCsFormData);
         }
         else if(type==="copy"){
             const copy = document.getElementById("copyright");
             formData.append("copy",copy.value);
             formData.append("id", copy.dataset.copyid)
-            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
             await fetchBasic('POST',`/admin/config/copy`,formData);
         }
     }

@@ -25,10 +25,10 @@ async function openCategory(event){
             console.log(subCategories)
             return `
         <li class="dep2_line">
-            <a href="#" target="_blank" class="d2_tit cf">${v.name}
-                <ul class="dep3 cf">
+            <a href="#" onmouseover="hoverFunction(event)" data-id="${v.id}" class="d2_tit cf">${v.name}
+                <ul class="dep3 cf" id="${v.id}" style="display: none">
                     ${subCategories.map(sub => `
-                        <li><a href="#" target="_blank">${sub.name}</a></li>
+                        <li><a href="#" data-value="${sub.id}" onclick="productList(this)">${sub.name}</a></li>
                     `).join('')}
                 </ul>
             </a>
@@ -47,4 +47,33 @@ async function openCategory(event){
 
 function closePopupCategory(){
      document.querySelector('.dep2').style.display = 'none'
+}
+
+function productList(e){
+    console.log(e.dataset.value);
+
+    const cate = e.dataset.value;
+    window.location.href = `/prod/products?cate=${cate}`;
+
+
+}
+
+function hoverFunction(event){
+    const id = event.target.dataset.id
+    const allDiv = document.querySelectorAll('.dep3')
+    allDiv.forEach(v=>{
+        if(v.style.display === 'block'){
+            v.style.display = 'none';
+            v.classList.remove('fade-in')
+            v.classList.remove('show')
+        }
+    })
+    document.getElementById(`${id}`).style.display='block'
+    const element = document.getElementById(`${id}`)
+
+    // 요소가 보이도록 하고 클래스를 추가
+    element.classList.add('fade-in');
+    setTimeout(() => {
+        element.classList.add('show'); // 0.5초 후에 show 클래스 추가
+    }, 10);
 }

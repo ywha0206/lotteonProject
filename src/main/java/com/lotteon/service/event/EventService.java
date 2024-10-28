@@ -4,11 +4,15 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.point.Coupon;
+import com.lotteon.entity.point.CustomerCoupon;
 import com.lotteon.entity.point.Point;
 import com.lotteon.repository.member.AttendanceEventRepository;
 import com.lotteon.repository.member.CustomerRepository;
+import com.lotteon.repository.point.CouponRepository;
+import com.lotteon.repository.point.CustomerCouponRepository;
 import com.lotteon.repository.point.PointRepository;
 import com.lotteon.service.member.CustomerService;
+import com.lotteon.service.point.CouponService;
 import com.lotteon.service.point.CustomerCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -32,12 +37,19 @@ public class EventService {
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
     private final CustomerCouponService customerCouponService;
+    private final CouponRepository couponRepository;
+    private final CustomerCouponRepository customerCouponRepository;
 
-    public String updateEvent() {
+    private Customer getCustomer() {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
         Customer customer = auth.getUser().getCustomer();
+        return customer;
+    }
+
+    public String updateEvent() {
+        Customer customer = this.getCustomer();
 
         AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
         if (event == null) {
@@ -69,11 +81,10 @@ public class EventService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void resetEventSequence(){
-        List<AttendanceEvent> attendanceEvents = attendanceEventRepository.findByAttendanceSequenceIn(Arrays.asList(0, 1));
+        List<AttendanceEvent> attendanceEvents = attendanceEventRepository.findAll();
         for(AttendanceEvent event : attendanceEvents){
             if(event.getAttendanceSequence()==1){
                 event.updateEventSequenceZero();
-
             } else if(event.getAttendanceSequence()==0){
                 event.updateEventSequenceOne();
             }
@@ -95,10 +106,7 @@ public class EventService {
 
 
     public int findEvent(String result) {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        Customer customer = auth.getUser().getCustomer();
+        Customer customer = this.getCustomer();
         AttendanceEvent newEvent = attendanceEventRepository.findByCustomer(customer);
         if(result.equals("done")){
             AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
@@ -139,13 +147,10 @@ public class EventService {
     }
 
     private void updateCustomerPoint(int value) {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+        Customer customer = this.getCustomer();
 
         LocalDate today = LocalDate.now().plusMonths(2);
 
-        Customer customer = auth.getUser().getCustomer();
 
         Point point = Point.builder()
                 .pointVar(value)
@@ -159,5 +164,24 @@ public class EventService {
         int points = customerService.updateCustomerPoint(customer);
         customer.updatePoint(points);
         customerRepository.save(customer);
+    }
+
+    public void issueCoupon() {
+        Customer customer = this.getCustomer();
+
+
+        Optional<Coupon> coupon = couponRepository.findById((long)7);
+        if(coupon.isEmpty()){
+            return;
+        }
+
+        CustomerCoupon customerCoupon = CustomerCoupon.builder()
+                .couponState(1)
+                .couponCnt(1)
+                .coupon(coupon.get())
+                .customer(customer)
+                .build();
+
+        customerCouponRepository.save(customerCoupon);
     }
 }

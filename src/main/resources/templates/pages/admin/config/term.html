@@ -1,7 +1,7 @@
 <link rel="stylesheet" th:href="@{/css/admin/config/term.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
     <header th:replace="layout/admin/header.html"></header>
-    <main>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
         <aside th:replace="layout/admin/aside.html"></aside>
         <div class="container">
             <div class="header">
@@ -30,7 +30,7 @@
                     </tr>
                 </table>
                 <article class="btn">
-                    <button class="modify" th:data-id="${term.id}">수정하기</button>
+                    <button class="modify admin-btn" th:data-id="${term.id}">수정하기</button>
                 </article>
             </section>
         </div>

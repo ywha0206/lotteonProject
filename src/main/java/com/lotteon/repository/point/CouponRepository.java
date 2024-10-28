@@ -1,13 +1,16 @@
 package com.lotteon.repository.point;
 
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.point.Coupon;
+import com.lotteon.entity.point.CustomerCoupon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
@@ -29,4 +32,5 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> findAllByMember(Member user);
 
     List<Coupon> findAllByMemberAndCouponNameContaining(Member user, String keyword);
+
 }

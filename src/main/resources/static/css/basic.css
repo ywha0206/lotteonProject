@@ -2,7 +2,7 @@ main {
     display: flex;
     gap: 60px;
     width: 1200px;
-    margin: 100px auto;
+    margin: 130px auto;
     user-select: none;
     align-items: flex-start;
 }
@@ -15,7 +15,7 @@ main {
 }
 #my > main {
     display: block;
-    width: 810px; height: auto;float: left; margin: 30px; box-sizing: border-box;
+    width: 810px; height: auto;float: left; margin: 30px; margin-top: 60px; box-sizing: border-box;
 }
 
 #wrap > #main {
@@ -28,4 +28,8 @@ main {
 
 #wrap > #navi {
     width: 800px;
+}
+
+.admin-btn{
+    border-radius: 5px;
 }

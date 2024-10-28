@@ -186,12 +186,18 @@
 }
 
 .submit-btn{
-    background-color: #8EB4E3;
-    color: white;
-    border: none;
+    background-color: #647264;
+    color: white !important;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
     cursor: pointer;
-    width: 95.87px;
-    height: 36.79px;
+    border-radius: 4px;
+    border: none;
+    transition: box-shadow 0.3s ease;
 }
 
 /* option */
@@ -201,6 +207,19 @@
 .option_inputs{display: inline-block; padding: 7px;}
 .option_input{width: 100px;height: 28.29px;border: 1px solid #BFBFBF;outline: none; text-indent: 5px;}
 .btnOption{height: 28.29px;border: none; padding: 0 5px; background-color:#ddd;}
-.addoption{height: 35px; width: 80px; float: right; margin: 10px; border: none; background-color: #8EB4E3; color: #fff;}
+.addoption{background-color: #647264;
+    color: white !important;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+    transition: box-shadow 0.3s ease;
+    float: right;
+}
 .btnDelete{height: 28.29px;border: none; padding: 0 5px; background-color:#ddd;}
 .addoption:hover{cursor: pointer}

@@ -1,7 +1,7 @@
 <link rel="stylesheet" th:href="@{/css/admin/config/version.css}"/>
 <link rel="stylesheet" th:href="@{/css/basic.css}">
   <header th:replace="layout/admin/header.html"></header>
-  <main>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
     <aside th:replace="layout/admin/aside.html"></aside>
     <div class="container">
       <div class="header">
@@ -47,8 +47,8 @@
         </table>
 
         <div class="btns">
-          <button class="delete-btn">선택삭제</button>
-          <button onclick="postVersion()" class="insert-btn">등록</button>
+          <button class="delete-btn admin-btn">선택삭제</button>
+          <button onclick="postVersion()" class="insert-btn admin-btn">등록</button>
         </div>
         <div class="page" th:if="${not #lists.isEmpty(resp.dtoList)}">
 

@@ -1,5 +1,6 @@
 package com.lotteon.config;
 
+import com.lotteon.config.filter.CustomLoginFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
+    private final CustomLoginFilter customLoginFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,7 +47,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/my/**").hasRole("customer")
                         .requestMatchers("/event/**").hasRole("customer")
 //                        .requestMatchers(HttpMethod.GET,"prod/order/**").authenticated()
-//                        .requestMatchers(HttpMethod.GET,"prod/cart/**").authenticated()
+                        .requestMatchers(HttpMethod.GET,"prod/cart/**").authenticated()
                         .requestMatchers("/**","/error/**", "/file/**", "/auth/**","/cs/**", "/company/**", "/prod/**","/policy/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -57,7 +59,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .formLogin(login -> login
                         .loginPage("/auth/login/view")  // 로그인 페이지 URL
                         .loginProcessingUrl("/auth/login")  // 로그인 인증 처리 URL (디비 처리)
-                        .defaultSuccessUrl("/")  // 로그인 성공 후 이동할 URL
+                        .successHandler(customLoginFilter)
 //                        .failureUrl("/auth/login?error=true")  // 로그인 실패 시 이동할 URL
                         .usernameParameter("userName")  // 사용자명 파라미터 이름
                         .passwordParameter("pwd")  // 비밀번호 파라미터 이름

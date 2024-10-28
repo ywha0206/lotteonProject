@@ -2,7 +2,7 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}" />
 <body>
 <header th:replace="layout/admin/header.html"></header>
-<main>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
   <aside th:replace="layout/admin/aside.html"></aside>
   <section id="admin-product-list" class="container">
     <script>
@@ -106,8 +106,11 @@
           </tbody>
         </table>
         <div class="button-group">
-          <a th:href="@{/admin/cs/notices}" class="button--write">취소하기</a>
-          <button type="submit" class="button--write">등록하기</button>
+          <div class="button-group">
+            <a th:href="@{/admin/cs/notices}" class="button button--delete">취소하기</a>
+            <button type="submit" class="button button--write">작성하기</button> <!-- 수정된 부분 -->
+        </div>
+
         </div>
       </form>
     </article>

@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/*
+ * 이름 : 이상훈
+ * 날짜 : 2024-10-26
+ * 작업내용 : 카테고리 출력 레디스 인메모리디비 사용하기
+ * */
 @RestController
 @RequiredArgsConstructor
 public class ApiCategoryController {
