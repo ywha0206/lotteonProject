@@ -141,7 +141,6 @@
 #mainSlider .pager ul li a{text-indent: -9999px;display: inline-block;width: 10px; height: 10px;background: #000; border-radius: 50%;}
 
 
-/* 컨테이너 본문 공통영역 */
 /* cont1 */
 .cont1{margin-top: 60px;}
 .cont1 .tit{font-size:26px; font-weight: 900; letter-spacing:-0.5px; margin-bottom: 20px;}
