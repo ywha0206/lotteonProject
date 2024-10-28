@@ -21,7 +21,7 @@
         <div id="headerIn">
             <h1 class="logo">
                 <a style="z-index: 2; position: relative; top: 13px;" th:href="@{/}"><img th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo"></a>
-            </h1><!--.logo-->
+            </h1>
             <div class="utill">
                 <ul>
                     <li sec:authorize="!isAuthenticated()">
@@ -46,14 +46,6 @@
                 </ul>
             </div><!--.utill-->
             <nav class="gnb">
-                <!-- <ul>
-                    <li><a href="#">회원</a></li>
-                    <li><a href="#">상품</a></li>
-                    <li><a href="#">고객센터</a></li>
-                    <li><a href="#">마이페이지</a></li>
-                    <li><a href="#">정책</a></li>
-                    <li><a href="#">회사</a></li>
-                </ul> -->
             </nav><!--.gnb-->
             <div style="z-index: 2;" class="search">
                 <input type="text" id="search" name="search" placeholder="어떤 상품을 찾으세요?">
@@ -68,9 +60,68 @@
                 position: relative;
                 top: -18px;"
         >
+            <div id="searchSlider">
+                <ul class="searchslider">
+                    <li>
+                        <a>
+                            1. 연관검색어1
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            2. 연관검색어2
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            3. 연관검색어3
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            4. 연관검색어4
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            5. 연관검색어5
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            6. 연관검색어6
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            7. 연관검색어7
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            8. 연관검색어8
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <a sec:authorize="!hasRole('admin')" th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')" th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')"><img class="img-header-link" th:src="@{/images/header-zzim.png}" style="width: 50px; height: 50px;"></a>
         </div>
     </header><!--#header-->
 </body>
+
+<script>
+    $(document).ready(function(){
+        $('.searchslider').bxSlider({
+            mode: 'vertical',
+            auto: true, // 자동 슬라이드
+            pause: 3000, // 슬라이드 간의 대기 시간 (밀리초)
+            pager: true, // 페이지 네비게이션 표시
+            controls: true, // 이전/다음 버튼 표시
+            nextText: '다음', // 다음 버튼 텍스트
+            prevText: '이전', // 이전 버튼 텍스트
+            touchEnabled : (navigator.maxTouchPoints > 0)
+        });
+    });
+</script>
