@@ -66,4 +66,8 @@ public class Member {
                 .build();
 
     }
+
+    public void updateLastLogin(LocalDateTime today) {
+        memLastLoginDate = today;
+    }
 }
