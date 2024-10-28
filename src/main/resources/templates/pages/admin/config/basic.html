@@ -283,6 +283,7 @@
                 if(data.id>0){
                     alert('성공적으로 수정되었습니다.')
                     document.getElementById('configId').value = data.id;
+                    location.href="/admin/config/index";
                 }
             })
             .catch(err => {
@@ -332,20 +333,17 @@
         }
         else if(type==="fLotte"){
             const fLotteFormData = new FormData(document.getElementById("fLotte"));
-            console.log('Form Data:', ...fLotteFormData.entries()); // 폼 데이터 출력
             await fetchBasic('POST',`/admin/config/footer`,fLotteFormData);
         }
         else if(type==="fCs"){
 
             const fCsFormData = new FormData(document.getElementById("fCs"));
-            console.log('Form Data:', ...fCsFormData.entries()); // 폼 데이터 출력
             await fetchBasic('POST',`/admin/config/cs`,fCsFormData);
         }
         else if(type==="copy"){
             const copy = document.getElementById("copyright");
             formData.append("copy",copy.value);
             formData.append("id", copy.dataset.copyid)
-            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
             await fetchBasic('POST',`/admin/config/copy`,formData);
         }
     }

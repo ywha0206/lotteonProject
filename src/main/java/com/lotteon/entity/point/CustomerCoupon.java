@@ -2,6 +2,7 @@ package com.lotteon.entity.point;
 
 import com.lotteon.dto.responseDto.GetCustomerCouponDto;
 import com.lotteon.dto.responseDto.GetMyCouponDto;
+import com.lotteon.dto.responseDto.cartOrder.GetCouponDto;
 import com.lotteon.entity.member.Customer;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,25 +36,21 @@ public class CustomerCoupon {
     @Column(name = "cust_coupon_state")
     private int couponState;
 
-    @Column(name = "coupon_cnt")
-    private int couponCnt;
-
     @Column(name = "cust_coupon_udate")
     private LocalDateTime couponUDate;
 
-    public void updateCustCouponCnt() {
-        this.couponCnt = couponCnt + 1;
-    }
+    @Column(name = "coupon_expiration")
+    private LocalDate couponExpiration;
+
 
     public void updateCustCouponCntMinus(){
         LocalDateTime today = LocalDateTime.now();
-        this.couponCnt = couponCnt - 1;
         this.couponUDate = today;
         this.couponState = 2;
     }
 
-    public void updateCustCouponState(){
-        this.couponState = 0;
+    public void updateCustCouponState(int a){
+        this.couponState = a;
     }
 
     public void updateCustCouponStateMinus() {
@@ -156,5 +153,36 @@ public class CustomerCoupon {
 
     }
 
+    public GetCouponDto toCartGetCouponDto(){
+        String realOption;
+        if(coupon.getCouponDiscountOption().equals("p")) {
+            realOption = "% 할인";
+        } else if (coupon.getCouponDiscountOption().equals("d")){
+            realOption = "원 배달비 할인";
+        } else {
+            realOption = "원 할인";
+        }
+        if(coupon.getMember().getMemRole().equals("admin")){
+            return GetCouponDto.builder()
+                    .id(id)
+                    .couponName(coupon.getCouponName())
+                    .couponType(coupon.getCouponType())
+                    .couponDiscountOption(realOption)
+                    .couponMinPrice(coupon.getCouponMinPrice())
+                    .couponDiscount(coupon.getCouponDiscount())
+                    .build();
+        } else {
+            return GetCouponDto.builder()
+                    .id(id)
+                    .couponName(coupon.getCouponName())
+                    .couponType(coupon.getCouponType())
+                    .couponDiscountOption(realOption)
+                    .couponMinPrice(coupon.getCouponMinPrice())
+                    .couponDiscount(coupon.getCouponDiscount())
+                    .sellId(coupon.getMember().getId())
+                    .build();
+        }
 
+
+    }
 }

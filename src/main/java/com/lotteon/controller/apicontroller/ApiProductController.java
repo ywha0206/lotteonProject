@@ -1,6 +1,8 @@
 package com.lotteon.controller.apicontroller;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartSaveDto;
+import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
@@ -12,9 +14,12 @@ import com.lotteon.service.product.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +32,29 @@ public class ApiProductController {
     private final CartService cartService;
     private final OrderService orderService;
     private final OrderItemService orderItemService;
+    private final RedisTemplate<String,Object> redisTemplate;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
 
         customerCouponService.useCustCoupon();
+    }
+
+    @PostMapping("/customer/coupon")
+    public ResponseEntity<?> getCustCoupon(@RequestBody PostCouponDto dto){
+        String result;
+
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        String cacheKey = "dailyCoupon::daily_" + dto.getId() + "_" + auth.getUser().getId() +"_" + LocalDate.now();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey))) {
+            return ResponseEntity.ok("이미 수령하였습니다.");
+        }
+
+        String dailyCoupon = customerCouponService.postDailyCoupon(dto.getId(),auth);
+
+        return ResponseEntity.ok(dailyCoupon);
     }
 
     @DeleteMapping("/cart")

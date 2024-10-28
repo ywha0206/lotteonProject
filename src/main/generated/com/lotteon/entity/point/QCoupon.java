@@ -22,6 +22,8 @@ public class QCoupon extends EntityPathBase<Coupon> {
 
     public static final QCoupon coupon = new QCoupon("coupon");
 
+    public final NumberPath<Integer> couponBannerState = createNumber("couponBannerState", Integer.class);
+
     public final StringPath couponCaution = createString("couponCaution");
 
     public final NumberPath<Integer> couponDiscount = createNumber("couponDiscount", Integer.class);
@@ -43,6 +45,8 @@ public class QCoupon extends EntityPathBase<Coupon> {
     public final StringPath couponType = createString("couponType");
 
     public final NumberPath<Integer> couponUseCount = createNumber("couponUseCount", Integer.class);
+
+    public final NumberPath<Integer> customerCouponExpiration = createNumber("customerCouponExpiration", Integer.class);
 
     public final ListPath<CustomerCoupon, QCustomerCoupon> customerCoupons = this.<CustomerCoupon, QCustomerCoupon>createList("customerCoupons", CustomerCoupon.class, QCustomerCoupon.class, PathInits.DIRECT2);
 

@@ -142,9 +142,11 @@
 
     document.getElementById("buttonId").addEventListener("click", openCustUpdatePopup);
 
+
     async function openCustUpdatePopup(event){
         const id = event.target.dataset.id;
         console.log(id);
+
 
         fetch(`/admin/user/user/${id}`,{
             method : 'GET',
@@ -185,13 +187,16 @@
                     <tr>
                         <th>성별</th>
                         <td>
+
                             <label for=""><input value="true" type="radio" name="custGender">남</label>
+
                             <label for=""><input value="false" type="radio" name="custGender">여</label>
                         </td>
                     </tr>
                     <tr>
                         <th>등급</th>
                         <td>${data.custGrade}</td>
+
                     </tr>
                     <tr>
                         <th>상태</th>
