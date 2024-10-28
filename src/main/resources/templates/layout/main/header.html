@@ -32,11 +32,11 @@
                     </li>
                     <li sec:authorize="!isAuthenticated()">
                         <a th:href="@{/auth/join}">회원가입</a></li>
-<!--                     <li sec:authorize="hasRole('customer')">-->
-<!--                         <a th:href="@{/my/index}">마이페이지</a></li>-->
+                     <li sec:authorize="hasRole('customer')">
+                         <a th:href="@{/my/index}">마이페이지</a></li>
 <!--                      마이페이지 로그인 시 확인가능 -->
-<!--                    <li-->
-<!--                        ><a th:href="@{/prod/cart}">장바구니</a></li>-->
+                    <li sec:authorize="hasRole('customer')"
+                        ><a th:href="@{/prod/cart}">장바구니</a></li>
                     <li
                         ><a th:href="@{/cs/index}">고객센터</a></li>
                     <li  sec:authorize="hasRole('admin')"

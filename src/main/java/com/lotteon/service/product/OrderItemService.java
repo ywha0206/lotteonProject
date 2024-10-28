@@ -74,7 +74,6 @@ public class OrderItemService {
                     .quantity(orderItem.getQuantity())
                     .total(orderItem.getTotalPrice())
                     .discount(orderItem.getDiscount())
-                    .state1(false)
                     .deli(orderItem.getDeliver())
                     .build();
 
