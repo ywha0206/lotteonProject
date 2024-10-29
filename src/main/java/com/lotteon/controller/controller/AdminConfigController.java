@@ -61,7 +61,7 @@ public class AdminConfigController {
     }
     @GetMapping("/banners")
     public String banner(Model model) {
-        List<GetBannerDTO> bannerList = bannerService.findAll();
+        List<GetBannerDTO> bannerList = bannerService.findAllByCate(1);
         model.addAttribute("bannerList", bannerList);
         model.addAttribute("active","banners");
         return "pages/admin/config/banner";
