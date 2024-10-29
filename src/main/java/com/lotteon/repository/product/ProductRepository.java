@@ -13,6 +13,11 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
-    public Page<Product> findAllBySellId(Pageable pageable, Long sellId);
     List<Product> findAllByIdIn(List<Long> ids);
+
+    Page<Product> findAllByProdNameContainingOrderByProdViewsDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByProdNameContainingOrderByProdOrderCntDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByOrderByProdOrderCntDesc(Pageable pageable);
 }

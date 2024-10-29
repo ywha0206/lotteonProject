@@ -47,7 +47,7 @@ public class QCategoryProductMapper extends EntityPathBase<CategoryProductMapper
     public QCategoryProductMapper(Class<? extends CategoryProductMapper> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new QCategoryProduct(forProperty("category"), inits.get("category")) : null;
-        this.product = inits.isInitialized("product") ? new com.lotteon.entity.product.QProduct(forProperty("product")) : null;
+        this.product = inits.isInitialized("product") ? new com.lotteon.entity.product.QProduct(forProperty("product"), inits.get("product")) : null;
     }
 
 }

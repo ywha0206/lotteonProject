@@ -103,4 +103,10 @@ public class SellerService {
 
         return seller.get().getMember().getMemUid();
     }
+
+    public String findSellUidAndSellGrade(Long sellId){
+        Optional<Seller> seller = sellerRepository.findById(sellId);
+
+        return seller.get().getMember().getMemUid() + "/" + seller.get().getSellGrade();
+    }
 }

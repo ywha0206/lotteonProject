@@ -53,7 +53,7 @@ public class QReview extends EntityPathBase<Review> {
     public QReview(Class<? extends Review> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.customer = inits.isInitialized("customer") ? new com.lotteon.entity.member.QCustomer(forProperty("customer"), inits.get("customer")) : null;
-        this.product = inits.isInitialized("product") ? new QProduct(forProperty("product")) : null;
+        this.product = inits.isInitialized("product") ? new QProduct(forProperty("product"), inits.get("product")) : null;
     }
 
 }

@@ -56,7 +56,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetch();
@@ -73,8 +73,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                 .from(qProduct)
                 .join(qSeller)
-                .on(qProduct.sellId.eq(qSeller.member.id))
-                .where(qProduct.sellId.eq(sellId))
+                .on(qProduct.seller.id.eq(qSeller.member.id))
+                .where(qProduct.seller.id.eq(sellId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -84,7 +84,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             long total = queryFactory.select(qProduct.count())
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .fetchOne();
 
             return new PageImpl<Tuple>(content, pageable, total);
@@ -118,7 +118,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         BooleanExpression expression = null;
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(qProduct.sellId.eq(sellId));
+        builder.and(qProduct.seller.id.eq(sellId));
 
         if(type.equals("상품명")){
             builder.and(qProduct.prodName.contains(keyword));
@@ -139,7 +139,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .where(expression)
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
@@ -150,7 +150,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
             long total = queryFactory.select(qProduct.count())
                     .from(qProduct)
-                    .join(qSeller).on(qProduct.sellId.eq(qSeller.id))
+                    .join(qSeller).on(qProduct.seller.id.eq(qSeller.id))
                     .where(expression).fetchOne();
 
             log.info("impl total : " + total);
@@ -161,7 +161,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .where(builder)
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
@@ -169,7 +169,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
             long total = queryFactory.select(qProduct.count())
                     .from(qProduct).where(builder).join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id)).fetchOne();
+                    .on(qProduct.seller.id.eq(qSeller.member.id)).fetchOne();
 
         return new PageImpl<Tuple>(content, pageable, total);
 
@@ -184,7 +184,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .select(qProduct, qSeller.sellCompany, qSeller.sellGrade) // 필요한 컬럼 선택
                 .from(qProduct)
                 .join(qSeller) // Seller 테이블과 조인
-                .on(qProduct.sellId.eq(qSeller.member.id)) // 조건: Product의 sellId와 Seller의 id가 같을 때
+                .on(qProduct.seller.id.eq(qSeller.member.id)) // 조건: Product의 sellId와 Seller의 id가 같을 때
                 .where(qProduct.id.in(productIds)) // productIds 리스트를 사용하여 필터링
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

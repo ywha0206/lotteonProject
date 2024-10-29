@@ -69,7 +69,7 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
     public QOrderItem(Class<? extends OrderItem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.order = inits.isInitialized("order") ? new QOrder(forProperty("order"), inits.get("order")) : null;
-        this.product = inits.isInitialized("product") ? new QProduct(forProperty("product")) : null;
+        this.product = inits.isInitialized("product") ? new QProduct(forProperty("product"), inits.get("product")) : null;
         this.seller = inits.isInitialized("seller") ? new com.lotteon.entity.member.QSeller(forProperty("seller"), inits.get("seller")) : null;
     }
 
