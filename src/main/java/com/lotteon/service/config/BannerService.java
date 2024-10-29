@@ -11,9 +11,13 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +31,10 @@ public class BannerService {
     private final ImageService imageService;
     private final ModelMapper modelMapper;
 
-    @CacheEvict(value = "bannerCache", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "adminBannerCache", allEntries = true),
+            @CacheEvict(value = "bannerCache", allEntries = true)
+    })
     public Banner insert(PostBannerDTO bannerDTO) {
         log.info(bannerDTO.toString());
         // 이미지 업로드 및 경로 설정
@@ -46,29 +53,24 @@ public class BannerService {
         return bannerRepository.save(banner);
     }
 
+    @Cacheable(value = "adminBannerCache", key = "#cateId", cacheManager = "cacheManager")
     public List<GetBannerDTO> findAllByCate(int cateId) {
         List<Banner> banners = bannerRepository.findAllByBannerLocation(cateId);
 
         List<GetBannerDTO> bannerList =
                 banners.stream()
                 .map(Entity->modelMapper.map(Entity,GetBannerDTO.class))
-                .toList();
+                .collect(Collectors.toList());
 
         log.info(bannerList.toString());
 
         return bannerList;
     }
 
-    public List<GetBannerDTO> findAll() {
-        List<Banner> banners = bannerRepository.findAll();
-        List<GetBannerDTO> bannerList =
-                banners.stream()
-                        .map(Entity -> modelMapper.map(Entity, GetBannerDTO.class))
-                        .toList();
-        return bannerList;
-    }
-
-    @CacheEvict(value = "bannerCache", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "adminBannerCache", allEntries = true),
+            @CacheEvict(value = "bannerCache", allEntries = true)
+    })
     public boolean deleteBannersById(List<Long> bannerIds) {
         try {
             for(Long bannerId : bannerIds) {
@@ -80,12 +82,14 @@ public class BannerService {
             return false;
         }
     }
-
-    @CacheEvict(value = "bannerCache", key = "#banner.cateId")
-    public Banner updateBannerState(Long id, Integer state) {
+    @Caching(evict = {
+            @CacheEvict(value = "adminBannerCache", key = "#location"),
+            @CacheEvict(value = "bannerCache", key = "#location"),
+            @CacheEvict(value = "bannerCache", key = "'allBanner'")
+    })
+    public Banner updateBannerState(Long id, Integer state, int location) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Banner not found"));
-
         banner.updateBannerState(state);
 
         return banner;
@@ -103,4 +107,14 @@ public class BannerService {
 
         return bannerList;
     }
+
+
+
+    @Cacheable(value = "bannerCache", key = "'allBanner'", cacheManager = "cacheManager")
+    public List<Banner> getBanners() {
+        return bannerRepository.findAll(); // 모든 배너 조회
+    }
+
+
+
 }

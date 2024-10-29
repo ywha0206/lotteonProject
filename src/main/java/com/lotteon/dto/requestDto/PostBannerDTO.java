@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Date;
 import java.sql.Time;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -20,8 +22,8 @@ public class PostBannerDTO {
     private String bannerBg;
     private String bannerLink;
     private int bannerLocation;
-    private Timestamp bannerSdate;
-    private Timestamp bannerEdate;
+    private Date bannerSdate;
+    private Date bannerEdate;
     private Time bannerStime;
     private Time bannerEtime;
 
