@@ -74,8 +74,8 @@
                         </td>
                         <td>[[${b.bannerSdate}]]</td>
                         <td>[[${b.bannerEdate}]]</td>
-                        <td>[[${b.bannerStime}]]</td>
-                        <td>[[${b.bannerEtime}]]</td>
+                        <td>[[${#strings.substring(b.bannerStime,0,5)}]]</td>
+                        <td>[[${#strings.substring(b.bannerEtime,0,5)}]]</td>
                         <td class="td-admin">
                             <input type="button" class="banner-active"
                                    th:value="${b.bannerState < 1?'[ 활성화 ]':'[ 비활성화 ]'}"
