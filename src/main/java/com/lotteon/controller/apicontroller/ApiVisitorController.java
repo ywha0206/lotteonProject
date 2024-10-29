@@ -42,8 +42,6 @@ public class ApiVisitorController {
         Long count = visitorService.getVisitorCount(key);
         Long weekCount = visitorService.getWeekVisitorCount();
 
-        map.put("count",count);
-        map.put("weekCount",weekCount);
         return ResponseEntity.ok(map);
     }
 }

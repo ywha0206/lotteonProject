@@ -1,7 +1,9 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.dto.requestDto.GetProductDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
+import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @ToString
@@ -23,8 +26,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sell_id")
-    private Long sellId;
+//    @Column(name = "sell_id")
+//    private Long sellId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sell_id")
+    private Seller seller;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -79,4 +86,18 @@ public class Product {
     @ToString.Exclude
     private List<ProductOption> options = new ArrayList<>();
 
+    public GetProductDto toGetProductDto() {
+        return GetProductDto.builder()
+                .id(id)
+                .deli(prodDeliver)
+                .img(prodListImg)
+                .discount(prodDiscount)
+                .title(prodName)
+                .price(prodPrice)
+                .rating(prodRating)
+                .summary(prodSummary)
+                .sell_uid(seller.getMember().getMemUid())
+                .grade(seller.getSellGrade())
+                .build();
+    }
 }

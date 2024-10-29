@@ -1,13 +1,12 @@
 /* header */
 #wraper{width:100%; min-width:1200px; padding-top:120px;}
-#header{width:100%; height:120px; border-bottom:1px solid #ccc; transition:all 0.5s; background-color: white; position:fixed; top:0; left:0; z-index: 1000;}
+#header{width:100%; height:206px; border-bottom: 3px solid #ef2a23; transition:all 0.5s; background-color: white; position:fixed; top:0; left:0; z-index: 1000;}
 #headerIn{width:1200px; margin:0 auto; position:relative;}
-
 .logo a img{display: inline-block; width: 205px; font-size:50px; margin-left: 40px; line-height:1em; padding-top:30px; transition:all 0.5s;}
 
-.utill{position:absolute; top:10px; right:0; transition:all 0.5s;}
+.utill{position:absolute; top:10px; right:868px; width: 350px; transition:all 0.5s;}
 .utill li{float:left; margin-left:20px;}
-.utill li a{color:#555;}
+.utill li a{color:#555; float: left;}
 
 .gnb{position:absolute; top:60px; right:0; transition:all 0.5s;}
 .gnb li{float:left; margin-left:60px;}
@@ -16,25 +15,59 @@
 .gnb .on a{color:#f30;}
 
 /* 검색 bar */
-.search{
+#headerIn .search2{
     position: absolute;
-    top: 12px;
-    right: 44%;
+    top: 30px;
+    right: 31%;
     margin-left: -175px;
     transition: all 0.5s;
     padding-top: 34px}
-.search input{    width: 368px;
+#headerIn .search2 input{
+    width: 368px;
     height: 44px;
     text-indent: 13px;
     border-radius: 34px;
     border: 2.5px solid #ef2a23;
     background-color: #fff;
     text-overflow: ellipsis; /*  검색 칸 사이즈 초과시 ... 처리  */ }
-.search .ico_sch img{
+#headerIn .search2 .ico_sch img{
     position: absolute;
     top: 10px;
     right: 26px;
     padding-top: 39px;
+}
+
+.search-slider {
+    width: 200px; /* 슬라이더 전체 폭 조정 */
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    top: -24px;
+    left: 783px;
+    height: 30px;
+}
+
+/* 각 슬라이드 아이템 스타일 */
+.searchSlider li {
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    padding: 5px 0;
+    height: 30px;
+}
+
+.search-slider .bx-wrapper {
+    border: none;
+}
+
+/* 슬라이더의 텍스트 강조 스타일 */
+.searchSlider li:nth-child(1) {
+    color: #e60023; /* 첫 번째 검색어에 강조 색상 */
+    font-weight: bold;
+}
+
+.menu-box span {
+    margin-right: 10px;
 }
 
 /* 스크롤이 발생할 때 변경될 #header 스타일 */

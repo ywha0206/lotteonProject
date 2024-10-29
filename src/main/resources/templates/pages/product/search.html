@@ -2,11 +2,11 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <script th:src="@{/js/main.js}"></script>
-<main style="margin-top: 140px; gap: 0">
+<main style="margin-top: 230px; gap: 0">
     <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
     <div id="wrap">
         <!-- .aside -->
-        <main id="main" style="height: auto;">
+        <div id="main" style="height: auto;">
             <nav id="navi" style="width: 810px">
                 <h2 class="sub_tit">상품검색결과</h2>
                 <p class="location">
@@ -55,79 +55,37 @@
                     <col style="width: 20%;">
                     <col style="width: 20%;">
                 </colgroup>
-                <tr>
+                <tr th:each="product : ${products}">
                     <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
                     <td>
-                        <span style="font-size: 20px; font-weight: 700;">상품명</span> <br>
-                        <span style="font-size: 16px;">간단한 상품 설명</span>
+                        <span th:text="${product.title}" style="font-size: 20px; font-weight: 700;">상품명</span> <br>
+                        <span th:text="${product.summary}" style="font-size: 16px;">간단한 상품 설명</span>
                     </td>
                     <td>
                         <strong style="font-size: 20px;">27,000원</strong> <br>
-                        <del style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
-                        <span style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
-                        <span style="font-size: 16px;">배송비 2,500</span>
+                        <del th:text="${product.price.intValue()} + '원'" style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
+                        <span th:text="${product.discount} + '%'" style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
+                        <span th:text="${product.deli} + '원'" style="font-size: 16px;">배송비 2,500</span>
                         <img src="https://via.placeholder.com/89x19" alt="">
                     </td>
                     <td>
                         <img src="https://via.placeholder.com/19x19">
-                        <span style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
+                        <span th:text="${product.sell_uid}" style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
                         <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span style="font-size: 14px;">상품평</span>
-                        <img src="https://via.placeholder.com/56x17">
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
-                    <td>
-                        <span style="font-size: 20px; font-weight: 700;">상품명</span> <br>
-                        <span style="font-size: 16px;">간단한 상품 설명</span>
-                    </td>
-                    <td>
-                        <strong style="font-size: 20px;">27,000원</strong> <br>
-                        <del style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
-                        <span style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
-                        <span style="font-size: 16px;">배송비 2,500</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
-                    </td>
-                    <td>
-                        <img src="https://via.placeholder.com/19x19">
-                        <span style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span style="font-size: 14px;">상품평</span>
-                        <img src="https://via.placeholder.com/56x17">
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
-                    <td>
-                        <span style="font-size: 20px; font-weight: 700;">상품명</span> <br>
-                        <span style="font-size: 16px;">간단한 상품 설명</span>
-                    </td>
-                    <td>
-                        <strong style="font-size: 20px;">27,000원</strong> <br>
-                        <del style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
-                        <span style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
-                        <span style="font-size: 16px;">배송비 2,500</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
-                    </td>
-                    <td>
-                        <img src="https://via.placeholder.com/19x19">
-                        <span style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span style="font-size: 14px;">상품평</span>
+                        <span th:text="${product.rating}" style="font-size: 14px;">상품평</span>
                         <img src="https://via.placeholder.com/56x17">
                     </td>
                 </tr>
             </table> <!-- tb1 -->
             <div class="page">
-                <a href="#">&lt; 이전</a>
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
-                <a href="#">다음 &gt;</a>
-            </div> <!-- page -->
+                <a class="none" th:href="@{/prod/products/search(page=0, searchType=${searchType}, keyword=${keyword})}"><<</a>
+                <a class="none" th:href="@{/prod/products/search(page=${page - 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${page - 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
+                <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${page + 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${page + 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${totalPages - 1}, searchType=${searchType}, keyword=${keyword})}" >>></a>
+            </div>
         </div> <!-- #main-->
     </div><!-- #wrap -->
 </main>

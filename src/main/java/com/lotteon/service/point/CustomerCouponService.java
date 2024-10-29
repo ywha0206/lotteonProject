@@ -385,7 +385,7 @@ public class CustomerCouponService {
         List<Member> members = new ArrayList<>();
         for(Long prodId : prodIds){
             Optional<Product> product = productRepository.findById(prodId);
-            Long sellId = product.get().getSellId();
+            Long sellId = product.get().getSeller().getId();
             Member member = memberRepository.findById(sellId).orElseThrow();
             members.add(member);
         }
