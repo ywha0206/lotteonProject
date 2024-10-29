@@ -83,11 +83,11 @@ address{font-style: normal;}
 #wrap .btn_search {float: left; color: #ffffff; border: none; background-color: #c00000;
             width: 69px; height: 41px; margin-top: -1px;
 }
-#wrap .tb_search td > input:nth-child(3),
-#wrap .tb_search td > input:nth-child(4),
-#wrap .tb_search td > input:nth-child(5) {margin-right: 5px;}
-#wrap .tb_search td > input:nth-child(6) {width: 102px; height: 37px;}
-#wrap .tb_search td > input:nth-child(8) {width: 102px; height: 37px; margin-right: 8px;}
+#wrap .tb_search td input:nth-child(4),
+#wrap .tb_search td input:nth-child(5),
+#wrap .tb_search td input:nth-child(6) {margin-right: 5px;}
+#wrap .tb_search td input:nth-child(4) {width: 102px; height: 37px;}
+#wrap .tb_search td input:nth-child(6) {width: 102px; height: 37px; margin-right: 8px;}
 
 /* tab menu | 텝메뉴 */
 #wrap .array {

@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +26,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @Column(name = "sell_id")
-//    private Long sellId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sell_id")
@@ -79,7 +77,10 @@ public class Product {
 
     @Column(name = "prod_rdate")
     @CreationTimestamp
-    private Timestamp prodRdate;
+    private LocalDateTime prodRdate;
+
+    @Column(name = "prod_review_cnt")
+    private Integer prodReviewCnt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

@@ -48,7 +48,9 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final NumberPath<Integer> prodRating = createNumber("prodRating", Integer.class);
 
-    public final DateTimePath<java.sql.Timestamp> prodRdate = createDateTime("prodRdate", java.sql.Timestamp.class);
+    public final DateTimePath<java.time.LocalDateTime> prodRdate = createDateTime("prodRdate", java.time.LocalDateTime.class);
+
+    public final NumberPath<Integer> prodReviewCnt = createNumber("prodReviewCnt", Integer.class);
 
     public final NumberPath<Integer> prodStock = createNumber("prodStock", Integer.class);
 

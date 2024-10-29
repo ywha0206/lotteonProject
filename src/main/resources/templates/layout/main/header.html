@@ -53,7 +53,8 @@
             <nav class="gnb">
             </nav><!--.gnb-->
             <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search2">
-                <input type="text" id="search2" name="search" placeholder="어떤 상품을 찾으세요?">
+                <input autocomplete="off" onclick="openRelated()" type="text" id="search2" name="search" placeholder="어떤 상품을 찾으세요?">
+                <input type="hidden" name="related" th:value="${related}">
                 <label for="search2"></label><button style="border: none;" type="submit" class="ico_sch"><img th:src="@{/images/ico_search.png}" alt="검색하기"></button>
             </form><!--.search-->
         </div><!--.headerIn-->
@@ -93,12 +94,22 @@
                     <img th:src="@{/images/icon_search_down.svg}">
                 </div>
             </div>
-
+        </div>
+        <div id="related-box" class="related-search-box">
+            <div onclick="closeRelated()" class="close-related">X</div>
+            <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search2">
+                <input onchange="getRelated(event)" autocomplete="off" class="related-search-inp" type="text" id="search3" name="search" placeholder="어떤 상품을 찾으세요?">
+                <input type="hidden" name="related" th:value="${related}">
+                <label for="search3"></label><button style="border: none;" type="submit" class="ico_sch"><img class="related-search-ico" th:src="@{/images/ico_search.png}" alt="검색하기"></button>
+            </form>
+            <h4>연관검색어</h4><br>
+            <div class="related-keyword"></div>
         </div>
     </header><!--#header-->
 </body>
 
 <script>
+    let timer;
     $(document).ready(function(){
         $('.searchSlider').bxSlider({
             mode: 'vertical',    // 세로로 슬라이드 이동
@@ -110,4 +121,55 @@
             autoHover: true      // 마우스 호버 시 일시 정지
         });
     });
+
+    function openRelated(){
+        const related = document.getElementById('related-box')
+        const relatedSearch = document.querySelector('.related-search-inp')
+        related.style.display='block'
+        relatedSearch.focus()
+    }
+
+    function closeRelated(){
+        const related = document.getElementById('related-box')
+        related.style.display='none'
+    }
+
+    document.getElementById("search3").addEventListener("input", function() {
+        clearTimeout(timer);  // 이전 타이머를 초기화하여 중복 요청 방지
+
+        // 새로운 타이머 설정 (2초 후에 연관 검색어 표시)
+        timer = setTimeout(() => {
+            const searchTerm = this.value;
+
+            if (searchTerm) {
+                // 연관 검색어 로드 함수 호출
+                loadRelatedSearches(searchTerm);
+            } else {
+                // 입력 내용이 비어 있을 경우 연관 검색어 숨김
+                document.getElementById("relatedSearches").innerHTML = "";
+            }
+        }, 2000); // 2초 지연 설정
+    });
+
+    async function loadRelatedSearches(searchTerm) {
+        try {
+            const resp = await axios.get("/search/related-search",{
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                params : {
+                    'keyword' : searchTerm
+                }
+            })
+            document.querySelector('.related-keyword').innerHTML = resp.data.map(v => {
+                return `<span onclick="searchRelated(event)" data-keyword="${v}">#${v}</span>`;
+            }).join('');
+        } catch (e) {
+            alert(e)
+        }
+    }
+
+    function searchRelated(event){
+        window.location.href = "/prod/products/search?search="+event.target.dataset.keyword
+    }
 </script>
