@@ -129,4 +129,37 @@ public class OrderItemService {
 
         return responseOrderDto;
     }
+
+    public ResponseOrderDto selectAdminOrder(Long orderId) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(orderId);
+        log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
+
+        List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
+        for(OrderItem orderItem : orderItems){
+            ResponseOrderItemDto orderItemDto = ResponseOrderItemDto.builder()
+                                                        .prodListImg(orderItem.getProduct().getProdListImg())
+                                                        .prodName(orderItem.getProduct().getProdName())
+                                                        .prodId(orderItem.getProduct().getId())
+                                                        .sellerName(orderItem.getSeller().getSellCompany())
+                                                        .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
+                                                        .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
+                                                        .quantity(orderItem.getQuantity())
+                                                        .delivery(orderItem.getDeli())
+                                                        .totalPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
+                                                        .build();
+
+            orderItemDtos.add(orderItemDto);
+        }
+        return ResponseOrderDto.builder()
+                .orderId(orderItems.get(0).getOrder().getId())
+                .payment(orderItems.get(0).getOrder().getOrderPayment())
+                .custName(orderItems.get(0).getOrder().getCustomer().getCustName())
+                .custHp(orderItems.get(0).getOrder().getCustomer().getCustHp())
+                .orderState(orderItems.get(0).getOrder().getOrderState())
+                .receiverName(orderItems.get(0).getOrder().getReceiverName())
+                .receiverHp(orderItems.get(0).getOrder().getReceiverHp())
+                .receiverAddr(orderItems.get(0).getOrder().getReceiverAddr())
+                .orderItemDtos(orderItemDtos)
+                .build();
+    }
 }

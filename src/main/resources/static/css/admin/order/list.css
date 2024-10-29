@@ -11,6 +11,16 @@ li {list-style: none;}
     align-items: flex-end;
     margin: 0 auto;
     margin-bottom: 20px;
+
+}
+.fixed {
+    position: sticky;
+    top: 0;
+    z-index: 10; /* 헤더가 다른 콘텐츠 위에 표시되도록 설정 */
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-title{
