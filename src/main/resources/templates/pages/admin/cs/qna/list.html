@@ -57,7 +57,7 @@
 
           <!-- 작성자 표시 (작성자 열에 위치) -->
           <td>
-          <span th:text="${qna.memId != null ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}"></span>
+            <span th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}"></span>
           </td>
           <!-- 작성일 표시 (작성일 열에 위치) -->
           <td th:text="${qna.rdate}">작성일</td>
