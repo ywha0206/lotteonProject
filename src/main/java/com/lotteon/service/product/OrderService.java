@@ -214,7 +214,7 @@ public class OrderService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<Order> orders = orderRepository.findAll(pageable);
-        log.info("셀러 아이템  "+orders.getContent());
+        log.info("파인드올 셀러 아이템  "+orders.getContent());
 
 
         Page<ResponseAdminOrderDto> orderDtos = orders.map(order -> {
@@ -223,9 +223,6 @@ public class OrderService {
 
             // 필터링된 아이템의 개수
             int sellerOrderItemCount = order.getOrderItems().size();
-
-            log.info("셀러 아이템 개수 "+sellerOrderItemCount);
-
 
             // 필터링된 아이템의 총 가격 합산
             int sellerOrderTotal = order.getOrderItems().stream()

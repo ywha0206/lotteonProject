@@ -5,8 +5,10 @@ import com.lotteon.dto.requestDto.PostProdAllDTO;
 import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ApiAdminProdController {
 
     private final ProductService productService;
     private final CategoryProductService categoryProductService;
+    private final OrderItemService orderItemService;
 
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
@@ -84,6 +87,18 @@ public class ApiAdminProdController {
         response.put("success", true);
         return ResponseEntity.ok(response);
 
+    }
+
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<?> adminOrderDetail(@PathVariable Long orderId) {
+
+        ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
+
+        if(responseOrderDto==null ){
+            return ResponseEntity.ok().body(false);
         }
+
+        return ResponseEntity.ok().body(responseOrderDto);
+    }
 
 }
