@@ -16,6 +16,7 @@
         }
         return true;
       }
+
       function goBack() {
         window.history.back();
       }
@@ -26,21 +27,20 @@
     </nav>
     <!-- 글작성 컨텐츠 시작 -->
     <article>
-      <form class="formBox" method="post" onsubmit="return checkSelection()">
+      <form class="formBox" th:action="|@{/qna/reply/}${qna.id}|" method="post" onsubmit="return checkSelection()">
         <table>
           <tbody>
-          <input type="hidden" name="qnaHit" value="1" />
           <tr style="height: 60px">
             <th style="width: 100px">유형</th>
-            <td class="qna-type">회원 - 가입</td>
+            <td class="qna-type" th:text="|${qna.cate1.categoryName} - ${qna.cate2.categoryName}|">회원 - 가입</td>
           </tr>
           <tr style="height: 60px">
             <th>제목</th>
-            <td class="qna-title">개인회원과 법인회원에 차이가 있나요?</td>
+            <td class="qna-title" th:text="${qna.title}">개인회원과 법인회원에 차이가 있나요?</td>
           </tr>
           <tr style="height: 200px">
             <th>내용</th>
-            <td class="qna-content">
+            <td class="qna-content" th:text="${qna.content}">
               개인회원과 법인회원에 차이가 있나요? 혜택도 있나요? 알려주세요
             </td>
           </tr>
@@ -49,7 +49,7 @@
             <td>
               <textarea
                       class="qnaContent"
-                      name="qnaContent"
+                      name="answer"
                       placeholder="내용을 입력하세요."
                       required
               ></textarea>
@@ -67,7 +67,6 @@
   </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
-
 
 
 <!--내용 끝-->

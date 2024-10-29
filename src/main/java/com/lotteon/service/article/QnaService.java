@@ -30,7 +30,6 @@ public class QnaService {
     private final QnaRepository qnaRepository;
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
-    private final CategoryArticleService categoryArticleService;
     private final CategoryArticleRepository categoryArticleRepository;
 
 
@@ -94,16 +93,19 @@ public class QnaService {
     }
 
 
+    // qna 답변하기 *관리자 작성
+   public void reply(Long id, String answer){
+        Qna qna = qnaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 qna는 없습니다."));
+        qna.changeAnswer(answer);
+    }
 
-    // QnA 글 작성
-    public Long insertQna(ArticleDto articleDto, HttpServletRequest req) {
+    // QnA 글 작성 *일반 CS 고객 작성
+    public Long insertQna(ArticleDto articleDto, Long memberId) {
         // 작성일 및 기본 정보 설정
         articleDto.setRdate(LocalDateTime.now());
         articleDto.setViews(0); // 초기 조회수 0
         articleDto.setState(0); // 초기 답변 상태: 대기
 
-        // 세션에서 사용자 ID 가져오기 (비회원 작성 테스트할 때 주석처리 ...)
-        Long memberId = (Long) req.getSession().getAttribute("memberId");
         if (memberId == null) {
             throw new IllegalStateException("로그인된 사용자가 아닙니다.");
         }
@@ -112,8 +114,10 @@ public class QnaService {
         articleDto.setMemId(memberId);
 
         // 카테고리 설정 (1차, 2차 카테고리)
-        CategoryArticle cate1 = categoryArticleService.getCategoryById(articleDto.getCate1Id());
-        CategoryArticle cate2 = categoryArticleService.getCategoryById(articleDto.getCate2Id());
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(articleDto.getCate1Name())
+                .orElseThrow(()->new IllegalArgumentException("해당 카테고리가 없습니다."));
+        CategoryArticle cate2 = categoryArticleRepository.findByCategoryName(articleDto.getCate2Name())
+                .orElseThrow(()->new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         // 회원 정보 설정
         Member member = memberRepository.findById(memberId)
@@ -123,7 +127,7 @@ public class QnaService {
         Qna qna = Qna.builder()
                 .qnaTitle(articleDto.getTitle())
                 .qnaContent(articleDto.getContent())
-                .qnaRdate(Timestamp.valueOf(articleDto.getRdate()).toLocalDateTime())
+                .qnaRdate(articleDto.getRdate())
                 .qnaState(articleDto.getState())
                 .qnaType(articleDto.getType())
                 .qnaAnswer(articleDto.getAnswer())
@@ -138,7 +142,15 @@ public class QnaService {
         return savedQna.getId(); // 저장된 QnA ID 반환
     }
 
-
-
+    // 답변 여부 확인
+    public boolean hasAnswer(Long id) {
+        Qna qna = qnaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 QnA가 없습니다."));
+        return qna.getQnaAnswer() != null && !qna.getQnaAnswer().isEmpty();
+    }
 
 }
+
+
+
+

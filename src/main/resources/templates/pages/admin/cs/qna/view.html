@@ -32,7 +32,7 @@
           <input type="hidden" name="qnaHit" value="1" />
           <tr style="height: 60px">
             <th style="width: 100px">유형</th>
-            <td class="qna-type">회원 - 가입</td>
+            <td class="qna-type" th:text="|${qna.cate1.categoryName} - ${qna.cate2.categoryName}|">회원 - 가입</td>
           </tr>
           <tr style="height: 60px">
             <th>제목</th>
