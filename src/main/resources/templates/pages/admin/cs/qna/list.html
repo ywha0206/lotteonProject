@@ -51,7 +51,8 @@
           <td class="cate1" th:text="${qna.cate1.categoryName}">카테고리1</td>
           <td class="cate2" th:text="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}">카테고리2</td>
           <td style="text-align: left">
-            <a th:href="@{'/qna/view/' + ${qna.id}}" th:text="${qna.title}">문의 제목</a>
+            <!-- 제목 클릭 시 답변 여부에 따라 view 또는 reply 페이지로 이동 -->
+            <a th:href="@{'/admin/cs/qna/viewOrReply/' + ${qna.id}}" th:text="${qna.title}">문의 제목</a>
           </td>
 
           <!-- 작성자 표시 (작성자 열에 위치) -->
@@ -62,10 +63,11 @@
           <td th:text="${qna.rdate}">작성일</td>
 
           <!-- 상태 표시 (상태 열에 위치) -->
-          <td th:text="${qna.answer != null && !#strings.isEmpty(qna.answer1) ? '답변완료' : '검토중'}">검토중</td>
+          <td th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토중'}">검토중</td>
         </tr>
       </table>
     </article>
+
 
     <div class="button-group">
       <a class="button--delete" onclick="deleteSelected();">선택삭제</a>

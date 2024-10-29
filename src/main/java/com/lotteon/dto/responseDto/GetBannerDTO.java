@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 
 @Data
 @AllArgsConstructor
@@ -19,9 +20,9 @@ public class GetBannerDTO {
     private String bannerBg;
     private String bannerLink;
     private int bannerLocation;
-    private Timestamp bannerSdate;
-    private Timestamp bannerEdate;
-    private Timestamp bannerStime;
-    private Timestamp bannerEtime;
-    private int bannerState;
+    private Date bannerSdate;
+    private Date bannerEdate;
+    private Time bannerStime;
+    private Time bannerEtime;
+    private Integer bannerState;
 }

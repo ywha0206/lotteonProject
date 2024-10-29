@@ -49,9 +49,6 @@ public class OrderItem {
     @Column(name = "order_item_discount")
     private int discount;
 
-    @Column(name = "order_item_req" ,columnDefinition = "TEXT")
-    private String req;
-
     @Column(name = "order_item_deli")
     private int deli;
 

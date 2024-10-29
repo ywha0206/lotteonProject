@@ -29,7 +29,8 @@ import java.util.Map;
  *
  * 수정이력
       - 2025/10/26 박경림 - /faqs pageable default로 sort 설정
-      - 2025/10/26 박경림 - faq 개별 삭제&선택 삭제 기능, /qnas 문의하기 목록 추가
+      - 2025/10/28 박경림 - faq 개별 삭제&선택 삭제 기능, /qnas 문의하기 목록 추가
+      - 2025/10/29 박경림 - 일반 cs qna 작성하기 기능
 
 
  * */
@@ -87,7 +88,6 @@ public class AdminCsController {
     }
 
 
-
     @GetMapping("/faq")
     public String faq(Model model) {
         model.addAttribute("active", "faqs");
@@ -116,7 +116,6 @@ public class AdminCsController {
     }
 
 
-
     // FAQ 상세 보기
     @GetMapping("/faq/view/{id}")
     public String faqView(@PathVariable Long id, Model model) {
@@ -134,7 +133,7 @@ public class AdminCsController {
     }
 
     @PostMapping("/faq/modify/{id}")
-    public  String modifyFaq(@PathVariable Long id, @ModelAttribute ArticleDto faqDto) {
+    public String modifyFaq(@PathVariable Long id, @ModelAttribute ArticleDto faqDto) {
         faqService.updateFaq(id, faqDto);
         return "redirect:/admin/cs/faqs";
     }
@@ -163,7 +162,6 @@ public class AdminCsController {
     }
 
 
-
     // 선택 삭제
     @PostMapping("/faq/deleteSelected")
     @ResponseBody
@@ -180,20 +178,11 @@ public class AdminCsController {
     }
 
 
-
-
-
-
-
-
-
-
-
     // QNA 문의하기
     @GetMapping("/qnas")
     public String qnas(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // 1. qna 서비스에서 페이징 처리된  qna를 반환
-        Page<ArticleDto>qnasPage = qnaService.getAllQnas(pageable);
+        Page<ArticleDto> qnasPage = qnaService.getAllQnas(pageable);
         // 2. qnasPage에서 데이터들을 뽑아옴
         List<ArticleDto> qnas = qnasPage.getContent();
         // 3. model에 qnas 를 추가
@@ -204,7 +193,18 @@ public class AdminCsController {
 
     }
 
-    // QNA 상세 보기 1028 코드 미완성
+
+    // 답변 여부에 따라 view 또는 reply 페이지로 리다이렉트
+    @GetMapping("/qna/viewOrReply/{id}")
+    public String viewOrReply(@PathVariable Long id) {
+        if (qnaService.hasAnswer(id)) {
+            return "redirect:/admin/cs/qna/view/" + id; // 답변이 있으면 view 페이지로 이동
+        } else {
+            return "redirect:/admin/cs/qna/reply/" + id; // 답변이 없으면 reply 페이지로 이동
+        }
+    }
+
+    // QNA 글 보기 (답변 있는 글)
     @GetMapping("/qna/view/{id}")
     public String qnaView(@PathVariable Long id, Model model) {
         ArticleDto qna = qnaService.getQnaById(id); // 서비스에서 QNA 가져오기
@@ -212,11 +212,49 @@ public class AdminCsController {
         return "pages/admin/cs/qna/view"; // 상세보기 페이지로 이동
     }
 
+    // QNA 답변 페이지를 표시
+    @GetMapping("/qna/reply/{id}")
+    public String qnaReply(@PathVariable Long id, Model model) {
+        ArticleDto qna = qnaService.getQnaById(id); // QNA 데이터 가져오기
+        model.addAttribute("qna", qna); // 모델에 QNA 데이터 추가
+        return "pages/admin/cs/qna/reply"; // 답변 페이지로 이동
+    }
+
+    // QNA 답변 작성 후 저장 처리
+    @PostMapping("/qna/reply/{id}")
+    public String saveQnaReply(@PathVariable Long id, @RequestParam("answer") String answer) {
+        log.debug("saveQnaReply called with id: {} and answer: {}", id, answer);
+        qnaService.reply(id, answer); // 답변 저장
+        return "redirect:/admin/cs/qnas"; // 목록 페이지로 리다이렉트
+    }
+
+
+
+  /*  // QNA 답변하기 (답변 없는 글)
+    @GetMapping("/qna/reply/{id}")
+    public String qnaReply(Model model, @PathVariable Long id) {
+        ArticleDto qna = qnaService.getById(id);
+        log.debug("qnaReplay method called with id: {} and answer: {}", id, qna.getAnswer());
+        model.addAttribute("qna", qna);
+
+        return "/pages/admin/cs/qna/reply";
+    }
+
+    // QNA 답변 작성 후 처리
+    @PostMapping("/qna/reply/{id}")
+    public String qnaReplay(@PathVariable Long id, @RequestParam("answer") String answer) {
+        qnaService.reply(id, answer);
+        return "redirect:/admin/cs/qnas";
+    }*/
+
+/* 관리자 답변 수정기능 제공 안 함
+
     @GetMapping("/qna/modify")
     public String qnaModify(Model model) {
         model.addAttribute("config", getSideValue());
         return "pages/admin/cs/qna/modify";
     }
+*/
 
     @GetMapping("/qna")
     public String qnaView(Model model) {
@@ -230,6 +268,8 @@ public class AdminCsController {
         return "pages/admin/cs/qna/write";
     }
 
+
+    // 채용하기
     @GetMapping("/recruits")
     public String recruits(
             Model model,
@@ -253,7 +293,6 @@ public class AdminCsController {
 
         return "pages/admin/cs/recruit/list";
     }
-
 
 
 }

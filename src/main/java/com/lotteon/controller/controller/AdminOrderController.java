@@ -48,9 +48,9 @@ public class AdminOrderController {
         Page<ResponseAdminOrderDto> orders;
 
         if(role.equals("admin")){
-            orders = orderService.selectedAdminOrdersByAdmin(0);
+            orders = orderService.selectedAdminOrdersByAdmin(page);
         }else{
-            orders = orderService.selectedAdminOrdersBySeller(0);
+            orders = orderService.selectedAdminOrdersBySeller(page);
         }
 
 

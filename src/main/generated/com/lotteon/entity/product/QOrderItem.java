@@ -36,8 +36,6 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);
 
-    public final StringPath req = createString("req");
-
     public final ListPath<OrderItemOption, QOrderItemOption> selectedOptions = this.<OrderItemOption, QOrderItemOption>createList("selectedOptions", OrderItemOption.class, QOrderItemOption.class, PathInits.DIRECT2);
 
     public final com.lotteon.entity.member.QSeller seller;

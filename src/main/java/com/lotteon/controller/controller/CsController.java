@@ -1,5 +1,6 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.entity.article.Notice;
 import com.lotteon.repository.category.CategoryArticleRepository;
@@ -9,6 +10,7 @@ import com.lotteon.service.article.QnaService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -72,9 +74,14 @@ public class CsController {
     }
 
     // 문의하기 글 작성 처리
+    // @AuthenticationPrincipal 인증된 사용자 정보를 가져올 때 사용
     @PostMapping("/qna/write")
-    public String submitQna(@ModelAttribute ArticleDto articleDto, HttpServletRequest req) {
-        Long qnaId = qnaService.insertQna(articleDto, req);
+    public String submitQna(@ModelAttribute ArticleDto articleDto,  @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        if(myUserDetails == null)
+        {
+            return "redirect:/auth/login/view";
+        }
+        Long qnaId = qnaService.insertQna(articleDto, myUserDetails.getUser().getId());
         log.info("문의하기 글 작성 완료, ID: " + qnaId);
         return "redirect:/cs/qnas";
     }

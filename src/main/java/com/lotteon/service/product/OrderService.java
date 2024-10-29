@@ -4,10 +4,7 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
-import com.lotteon.dto.responseDto.cartOrder.CartItemDto;
-import com.lotteon.dto.responseDto.cartOrder.ProductDto;
-import com.lotteon.dto.responseDto.cartOrder.ResponseAdminOrderDto;
-import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
+import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.*;
@@ -214,7 +211,7 @@ public class OrderService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<Order> orders = orderRepository.findAll(pageable);
-        log.info("셀러 아이템  "+orders.getContent());
+        log.info("파인드올 셀러 아이템  "+orders.getContent());
 
 
         Page<ResponseAdminOrderDto> orderDtos = orders.map(order -> {
@@ -223,9 +220,6 @@ public class OrderService {
 
             // 필터링된 아이템의 개수
             int sellerOrderItemCount = order.getOrderItems().size();
-
-            log.info("셀러 아이템 개수 "+sellerOrderItemCount);
-
 
             // 필터링된 아이템의 총 가격 합산
             int sellerOrderTotal = order.getOrderItems().stream()
