@@ -4,7 +4,8 @@ package com.lotteon.entity.config;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @ToString
@@ -37,16 +38,16 @@ public class Banner {
     private int bannerLocation;
 
     @Column(name = "banner_sdate")
-    private Timestamp bannerSdate;
+    private Date bannerSdate;
 
     @Column(name = "banner_edate")
-    private Timestamp bannerEdate;
+    private Date bannerEdate;
 
     @Column(name = "banner_stime")
-    private Timestamp bannerStime;
+    private Time bannerStime;
 
     @Column(name = "banner_etime")
-    private Timestamp bannerEtime;
+    private Time bannerEtime;
 
     @Column(name = "banner_state")
     private int bannerState;
