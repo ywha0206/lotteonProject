@@ -26,11 +26,14 @@ public class ResponseOrderDto {
     private String custHp;
     private String receiverName;
     private String receiverHp;
-    private String receiverAddr;
+    private String receiverAddr1;
+    private String receiverAddr2;
+    private String receiverAddr3;
     private int OrderTotal;
     private List<ResponseOrderItemDto> orderItemDtos;
 
     //추가필드
     private int payment;
     private int orderState;
+    private String orderReq;
 }

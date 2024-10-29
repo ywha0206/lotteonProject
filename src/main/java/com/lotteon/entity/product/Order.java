@@ -58,6 +58,10 @@ public class Order {
     @CreationTimestamp
     private Timestamp orderRdate;
 
+
+    @Column(name = "order_req" ,columnDefinition = "TEXT")
+    private String orderReq;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude

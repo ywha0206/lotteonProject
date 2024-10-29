@@ -38,6 +38,8 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final DateTimePath<java.sql.Timestamp> orderRdate = createDateTime("orderRdate", java.sql.Timestamp.class);
 
+    public final StringPath orderReq = createString("orderReq");
+
     public final NumberPath<Integer> orderState = createNumber("orderState", Integer.class);
 
     public final NumberPath<Integer> orderTotal = createNumber("orderTotal", Integer.class);
