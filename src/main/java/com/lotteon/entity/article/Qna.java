@@ -55,5 +55,8 @@ public class Qna {
     @Column(name = "qna_views")
     private int qnaViews;
 
+    public void changeAnswer(String answer) {
+        qnaAnswer = answer;
+    }
 
 }
