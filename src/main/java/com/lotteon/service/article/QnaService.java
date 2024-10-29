@@ -104,7 +104,6 @@ public class QnaService {
        Qna qna = qnaRepository.findById(id)
                .orElseThrow(() -> new IllegalArgumentException("해당하는 QnA가 없습니다."));
        qna.changeAnswer(answer); // 답변 내용 업데이트
-       qnaRepository.save(qna); // DB에 저장
     }
 
     public void save(Qna qna) {
