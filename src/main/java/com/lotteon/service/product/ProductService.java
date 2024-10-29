@@ -1,6 +1,7 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.GetProductDto;
 import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
@@ -213,4 +214,17 @@ public class ProductService {
         return optionDTOs;
     }
 
+    public Page<GetProductDto> searchProducts(int page, String search) {
+        Pageable pageable = PageRequest.of(page, 7);
+        Page<Product> products;
+        Page<GetProductDto> dtos;
+        if(search.equals("0")){
+            products = productRepository.findAllByOrderByProdOrderCntDesc(pageable);
+            dtos = products.map(v->v.toGetProductDto());
+            return dtos;
+        }
+        products = productRepository.findAllByProdNameContainingOrderByProdOrderCntDesc(search,pageable);
+        dtos = products.map(v->v.toGetProductDto());
+        return dtos;
+    }
 }

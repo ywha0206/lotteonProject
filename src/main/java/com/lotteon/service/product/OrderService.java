@@ -66,7 +66,7 @@ public class OrderService {
                                             .prodPoint(product.get().getProdPoint())
                                             .prodSummary(product.get().getProdSummary())
                                             .prodListImg(product.get().getProdListImg())
-                                            .sellId(product.get().getSellId())
+                                            .sellId(product.get().getSeller().getId())
                                             .stock(product.get().getProdStock())
                                             .build();
 

@@ -58,7 +58,7 @@ public class OrderItemService {
             }
             log.info("프로덕트 조회 : "+ optProduct.get());
 
-            Long sellId = optProduct.get().getSellId();
+            Long sellId = optProduct.get().getSeller().getId();
 
             log.info("셀러 아이디 가지고 왔나요? : "+sellId);
 

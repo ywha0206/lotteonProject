@@ -18,6 +18,8 @@ public class QProduct extends EntityPathBase<Product> {
 
     private static final long serialVersionUID = 1825934975L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QProduct product = new QProduct("product");
 
     public final ListPath<com.lotteon.entity.category.CategoryProductMapper, com.lotteon.entity.category.QCategoryProductMapper> categoryMappings = this.<com.lotteon.entity.category.CategoryProductMapper, com.lotteon.entity.category.QCategoryProductMapper>createList("categoryMappings", com.lotteon.entity.category.CategoryProductMapper.class, com.lotteon.entity.category.QCategoryProductMapper.class, PathInits.DIRECT2);
@@ -54,18 +56,27 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final NumberPath<Integer> prodViews = createNumber("prodViews", Integer.class);
 
-    public final NumberPath<Long> sellId = createNumber("sellId", Long.class);
+    public final com.lotteon.entity.member.QSeller seller;
 
     public QProduct(String variable) {
-        super(Product.class, forVariable(variable));
+        this(Product.class, forVariable(variable), INITS);
     }
 
     public QProduct(Path<? extends Product> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QProduct(PathMetadata metadata) {
-        super(Product.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QProduct(PathMetadata metadata, PathInits inits) {
+        this(Product.class, metadata, inits);
+    }
+
+    public QProduct(Class<? extends Product> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.seller = inits.isInitialized("seller") ? new com.lotteon.entity.member.QSeller(forProperty("seller"), inits.get("seller")) : null;
     }
 
 }
