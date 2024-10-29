@@ -1,5 +1,6 @@
 package com.lotteon.service.product;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,7 +125,7 @@ public class OrderItemService {
                 .OrderTotal(order.getOrderTotal())
                 .receiverName(order.getReceiverName())
                 .receiverHp(order.getReceiverHp())
-                .receiverAddr(order.getReceiverAddr())
+                .receiverAddr1(order.getReceiverAddr())
                 .orderItemDtos(orderItemDtos)
                 .build();
 
@@ -131,8 +133,23 @@ public class OrderItemService {
     }
 
     public ResponseOrderDto selectAdminOrder(Long orderId) {
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(orderId);
-        log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
+
+        MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String role = auth.getUser().getMemRole();
+        Seller seller = auth.getUser().getSeller();
+        Long memId = auth.getUser().getId();
+        log.info("셀러인지 어드민인지 확인하기 "+role+memId);
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        if(role.equals("admin")){
+            orderItems = orderItemRepository.findAllByOrder_Id(orderId);
+        }else if(role.equals("seller")){
+            orderItems = orderItemRepository.findAllBySellerAndOrder_Id(seller,orderId);
+            log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
+        }
+
+
 
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
@@ -150,6 +167,7 @@ public class OrderItemService {
 
             orderItemDtos.add(orderItemDto);
         }
+        String[] addr = orderItems.get(0).getOrder().getReceiverAddr().split("/");
         return ResponseOrderDto.builder()
                 .orderId(orderItems.get(0).getOrder().getId())
                 .payment(orderItems.get(0).getOrder().getOrderPayment())
@@ -158,7 +176,14 @@ public class OrderItemService {
                 .orderState(orderItems.get(0).getOrder().getOrderState())
                 .receiverName(orderItems.get(0).getOrder().getReceiverName())
                 .receiverHp(orderItems.get(0).getOrder().getReceiverHp())
-                .receiverAddr(orderItems.get(0).getOrder().getReceiverAddr())
+                .receiverAddr1(addr[0])
+                .receiverAddr2(addr[1])
+                .receiverAddr3(addr[2])
+                .orderReq(
+                        (orderItems.get(0).getOrder().getOrderReq() != null && !orderItems.get(0).getOrder().getOrderReq().isEmpty())
+                                ? orderItems.get(0).getOrder().getOrderReq()
+                                : ""
+                )
                 .orderItemDtos(orderItemDtos)
                 .build();
     }
