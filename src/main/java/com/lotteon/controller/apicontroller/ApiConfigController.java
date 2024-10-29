@@ -61,9 +61,9 @@ public class ApiConfigController {
         }
     }
 
-    @PatchMapping("/banner/{id}/{state}")
-    public ResponseEntity<?> changeBannerState(@PathVariable("id") Long id, @PathVariable("state") Integer state) {
-        Banner banner = bannerService.updateBannerState(id, state);
+    @PatchMapping("/banner/{id}/{state}/{location}")
+    public ResponseEntity<?> changeBannerState(@PathVariable("id") Long id, @PathVariable("state") Integer state,@PathVariable("location") int location) {
+        Banner banner = bannerService.updateBannerState(id, state, location);
         return ResponseEntity.ok().body(banner);
     }
 
