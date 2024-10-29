@@ -63,7 +63,7 @@
           <td th:text="${qna.rdate}">작성일</td>
 
           <!-- 상태 표시 (상태 열에 위치) -->
-          <td th:text="${qna.answer != null && !#strings.isEmpty(qna.answer1) ? '답변완료' : '검토중'}">검토중</td>
+          <td th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토중'}">검토중</td>
         </tr>
       </table>
     </article>

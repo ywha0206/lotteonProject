@@ -9,6 +9,13 @@ import lombok.*;
 import java.security.Timestamp;
 import java.time.LocalDateTime;
 
+/*
+ *  이름 : 박경림
+ *  날짜 : 2024-10-29
+ *  작업내용 :  fromEntity 메서드를 오버로딩하여 추가
+ *
+ * */
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -37,6 +44,8 @@ public class ArticleDto {
     private LocalDateTime updateDate;  // 업데이트된 날짜 (필요 시 추가)
     private String status;       // 글 상태 (예: '작성 중', '게시 완료' 등)
 
+
+    // 오버로딩: 같은 이름(fromEntity)을 사용 인자의 엔티티 타입(Faq, Qna)에 따라 서로 다른 처리
     public static ArticleDto fromEntity(Faq faq){
         return ArticleDto.builder()
                 .id(faq.getId())
@@ -53,8 +62,7 @@ public class ArticleDto {
                 .build();
     }
 
-    public static ArticleDto fromEntity(Qna qna)
-    {
+    public static ArticleDto fromEntity(Qna qna){
         return ArticleDto.builder()
                 .id(qna.getId())
                 .title(qna.getQnaTitle())

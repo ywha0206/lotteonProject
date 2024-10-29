@@ -11,7 +11,7 @@
       <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
     </nav>
     <article>
-      <form class="formBox" method="post" th:action="@{/admin/cs/faq/modify/{id}(id=${faq.id})}" onsubmit="return checkSelection();">
+      <form class="formBox" method="post" th:action="@{/qna/reply/{id}(id=${qna.id})}" onsubmit="return checkSelection();">
         <input type="hidden" name="faqNo" th:value="${faq.id}" />
         <input type="hidden" name="faqCate2" th:value="${faq.cate1.categoryName}" />
         <input type="hidden" name="faqType2" th:value="${faq.cate2.categoryName}" />
