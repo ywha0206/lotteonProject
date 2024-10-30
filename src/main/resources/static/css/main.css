@@ -43,7 +43,7 @@
     overflow: hidden;
     position: relative;
     top: -24px;
-    left: 783px;
+    left: 863px;
     height: 30px;
 }
 
@@ -87,6 +87,27 @@
 .related-search-box .related-search-inp{    width: 600px;height: 44px;text-indent: 13px;border-radius: 34px;border: 2.5px solid #ef2a23;background-color: #fff;text-overflow: ellipsis;}
 .related-search-box .related-search-ico{position: absolute;top: -25px;right: 90px;padding-top: 39px;}
 .related-search-box .close-related {position: absolute;right: 35px;font-size: 16px;top: 13px; cursor:pointer}
+#header .menu-box {
+    display: flex;
+    height: 10px;
+    margin-left: -2px;
+    margin-top: 20px;
+    padding: 20px 0;
+    position: relative;
+    top: 0px;
+    left: 160px;
+    width: 1200px;
+}
+#header .menu-box::before {
+    content: ""; /* 가상의 요소를 생성 */
+    display: block; /* 블록 요소로 설정 */
+    border-top: 3px solid #f2f2f2; /* 원하는 두께와 색상으로 상단 보더 추가 */
+    width: 100vw; /* 전체 화면 너비에 맞춰 설정 */
+    position: absolute; /* 절대 위치 설정 */
+    top: 0; /* 상단에 위치하도록 설정 */
+    left: 50%; /* 왼쪽에서 50% 위치 */
+    transform: translateX(-50%); /* 가상의 요소를 왼쪽으로 반만 이동 */
+}
 .menu-box span {
     margin-right: 10px;
 }
