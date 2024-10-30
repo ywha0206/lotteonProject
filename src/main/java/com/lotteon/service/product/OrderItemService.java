@@ -154,6 +154,7 @@ public class OrderItemService {
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
             ResponseOrderItemDto orderItemDto = ResponseOrderItemDto.builder()
+                                                        .orderItemId(orderItem.getId())
                                                         .prodListImg(orderItem.getProduct().getProdListImg())
                                                         .prodName(orderItem.getProduct().getProdName())
                                                         .prodId(orderItem.getProduct().getId())
@@ -162,6 +163,7 @@ public class OrderItemService {
                                                         .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
                                                         .quantity(orderItem.getQuantity())
                                                         .delivery(orderItem.getDeli())
+                                                        .orderDeliId(orderItem.getOrderDeliId()==null?"":orderItem.getOrderDeliId())
                                                         .totalPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
                                                         .build();
 
