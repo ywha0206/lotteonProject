@@ -11,64 +11,65 @@ import com.lotteon.repository.category.CategoryArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class NoticeService {
-    private final NoticeRepository noticeRepository; // 필드를 final로 선언하여 초기화 보장
+
+    private final NoticeRepository noticeRepository;
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final CategoryArticleRepository categoryArticleRepository;
 
     // 공지사항 목록 조회 (검색 및 페이징)
     public Page<NoticeResponseDto> getNotices(String keyword, Pageable pageable) {
-        Page<Notice> notices;
-        if (keyword == null || keyword.isEmpty()) {
-            notices = noticeRepository.findAll(pageable);
-        } else {
-            notices = noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, pageable);
-        }
-        return notices.map(notice -> modelMapper.map(notice, NoticeResponseDto.class));
+        Sort sort = Sort.by(Sort.Direction.DESC, "noticeRdate"); // 최신 순으로 정렬
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        Page<Notice> notices = (keyword == null || keyword.isEmpty())
+                ? noticeRepository.findAll(sortedPageable)
+                : noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, sortedPageable);
+
+        return notices.map(this::mapNoticeToResponseDto);
     }
 
     // 조회수 증가 후 공지사항 단일 조회
     public NoticeResponseDto incrementViewsAndGetNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. ID: " + id));
-        notice.incrementViews();  // 조회수 증가
-        noticeRepository.save(notice);  // 증가된 조회수를 저장
-        return modelMapper.map(notice, NoticeResponseDto.class);
+        notice.incrementViews();
+        noticeRepository.save(notice);
+
+        return mapNoticeToResponseDto(notice);
     }
 
     // 공지사항 저장 (작성 및 수정)
-    public void saveNotice(NoticeRequestDto RequestDto) {
-        long uid = RequestDto.getMemberId();
-        Member member = memberRepository.findById(uid)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. ID: " + uid));
-        RequestDto.setMember(member);
+    public void saveNotice(NoticeRequestDto requestDto) {
+        Member member = memberRepository.findById(requestDto.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. ID: " + requestDto.getMemberId()));
 
-        long cate1 = RequestDto.getCateId1();
-        long cate2 = RequestDto.getCateId2();
+        CategoryArticle categoryArticle1 = categoryArticleRepository.findById(requestDto.getCateId1())
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다. ID: " + requestDto.getCateId1()));
 
-        CategoryArticle categoryArticle1 = categoryArticleRepository.findById(cate1)
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다. ID: " + cate1));
-        CategoryArticle categoryArticle2 = categoryArticleRepository.findById(cate2)
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 2을 찾을 수 없습니다. ID: " + cate2));
+        CategoryArticle categoryArticle2 = requestDto.getCateId2() != null
+                ? categoryArticleRepository.findById(requestDto.getCateId2()).orElse(null)
+                : null;
 
-        RequestDto.setCate1(categoryArticle1);
-        RequestDto.setCate2(categoryArticle2);
+        Notice entity = modelMapper.map(requestDto, Notice.class);
+        entity.setMember(member);
+        entity.setCate1(categoryArticle1);
+        entity.setCate2(categoryArticle2);
 
-        Notice entity = modelMapper.map(RequestDto, Notice.class);
         noticeRepository.save(entity);
     }
 
@@ -77,19 +78,20 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. ID: " + id));
 
-        notice.setNoticeTitle(noticeRequestDto.getNoticeTitle());
-        notice.setNoticeContent(noticeRequestDto.getNoticeContent());
-
         CategoryArticle cate1 = categoryArticleRepository.findById(noticeRequestDto.getCateId1())
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다. ID: " + noticeRequestDto.getCateId1()));
-        CategoryArticle cate2 = categoryArticleRepository.findById(noticeRequestDto.getCateId2())
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 2을 찾을 수 없습니다. ID: " + noticeRequestDto.getCateId2()));
 
+        CategoryArticle cate2 = noticeRequestDto.getCateId2() != null
+                ? categoryArticleRepository.findById(noticeRequestDto.getCateId2()).orElse(null)
+                : null;
+
+        notice.setNoticeTitle(noticeRequestDto.getNoticeTitle());
+        notice.setNoticeContent(noticeRequestDto.getNoticeContent());
         notice.setCate1(cate1);
         notice.setCate2(cate2);
 
         Notice updatedNotice = noticeRepository.save(notice);
-        return modelMapper.map(updatedNotice, NoticeResponseDto.class);
+        return mapNoticeToResponseDto(updatedNotice);
     }
 
     // 공지사항 삭제
@@ -104,14 +106,7 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. ID: " + id));
 
-        NoticeResponseDto responseDto = modelMapper.map(notice, NoticeResponseDto.class);
-        responseDto.setMemberId(notice.getMember().getId());
-        responseDto.setCateId1(notice.getCate1().getCategoryId());
-        responseDto.setCateId2(notice.getCate2() != null ? notice.getCate2().getCategoryId() : null);
-        responseDto.setCategory1Name(notice.getCate1().getCategoryName());
-        responseDto.setCategory2Name(notice.getCate2() != null ? notice.getCate2().getCategoryName() : null);
-
-        return responseDto;
+        return mapNoticeToResponseDto(notice);
     }
 
     // 선택된 공지사항 삭제
@@ -125,40 +120,25 @@ public class NoticeService {
         noticeRepository.deleteAllById(ids);
     }
 
-    // 전체 공지사항 목록을 시간순으로 조회 (최신순)
-    public List<Notice> getAllNoticesSortedByDate() {
-        return noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "noticeRdate"));
-    }
-
-    // 검색된 공지사항 목록을 페이징 처리하여 조회
-    public List<Notice> searchNotices(String keyword, Pageable pageable) {
-        return noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, pageable).getContent();
-    }
-
-    // 페이징 처리된 공지사항 목록 조회
-    public Page<Notice> getNotices(Pageable pageable) {
-        return noticeRepository.findAll(pageable);
-    }
-
-    // 특정 카테고리의 공지사항 목록 조회 (페이징 포함)
-    public Page<Notice> getNoticesByCategory(Long categoryId, Pageable pageable) {
-        Long categoryId2 = (long)2;
-        return noticeRepository.findByCate1_CategoryIdAndCate2_CategoryId(categoryId,categoryId2, pageable);
-    }
-
-    // 공지사항 목록 조회 (페이징 지원)
-    public Page<Notice> findAll(Pageable pageable) {
-        // 공지사항 목록을 페이지 단위로 조회하여 반환
-        return noticeRepository.findAllByOrderByIdDesc(pageable);
-    }
     // 최신 공지사항 10개 조회
     public List<Notice> getTop10Notices() {
         return noticeRepository.findTop10ByOrderByNoticeRdateDesc();
     }
 
-    public Notice getNoticeById(Long id) {
-        // NoticeRepository를 통해 ID로 공지사항을 조회
-        return noticeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 공지사항이 없습니다: " + id));
+    // Notice -> NoticeResponseDto 변환 함수
+    private NoticeResponseDto mapNoticeToResponseDto(Notice notice) {
+        NoticeResponseDto responseDto = modelMapper.map(notice, NoticeResponseDto.class);
+        responseDto.setMemberId(notice.getMember().getId());
+        responseDto.setCategory1Name(notice.getCate1().getCategoryName());
+        responseDto.setCategory2Name(notice.getCate2() != null ? notice.getCate2().getCategoryName() : null);
+        responseDto.setCateId1(notice.getCate1().getCategoryId());
+        responseDto.setCateId2(notice.getCate2() != null ? notice.getCate2().getCategoryId() : null);
+        return responseDto;
     }
+
+    // 전체 공지사항 목록 조회 (페이징 포함)
+    public Page<Notice> findAll(Pageable pageable) {
+        return noticeRepository.findAllByOrderByIdDesc(pageable);
     }
+
+}

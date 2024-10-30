@@ -2,6 +2,7 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
+import com.lotteon.dto.responseDto.NoticeResponseDto;
 import com.lotteon.entity.article.Notice;
 import com.lotteon.entity.article.Qna;
 import com.lotteon.repository.category.CategoryArticleRepository;
@@ -11,6 +12,10 @@ import com.lotteon.service.article.QnaService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,15 +56,39 @@ public class CsController {
     }
 
     @GetMapping("/notices")
-    public String notices(Model model) {
-        return "pages/cs/notice/list";  // 공지사항 페이지에 맞게 수정
+    public String notices(Model model, Pageable pageable) {
+        // 최신순으로 정렬된 pageable 객체 생성
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "noticeRdate") // 공지사항 등록일 기준으로 정렬
+        );
+
+        Page<NoticeResponseDto> noticeList = noticeService.getNotices(null, sortedPageable);
+        model.addAttribute("notices", noticeList);
+        return "pages/cs/notice/list"; // list.html 파일로 이동
     }
+
 
     // 개별 공지사항 상세 페이지 매핑 추가
     @GetMapping("/notice")
     public String notice(Model model) {
 
         return "pages/cs/notice/view";
+    }
+
+    @GetMapping("/notice/{id}")
+    public String notice(@PathVariable Long id, Model model) {
+        NoticeResponseDto notice = noticeService.getNotice(id);  // NoticeResponseDto로 가져오기
+        model.addAttribute("notice", notice);  // 모델에 추가
+        return "pages/cs/notice/view";  // 뷰 파일로 이동
+    }
+
+    @GetMapping("/notice/view/{id}")
+    public String getNoticeDetail(@PathVariable Long id, Model model) {
+        NoticeResponseDto notice = noticeService.incrementViewsAndGetNotice(id);  // 조회수 증가 후 데이터 조회
+        model.addAttribute("notice", notice);  // 조회된 데이터를 모델에 추가하여 뷰로 전달
+        return "pages/cs/notice/view";  // 공지사항 상세보기 페이지로 이동
     }
 
     @GetMapping("/faqs")
