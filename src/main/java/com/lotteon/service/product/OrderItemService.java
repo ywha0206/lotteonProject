@@ -138,6 +138,7 @@ public class OrderItemService {
         String role = auth.getUser().getMemRole();
         Seller seller = auth.getUser().getSeller();
         Long memId = auth.getUser().getId();
+
         log.info("셀러인지 어드민인지 확인하기 "+role+memId);
 
         List<OrderItem> orderItems = new ArrayList<>();
