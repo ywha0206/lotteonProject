@@ -196,12 +196,14 @@
                         <table class="tb4">
                             <tr>
                                 <th>주문번호</th>
-                                <td><input value="${data.orderId}"></td>
+                                <td>${data.orderId}</td>
                             </tr>
 
                             <tr>
                                 <th>주문 상품</th>
-                                <td>${data.orderItemDtos.map(item => `${item.orderItemId}`).join(', ')}</td>
+                                <td value="${data.orderItemDtos.map(item => `${item.orderItemId}`).join(', ')}">
+                                    <span>${data.orderItemDtos[0].prodName+' 외 '+(data.orderItemDtos.length-1)+'개'}</span>
+                                </td>
                             </tr>
                             <tr>
                                 <th>수령인</th>
@@ -232,7 +234,7 @@
                             </tr>
                             <tr>
                                 <th>운송장번호</th>
-                                <td><input placeholder="운송장번호를 입력하세요." value="${data.orderDeliId}"></td>
+                                <td><input placeholder="운송장번호를 입력하세요." value="${data.orderItemDtos[0].orderDeliId}"></td>
                             </tr>
                             <tr>
                                 <th>기타</th>

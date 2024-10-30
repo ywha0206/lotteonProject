@@ -1,5 +1,6 @@
 package com.lotteon.controller.apicontroller;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostProdAllDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
@@ -13,6 +14,7 @@ import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -91,8 +93,10 @@ public class ApiAdminProdController {
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<?> adminOrderDetail(@PathVariable Long orderId) {
+    public ResponseEntity<?> adminOrderDetail(@PathVariable Long orderId, Authentication authentication) {
 
+        MyUserDetails auth2  =(MyUserDetails) authentication.getPrincipal();
+        log.info("컨트롤러에서 어드민인지 셀러인지 확인 "+auth2.getUser().getMemRole());
         ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
 
         if(responseOrderDto==null ){
