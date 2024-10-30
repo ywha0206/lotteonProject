@@ -44,9 +44,11 @@ public class GetConfigDTO {
 
 
     public void setCreatedStr() {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
         createdStr = configCreatedAt.toLocalDateTime().format(formatter);
-
+    }
+    public void setCreatedStrDetail() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 HH시 mm분");
+        createdStr = configCreatedAt.toLocalDateTime().format(formatter);
     }
 }
