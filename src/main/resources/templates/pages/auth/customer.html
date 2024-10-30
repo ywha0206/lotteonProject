@@ -65,6 +65,13 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>생년월일</th>
+                    <td>
+                        <input name="custBirth" id="birth" class="inp" type="date" placeholder="생년월일을 입력해주세요">
+                        <span class="resultBirth" id="resultBirth"></span>
+                    </td>
+                </tr>
+                <tr>
                     <th class="th-addr">주소</th>
                     <td onclick="execDaumPostcode()" class="td-addr">
                         <input readonly id="addr1" name="addr1" class="addr1" type="text" placeholder="우편번호검색 클릭" >
@@ -211,6 +218,7 @@
     }
 
     async function checkEmail(currentValue){
+
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
         let validation = regex.test(currentValue);
         if(!validation){
@@ -220,6 +228,7 @@
             emailChecker = false;
             return;
         }
+        alert('이메일이 발송되었습니다.')
         try {
             const resp = await axios.post(`/auth/check/email?email=${currentValue}`, null, {
                 headers: {
@@ -233,6 +242,7 @@
                 randomCode = data.validation
                 document.querySelector('.email-validation').innerHTML = `
                     <input style="margin-bottom: 10px;" id="email" class="inp" name="custEmail" value="${currentValue}" type="email" placeholder="이메일입력">
+                    <button class="retry-btn" type="button" onclick="checkEmail('${currentValue}')">재요청</button>
                     <span class="resultEmail" id="resultEmail"></span><br>
                     <input id="validation" class="validation inp" type="text" placeholder="인증번호를 입력해주세요">
                     <span class="resultValidation" id="resultValidation"></span>
