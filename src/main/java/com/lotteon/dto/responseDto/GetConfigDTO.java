@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Data
@@ -39,4 +41,16 @@ public class GetConfigDTO {
     private boolean configIsUsed;
 
     private String createdStr;
+
+
+
+    public void setCreatedStr() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
+        createdStr = configCreatedAt.toLocalDateTime().format(formatter);
+    }
+    public void setCreatedStrDetail() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 HH시 mm분");
+        createdStr = configCreatedAt.toLocalDateTime().format(formatter);
+    }
+
 }

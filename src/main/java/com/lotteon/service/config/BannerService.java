@@ -31,10 +31,8 @@ public class BannerService {
     private final ImageService imageService;
     private final ModelMapper modelMapper;
 
-    @Caching(evict = {
-            @CacheEvict(value = "adminBannerCache", allEntries = true),
-            @CacheEvict(value = "bannerCache", allEntries = true)
-    })
+    @Caching(evict = {  @CacheEvict(value = "adminBannerCache", allEntries = true),
+                        @CacheEvict(value = "bannerCache", allEntries = true)})
     public Banner insert(PostBannerDTO bannerDTO) {
         log.info(bannerDTO.toString());
         // 이미지 업로드 및 경로 설정
@@ -57,20 +55,13 @@ public class BannerService {
     public List<GetBannerDTO> findAllByCate(int cateId) {
         List<Banner> banners = bannerRepository.findAllByBannerLocation(cateId);
 
-        List<GetBannerDTO> bannerList =
-                banners.stream()
-                .map(Entity->modelMapper.map(Entity,GetBannerDTO.class))
-                .collect(Collectors.toList());
-
-        log.info(bannerList.toString());
-
-        return bannerList;
+        return banners.stream()
+        .map(Entity->modelMapper.map(Entity,GetBannerDTO.class))
+        .collect(Collectors.toList());
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "adminBannerCache", allEntries = true),
-            @CacheEvict(value = "bannerCache", allEntries = true)
-    })
+    @Caching(evict = {  @CacheEvict(value = "adminBannerCache", allEntries = true),
+                        @CacheEvict(value = "bannerCache", allEntries = true)})
     public boolean deleteBannersById(List<Long> bannerIds) {
         try {
             for(Long bannerId : bannerIds) {
@@ -82,11 +73,9 @@ public class BannerService {
             return false;
         }
     }
-    @Caching(evict = {
-            @CacheEvict(value = "adminBannerCache", key = "#location"),
-            @CacheEvict(value = "bannerCache", key = "#location"),
-            @CacheEvict(value = "bannerCache", key = "'allBanner'")
-    })
+    @Caching(evict = {  @CacheEvict(value = "adminBannerCache", key = "#location"),
+                        @CacheEvict(value = "bannerCache", key = "#location"),
+                        @CacheEvict(value = "bannerCache", key = "'allBanner'")})
     public Banner updateBannerState(Long id, Integer state, int location) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Banner not found"));
@@ -109,7 +98,7 @@ public class BannerService {
     }
 
 
-
+    // 배너 스케줄용 메서드
     @Cacheable(value = "bannerCache", key = "'allBanner'", cacheManager = "cacheManager")
     public List<Banner> getBanners() {
         return bannerRepository.findAll(); // 모든 배너 조회
