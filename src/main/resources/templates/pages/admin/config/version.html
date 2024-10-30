@@ -69,6 +69,7 @@
       </section>
       <input type="hidden" id="appVer" th:value="${appVersion}">
       <input type="hidden" id="mem_id" th:value="${#authentication.principal.user.id}">
+      <input type="hidden" id="memUid" th:value="${#authentication.principal.user.memUid}">
       <div class="popup"></div>
       <div class="bg"></div>
     </div>
@@ -128,6 +129,7 @@
 
       function postVersion() {
         const userId = document.getElementById('mem_id').value;
+        const memUid = document.getElementById('memUid').value;
         const appVersion = document.getElementById('appVer').value;
         popup.innerHTML = `
                 <div class="header">
@@ -137,6 +139,7 @@
             <div class="tb-div">
                 <form id="version">
                     <input type="hidden" name="mem_id" value="${userId}">
+                    <input type="hidden" name="memUid" value="${memUid}">
                 <table class="tb2">
                     <tr>
                         <th>버전</th>

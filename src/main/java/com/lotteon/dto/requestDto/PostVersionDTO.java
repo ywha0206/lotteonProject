@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class PostVersionDTO {
     private Long mem_id;
+    private String memUid;
     private String verName;
     private String verContent;
 }
