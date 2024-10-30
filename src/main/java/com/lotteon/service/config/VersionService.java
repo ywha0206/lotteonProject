@@ -6,6 +6,7 @@ import com.lotteon.dto.responseDto.GetVersionDTO;
 import com.lotteon.dto.responseDto.PageResponseDTO;
 import com.lotteon.entity.config.Config;
 import com.lotteon.entity.config.Version;
+import com.lotteon.repository.config.ConfigRepository;
 import com.lotteon.repository.config.VersionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,6 +35,7 @@ import java.util.List;
 @Transactional
 public class VersionService {
     private final VersionRepository versionRepository;
+    private final ConfigRepository configRepository;
     private final ConfigService configService;
     private final ModelMapper modelMapper;
 
@@ -44,6 +46,7 @@ public class VersionService {
         Config newConfig = existingConfig.copyConfig();
         newConfig.patchSiteVersion(postVersionDTO.getVerName());
         newConfig.update("ID "+postVersionDTO.getMem_id());
+        configRepository.save(newConfig);
         return versionRepository.save(version);
     }
 
