@@ -1,9 +1,8 @@
 package com.lotteon.controller.apicontroller;
 
-import ch.qos.logback.core.model.Model;
 import com.lotteon.dto.requestDto.PostProdAllDTO;
-import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
+import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.entity.product.Product;
@@ -11,11 +10,9 @@ import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
 import com.lotteon.service.product.ProductService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -103,4 +100,11 @@ public class ApiAdminProdController {
         return ResponseEntity.ok().body(responseOrderDto);
     }
 
+    @PostMapping("/order/delivery")
+    public ResponseEntity<?> adminOrderDeli(@RequestBody PostOrderDeliDto postOrderDeliDto){
+        log.info("배송정보 업데이트 컨트롤러 확인 "+postOrderDeliDto.toString());
+        Boolean result = orderService.updateOrderDeli(postOrderDeliDto);
+        log.info("컨트롤러에서 서비스 성공했는지 확인 "+result);
+        return ResponseEntity.ok().body(result);
+    }
 }

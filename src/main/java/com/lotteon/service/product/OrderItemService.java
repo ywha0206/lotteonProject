@@ -175,6 +175,7 @@ public class OrderItemService {
                 .custHp(orderItems.get(0).getOrder().getCustomer().getCustHp())
                 .orderState(orderItems.get(0).getOrder().getOrderState())
                 .receiverName(orderItems.get(0).getOrder().getReceiverName())
+                .orderDeliId(orderItems.get(0).getOrder().getOrderDeliId()==null?"":orderItems.get(0).getOrder().getOrderDeliId())
                 .receiverHp(orderItems.get(0).getOrder().getReceiverHp())
                 .receiverAddr1(addr[0])
                 .receiverAddr2(addr[1])
