@@ -249,10 +249,12 @@ public class OrderService {
 
         log.info("서비스 오더아이디로 오더 찾기 "+optOrder.toString());
         if(optOrder.isPresent()) {
-            Order order = optOrder.get();
-            order.setOrderDeli(postOrderDeliDto.getOrderDeli());
-            order.setOrderState(postOrderDeliDto.getOrderState());
-
+            List<OrderItem> orderItems = optOrder.get().getOrderItems();
+            for(OrderItem orderItem : orderItems) {
+                orderItem.setState2(postOrderDeliDto.getOrderState());
+                orderItem.setOrderDeliId(postOrderDeliDto.getOrderDeliId());
+                orderItem.setOrderDeliCompany(postOrderDeliDto.getOrderDeli());
+            }
             return true;
         }else{
             return false;
