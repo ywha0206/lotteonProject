@@ -59,7 +59,7 @@ public class ApiProductController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<?> cartInsert(PostCartDto postCartDto, Authentication authentication, HttpSession session) {
+    public ResponseEntity<?> cartInsert(@RequestBody PostCartDto postCartDto, Authentication authentication, HttpSession session) {
         log.info("카트 컨트롤러 접속 "+postCartDto.toString());
         Map<String, String> response = new HashMap<>();
 

@@ -47,5 +47,7 @@ public class CartItem {
     @Builder.Default
     private List<CartItemOption> selectedOptions = new ArrayList<>();
 
+    @Column(name = "option_id")
+    private Long optionId;
 
 }
