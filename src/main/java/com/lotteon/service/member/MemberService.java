@@ -35,6 +35,7 @@ public class MemberService {
     private final CustomerRepository customerRepository;
     private final EmailService emailService;
 
+
     public void updateLastLoginDate(MyUserDetails user) {
         Optional<Member> member = memberRepository.findById(user.getUser().getId());
         if(member.isEmpty()){
@@ -74,6 +75,7 @@ public class MemberService {
         }
     }
 
+
     public Map<String, String> findByEmail(String email) {
         Map<String,String> map = new HashMap<>();
         Customer customer = customerRepository.findByCustEmail(email);
@@ -90,4 +92,5 @@ public class MemberService {
             return map;
         }
     }
+
 }

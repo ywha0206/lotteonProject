@@ -1,6 +1,5 @@
-package com.lotteon.dto.requestDto;
+package com.lotteon.dto.requestDto.cartOrder;
 
-import com.lotteon.entity.product.CartItemOption;
 import lombok.*;
 
 import java.util.List;
@@ -13,10 +12,9 @@ import java.util.List;
 @ToString
 public class PostCartDto {
 
-    private long custId;
     private long prodId;
     private int quantity;
-    private List<Long> options;
+    private Long optionId;
     private double totalPrice;
 
 
