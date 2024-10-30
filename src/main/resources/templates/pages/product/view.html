@@ -97,7 +97,7 @@
                             <tr>
                                 <td class="total">
                                     <span>총 상품 금액 </span>
-                                    <span id="totalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
+                                    <span name="totalPrice" id="totalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
                                 </td>
                             </tr>
                         </table> <!-- .tb1-->
@@ -499,6 +499,7 @@
             let additionalPriceSum = selectedAdditionalPrice * inNum; // 선택된 추가 가격을 수량과 곱함
             let totalPriceValue = (inNum * basePrice) + additionalPriceSum; // 총 가격 계산
             totalPrice.innerText = totalPriceValue + "원"; // 화면에 표시
+            totalPrice.value = totalPriceValue;
         }
 
 
@@ -512,29 +513,30 @@
             const jsonData = {
                 "prodId": productForm.prodId.value,
                 "quantity":productForm.quantity.value,
-                "totalPrice": totalPrice1
+                "totalPrice": totalPrice.value,
+                "optionId": document.getElementById('optionId').value
             }
             console.log(jsonData)
-            //
-            // const response = await fetch('/prod/cart',{
-            //     method:'POST',
-            //     headers:{
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify(jsonData)
-            // });
-            // if (!response.ok) throw new Error('주문 상세 정보를 불러오지 못했습니다.');
-            //
-            // data = await response.json();
-            //
-            // console.log(data.status);
-            // if(data.status=='noAuth'){
-            //    alert('비회원입니다.');
-            // }else if(data.status=='seller'){
-            //     alert('일반 회원으로 이용해 주세요.')
-            // }else if(data.status=='customer'){
-            //     confirm('장바구니에 담겼습니다. 장바구니로 이동하시겠습니까?') ? location.replace('/prod/cart') : null;
-            // }
+
+            const response = await fetch('/prod/cart',{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            });
+            if (!response.ok) throw new Error('주문 상세 정보를 불러오지 못했습니다.');
+
+            data = await response.json();
+
+            console.log(data.status);
+            if(data.status=='noAuth'){
+               alert('비회원입니다.');
+            }else if(data.status=='seller'){
+                alert('일반 회원으로 이용해 주세요.')
+            }else if(data.status=='customer'){
+                confirm('장바구니에 담겼습니다. 장바구니로 이동하시겠습니까?') ? location.replace('/prod/cart') : null;
+            }
 
         })
     };
