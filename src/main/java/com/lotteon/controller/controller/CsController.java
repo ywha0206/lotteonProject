@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,7 @@ import java.util.List;
 /*
  *  이름 : 박경림
  *  날짜 : 2024-10-30
- *  작업내용 : index에서 qna 출력
+ *  작업내용 : index에서 글 목록, 문의하기 글 목록, 글 보기
  *
  *
  * 수정이력
@@ -56,16 +57,22 @@ public class CsController {
     }
 
     @GetMapping("/notices")
-    public String notices(Model model, Pageable pageable) {
-        // 최신순으로 정렬된 pageable 객체 생성
+    public String notices(@RequestParam(required = false) String category, Model model, Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 Sort.by(Sort.Direction.DESC, "noticeRdate") // 공지사항 등록일 기준으로 정렬
         );
 
-        Page<NoticeResponseDto> noticeList = noticeService.getNotices(null, sortedPageable);
+        Page<NoticeResponseDto> noticeList;
+        if (category != null && !category.isEmpty()) {
+            noticeList = noticeService.getNoticesByCate1(category, sortedPageable); // cate1으로 조회
+        } else {
+            noticeList = noticeService.getNotices(null, sortedPageable); // 전체 조회
+        }
+
         model.addAttribute("notices", noticeList);
+        model.addAttribute("selectedCate1", category); // 선택된 cate1 전달
         return "pages/cs/notice/list"; // list.html 파일로 이동
     }
 
@@ -101,15 +108,41 @@ public class CsController {
         return "pages/cs/faq/view";
     }
 
+
+    /*TODO: 회원만 작성 가능하게 나중에 추가하기*/
+
+    // QNA 문의하기 글 목록
     @GetMapping("/qnas")
-    public String qnas(Model model) {
-        return "pages/cs/qna/list";
+    public String qnasForUser(
+            Model model,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        // Page<ArticleDto> 타입의 qnasPage를 가져옴
+        Page<ArticleDto> qnasPage = qnaService.getAllQnas(pageable);
+
+        // Page 객체와 해당 페이지의 콘텐츠를 모델에 추가
+        model.addAttribute("qnas", qnasPage.getContent());
+        model.addAttribute("page", qnasPage); // 페이지 정보 전달
+
+        return "pages/cs/qna/list"; // 일반 사용자용 CS 페이지 경로
     }
 
-    @GetMapping("/qna")
-    public String qna(Model model) {
-        return "pages/cs/qna/view";
+
+    // QNA 글 보기
+    @GetMapping("/qna/view/{id}")
+    public String qnaView(@PathVariable Long id, Model model) {
+        ArticleDto qna = qnaService.getQnaById(id); // 서비스에서 QNA 가져오기
+        model.addAttribute("qna", qna); // 모델에 QNA 데이터 추가
+
+        // answer가 존재할 경우에만 모델에 추가
+        if (qna.getAnswer() != null && !qna.getAnswer().isEmpty()) {
+            model.addAttribute("hasAnswer", true);
+        } else {
+            model.addAttribute("hasAnswer", false);
+        }
+
+        return "pages/cs/qna/view"; // 상세보기 페이지로 이동
     }
+
 
     @GetMapping("/qna/write")
     public String qnaWrite(Model model) {
