@@ -68,19 +68,22 @@
 
 .related-search-box{
     position: absolute;
-    top: 62px;
-    left: 469px;
-    width: 700px;
+    top: 117px;
+    left: 415px;
+    width: 461px;
     background-color: white;
     min-height: 162px;
     padding: 0 31px;
     padding-bottom: 30px;
     z-index: 1000;
     display: none;
+    border: 1px solid #c1c1c1;
+    border-radius: 19px;
+    color: #484848;
 }
 
 .related-search-box h4 {margin-top: 30px;}
-.related-search-box span {margin-left: 10px;min-width: 60px;display: inline-block;border: 1px solid purple;margin-top: 10px;border-radius: 5px;text-align: center; cursor: pointer;}
+.related-search-box span {margin-left: 10px;min-width: 60px;display: inline-block;border:1px solid #828282; margin-top: 10px;border-radius: 5px;text-align: center; cursor: pointer;}
 .related-search-box .related-search-inp{    width: 600px;height: 44px;text-indent: 13px;border-radius: 34px;border: 2.5px solid #ef2a23;background-color: #fff;text-overflow: ellipsis;}
 .related-search-box .related-search-ico{position: absolute;top: -25px;right: 90px;padding-top: 39px;}
 .related-search-box .close-related {position: absolute;right: 35px;font-size: 16px;top: 13px; cursor:pointer}
