@@ -37,4 +37,6 @@ public class GetConfigDTO {
     private Timestamp configCreatedAt;
 
     private boolean configIsUsed;
+
+    private String createdStr;
 }
