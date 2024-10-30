@@ -90,10 +90,7 @@
                     <button id="view-versions" onclick="toggleMenu()">수정 내역 보기</button>
                     <div id="dropdown-menu" class="dropdown-hidden">
                         <ul>
-                            <li>10.20 13:32:04 저장됨</li>
-                            <li>10.20 06:01:58 저장됨</li>
-                            <li>10.19 23:43:19 저장됨</li>
-                            <li>10.15 16:21:41 저장됨</li>
+                            <li>[[${site.createdStr}]] 저장됨</li>
                         </ul>
                     </div>
                     <button class="admin-btn" onclick="patch('siteLogo')">수정하기</button>
@@ -241,11 +238,30 @@
     function toggleMenu() {
         const dropdownMenu = document.getElementById('dropdown-menu');
         const isHidden = dropdownMenu.classList.contains('dropdown-hidden');
-
+        const list = dropdownMenu.querySelector('ul');
         // 메뉴를 토글
         if (isHidden) {
+
+            fetch(`/admin/config/list`)
+                .then(resp=>resp.json())
+                .then(data=>{
+                    list.innerHTML = ``;
+                    data.forEach((config, i) => {
+                        // 각 banner 데이터를 반복하면서 HTML을 생성합니다.
+                        const li = `<li>${config.createdStr} 저장됨 ${config.configIsUsed?'(사용중)':''}</li>`;
+                        list.innerHTML += li;  // 생성된 row를 테이블에 추가합니다.
+                    });
+                })
+                .catch(err=>{
+                    console.error(err);
+                })
+
+
+
+
             dropdownMenu.classList.remove('dropdown-hidden');
             dropdownMenu.classList.add('dropdown-visible');
+
         } else {
             dropdownMenu.classList.remove('dropdown-visible');
             dropdownMenu.classList.add('dropdown-hidden');

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetBannerDTO;
+import com.lotteon.dto.responseDto.GetConfigDTO;
 import com.lotteon.entity.config.*;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.service.config.*;
@@ -140,4 +141,10 @@ public class ApiConfigController {
         Terms terms = termsService.modifyTerms(postDTO);
         return ResponseEntity.ok().body(terms);
     }
+    @GetMapping("/list/{num}")
+    public ResponseEntity<?> viewList(@PathVariable Integer num) {
+        List<GetConfigDTO> configList = configService.getRecentConfigs();
+        return ResponseEntity.ok().body(configList);
+    }
+
 }
