@@ -58,7 +58,7 @@ public class CartOrderController {
         return "pages/product/cart";
     }
 
-    @PostMapping("/cart")
+    @PostMapping("/cart/2")
     public String cart(PostCartDto postCartDto, Model model, HttpSession session, Authentication authentication) {
         log.info("카트 컨트롤러 접속 "+postCartDto.toString());
 

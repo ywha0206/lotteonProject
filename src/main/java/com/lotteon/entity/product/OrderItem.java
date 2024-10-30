@@ -44,6 +44,7 @@ public class OrderItem {
 
     @Column(name = "order_item_state2")
     @ColumnDefault("0")
+    @Setter
     private int state2;
 
     @Column(name = "order_item_discount")
@@ -65,4 +66,8 @@ public class OrderItem {
     @Setter
     @Column(name = "order_deli_id")
     private String orderDeliId;
+
+    @Setter
+    @Column(name = "order_deli_company")
+    private Integer orderDeliCompany;
 }
