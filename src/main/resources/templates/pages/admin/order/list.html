@@ -198,6 +198,11 @@
                                 <th>주문번호</th>
                                 <td><input value="${data.orderId}"></td>
                             </tr>
+
+                            <tr>
+                                <th>주문 상품</th>
+                                <td>${data.orderItemDtos.map(item => `${item.orderItemId}`).join(', ')}</td>
+                            </tr>
                             <tr>
                                 <th>수령인</th>
                                 <td><input value="${data.receiverName}"></td>

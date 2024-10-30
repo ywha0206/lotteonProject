@@ -36,5 +36,5 @@ public class ResponseOrderDto {
     private int payment;
     private int orderState;
     private String orderReq;
-    private String orderDeliId;
+
 }

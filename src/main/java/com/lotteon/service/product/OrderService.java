@@ -252,7 +252,6 @@ public class OrderService {
             Order order = optOrder.get();
             order.setOrderDeli(postOrderDeliDto.getOrderDeli());
             order.setOrderState(postOrderDeliDto.getOrderState());
-            order.setOrderDeliId(postOrderDeliDto.getOrderDeliId());
 
             return true;
         }else{

@@ -69,8 +69,4 @@ public class Order {
     @ToString.Exclude
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    //추가 필드
-    @Setter
-    @Column(name = "order_deli_id")
-    private String orderDeliId;
 }
