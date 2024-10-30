@@ -12,10 +12,9 @@ import java.util.List;
 @ToString
 public class PostCartDto {
 
-    private long custId;
     private long prodId;
     private int quantity;
-    private List<Long> options;
+    private Long optionId;
     private double totalPrice;
 
 

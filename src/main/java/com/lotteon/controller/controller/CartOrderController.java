@@ -58,35 +58,6 @@ public class CartOrderController {
         return "pages/product/cart";
     }
 
-    @PostMapping("/cart/2")
-    public String cart(PostCartDto postCartDto, Model model, HttpSession session, Authentication authentication) {
-        log.info("카트 컨트롤러 접속 "+postCartDto.toString());
-
-        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
-        ResponseEntity result = cartService.insertCart(postCartDto, session);
-        log.info(result.getBody());
-
-        if(result.getStatusCode() == HttpStatus.UNAUTHORIZED){
-            return "redirect:/prod/cart";
-        }
-        if(result.getStatusCode() == HttpStatus.CONTINUE){
-            return "redirect:/prod/product";
-        }
-
-
-        Cart cart = (Cart) result.getBody();
-        ResponseEntity result2 = cartService.insertCartItem(postCartDto,cart);
-
-        if(result2.getBody().equals("insert")){
-            model.addAttribute(true);
-            return "redirect:/prod/cart";
-        }else {
-            model.addAttribute(false);
-            return "redirect:/prod/product";
-        }
-
-    }
-
     @GetMapping("/cart/direct")
     public String cartDirect(Model model) {
         return "redirect:/prod/order";
