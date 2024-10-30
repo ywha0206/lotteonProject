@@ -197,20 +197,6 @@
     const popup = document.querySelector(".popup");
     const bg = document.querySelector(".popupbg");
 
-    function getText(location) {
-        switch (location) {
-            case 1:
-                return '사이트 버전 정보';
-            case 2:
-                return '브라우저 탭 노출 제목 부제';
-            case 3:
-                return '헤더/푸터 로고, 파비콘';
-            default:
-                return '-';
-        }
-    }
-
-
     function openPopup(event) {
         event.preventDefault();
         const configIndex = event.target.dataset.no;
@@ -224,8 +210,8 @@
                 <div onclick="closePopup()" class="btn">X</div>
             </div>
             <div class="body">
-                <div style="text-align: center;height: 40px; display: flex;justify-content: space-between">
-                        <span style="font-size: 17px">${getText(data.configUpdateLocation)} 수정됨</span> <span>${data.createdStr} - ${data.configUpdatedAdmin}</span>
+                <div style="margin: -15px auto;text-align: center;height: 40px; display: flex;justify-content: space-between">
+                        <span style="font-size: 17px"> </span> <span>${data.createdStr} - ${data.configUpdatedAdmin}</span>
                  </div>
                 <table class="tb2">
                     <tr class="${+data.configUpdateLocation===1?'modified':''}">
@@ -244,15 +230,15 @@
 
                     <tr class="${+data.configUpdateLocation===3?'modified':''}">
                         <th>헤더 로고</th>
-                        <td>${data.configHeaderLogo}</td>
+                        <td><img src="/file/${data.configHeaderLogo}"/></td>
                     </tr>
                     <tr class="${+data.configUpdateLocation===3?'modified':''}">
                         <th>푸터 로고</th>
-                        <td>${data.configFooterLogo}</td>
+                        <td><img src="/file/${data.configFooterLogo}"/></td>
                     </tr>
                     <tr class="${+data.configUpdateLocation===3?'modified':''}">
                         <th>파비콘</th>
-                        <td>${data.configFabicon}</td>
+                        <td><img src="/file/${data.configFabicon}"/></td>
                     </tr>
                 </table>
                 <div class="indicator">
@@ -276,6 +262,7 @@
     function closePopup() {
         popup.style.display = "none";
         bg.style.display = "none";
+        popup.innerHTML = ``;
     }
     function changeVersion(event) {
         if (!confirm("정말 이 버전으로 변경하시겠습니까?")) {
@@ -292,6 +279,7 @@
             .then(data=>{
                 console.log(data);
                 if(data.success){
+                    alert(`성공적으로 적용되었습니다. \n새로 고침 후 확인해주세요`)
                     const popBtns = popup.querySelector('.btns');
                     popBtns.innerHTML=`현재 사용중인 설정입니다.`;
                 }

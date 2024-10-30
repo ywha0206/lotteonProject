@@ -121,6 +121,7 @@ input.inp[type="file"]{border: none}
 #dropdown-menu.dropdown-visible {
     display: block;
 }
+td>img{margin: 10px; max-height: 60px; max-width: 100%}
 
 .popup, .popupbg {
     display: none;
