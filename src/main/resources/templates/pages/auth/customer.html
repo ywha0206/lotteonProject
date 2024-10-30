@@ -2,7 +2,9 @@
 <link rel="stylesheet" th:href="@{/css/auth/customer.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <!--<script th:src="@{/js/validation.js}"></script>-->
+
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <header th:replace="layout/main/header.html"></header>
 <main style="margin-top: 230px;">
     <div class="container">
@@ -88,6 +90,7 @@
     let confirmChecker = false;
     let nameChecker = false;
     let genderChecker = false;
+
     let emailChecker = false;
     let validationChecker = false;
     let hpChecker = false;
@@ -105,6 +108,7 @@
         console.log('hp'+hpChecker)
         console.log('addr'+addrChecker)
     }
+
     document.getElementById('id').addEventListener('input',(e)=>{
         delay(e,'uid')
     })
@@ -131,6 +135,7 @@
     })
 
 
+
     function delay(event,type){
         clearTimeout(timer);  // 이전 타이머를 초기화하여 중복 요청 방지
 
@@ -152,6 +157,7 @@
                     checkValidation(currentValue)
                 } else if(type === "hp"){
                     checkHp(currentValue)
+
                 }
             }
 
