@@ -1,8 +1,8 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
-import com.lotteon.dto.requestDto.PostCartDto;
-import com.lotteon.dto.requestDto.PostCartSaveDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
@@ -128,6 +128,7 @@ public class CartOrderController {
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
         model.addAttribute("category1", category1);
+        session.removeAttribute("orderItemIds");
         return "pages/product/complete";
     }
 }
