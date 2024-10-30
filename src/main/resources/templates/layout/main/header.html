@@ -57,6 +57,11 @@
                 <input type="hidden" name="related" th:value="${related}">
                 <label for="search2"></label><button style="border: none;" type="submit" class="ico_sch"><img th:src="@{/images/ico_search.png}" alt="검색하기"></button>
             </form><!--.search-->
+            <div id="related-box" class="related-search-box">
+                <div onclick="closeRelated()" class="close-related">X</div>
+                <h4>연관검색어</h4><br>
+                <div class="related-keyword"></div>
+            </div>
         </div><!--.headerIn-->
         <div style="
                 display: flex;
@@ -95,16 +100,6 @@
                 </div>
             </div>
         </div>
-        <div id="related-box" class="related-search-box">
-            <div onclick="closeRelated()" class="close-related">X</div>
-            <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search2">
-                <input autocomplete="off" class="related-search-inp" type="text" id="search3" name="search" placeholder="어떤 상품을 찾으세요?">
-                <input type="hidden" name="related" th:value="${related}">
-                <label for="search3"></label><button style="border: none;" type="submit" class="ico_sch"><img class="related-search-ico" th:src="@{/images/ico_search.png}" alt="검색하기"></button>
-            </form>
-            <h4>연관검색어</h4><br>
-            <div class="related-keyword"></div>
-        </div>
     </header><!--#header-->
 </body>
 
@@ -134,7 +129,7 @@
         related.style.display='none'
     }
 
-    document.getElementById("search3").addEventListener("input", function() {
+    document.getElementById("search2").addEventListener("input", function() {
         clearTimeout(timer);  // 이전 타이머를 초기화하여 중복 요청 방지
 
         // 새로운 타이머 설정 (2초 후에 연관 검색어 표시)
