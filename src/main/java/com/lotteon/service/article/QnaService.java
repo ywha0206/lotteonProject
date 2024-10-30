@@ -126,9 +126,9 @@ public class QnaService {
         articleDto.setMemId(memberId);
 
         // 카테고리 설정 (1차, 2차 카테고리)
-        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(articleDto.getCate1Name())
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate1Name(),1,2)
                 .orElseThrow(()->new IllegalArgumentException("해당 카테고리가 없습니다."));
-        CategoryArticle cate2 = categoryArticleRepository.findByCategoryName(articleDto.getCate2Name())
+        CategoryArticle cate2 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate2Name(),2,2)
                 .orElseThrow(()->new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         // 회원 정보 설정

@@ -15,5 +15,4 @@ public interface FaqRepository extends JpaRepository<Faq,Long> {
     // 1차 및 2차 카테고리로 FAQ 목록을 조회 (페이징 처리 포함)
     Page<Faq> findByCate1AndCate2(CategoryArticle cate1Id, CategoryArticle cate2Id, Pageable pageable);
     List<Faq> findByCate1AndCate2(CategoryArticle cate1Id, CategoryArticle cate2Id, Limit limit);
-
 }
