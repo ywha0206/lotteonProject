@@ -6,6 +6,7 @@ import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.product.ProductOption;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.point.CouponService;
 import com.lotteon.service.product.ProductDetailService;
 import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,9 @@ public class ProductController {
     private final CategoryProductService categoryProductService;
     private final ProductService productService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CouponService couponService;
     private final ProductDetailService productDetailService;
+
 
     @GetMapping("/products")
     public String products(Model model, @RequestParam(value = "cate",required = false) String cate, ProductPageRequestDTO productPageRequestDTO) {
@@ -61,6 +64,8 @@ public class ProductController {
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
         List<PostProductOptionDTO> options = productService.findOption(prodId);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
+        Long couponId = couponService.findCouponByProduct(prodId);
+        model.addAttribute("couponId", couponId);
         PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
         Set<String> addedOptions = new HashSet<>();
 

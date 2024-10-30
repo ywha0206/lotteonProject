@@ -46,4 +46,8 @@ public interface CustomerCouponRepository extends JpaRepository<CustomerCoupon, 
     List<CustomerCoupon> findAllByCustomer(Customer customer);
 
     List<CustomerCoupon> findAllByCustomerAndCoupon_Member_MemRole(Customer customer, String admin);
+
+    List<CustomerCoupon> findAllByCustomerAndCoupon_MemberAndCouponState(Customer customer, Member member, int i);
+
+    List<CustomerCoupon> findAllByCustomerAndCoupon_Member_MemRoleAndCouponState(Customer customer, String admin, int i);
 }

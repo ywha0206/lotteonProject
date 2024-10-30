@@ -122,7 +122,8 @@
 
       const jsonData = {
         orderDto: orderData,
-        orderItemDto:products
+        orderItemDto:products,
+        orderPointAndCouponDto:submitData
       }
 
       console.log(jsonData);
@@ -152,8 +153,12 @@
     })
 
   };
-  let submitData;
-
+  let submitData ={
+    "couponId" : 0,
+    "points" : 0
+  }
+  let couId = 0;
+  let pointValue = 0;
 
   async function adjustCoupon(event) {
     event.stopPropagation()
@@ -189,13 +194,13 @@
           if(couponOption === '원 배달비 할인'){
             dPlusDiscount(couponDiscount,allDeliver,deliverValue,orderPrice,priceValue,event)
           }
-          submitData = couponId
+          couId = couponId
+          createSubmitData()
         } else {
           alert("판매자 쿠폰입니다. 쿠폰을 발급 한 해당 판매자 가격만 할인됩니다.")
           let adjustCouponPrice =0;
           let highestDeliver = 0;
           matchingElements.forEach(v=>{
-            console.log(v)
             if(!v){
               return;
             }
@@ -229,12 +234,11 @@
               const result = confirm("할인금액이 구매물품배달비 총합보다 많습니다. 진행하시겠습니까?")
               if(result){
                 dPlusDiscount(highestDeliver,allDeliver,deliverValue,orderPrice,priceValue,event)
-              } else {
-                return;
               }
             }
           }
-          submitData = couponId
+          couId = couponId
+          createSubmitData()
         }
       }
     } else {
@@ -268,12 +272,12 @@
           if(couponOption === '원 배달비 할인'){
             dMinusDiscount(couponDiscount,allDeliver,deliverValue,orderPrice,priceValue,event)
           }
-          submitData = ""
+          couId = 0
+          createSubmitData()
         } else {
           let adjustCouponPrice =0;
           let highestDeliver = 0;
           matchingElements.forEach(v=>{
-            console.log(v)
             if(!v){
               return;
             }
@@ -302,10 +306,26 @@
               dMinusDiscount(highestDeliver,allDeliver,deliverValue,orderPrice,priceValue,event)
             }
           }
-          submitData = ""
+          couId = 0
+          createSubmitData()
         }
       }
     }
+  }
+  function createSubmitData() {
+
+    // 쿠폰 ID가 설정된 경우 submitData에 추가
+    if (couId !== null) {
+      submitData.couponId = couId;
+    }
+
+    // 포인트 값이 설정된 경우 submitData에 추가
+    if (pointValue !== null) {
+      submitData.points = pointValue;
+    }
+
+    console.log("Submit Data:", submitData);
+    // submitData를 사용하여 서버에 전송하는 로직 추가 가능
   }
 
   function usePoint(event) {
@@ -318,8 +338,15 @@
       if(Number(event.target.dataset.point) < Number(pointsId.value)){
         pointsId.value = event.target.dataset.point;
       }
+      if(Number(event.target.dataset.point) > Number(document.querySelector('.OrderPrice').innerText) ){
+        pointsId.value = document.querySelector('.OrderPrice').innerText
+      }
+      pointValue = pointsId.value
+      createSubmitData()
       wPlusDiscount(pointsId.value,allDiscount,discountValue,orderPrice,priceValue,event)
     } else {
+      pointValue = 0
+      createSubmitData()
       wMinusDiscount(pointsId.value,allDiscount,discountValue,orderPrice,priceValue,event)
     }
   }

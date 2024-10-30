@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -127,5 +128,32 @@ public class PointService {
         Customer customer = customerRepository.findByMember_MemUid(keyword);
         Page<Point> points = pointRepository.findAllByCustomer_Member_IdOrderByIdDesc(customer.getMember().getId(),pageable);
         return points;
+    }
+
+    public void usePoint(Integer points) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        List<Point> pointList  = pointRepository.findAllByCustomerAndPointTypeOrderByPointExpirationAsc(customer,1);
+        int remainingPoints = points;
+
+        for (Point point : pointList) {
+            if (remainingPoints <= 0) break;  // 필요한 포인트가 모두 차감되면 종료
+
+            int availablePoints = point.getPointVar();
+
+            if (availablePoints <= remainingPoints) {
+                // 포인트를 모두 사용하고, remainingPoints에서 차감
+                point.changePointVar(0);
+                remainingPoints -= availablePoints;
+            } else {
+                // 필요한 포인트만 차감하고 종료
+                point.changePointVar(availablePoints - remainingPoints);
+                remainingPoints = 0;
+            }
+
+            // 변경된 포인트를 업데이트합니다.
+            pointRepository.save(point);
+        }
+
     }
 }

@@ -134,4 +134,8 @@ public class Point {
                 .point(customer.getCustPoint())
                 .build();
     }
+
+    public void changePointVar(int pointVar) {
+        this.pointVar = pointVar;
+    }
 }

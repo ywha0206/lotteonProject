@@ -33,4 +33,5 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     List<Coupon> findAllByMemberAndCouponNameContaining(Member user, String keyword);
 
+    Optional<Coupon> findFirstByMember(Member member);
 }

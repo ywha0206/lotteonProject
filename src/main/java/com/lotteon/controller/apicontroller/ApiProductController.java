@@ -3,8 +3,14 @@ package com.lotteon.controller.apicontroller;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.cartOrder.*;
 import com.lotteon.dto.requestDto.PostCouponDto;
+import com.lotteon.dto.requestDto.cartOrder.OrderDto;
+import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
+import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
+import com.lotteon.entity.product.Order;
+import com.lotteon.service.point.CouponService;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.service.point.CustomerCouponService;
+import com.lotteon.service.point.PointService;
 import com.lotteon.service.product.CartService;
 import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
@@ -34,6 +40,8 @@ public class ApiProductController {
     private final OrderService orderService;
     private final OrderItemService orderItemService;
     private final RedisTemplate<String,Object> redisTemplate;
+    private final PointService pointService;
+    private final CouponService couponService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
@@ -110,6 +118,12 @@ public class ApiProductController {
         List<Long> cartItemIds = selectedProducts.stream().map(cartItemId -> cartItemId.getCartItemId()).toList();
 
         log.info("카트 아이템 아이디 세션에 저장된 거 "+cartItemIds.toString());
+        if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
+            pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
+        }
+        if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
+            customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
+        }
 
         OrderDto orderDto = postOrderDto.getOrderDto();
         List<OrderItemDto> orderItemDto = postOrderDto.getOrderItemDto();

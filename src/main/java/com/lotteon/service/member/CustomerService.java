@@ -63,6 +63,7 @@ public class CustomerService {
                     .member(member)
                     .custName(postCustSignupDTO.getCustName())
                     .custEventChecker(0)
+                    .custBirth(postCustSignupDTO.getCustBirth())
                     .custGender(postCustSignupDTO.getCustGender() != null ? postCustSignupDTO.getCustGender() : false)  // null일 때 false로 처리
                     .custEmail(postCustSignupDTO.getCustEmail())
                     .custHp(postCustSignupDTO.getCustHp())
@@ -70,7 +71,7 @@ public class CustomerService {
                     .build();
 
             customerRepository.save(customer);
-            //상훈 작업부분 포인트추가
+
             Point point = this.insertPoint(customer);
 
             pointRepository.save(point);
