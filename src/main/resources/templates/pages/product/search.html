@@ -68,8 +68,8 @@
                 <tr class="table-tr" th:each="product : ${products}">
                     <td><img style="width: 138px; height:110px;" th:src="'/file/' + ${product.img}" alt="상품 이미지"></td>
                     <td>
-                        <span th:text="${product.title}" style="font-size: 20px; font-weight: 700;">상품명</span> <br>
-                        <span th:text="${product.summary}" style="font-size: 16px;">간단한 상품 설명</span>
+                        <span th:data-id="${product.id}" onclick="getProduct(event)" th:text="${product.title}" style="font-size: 20px; font-weight: 700; cursor: pointer">상품명</span> <br>
+                        <span th:data-id="${product.id}" onclick="getProduct(event)" th:text="${product.summary}" style="font-size: 16px;  cursor: pointer">간단한 상품 설명</span>
                     </td>
                     <td>
                         <strong class="realPrice" style="font-size: 20px;">27,000원</strong> <br>
@@ -198,5 +198,10 @@
 
         // searchTypeValue 배열에서 빈 요소 제거 및 값 업데이트
         searchTypeInput.value = searchTypeValue.filter(Boolean).join('/');
+    }
+
+    function getProduct(event) {
+        console.log(event.target.dataset.id)
+        window.location.href = "/prod/product?prodId="+event.target.dataset.id
     }
 </script>

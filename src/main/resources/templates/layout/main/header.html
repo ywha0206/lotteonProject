@@ -98,7 +98,7 @@
         <div id="related-box" class="related-search-box">
             <div onclick="closeRelated()" class="close-related">X</div>
             <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search2">
-                <input onchange="getRelated(event)" autocomplete="off" class="related-search-inp" type="text" id="search3" name="search" placeholder="어떤 상품을 찾으세요?">
+                <input autocomplete="off" class="related-search-inp" type="text" id="search3" name="search" placeholder="어떤 상품을 찾으세요?">
                 <input type="hidden" name="related" th:value="${related}">
                 <label for="search3"></label><button style="border: none;" type="submit" class="ico_sch"><img class="related-search-ico" th:src="@{/images/ico_search.png}" alt="검색하기"></button>
             </form>
