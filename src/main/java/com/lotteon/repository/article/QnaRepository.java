@@ -17,5 +17,8 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
     Page<Qna> findByCate1AndCate2(CategoryArticle cate1Id, CategoryArticle cate2Id, Pageable pageable);
     List<Qna> findByCate1AndCate2(CategoryArticle cate1Id, CategoryArticle cate2Id, Limit limit);
 
+    List<Qna> findTop5ByOrderByQnaRdateDesc();
+
+
 
 }

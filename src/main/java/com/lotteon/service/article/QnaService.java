@@ -21,6 +21,16 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+/*
+ *  이름 : 박경림
+ *  날짜 : 2024-10-30
+ *  작업내용 : 일반 CS index, list (공지사항 제외)
+ *
+ *
+ * 수정이력
+      -
+
+ * */
 
 @Service
 @Transactional
@@ -154,7 +164,10 @@ public class QnaService {
         return savedQna.getId(); // 저장된 QnA ID 반환
     }
 
-
+    // index에서 qna 5개 조회
+    public List<Qna> getTop5Qnas() {
+        return qnaRepository.findTop5ByOrderByQnaRdateDesc();
+    }
 }
 
 
