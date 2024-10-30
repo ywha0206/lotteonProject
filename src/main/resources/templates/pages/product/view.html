@@ -2,7 +2,6 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <script th:src="@{/js/main.js}"></script>
-
 <main style="margin-top: 230px; gap: 0">
     <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
     <div id="wrap">
@@ -209,7 +208,7 @@
             </div> <!-- page -->
         </main> <!-- #main-->
     </div>
-    <input type="text" th:value="${options}" id="hiddenOption">
+    <input type="hidden" th:value="${options}" id="hiddenOption">
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 <!-- #wrap -->
