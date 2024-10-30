@@ -46,6 +46,7 @@ public class VersionService {
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'"),
                         @CacheEvict("version")})
+
     public Version insertVersion(PostVersionDTO postVersionDTO) {
         Version version = modelMapper.map(postVersionDTO, Version.class);
         Config existingConfig = modelMapper.map(configService.getUsedConfig(), Config.class);
@@ -76,6 +77,7 @@ public class VersionService {
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'"),
                         @CacheEvict("version")})
+
     public boolean deleteVersionsById(List<Long> VersionIds) {
         try {
             for (Long VersionId : VersionIds) {

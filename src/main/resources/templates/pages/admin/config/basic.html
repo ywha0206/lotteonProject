@@ -333,11 +333,13 @@
                     list.innerHTML = ``;
                     data.forEach((config, i) => {
                         // 각 banner 데이터를 반복하면서 HTML을 생성합니다.
+
                         const li = `
                             <li onclick="openPopup(event)"
                                 data-id="${config.id}">
                                 ${config.createdStr} 저장됨 ${config.configIsUsed?'(사용중)':''}
                             </li>`;
+
                         list.innerHTML += li;  // 생성된 row를 테이블에 추가합니다.
                     });
                 })

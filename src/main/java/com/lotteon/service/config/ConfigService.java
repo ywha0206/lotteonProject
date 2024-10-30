@@ -42,6 +42,7 @@ public class ConfigService {
 
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'")})
+
     public Config updateInfo(PatchConfigDTO configDTO){
         Config existingConfig = configRepository.findById(configDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Config not found"));
@@ -55,6 +56,7 @@ public class ConfigService {
 
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'")})
+
     public Config updateLogo(PatchLogoDTO logoDTO) {
         Config existingConfig = configRepository.findById(logoDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Config not found"));
@@ -72,7 +74,9 @@ public class ConfigService {
 
 
     @Cacheable(value = "configCache", key = "'configList'", cacheManager = "cacheManager")
+
     public List<GetConfigListDTO> getRecentConfigs() {
+
         List<Config> configs = configRepository.findTop10ByOrderByConfigCreatedAtDesc();
 
         return configs.stream()

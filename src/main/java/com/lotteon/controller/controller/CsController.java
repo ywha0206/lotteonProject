@@ -3,6 +3,7 @@ package com.lotteon.controller.controller;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.entity.article.Notice;
+import com.lotteon.entity.article.Qna;
 import com.lotteon.repository.category.CategoryArticleRepository;
 import com.lotteon.service.article.FaqService;
 import com.lotteon.service.article.NoticeService;
@@ -16,7 +17,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+/*
+ *  이름 : 박경림
+ *  날짜 : 2024-10-30
+ *  작업내용 : index에서 qna 출력
+ *
+ *
+ * 수정이력
+      -
 
+ * */
 @Controller
 @RequestMapping("/cs")
 @RequiredArgsConstructor
@@ -33,6 +43,10 @@ public class CsController {
         // 최신 공지사항 10개를 가져와서 모델에 추가
         List<Notice> noticeList = noticeService.getTop10Notices();
         model.addAttribute("notices", noticeList);
+
+        // 최신 문의하기 리스트 5개
+        List<Qna> qnaList = qnaService.getTop5Qnas();
+        model.addAttribute("qnas", qnaList);
         return "pages/cs/index";
     }
 
