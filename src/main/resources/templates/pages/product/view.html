@@ -2,6 +2,7 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <script th:src="@{/js/main.js}"></script>
+
 <main style="margin-top: 230px; gap: 0">
     <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
     <div id="wrap">
@@ -18,7 +19,7 @@
             <div class="product_info">
                 <img th:src="@{'/file/'+${product.getProdBasicImg()}}" alt="">
                 <div class="product_details">
-                    <form th:action="@{/prod/cart}" method="POST">
+                    <form th:action="@{/prod/cart}" method="POST" id="productForm">
                         <table class="tb1">
                             <tr>
                                 <td class="td_company">
@@ -208,7 +209,7 @@
             </div> <!-- page -->
         </main> <!-- #main-->
     </div>
-    <input type="hidden" th:value="${options}" id="hiddenOption">
+    <input type="text" th:value="${options}" id="hiddenOption">
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 <!-- #wrap -->
@@ -458,5 +459,42 @@
             let totalPriceValue = (inNum * basePrice) + additionalPriceSum; // 총 가격 계산
             totalPrice.innerText = totalPriceValue + "원"; // 화면에 표시
         }
+
+
+        const cart= document.querySelector('.cart');
+        const productForm = document.querySelector('#productForm');
+
+        cart.addEventListener('click', async function (e){
+            alert('asdfas');
+            e.preventDefault();
+            const totalPrice1 = document.querySelector('#totalPrice').value;
+            const jsonData = {
+                "prodId": productForm.prodId.value,
+                "quantity":productForm.quantity.value,
+                "totalPrice": totalPrice1
+            }
+            console.log(jsonData)
+            //
+            // const response = await fetch('/prod/cart',{
+            //     method:'POST',
+            //     headers:{
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(jsonData)
+            // });
+            // if (!response.ok) throw new Error('주문 상세 정보를 불러오지 못했습니다.');
+            //
+            // data = await response.json();
+            //
+            // console.log(data.status);
+            // if(data.status=='noAuth'){
+            //    alert('비회원입니다.');
+            // }else if(data.status=='seller'){
+            //     alert('일반 회원으로 이용해 주세요.')
+            // }else if(data.status=='customer'){
+            //     confirm('장바구니에 담겼습니다. 장바구니로 이동하시겠습니까?') ? location.replace('/prod/cart') : null;
+            // }
+
+        })
     };
 </script>

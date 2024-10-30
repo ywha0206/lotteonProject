@@ -1,8 +1,8 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
-import com.lotteon.dto.requestDto.PostCartDto;
-import com.lotteon.dto.requestDto.PostCartSaveDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
@@ -58,34 +58,6 @@ public class CartOrderController {
         return "pages/product/cart";
     }
 
-    @PostMapping("/cart")
-    public String cart(PostCartDto postCartDto, Model model, HttpSession session, Authentication authentication) {
-        log.info("카트 컨트롤러 접속 "+postCartDto.toString());
-
-        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
-        ResponseEntity result = cartService.insertCart(postCartDto, session);
-        log.info(result.getBody());
-
-        if(result.getStatusCode() == HttpStatus.UNAUTHORIZED){
-            return "redirect:/prod/cart";
-        }
-        if(result.getStatusCode() == HttpStatus.CONTINUE){
-            return "redirect:/prod/product";
-        }
-
-
-        Cart cart = (Cart) result.getBody();
-        ResponseEntity result2 = cartService.insertCartItem(postCartDto,cart);
-
-        if(result2.getBody().equals("insert")){
-            model.addAttribute(true);
-            return "redirect:/prod/cart";
-        }else {
-            model.addAttribute(false);
-            return "redirect:/prod/product";
-        }
-
-    }
 
     @GetMapping("/cart/direct")
     public String cartDirect(Model model) {
@@ -128,6 +100,7 @@ public class CartOrderController {
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
         model.addAttribute("category1", category1);
+        session.removeAttribute("orderItemIds");
         return "pages/product/complete";
     }
 }

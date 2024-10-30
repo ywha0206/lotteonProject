@@ -1,7 +1,7 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
-import com.lotteon.dto.requestDto.PostCartDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartDto;
 import com.lotteon.dto.responseDto.CartSessionDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.entity.member.Customer;

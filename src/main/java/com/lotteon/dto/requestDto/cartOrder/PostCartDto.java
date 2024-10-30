@@ -1,6 +1,5 @@
-package com.lotteon.dto.requestDto;
+package com.lotteon.dto.requestDto.cartOrder;
 
-import com.lotteon.entity.product.CartItemOption;
 import lombok.*;
 
 import java.util.List;
