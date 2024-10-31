@@ -5,25 +5,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @ToString
@@ -31,6 +25,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
     private final CustomLoginFilter customLoginFilter;
+    private final UserDetailsService userDetailsService;
+    private final PersistentTokenRepository tokenRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -73,6 +69,13 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .logoutSuccessUrl("/")
                         .deleteCookies("JSESSIONID")
                 )
+                .rememberMe(remember -> remember
+                        .key("uniqueAndSecret") // 고유한 키를 설정합니다.
+                        .tokenValiditySeconds(86400 * 7) // 7일 동안 유지
+                        .tokenRepository(tokenRepository)
+                        .rememberMeParameter("remember-me") // 클라이언트 측의 체크박스 파라미터 이름 (기본은 "remember-me")
+                        .userDetailsService(userDetailsService) // 유저 정보를 제공할 UserDetailsService
+                )
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
@@ -81,6 +84,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     @Bean
     protected CorsConfigurationSource corsConfigurationSource(){
