@@ -103,7 +103,7 @@
                         </table> <!-- .tb1-->
                         <div class="buttons">
                             <button type="submit" class="cart" onclick="cartBtn()">장바구니</button>
-                            <button type="button" class="btnorder"><a th:href="@{/prod/cart/direct}"> 구매하기</a></button>
+                            <button type="button" class="btnorder"><a> 구매하기</a></button>
                         </div> <!-- .buttons -->
                     </form>
                 </div> <!-- .product_details -->
@@ -508,11 +508,22 @@
 
         cart.addEventListener('click', async function (e){
             e.preventDefault();
+            let readPrice = totalPrice.value
+            const optionId = document.getElementById('optionId').value
+
+
+            if(qty.style.display != 'table-cell'){
+                alert('옵션을 선택해 주세요.');
+                return;
+            }else{
+                readPrice = basePrice;
+            }
+
             const jsonData = {
                 "prodId": productForm.prodId.value,
                 "quantity":productForm.quantity.value,
-                "totalPrice": totalPrice.value,
-                "optionId": document.getElementById('optionId').value
+                "totalPrice": readPrice,
+                "optionId": optionId
             }
             console.log(jsonData)
 
@@ -529,7 +540,8 @@
 
             console.log(data.status);
             if(data.status=='noAuth'){
-               alert('비회원입니다.');
+                alert('로그인 후 이용해주세요.');
+                location.replace('/auth/login/view');
             }else if(data.status=='seller'){
                 alert('일반 회원으로 이용해 주세요.')
             }else if(data.status=='customer'){
@@ -537,6 +549,55 @@
             }
 
         })
+
+        const btnorder = document.querySelector('.btnorder');
+
+        btnorder.addEventListener('click',async function (e){
+            e.preventDefault();
+
+            let readPrice = totalPrice.value
+            const optionId = document.getElementById('optionId').value
+
+
+            if(qty.style.display != 'table-cell'){
+                alert('옵션을 선택해 주세요.');
+                return;
+            }else{
+                readPrice = basePrice;
+            }
+
+            const jsonData = {
+                "productId": productForm.prodId.value,
+                "quantity":productForm.quantity.value,
+                "totalPrice": readPrice,
+                "optionId": optionId
+            }
+            console.log(jsonData)
+
+            const response = await fetch('/prod/order/direct',{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            });
+            if (!response.ok) throw new Error('주문 상세 정보를 불러오지 못했습니다.');
+
+            data = await response.json();
+
+            console.log(data);
+            if(data.status=='noAuth'){
+                alert('로그인 후 이용해주세요.');
+                location.replace('/auth/login/view');
+            }else if(data.status=='seller'){
+                alert('일반 회원으로 이용해 주세요.')
+            }else if(data.status=='customer'){
+                alert('주문서로 이동합니다.');
+                location.replace('/prod/order');
+            }
+
+        });
+
     };
 
 </script>

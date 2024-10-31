@@ -81,6 +81,12 @@ public class OrderService {
                         .quantity(cartItem.get().getQuantity())
                         .build();
 
+            }else {
+                cartItemDto = CartItemDto.builder()
+                        .cartId(null)
+                        .id(null)
+                        .quantity(postCartSaveDto.getQuantity())
+                        .build();
             }
 
             //옵션이 있으면 옵션리스트에 담기
@@ -95,13 +101,6 @@ public class OrderService {
                 optionValue.add(option.getOptionValue3());
             }
             log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
-//
-//            Long optionId = postCartSaveDto.getOptionId();
-//            Optional<ProductOption> option = productOptionRepository.findById(optionId);
-//
-//            String option1 = option.get().getOptionValue()==null?"":option.get().getOptionValue();
-//            String option2 = option.get().getOptionValue2()==null?"":option.get().getOptionValue2();
-//            String option3 = option.get().getOptionValue3()==null?"":option.get().getOptionValue3();
 
             GetOrderDto orderDto = GetOrderDto.builder()
                                             .products(productDto)
