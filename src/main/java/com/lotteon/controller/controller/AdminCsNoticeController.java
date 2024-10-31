@@ -46,6 +46,7 @@ public class AdminCsNoticeController {
         List<GetArticleCategoryDto> cate1 = categoryArticleService.findCategory(1, 1); // category_level = 1인 카테고리만 조회
         model.addAttribute("cate1", cate1); // 1차 카테고리 목록을 모델에 추가
 
+
         // 공지사항 목록 조회 (카테고리 및 제목 필터링 적용)
         Page<NoticeResponseDto> noticePage;
         if (type != null && !type.equals("typeselect") && title != null && !title.isEmpty()) {

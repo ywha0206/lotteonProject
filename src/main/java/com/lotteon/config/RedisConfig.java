@@ -3,7 +3,10 @@ package com.lotteon.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.repository.impl.token.PersistentRememberMeTokenDeserializer;
+import com.lotteon.repository.impl.token.PersistentRememberMeTokenSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +19,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 
 import java.time.Duration;
 import java.util.List;
@@ -34,21 +38,6 @@ public class RedisConfig {
         return new LettuceConnectionFactory(host, port);
     }
 
-//    @Bean
-//    public RedisTemplate<String, Object> getRedisTemplate() {
-//        RedisTemplate<String, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(getConnectionFactory());
-//        template.setDefaultSerializer(new StringRedisSerializer());
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
-//
-//        // GenericJackson2JsonRedisSerializer에 ObjectMapper를 적용
-//        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
-//        template.setValueSerializer(serializer);
-//
-//        return template;
-//    }
 @Bean
 public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory connectionFactory) {
     RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -97,5 +86,15 @@ public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory con
         return RedisCacheManager.builder(factory).cacheDefaults(cacheConfiguration).build();
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(PersistentRememberMeToken.class, new PersistentRememberMeTokenSerializer());
+        module.addDeserializer(PersistentRememberMeToken.class, new PersistentRememberMeTokenDeserializer());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(module);
+        return objectMapper;
+    }
 
 }

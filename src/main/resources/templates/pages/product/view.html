@@ -30,7 +30,7 @@
                                         color: red;
                                         border: 1px solid black;
                                         padding: 2px 4px;
-                                     " th:data-id="${couponId}" onclick="getCustomerCoupon(event)">쿠폰 발급받기</span>
+                                     " th:if="${couponId != 0}" th:data-id="${couponId}" onclick="getCustomerCoupon(event)">쿠폰 발급받기</span>
                                 </td>
                             </tr>
                             <tr>
@@ -507,9 +507,7 @@
         const productForm = document.querySelector('#productForm');
 
         cart.addEventListener('click', async function (e){
-            alert('asdfas');
             e.preventDefault();
-            const totalPrice1 = document.querySelector('#totalPrice').value;
             const jsonData = {
                 "prodId": productForm.prodId.value,
                 "quantity":productForm.quantity.value,

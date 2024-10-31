@@ -24,8 +24,6 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final NumberPath<Integer> deli = createNumber("deli", Integer.class);
 
-    public final StringPath deliCompany = createString("deliCompany");
-
     public final NumberPath<Integer> discount = createNumber("discount", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

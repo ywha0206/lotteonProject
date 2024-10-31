@@ -59,11 +59,12 @@ public class OrderItemService {
             log.info("프로덕트 조회 : "+ optProduct.get());
 
             Long sellId = optProduct.get().getSeller().getId();
-
+            Seller seller = optProduct.get().getSeller();
+            System.out.println("1번 셀러"+seller);
             log.info("셀러 아이디 가지고 왔나요? : "+sellId);
 
             Optional<Seller> optSeller = sellerRepository.findById(sellId);
-
+            System.out.println("2번 셀러"+optSeller.get());
             if(!optSeller.isPresent()){
                 return ResponseEntity.ok().body(false);
             }

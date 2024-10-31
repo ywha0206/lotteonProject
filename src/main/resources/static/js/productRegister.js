@@ -1,6 +1,8 @@
-    const productAll = new FormData();
+    let productAll = new FormData();
     let submitData = [];
+    let totalStock = 0;
     window.onload = function (){
+        let duplication = 0;
         const prodInsert = document.getElementsByClassName('submit-btn')[0];
         prodInsert.addEventListener('click', (e) => {
 
@@ -16,16 +18,18 @@
         }
 
         e.preventDefault();
-        for (const [key, value] of prodCate.entries()) {
-            productAll.append(`postProdCateMapperDTO.${key}`, value)
+        if(duplication === 0){
+            for (const [key, value] of prodCate.entries()) {
+                productAll.append(`postProdCateMapperDTO.${key}`, value)
+            }
+            for (const [key, value] of productInfo.entries()) {
+                productAll.append(`postProductDTO.${key}`, value)
+            }
+            for (const [key, value] of detail.entries()) {
+                productAll.append(`postProdDetailDTO.${key}`, value)
+            }
+            duplication = 1;
         }
-        for (const [key, value] of productInfo.entries()) {
-            productAll.append(`postProductDTO.${key}`, value)
-        }
-        for (const [key, value] of detail.entries()) {
-            productAll.append(`postProdDetailDTO.${key}`, value)
-        }
-
         for (const [key, value] of productAll.entries()) {
             console.log(key, value)
         }
@@ -57,7 +61,6 @@
         } else {
             alert('결제 정보 등록에 실패하였습니다');
         }
-
         })
             .catch(err => {
              console.log(err);
@@ -176,10 +179,14 @@
             stock: stock,
             productId: null
         };
-
+        totalStock += parseInt(jsonData.stock);
     submitData.push(jsonData);
 });
     console.log(submitData)
+    console.log("totalStock"+totalStock);
+    document.getElementById('prodStock').value = totalStock;
+    console.log("prodStock"+document.getElementById('prodStock').value);
+    totalStock = 0;
 }
 
     function deleteOption(event) {
