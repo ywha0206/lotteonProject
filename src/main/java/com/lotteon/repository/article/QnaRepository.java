@@ -26,7 +26,7 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
     // 2차 카테고리로 QnA 목록 조회
     Page<Qna> findByCate2(CategoryArticle cate2, Pageable pageable);
 
-    // Qna 엔티티에 qnaTitle과 qnaContent 속성이 있을 경우
+    // 페이징 처리하여 검색하는 기능
     Page<Qna> findByQnaTitleContainingOrQnaContentContaining(String titleKeyword, String contentKeyword, Pageable pageable);
 */
 

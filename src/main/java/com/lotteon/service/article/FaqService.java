@@ -1,31 +1,20 @@
 package com.lotteon.service.article;
 
 import com.lotteon.dto.ArticleDto;
-import com.lotteon.dto.requestDto.NoticeRequestDto;
-import com.lotteon.dto.responseDto.NoticeResponseDto;
 import com.lotteon.entity.article.Faq;
-import com.lotteon.entity.article.Notice;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.repository.article.FaqRepository;
 import com.lotteon.repository.category.CategoryArticleRepository;
 import com.lotteon.service.category.CategoryArticleService;
-import jakarta.servlet.http.HttpServletRequest;
-import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -63,14 +52,14 @@ public class FaqService {
 
     }
 
-    // FAQ 목록 조회 (카테고리별)
-    public Page<ArticleDto> getFaqs(CategoryArticle cate1, CategoryArticle cate2, int limit, Pageable pageable) {
-        // Page<Faq>를 사용하여 페이징 처리된 결과를 받아옴
-        Page<Faq> faqPage = faqRepository.findByCate1AndCate2(cate1, cate2, pageable);
-        // Page<ArticleDto>로 변환하여 반환
+    // 카테고리별 FAQ 목록 조회
+    public Page<ArticleDto> getFaqsByCategory(String category, Pageable pageable) {
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(category)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다: " + category));
+
+        Page<Faq> faqPage = faqRepository.findByCate1(cate1, pageable);
         return faqPage.map(faq -> modelMapper.map(faq, ArticleDto.class));
     }
-
 
 
     // FAQ 상세보기 기능 추가
@@ -124,17 +113,16 @@ public class FaqService {
 
     /* 일반 cs 기능 */
     /*    TODO: faq 1차 유형별 페이지 조회 (1031 예정) */
-    // 더보기 기능 (처음부터 10개 가져오는걸로 수정하기)
+    // 카테고리별 FAQ 목록 조회
+
+
+    // 더보기 기능으로 최대 10개의 FAQ를 가져옴
     public List<ArticleDto> getFaqsCount10(CategoryArticle cate1, CategoryArticle cate2) {
-        Limit limit = Limit.of(10);
-
-        // Page<Faq>를 사용하여 더보기 페이징 처리된 결과를 받아옴
-        List<Faq> byCate1AndCate2 = faqRepository.findByCate1AndCate2(cate1, cate2, limit);
-        // Page<ArticleDto>로 변환하여 반환
-        return byCate1AndCate2.stream().map(faq -> modelMapper.map(faq, ArticleDto.class)).toList();
-
+        List<Faq> faqs = faqRepository.findTop10ByCate1AndCate2OrderByFaqRdateDesc(cate1, cate2);
+        return faqs.stream()
+                .map(faq -> modelMapper.map(faq, ArticleDto.class))
+                .collect(Collectors.toList());
     }
-
     /**
      * faq를 페이지네이션으로 들고오는 함수
      *
