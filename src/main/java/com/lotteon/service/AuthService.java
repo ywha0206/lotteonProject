@@ -8,6 +8,7 @@ import com.lotteon.entity.member.Seller;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.member.SellerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -215,6 +216,8 @@ public class AuthService implements UserDetailsService {
         }
         return "NF";
     }
+
+
 }
 
 

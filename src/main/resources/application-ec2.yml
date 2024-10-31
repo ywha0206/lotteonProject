@@ -77,3 +77,6 @@ logging:
         security: debug
         web: error
     root: info
+kakao:
+  client_id: 21f13935510b320e93de9c06c918e6ec
+  redirect_uri: http://localhost:8080/auth/kakao/callback

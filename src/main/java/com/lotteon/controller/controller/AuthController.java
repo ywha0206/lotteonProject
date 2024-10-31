@@ -4,6 +4,7 @@ package com.lotteon.controller.controller;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
+import com.lotteon.service.SocialService;
 import com.lotteon.service.config.BannerService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.member.MemberService;
@@ -13,6 +14,7 @@ import com.lotteon.service.term.TermsService;
 import lombok.extern.log4j.Log4j2;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +28,25 @@ import java.util.List;
 public class AuthController {
 
     private final CustomerService customerService;
-    private final MemberService memberService;
-    private final SellerService sellerService;
     private final TermsService termsService;
     private final BannerService bannerService;
+    private final SocialService socialService;
+
 
     @GetMapping("/login/view")
     public String login(Model model) {
         List<GetBannerDTO> bannerList = bannerService.selectUsingBannerAt(4);
         model.addAttribute("banner", bannerList);
+        String kakaoURL = socialService.getKakaoLogin();
+        model.addAttribute("kakaoURL", kakaoURL);
         return "pages/auth/login";
+    }
+
+    @RequestMapping("/{type}/callback")
+    public String socialLogin(@PathVariable String type, @RequestParam String code, Model model) {
+        String accessCode = socialService.getAccessToken(code,type);
+        log.info("accessCode : " +accessCode);
+        return login(model);
     }
 
     @GetMapping("/join")
