@@ -6,6 +6,35 @@
   <aside th:replace="layout/admin/aside.html"></aside>
   <section id="admin-product-list" class="container">
     <script>
+      // 1차 카테고리 선택 시 2차 카테고리 로드
+      function loadSecondCategory() {
+        const cateId1 = document.getElementById("cateId1").value;
+
+        fetch(`/admin/cs/notice/categories/child?parentId=${cateId1}`)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error("2차 카테고리 로드 실패: " + response.statusText);
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  const cateId2 = document.getElementById("cateId2");
+                  cateId2.innerHTML = '<option>2차선택</option>'; // 초기화
+
+                  if (data.length === 0) {
+                    console.warn("해당 1차 카테고리에 대한 2차 카테고리가 없습니다.");
+                  }
+
+                  data.forEach(category => {
+                    const option = document.createElement("option");
+                    option.value = category.id;  // DTO에서 ID 필드에 접근
+                    option.textContent = category.categoryName;  // DTO에서 categoryName 필드에 접근
+                    cateId2.appendChild(option);
+                  });
+                })
+                .catch(error => console.error("2차 카테고리 로드 실패:", error));
+      }
+
       // 타입별 카테조회
       function firstOption() {
         const CateOption = event.target; // 내가 함수를 호출한 현재 태그
@@ -74,11 +103,20 @@
           <tr>
             <th>유형</th>
             <td>
-              <select name="cateId1" th:value="${notice.cateId1}">
-                <option value="service" th:selected="${notice.category1Name == 'service'}">고객서비스</option>
-                <option value="event" th:selected="${notice.category1Name == 'event'}">이벤트당첨</option>
-                <option value="safe" th:selected="${notice.category1Name == 'safe'}">안전거래</option>
-                <option value="danger" th:selected="${notice.category1Name == 'danger'}">위해상품</option>
+              <select name="cateId1" id="cateId1" onchange="loadSecondCategory()" th:value="${notice.cateId1}">
+                <option value="1" th:selected="${notice.category1Name == '고객서비스'}">고객서비스</option>
+                <option value="2" th:selected="${notice.category1Name == '이벤트당첨'}">이벤트당첨</option>
+                <option value="3" th:selected="${notice.category1Name == '안전거래'}">안전거래</option>
+                <option value="4" th:selected="${notice.category1Name == '위해상품'}">위해상품</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>상세 유형</th>
+            <td>
+              <select name="cateId2" id="cateId2">
+                <option>2차선택</option>
+                <!-- 2차 카테고리가 동적으로 삽입될 위치 -->
               </select>
             </td>
           </tr>

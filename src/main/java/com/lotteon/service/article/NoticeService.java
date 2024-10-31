@@ -168,4 +168,9 @@ public class NoticeService {
 
         return mapNoticeToResponseDto(notice);
     }
+    public List<CategoryArticle> getChildCategories(Long parentCategoryId) {
+        CategoryArticle parentCategory = categoryArticleRepository.findById(parentCategoryId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 부모 카테고리를 찾을 수 없습니다: " + parentCategoryId));
+        return categoryArticleRepository.findByParent(parentCategory);
+    }
 }
