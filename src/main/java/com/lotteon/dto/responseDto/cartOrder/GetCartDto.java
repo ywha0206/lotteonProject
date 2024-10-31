@@ -14,6 +14,7 @@ public class GetCartDto {
     private Long cartItemId;
     private int quantity;
     private double totalPrice;
+    private Long optionId;
     private List<String> optionValue;
 //    private String optionValue2;
 //    private String optionValue3;

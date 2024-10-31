@@ -13,7 +13,7 @@ public class GetOrderDto {
     private CartItemDto cartItems;
     private int quantity;
     private Long optionId;
-    private String option1;
+    private List<String> optionValue;
     private String option2;
     private String option3;
     private double totalPrice;

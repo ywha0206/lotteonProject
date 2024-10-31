@@ -83,19 +83,30 @@ public class OrderService {
 
             }
 
-            Long optionId = postCartSaveDto.getOptionId();
-            Optional<ProductOption> option = productOptionRepository.findById(optionId);
+            //옵션이 있으면 옵션리스트에 담기
+            Long optionId = null;
+            List<String> optionValue = new ArrayList<>();
+            if(postCartSaveDto.getOptionId()!=null){
+                optionId = postCartSaveDto.getOptionId();
+                ProductOption option = productOptionRepository.findById(optionId).orElse(null);
 
-            String option1 = option.get().getOptionValue()==null?"":option.get().getOptionValue();
-            String option2 = option.get().getOptionValue2()==null?"":option.get().getOptionValue2();
-            String option3 = option.get().getOptionValue3()==null?"":option.get().getOptionValue3();
+                optionValue.add(option.getOptionValue());
+                optionValue.add(option.getOptionValue2());
+                optionValue.add(option.getOptionValue3());
+            }
+            log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
+//
+//            Long optionId = postCartSaveDto.getOptionId();
+//            Optional<ProductOption> option = productOptionRepository.findById(optionId);
+//
+//            String option1 = option.get().getOptionValue()==null?"":option.get().getOptionValue();
+//            String option2 = option.get().getOptionValue2()==null?"":option.get().getOptionValue2();
+//            String option3 = option.get().getOptionValue3()==null?"":option.get().getOptionValue3();
 
             GetOrderDto orderDto = GetOrderDto.builder()
                                             .products(productDto)
                                             .quantity(postCartSaveDto.getQuantity())
-                                            .option1(option1)
-                                            .option2(option2)
-                                            .option3(option3)
+                                            .optionValue(optionValue)
                                             .totalPrice(postCartSaveDto.getTotalPrice())
                                             .cartItems(cartItemDto)
                                             .build();
