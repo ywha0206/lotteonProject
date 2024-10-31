@@ -56,9 +56,6 @@ public class OrderItem {
     @Column(name = "order_item_warranty")
     private Timestamp warranty;
 
-    @Column(name = "order_item_deli_company")
-    private String deliCompany;
-
     @OneToMany(mappedBy = "orderItem")
     private List<OrderItemOption> selectedOptions;
 
