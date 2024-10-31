@@ -55,19 +55,15 @@ td {
 
 /* 공통 버튼 스타일 */
 .button {
-  background-color: #4CAF50; /* 기본 배경 색상 */
-  color: white !important; /* 글자 색상 */
-  padding: 7px 0px; /* 패딩 (위아래 4px, 양옆 8px으로 최소화) */
-  text-align: center; /* 텍스트 중앙 정렬 */
-  text-decoration: none; /* 밑줄 제거 */
-  display: inline-block; /* 인라인 블록 */
-  font-size: 12px; /* 글자 크기를 살짝 줄임 */
-  margin: 2px 4px; /* 마진을 최소화 */
-  cursor: pointer; /* 커서 포인터 */
-  border-radius: 4px; /* 둥근 테두리 */
-  border: none; /* 테두리 없음 */
-  transition: box-shadow 0.3s ease; /* 부드러운 트랜지션 */
-  min-width: 80px; /* 최소 너비를 더 작게 설정 */
+  width: 120px; /* 버튼의 고정 너비 설정 */
+  padding: 10px 0; /* 동일한 패딩 */
+  font-size: 13px; /* 동일한 글자 크기 */
+  color: white;
+  text-align: center;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
 }
 
 /* 취소하기 버튼 스타일 */
@@ -75,22 +71,23 @@ td {
   background-color: #f44336; /* 빨간색 배경 */
 }
 
-/* 등록하기 버튼 스타일 */
+/* 작성하기 버튼 스타일 */
 .button--write {
   background-color: #647264; /* 초록색 배경 */
 }
+
 /* 취소하기 버튼 호버 효과 */
 .button--delete:hover {
-  background-color: #d32f2f; /* 호버 시 더 어두운 빨간색 */
-  transform: scale(1.05); /* 살짝 확대되는 효과 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+  background-color: #d32f2f;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 등록하기 버튼 호버 효과 */
+/* 작성하기 버튼 호버 효과 */
 .button--write:hover {
-  background-color: #556b54; /* 호버 시 더 어두운 초록색 */
-  transform: translateY(-2px); /* 살짝 위로 이동하는 효과 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* 부드러운 그림자 */
+  background-color: #556b54;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 
