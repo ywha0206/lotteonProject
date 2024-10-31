@@ -46,4 +46,8 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     Page<Notice> findByCate1(CategoryArticle cate1, Pageable pageable);
 
     Page<Notice> findByCate2(CategoryArticle cate2, Pageable pageable);
+
+    Page<Notice> findByCate1AndNoticeTitleContaining(CategoryArticle cate1, String title, Pageable pageable);
+
+    Page<Notice> findByNoticeTitleContaining(String title, Pageable pageable);
 }

@@ -4,7 +4,6 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.NoticeRequestDto;
 import com.lotteon.dto.responseDto.GetArticleCategoryDto;
 import com.lotteon.dto.responseDto.NoticeResponseDto;
-import com.lotteon.entity.article.Notice;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.service.article.NoticeService;
 import com.lotteon.service.category.CategoryArticleService;
@@ -33,31 +32,42 @@ public class AdminCsNoticeController {
     private final NoticeService noticeService;
     private final CategoryArticleService categoryArticleService;
 
-    // 공지사항 목록 조회 (페이지네이션 + 카테고리 필터링 추가)
+    // 공지사항 목록 조회 (페이지네이션 + 카테고리 및 제목 필터링 추가)
     @GetMapping("/notices")
     public String notices(Model model,
                           @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(required = false) String type) { // 카테고리 필터링 파라미터 추가
+                          @RequestParam(required = false) String type,  // 카테고리 필터링 파라미터
+                          @RequestParam(required = false) String title) { // 제목 검색 파라미터
 
-        // 필터링, 페이지네이션 적용
+        // 필터링과 페이지네이션 적용
         Pageable pageable = PageRequest.of(page, 10);
 
         // 1차 카테고리 목록 조회
         List<GetArticleCategoryDto> cate1 = categoryArticleService.findCategory(1, 1); // category_level = 1인 카테고리만 조회
         model.addAttribute("cate1", cate1); // 1차 카테고리 목록을 모델에 추가
 
-        // 공지사항 목록 조회 (필터링 적용)
+
+        // 공지사항 목록 조회 (카테고리 및 제목 필터링 적용)
         Page<NoticeResponseDto> noticePage;
-        if (type != null && !type.equals("typeselect")) {
-            noticePage = noticeService.getNoticesByCate1(type, pageable); // 특정 카테고리로 필터링
+        if (type != null && !type.equals("typeselect") && title != null && !title.isEmpty()) {
+            // 카테고리와 제목이 모두 지정된 경우
+            noticePage = noticeService.getNoticesByCate1AndTitle(type, title, pageable);
+        } else if (type != null && !type.equals("typeselect")) {
+            // 카테고리만 지정된 경우
+            noticePage = noticeService.getNoticesByCate1(type, pageable);
+        } else if (title != null && !title.isEmpty()) {
+            // 제목만 지정된 경우
+            noticePage = noticeService.getNoticesByTitle(title, pageable);
         } else {
-            noticePage = noticeService.getNotices(null, pageable); // 전체 조회
+            // 전체 조회
+            noticePage = noticeService.getNotices(null, pageable);
         }
 
         model.addAttribute("notices", noticePage.getContent());
         model.addAttribute("page", page);
         model.addAttribute("totalPages", noticePage.getTotalPages());
         model.addAttribute("selectedType", type); // 선택된 카테고리 유지
+        model.addAttribute("title", title); // 검색된 제목 유지
 
         return "pages/admin/cs/notice/list"; // 공지사항 목록 뷰로 이동
     }
@@ -91,17 +101,16 @@ public class AdminCsNoticeController {
     @GetMapping("/notice/categories/child")
     @ResponseBody
     public List<GetArticleCategoryDto> getChildCategories(@RequestParam Long parentId) {
-        List<GetArticleCategoryDto> childCategories = categoryArticleService.getChildCategories(parentId)
+        return categoryArticleService.getChildCategories(parentId)
                 .stream()
                 .map(CategoryArticle::toGetArticleCategoryDto)
                 .collect(Collectors.toList());
-        return childCategories;
     }
 
     // 공지사항 작성 처리
     @PostMapping("/notice/write")
     public String noticeWrite(@ModelAttribute NoticeRequestDto dto) {
-        log.info("컨트롤러 " + dto);
+        log.info("공지사항 작성 요청: " + dto);
         noticeService.saveNotice(dto);
         return "redirect:/admin/cs/notices";
     }
@@ -146,5 +155,11 @@ public class AdminCsNoticeController {
             result.put("message", e.getMessage());
         }
         return result;
+    }
+    @GetMapping("/notice/view/{id}")
+    public String viewNotice(@PathVariable Long id, Model model) {
+        NoticeResponseDto notice = noticeService.getNotice(id);  // ID를 통해 공지사항 조회
+        model.addAttribute("notice", notice);  // 조회한 공지사항을 모델에 추가
+        return "pages/admin/cs/notice/view";  // 보기 페이지로 이동
     }
 }
