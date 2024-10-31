@@ -82,7 +82,6 @@ public class CartService {
 
     public ResponseEntity<?> insertCartItem(PostCartDto postCartDto, Cart cart) {
 
-
         long prodId = postCartDto.getProdId();
 
         Product product = productRepository.findById(prodId).orElse(null);
