@@ -19,6 +19,6 @@ public class GetDeliveryDto {
     private Integer orderItemSize;
     private Integer orderItemTotalPrice;
     private Integer prodDeli;
-    private Integer orderItemState2;
-    private LocalDateTime orderRdate;
+    private String orderItemState2;
+    private String orderRdate;
 }
