@@ -109,9 +109,7 @@ public class CsController {
     }
 
 
-    /*TODO: 회원만 작성 가능하게 나중에 추가하기*/
-
-    // QNA 문의하기 글 목록
+  /*  // QNA 문의하기 글 목록
     @GetMapping("/qnas")
     public String qnasForUser(
             Model model,
@@ -124,6 +122,26 @@ public class CsController {
         model.addAttribute("page", qnasPage); // 페이지 정보 전달
 
         return "pages/cs/qna/list"; // 일반 사용자용 CS 페이지 경로
+    }*/
+    // 카테고리별 QNA 목록 조회
+    @GetMapping("/qnas")
+    public String qnasByCategory(
+            @RequestParam(required = false) String category,
+            Model model,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        // category가 null이거나 빈 문자열이면 "회원"을 기본값으로 설정 (전체 글 목록이 없어서)
+        if (category == null || category.isEmpty()) {
+            category = "user";
+        }
+
+        // 카테고리에 해당하는 QNA 목록 조회
+        Page<ArticleDto> qnasPage = qnaService.getQnasByCategory(category, pageable);
+
+        model.addAttribute("qnas", qnasPage.getContent());
+        model.addAttribute("page", qnasPage);
+        model.addAttribute("selectedCate1", category); // 선택된 카테고리 전달
+
+        return "pages/cs/qna/list";
     }
 
 

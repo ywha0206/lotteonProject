@@ -19,6 +19,13 @@
     color: #0070C0;
 }
 
+/* 선택된 1차 유형 */
+.cate_list a.active {
+    font-weight: bold;
+    text-decoration: underline;
+
+}
+
 
 /* qna view */
 .qna_view{margin-left: 40px; border-top: 1px solid #000000;}

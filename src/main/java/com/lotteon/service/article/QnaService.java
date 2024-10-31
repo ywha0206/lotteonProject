@@ -164,10 +164,30 @@ public class QnaService {
         return savedQna.getId(); // 저장된 QnA ID 반환
     }
 
+
+
+
+    /* 일반 CS (목록, 보기) */
     // index에서 qna 5개 조회
     public List<Qna> getTop5Qnas() {
         return qnaRepository.findTop5ByOrderByQnaRdateDesc();
     }
+
+    /* TODO: qna 1차 유형별 조회 기능 */
+    // 1차 카테고리별 QNA 목록 조회
+    public Page<ArticleDto> getQnasByCategory(String category, Pageable pageable) {
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(category)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다. 이름: " + category));
+
+        Page<Qna> qnaPage = qnaRepository.findByCate1(cate1, pageable);
+        return qnaPage.map(ArticleDto::fromEntity); // 기존 fromEntity 메서드 활용
+    }
+
+
+
+
+
+
 }
 
 
