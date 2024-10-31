@@ -210,18 +210,14 @@
             </div></td>
             <td>
               <div class="cartOptions">
-  <!--              &lt;!&ndash; 옵션이 있는 경우 반복문 실행 &ndash;&gt;-->
-  <!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) > 0}">-->
-  <!--                <div th:each="cartItemOption, stat : ${cartItem.cartItemOption}">-->
-  <!--                  <span th:text="${cartItemOption.optionValue}">S</span>-->
-  <!--                </div>-->
-  <!--              </th:block>-->
-  <!--              &lt;!&ndash; 옵션이 없을 경우 "옵션없음" 출력 &ndash;&gt;-->
-  <!--              <th:block th:if="${#lists.size(cartItem.cartItemOption) == 0}">-->
-                  <span th:text="${cartItem.optionValue
-                              +' / '+cartItem.optionValue2
-                              +' / '+cartItem.optionValue3}">옵션없음</span>
-  <!--              </th:block>-->
+                <th:block th:if="${cartItem.optionValue.isEmpty()}">
+                  <span>옵션없음</span>
+                </th:block>
+                <th:block th:unless="${cartItem.optionValue.isEmpty()}">
+                  <th:block th:each="option : ${cartItem.optionValue}">
+                    <span th:text="${option}">옵션있음</span>
+                  </th:block>
+                </th:block>
               </div>
             </td>
             <td>[[${cartItem.quantity}]]</td>

@@ -14,10 +14,12 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
 
     // 부모 카테고리(1차 카테고리) 조회
     List<CategoryArticle> findByParentIsNull();
+
     // 특정 부모 카테고리(1차 카테고리)에 해당하는 자식 카테고리(2차 카테고리) 조회
     List<CategoryArticle> findByParent(CategoryArticle parent);
 
-    List<CategoryArticle> findAllByCategoryTypeAndCategoryLevel(int type, int level);
+    // 특정 타입과 레벨에 해당하는 카테고리 조회
+    List<CategoryArticle> findByCategoryTypeAndCategoryLevel(int categoryType, int categoryLevel);
 
     Optional<CategoryArticle> findByCategoryNameAndCategoryLevelAndCategoryType(String categoryName1, int i, int i1);
 
@@ -26,6 +28,6 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
 
     Optional<CategoryArticle> findByCategoryNameAndCategoryLevel(String cate1Name, int i);
 
-
+    // 특정 카테고리 ID로 카테고리 조회
     CategoryArticle findByCategoryId(Long category1);
 }

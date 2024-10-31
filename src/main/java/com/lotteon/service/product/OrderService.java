@@ -5,7 +5,7 @@ import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
-import com.lotteon.dto.responseDto.GetOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
@@ -71,20 +71,32 @@ public class OrderService {
                                             .sellId(product.get().getSeller().getId())
                                             .stock(product.get().getProdStock())
                                             .build();
+            CartItemDto cartItemDto = new CartItemDto();
+            if(postCartSaveDto.getCartItemId()!=null) {
+                Long cartItemId = postCartSaveDto.getCartItemId();
+                Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
+                 cartItemDto = CartItemDto.builder()
+                        .cartId(cartItem.get().getCart().getId())
+                        .id(cartItem.get().getId())
+                        .quantity(cartItem.get().getQuantity())
+                        .build();
 
-            Long cartItemId = postCartSaveDto.getCartItemId();
-            Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
-            CartItemDto cartItemDto = CartItemDto.builder()
-                                                .cartId(cartItem.get().getCart().getId())
-                                                .id(cartItem.get().getId())
-                                                .quantity(cartItem.get().getQuantity())
-                                                .build();
+            }
 
+            Long optionId = postCartSaveDto.getOptionId();
+            Optional<ProductOption> option = productOptionRepository.findById(optionId);
 
-
+            String option1 = option.get().getOptionValue()==null?"":option.get().getOptionValue();
+            String option2 = option.get().getOptionValue2()==null?"":option.get().getOptionValue2();
+            String option3 = option.get().getOptionValue3()==null?"":option.get().getOptionValue3();
 
             GetOrderDto orderDto = GetOrderDto.builder()
                                             .products(productDto)
+                                            .quantity(postCartSaveDto.getQuantity())
+                                            .option1(option1)
+                                            .option2(option2)
+                                            .option3(option3)
+                                            .totalPrice(postCartSaveDto.getTotalPrice())
                                             .cartItems(cartItemDto)
                                             .build();
 

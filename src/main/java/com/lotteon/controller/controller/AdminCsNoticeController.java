@@ -42,6 +42,11 @@ public class AdminCsNoticeController {
         // 필터링, 페이지네이션 적용
         Pageable pageable = PageRequest.of(page, 10);
 
+        // 1차 카테고리 목록 조회
+        List<GetArticleCategoryDto> cate1 = categoryArticleService.findCategory(1, 1); // category_level = 1인 카테고리만 조회
+        model.addAttribute("cate1", cate1); // 1차 카테고리 목록을 모델에 추가
+
+        // 공지사항 목록 조회 (필터링 적용)
         Page<NoticeResponseDto> noticePage;
         if (type != null && !type.equals("typeselect")) {
             noticePage = noticeService.getNoticesByCate1(type, pageable); // 특정 카테고리로 필터링
