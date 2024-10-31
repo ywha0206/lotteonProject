@@ -1,6 +1,7 @@
 package com.lotteon.entity.product;
 
 import com.lotteon.dto.requestDto.GetDeliveryDto;
+import com.lotteon.dto.responseDto.GetDeliInfoDto;
 import com.lotteon.entity.member.Customer;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,9 +9,9 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @ToString
@@ -82,16 +83,66 @@ public class Order {
         } else {
             company = "대한통운";
         }
-//        Integer price;
-//        orderItems.stream().map(v->v.)
+
+
+        Optional<Integer> maxDeli = orderItems.stream()
+                .map(OrderItem::getDeli)
+                .max(Integer::compareTo);
+
+        String state ;
+        if(orderState == 0){
+            state = "미완료";
+        } else {
+            state = "완료";
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date orderDate = Date.from(orderRdate.toInstant());
+        String formattedDate = dateFormat.format(orderDate);
+
         return GetDeliveryDto.builder()
                 .deliveryId(orderItems.get(0).getOrderDeliId())
                 .deliCompany(company)
                 .orderItemId(id)
                 .orderItemSize(orderItems.size())
-                .orderItemState2(orderState)
-//                .orderItemTotalPrice()
-//                .prodDeli(orderDeli)
+                .orderItemState2(state)
+                .orderItemTotalPrice(orderTotal)
+                .prodDeli(maxDeli.get())
+                .receiverName(receiverName)
+                .prodName(orderItems.get(0).getProduct().getProdName())
+                .orderRdate(formattedDate)
+                .build();
+    }
+
+    public GetDeliInfoDto toGetDeliInfoDto() {
+        String company;
+        if(orderItems.get(0).getOrderDeliCompany()==1){
+            company = "로젠택배";
+        } else if(orderItems.get(0).getOrderDeliCompany()==2){
+            company = "한신택배";
+        } else if(orderItems.get(0).getOrderDeliCompany()==3){
+            company = "우체국";
+        } else {
+            company = "대한통운";
+        }
+
+        List<String> addrs = Arrays.asList(receiverAddr.split("/"));
+        String req;
+        if(orderReq == null){
+            req = "요청사항 없음";
+        } else {
+            req = orderReq;
+        }
+
+        return GetDeliInfoDto.builder()
+                .orderId(id)
+                .receiverName(receiverName)
+                .deliveryId(orderItems.get(0).getOrderDeliId())
+                .company(company)
+                .addr1(addrs.get(0))
+                .addr2(addrs.get(1))
+                .addr3(addrs.get(2))
+                .orderReq(req)
                 .build();
     }
 

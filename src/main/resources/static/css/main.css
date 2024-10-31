@@ -1,116 +1,74 @@
+/*
+     날짜 : 2024/10/13 (일)
+     이름 : 김민희
+     내용 : 메인(index) 레이아웃 css 생성
+
+     수정이력
+      - 2025/10/30 (수) 김민희
+      : 마이페이지, gnb 메뉴, 실시간 검색어 수정 (myTool, menu-box, search-slider)
+*/
+
+/* reset: 실시간 검색어 ico 수평 설정 */
+/*img{vertical-align: middle; width: 18px; height: 40px; }*/
+
 /* header */
 #wraper{width:100%; min-width:1200px; padding-top:120px;}
 #header{width:100%; height:206px; border-bottom: 3px solid #ef2a23; transition:all 0.5s; background-color: white; position:fixed; top:0; left:0; z-index: 1000;}
 #headerIn{width:1200px; margin:0 auto; position:relative;}
-.logo a img{display: inline-block; width: 205px; font-size:50px; margin-left: 40px; line-height:1em; padding-top:30px; transition:all 0.5s;}
+.logo a img{vertical-align: top;  display: inline-block; width: 205px; height: 72px; font-size:50px; /*margin-left: 40px;*/ line-height:1em; padding-top:30px; transition:all 0.5s;}
+#headerIn > .logo > a > img.hlogo{vertical-align: top; display: inline-block; width: 205px; height: 72px; font-size:50px; /*margin-left: 40px;*/ line-height:1em; padding-top:30px; transition:all 0.5s;}
 
+/* 로그인 | 회원가입 | 고객센터 */
 .utill{position:absolute; top:10px; right:868px; width: 350px; transition:all 0.5s;}
 .utill li{float:left; margin-left:20px;}
 .utill li a{color:#555; float: left;}
 
-.gnb{position:absolute; top:60px; right:0; transition:all 0.5s;}
-.gnb li{float:left; margin-left:60px;}
-.gnb li a{font-size:18px;}
-.gnb li:hover a{color:#f30;}
-.gnb .on a{color:#f30;}
-
 /* 검색 bar */
-#headerIn .search2{
-    position: absolute;
-    top: 30px;
-    right: 31%;
-    margin-left: -175px;
-    transition: all 0.5s;
-    padding-top: 34px}
-#headerIn .search2 input{
-    width: 368px;
-    height: 44px;
-    text-indent: 13px;
-    border-radius: 34px;
-    border: 2.5px solid #ef2a23;
-    background-color: #fff;
-    text-overflow: ellipsis; /*  검색 칸 사이즈 초과시 ... 처리  */ }
-#headerIn .search2 .ico_sch img{
-    position: absolute;
-    top: 10px;
-    right: 26px;
-    padding-top: 39px;
-}
+#headerIn .search2{position: absolute; top: 30px; right: 31%; margin-left: -175px; transition: all 0.5s; padding-top: 34px}
+#headerIn .search2 input{width: 368px; height: 44px; text-indent: 13px; border-radius: 34px; border: 2.5px solid #ef2a23; background-color: #fff; text-overflow: ellipsis; /*  검색 칸 사이즈 초과시 ... 처리  */ }
+#headerIn .search2 .ico_sch img{position: absolute; top: 10px; right: 26px; padding-top: 39px;}
 
-.search-slider {
-    width: 200px; /* 슬라이더 전체 폭 조정 */
-    margin: 0 auto;
-    overflow: hidden;
-    position: relative;
-    top: -24px;
-    left: 863px;
-    height: 30px;
-}
-
-/* 각 슬라이드 아이템 스타일 */
-.searchSlider li {
-    font-size: 16px;
-    color: #333;
-    text-align: center;
-    padding: 5px 0;
-    height: 30px;
-}
-
-.search-slider .bx-wrapper {
-    border: none;
-}
-
-/* 슬라이더의 텍스트 강조 스타일 */
-.searchSlider li:nth-child(1) {
-    color: #e60023; /* 첫 번째 검색어에 강조 색상 */
-    font-weight: bold;
-}
-
-.related-search-box{
-    position: absolute;
-    top: 117px;
-    left: 415px;
-    width: 461px;
-    background-color: white;
-    min-height: 162px;
-    padding: 0 31px;
-    padding-bottom: 30px;
-    z-index: 1000;
-    display: none;
-    border: 1px solid #c1c1c1;
-    border-radius: 19px;
-    color: #484848;
-}
+/* 연관검색어 */
+.related-search-box{position: absolute; top: 117px; left: 415px; width: 461px; background-color: white;
+padding: 0 31px; padding-bottom: 30px; z-index: 1000; display: none; border: 1px solid #c1c1c1;
+    border-radius: 19px; color: #484848;}
 
 .related-search-box h4 {margin-top: 30px;}
 .related-search-box span {margin-left: 10px;min-width: 60px;display: inline-block;border:1px solid #828282; margin-top: 10px;border-radius: 5px;text-align: center; cursor: pointer;}
-.related-search-box .related-search-inp{    width: 600px;height: 44px;text-indent: 13px;border-radius: 34px;border: 2.5px solid #ef2a23;background-color: #fff;text-overflow: ellipsis;}
+.related-search-box .related-search-inp{width: 600px;height: 44px;text-indent: 13px;border-radius: 34px;border: 2.5px solid #ef2a23;background-color: #fff;text-overflow: ellipsis;}
 .related-search-box .related-search-ico{position: absolute;top: -25px;right: 90px;padding-top: 39px;}
 .related-search-box .close-related {position: absolute;right: 35px;font-size: 16px;top: 13px; cursor:pointer}
-#header .menu-box {
-    display: flex;
-    height: 10px;
-    margin-left: -2px;
-    margin-top: 20px;
-    padding: 20px 0;
-    position: relative;
-    top: 0px;
-    left: 160px;
-    width: 1200px;
-}
-#header .menu-box::before {
-    content: ""; /* 가상의 요소를 생성 */
-    display: block; /* 블록 요소로 설정 */
-    border-top: 3px solid #f2f2f2; /* 원하는 두께와 색상으로 상단 보더 추가 */
-    width: 100vw; /* 전체 화면 너비에 맞춰 설정 */
-    position: absolute; /* 절대 위치 설정 */
-    top: 0; /* 상단에 위치하도록 설정 */
-    left: 50%; /* 왼쪽에서 50% 위치 */
-    transform: translateX(-50%); /* 가상의 요소를 왼쪽으로 반만 이동 */
-}
-.menu-box span {
-    margin-right: 10px;
-}
+
+/* 마이롯데, 장바구니, 나의 찜 */
+#header .myTool {display: flex; gap: 25px; justify-content: flex-end; position: relative; top: -11px;}
+#header .myTool .img-header-link {width: 50px; height: 50px;}
+
+/* 메뉴 박스 : 출석이벤트 ~ */
+/*#header .menu-box:before {display: block; content:""; clear: both; width:100%; height: 1px; background: #f0f0f0;} !* 메뉴 박스 위에 line *!*/
+#header .menu-box .menu-box-in:before {display: block; content:""; clear: both; width:100%; height: 1px; background: #f0f0f0;}
+
+#header .menu-box .menu-box-in .gnb{position:absolute; top:162px; left:0;}
+#header .menu-box .menu-box-in .gnb li{float:left; margin-right:10px;}
+
+/* 출석이벤트 font */
+#header .menu-box .menu-box-in .gnb li a{display: inline-block; height: 40px; font-size: 1.27em; line-height: 40px;
+    margin-right: 6px; transition:all 0.3s; cursor: pointer;}
+#header .menu-box .menu-box-in .gnb li a:hover{cursor: pointer; color: #f65; font-weight: 500; transition:all 0.3s;}
+
+/* 실시간 검색어 ∨ (trending) */
+#headerIn .search-slider{position: absolute; top: 162px; right: 0; display: flex; justify-content: space-between;}
+#headerIn .search-slider .searchSlider{position: relative;}
+#headerIn .search-slider .searchSlider li{overflow: hidden;}
+#headerIn .search-slider .searchSlider li a{margin-right:10px; display: inline-block; font-size: 14px;
+    color: #333; width: 120px; line-height: 40px; overflow: hidden; box-sizing: border-box;}  /* 실시간 검색어 타이틀 */
+
+#headerIn > .search-slider > .sch_ico_down {display: block; padding-top:12px; position: relative; top:6px; right:0;} /* 실시간 검색어 ∨ icon */
+#headerIn > .search-slider > .sch_ico_down > img {display: inline-block; width: 18px; height: 18px;}
+
+#headerIn .search-slider .bx-wrapper {border: none; background: none;} /* 불필요한 line x */
+
+/* 실시간 검색어 font 강조 스타일  */
+#headerIn .search-slider .searchSlider li:nth-child(1) a{color: #e60023; /* 첫 번째 검색어 font 강조 색상 */ font-weight: bold;}
 
 /* 스크롤이 발생할 때 변경될 #header 스타일 */
 #header.fix{height:80px; background:rgba(255,255,255,0.8); box-shadow:0 1px 5px rgba(0,0,0,0.3);}
@@ -124,6 +82,7 @@
 
 #header.fix .search{top:24px;}
 #header .img-header-link {cursor: pointer}
+
 /* 메인컨텐츠 본문영역 */
 /* main */
 #main{width: 100%; height: 2000px; display: flex; justify-content: center; /* 콘텐츠를 중앙에 배치 */}
@@ -137,7 +96,7 @@
 
 #aside > .menu > ul > .dep1 > .m{position: relative; display: block; font-size: 16px; font-weight: 700; overflow: hidden!important; height: 75px; line-height: 75px; text-align: center; border:1px solid #eee; border-top: 0; border-bottom: 0; box-sizing: border-box;}
 #aside > .menu > ul > .dep1 > .m > .d1_tit{font-size: 15.5px; font-weight: 700; letter-spacing: -0.25px; }
-#aside > .menu > ul > .dep1 > .m:hover > .d1_tit{display: block; background-color: #ef2a23; color:#fff; transition:all 0.3-s;}
+#aside > .menu > ul > .dep1 > .m:hover > .d1_tit{display: block; background-color: #ef2a23; color:#fff; transition:all 0.3s;}
 #aside .menu ul .dep1 .dep2{
     display: none;
     position: relative;
@@ -160,12 +119,7 @@
 #aside .menu ul .dep1 .dep2 .dep3{}
 #aside .menu ul .dep1 .dep2 .dep3{}
 #aside .menu ul .dep1 .dep2 .dep3 li{}
-#aside .menu ul .dep1 .dep2 .dep3 li a{font-size:13px; display: block; width: 192px; color:#777; line-height: 3em;
-    &:hover {
-        color: brown;
-    }
-}
-
+#aside .menu ul .dep1 .dep2 .dep3 li a{font-size:13px; display: block; width: 192px; color:#777; line-height: 3em; &:hover {color: brown;} }
 #aside .menuBg{width:100%; height:0; overflow:hidden; background:#ff9; border-bottom:1px solid #333; position:absolute; top:100px; left:0;}
 
 /* 베스트 상품 영역 */
@@ -325,6 +279,7 @@
     opacity: 1; !important;/* show 클래스가 추가되면 불투명하게 설정 */
 }
 
+/* 메인슬라이더 영역 */
 #mainSlider{position: relative}
 #sliderPage{bottom: 20px;right: 60px;position: absolute; background: rgba(0,0,0,0.3);border-radius: 15px; padding: 5px 10px}
 #sliderPage>span{display: inline-block; font-size: 14px; color:#FFF;text-align: center}

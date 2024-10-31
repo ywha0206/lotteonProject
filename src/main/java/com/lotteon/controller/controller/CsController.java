@@ -3,16 +3,13 @@ package com.lotteon.controller.controller;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.NoticeResponseDto;
-import com.lotteon.entity.article.Faq;
 import com.lotteon.entity.article.Notice;
 import com.lotteon.entity.article.Qna;
-import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.repository.category.CategoryArticleRepository;
 import com.lotteon.service.article.FaqService;
 import com.lotteon.service.article.NoticeService;
 import com.lotteon.service.article.QnaService;
 import jakarta.servlet.http.HttpServletRequest;
-import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -123,23 +120,6 @@ public class CsController {
 
         return "pages/cs/faq/list";
     }
-
-
-
-    // 더보기 기능: 1차, 2차 카테고리별 최대 10개의 FAQ 목록을 반환
-    @GetMapping("/faqs/{cate1}/{cate2}/more")
-    @ResponseBody
-    public List<ArticleDto> getFaqsMore(@PathVariable String cate1,
-                                        @PathVariable String cate2) {
-        CategoryArticle cate1Obj = categoryArticleRepository.findByCategoryName(cate1)
-                .orElseThrow(() -> new IllegalArgumentException("해당 1차 카테고리를 찾을 수 없습니다: " + cate1));
-        CategoryArticle cate2Obj = categoryArticleRepository.findByCategoryName(cate2)
-                .orElseThrow(() -> new IllegalArgumentException("해당 2차 카테고리를 찾을 수 없습니다: " + cate2));
-
-        return faqService.getFaqsCount10(cate1Obj, cate2Obj);
-    }
-
-
 
     @GetMapping("/faq")
     public String faq(Model model) {

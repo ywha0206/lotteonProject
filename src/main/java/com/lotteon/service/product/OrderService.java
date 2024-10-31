@@ -5,6 +5,7 @@ import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
+import com.lotteon.dto.responseDto.GetDeliInfoDto;
 import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
@@ -81,6 +82,12 @@ public class OrderService {
                         .quantity(cartItem.get().getQuantity())
                         .build();
 
+            }else {
+                cartItemDto = CartItemDto.builder()
+                        .cartId(null)
+                        .id(null)
+                        .quantity(postCartSaveDto.getQuantity())
+                        .build();
             }
 
             //옵션이 있으면 옵션리스트에 담기
@@ -95,13 +102,6 @@ public class OrderService {
                 optionValue.add(option.getOptionValue3());
             }
             log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
-//
-//            Long optionId = postCartSaveDto.getOptionId();
-//            Optional<ProductOption> option = productOptionRepository.findById(optionId);
-//
-//            String option1 = option.get().getOptionValue()==null?"":option.get().getOptionValue();
-//            String option2 = option.get().getOptionValue2()==null?"":option.get().getOptionValue2();
-//            String option3 = option.get().getOptionValue3()==null?"":option.get().getOptionValue3();
 
             GetOrderDto orderDto = GetOrderDto.builder()
                                             .products(productDto)
@@ -285,14 +285,38 @@ public class OrderService {
         }
     }
 
-    public Page<GetDeliveryDto> findAllBySeller() {
-        Pageable pageable = PageRequest.of(0,10, Sort.by(Sort.Direction.DESC, "id"));
+    public Page<GetDeliveryDto> findAllBySeller(int page) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
         Page<Order> orders;
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Seller seller = auth.getUser().getSeller();
-        orders = orderRepository.findAllByOrderItems_Seller(seller,pageable);
+        orders = orderRepository.findAllByOrderItems_SellerAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,pageable);
+        Page<GetDeliveryDto> dtos = orders.map(v->v.toGetDeliveryDto());
+        return dtos;
+    }
 
+    public Page<GetDeliveryDto> findAllBySellerAndSearchType(int page, String searchType, String keyword) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Order> orders;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        if(searchType.equals("deliId")){
+            orders = orderRepository.findAllByOrderItems_SellerAndOrderItems_OrderDeliIdAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,keyword,pageable);
+        } else if (searchType.equals("orderId")){
+            orders = orderRepository.findAllByOrderItems_SellerAndIdAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,Long.parseLong(keyword),pageable);
+        } else {
+            orders = orderRepository.findAllByOrderItems_SellerAndReceiverNameAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,keyword,pageable);
+        }
+        Page<GetDeliveryDto> dtos = orders.map(v->v.toGetDeliveryDto());
+        return dtos;
+    }
 
-        return null;
+    public GetDeliInfoDto findByDeliveryId(String deliveryId) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        Optional<Order> order = orderRepository.findByOrderItems_SellerAndOrderItems_OrderDeliIdAndOrderItems_OrderDeliCompanyNotNull(seller,deliveryId);
+        System.out.println("===================");
+        System.out.println(order.get().toGetDeliInfoDto());
+        return order.get().toGetDeliInfoDto();
     }
 }

@@ -99,6 +99,6 @@ public class Product {
                 .summary(prodSummary)
                 .sell_uid(seller.getSellCompany())
                 .grade(seller.getSellGrade())
-                .build(); 
+                .build();
     }
 }

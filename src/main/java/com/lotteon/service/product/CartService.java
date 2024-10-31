@@ -82,30 +82,48 @@ public class CartService {
 
     public ResponseEntity<?> insertCartItem(PostCartDto postCartDto, Cart cart) {
 
-        long prodId = postCartDto.getProdId();
 
-        Product product = productRepository.findById(prodId).orElse(null);
-        List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
+        Product product = productRepository.findById(postCartDto.getProdId()).orElse(null);
 
-
-        Long optionId = null;
-        if(postCartDto.getOptionId()!=null){
-             optionId = postCartDto.getOptionId();
-        }else {
-
+        if(product == null) {
+            return ResponseEntity.ok().body("Product not found");
         }
 
-        CartItem existingCartItem = null;
-        for (CartItem cartItem : existingCartItems) {
-            // 3. 선택된 옵션이 동일한지 확인
-            Long findOptionId = cartItem.getOptionId();
+        //카트 아이템 조회하기
+        List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
 
-            // 선택된 옵션 리스트가 동일한지 비교
-            if (optionId == findOptionId) {
+        //카트 아이템을 돌리면서 같은 상품이 있는지 체크하기
+        CartItem existingCartItem = null;
+        for(CartItem cartItem : existingCartItems) {
+            Long cartItemOptionId = null;
+            if(cartItem.getOptionId()!=null) {
+                cartItemOptionId = cartItem.getOptionId();
+            }
+            Long cartItemProdId = cartItem.getProduct().getId();
+
+            if(cartItemOptionId.equals(postCartDto.getOptionId())
+            && cartItemProdId.equals(postCartDto.getProdId())) {
                 existingCartItem = cartItem;
                 break;
             }
         }
+
+        Long optionId = null;
+        if(postCartDto.getOptionId()!=null){
+             optionId = postCartDto.getOptionId();
+        }
+//
+//        CartItem existingCartItem1 = null;
+//        for (CartItem cartItem : existingCartItems) {
+//            // 3. 선택된 옵션이 동일한지 확인
+//            Long findOptionId = cartItem.getOptionId();
+//
+//            // 선택된 옵션 리스트가 동일한지 비교
+//            if (optionId == findOptionId) {
+//                existingCartItem1 = cartItem;
+//                break;
+//            }
+//        }
 
 
         if (existingCartItem != null) {

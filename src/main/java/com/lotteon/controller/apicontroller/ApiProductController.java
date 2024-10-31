@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,12 +78,9 @@ public class ApiProductController {
             return ResponseEntity.ok().body(response);
         }
         MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
-
         String role = auth.getUser().getMemRole();
 
-        if(role.equals("admin")){
-            response.put("status", "seller");
-        }else if(role.equals("seller")){
+        if(role.equals("admin") || role.equals("seller")){
             response.put("status", "seller");
         }else{
             ResponseEntity result = cartService.insertCart(postCartDto, session);
@@ -102,6 +100,7 @@ public class ApiProductController {
     @PostMapping("/cart/save")
     public ResponseEntity<Boolean> CartToOrder(@RequestBody List<PostCartSaveDto> selectedProducts, HttpSession session){
         log.info("선택한 카트 정보 "+selectedProducts.toString());
+
         if(selectedProducts.isEmpty()){
             return ResponseEntity.ok(false);
         }else {
@@ -110,12 +109,48 @@ public class ApiProductController {
         }
     }
 
+    @PostMapping("/order/direct")
+    public ResponseEntity<?> viewToOrder(@RequestBody PostCartSaveDto selectedProduct,
+                                               HttpSession session,
+                                               Authentication authentication){
+        log.info("선택한 카트 정보 "+selectedProduct.toString());
+        Map<String, String> response = new HashMap<>();
+        if(authentication==null){
+            log.info("비회원임!!!");
+            response.put("status", "noAuth");
+            return ResponseEntity.ok().body(response);
+        }
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+        String role = auth.getUser().getMemRole();
+
+        List<PostCartSaveDto> selectedProducts = new ArrayList<>();
+        selectedProducts.add(selectedProduct);
+
+        if(role.equals("admin") || role.equals("seller")){
+            response.put("status", "seller");
+        }else{
+            session.setAttribute("selectedProducts", selectedProducts);
+            response.put("status", "customer");
+        }
+        return ResponseEntity.ok(response);
+
+    }
 
     @PostMapping("/order")
     public ResponseEntity order(@RequestBody PostOrderDto postOrderDto, HttpSession session){
         log.info("컨트롤러에 들어왔나요?"+postOrderDto.toString());
         List<PostCartSaveDto> selectedProducts = (List<PostCartSaveDto>) session.getAttribute("selectedProducts");
-        List<Long> cartItemIds = selectedProducts.stream().map(cartItemId -> cartItemId.getCartItemId()).toList();
+
+        List<Long> cartItemIds = new ArrayList<>();
+        for(PostCartSaveDto postCartSaveDto : selectedProducts){
+            if(postCartSaveDto.getCartItemId()!=null){
+                Long cartItemId = postCartSaveDto.getCartItemId();
+                cartItemIds.add(cartItemId);
+            }
+        }
+        if(!cartItemIds.isEmpty()){
+            cartService.deleteCartItem(cartItemIds);
+        }
 
         log.info("카트 아이템 아이디 세션에 저장된 거 "+cartItemIds.toString());
         if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
@@ -130,7 +165,6 @@ public class ApiProductController {
 
         ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session);
 
-        cartService.deleteCartItem(cartItemIds);
         session.removeAttribute("selectedProducts");
         return orderItemResult;
     }
