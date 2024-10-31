@@ -1,6 +1,7 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
@@ -259,5 +260,16 @@ public class OrderService {
         }else{
             return false;
         }
+    }
+
+    public Page<GetDeliveryDto> findAllBySeller() {
+        Pageable pageable = PageRequest.of(0,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Order> orders;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        orders = orderRepository.findAllByOrderItems_Seller(seller,pageable);
+        System.out.println(orders.getContent());
+
+        return null;
     }
 }

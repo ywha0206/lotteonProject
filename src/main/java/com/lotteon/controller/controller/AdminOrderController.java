@@ -1,6 +1,7 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseAdminOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
 import com.lotteon.entity.member.Customer;
@@ -66,6 +67,9 @@ public class AdminOrderController {
     @GetMapping("/deliverys")
     public String deliverys(Model model) {
         model.addAttribute("active","deliverys");
+        Page<GetDeliveryDto> deliverys;
+        deliverys = orderService.findAllBySeller();
+
         return "pages/admin/order/delivery";
     }
 }

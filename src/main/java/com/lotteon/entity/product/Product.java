@@ -89,7 +89,7 @@ public class Product {
 
     public GetProductDto toGetProductDto() {
         return GetProductDto.builder()
-                .id(id)
+                .id(seller.getId())
                 .deli(prodDeliver)
                 .img(prodListImg)
                 .discount(prodDiscount)
@@ -97,7 +97,7 @@ public class Product {
                 .price(prodPrice)
                 .rating(prodRating)
                 .summary(prodSummary)
-                .sell_uid(seller.getMember().getMemUid())
+                .sell_uid(seller.getSellCompany())
                 .grade(seller.getSellGrade())
                 .build();
     }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class Order {
 
     @Column(name = "order_rdate")
     @CreationTimestamp
-    private Timestamp orderRdate;
+    private LocalDateTime orderRdate;
 
 
     @Column(name = "order_req" ,columnDefinition = "TEXT")

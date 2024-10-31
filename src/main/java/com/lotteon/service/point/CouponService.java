@@ -159,11 +159,17 @@ public class CouponService {
 
 
     public Long findCouponByProduct(long prodId) {
-        Product product = productRepository.findById(prodId).orElse(null);
-        Member member = product.getSeller().getMember();
+        Optional<Product> product = productRepository.findById(prodId);
+        Member member = product.get().getSeller().getMember();
         Optional<Coupon> coupon = couponRepository.findFirstByMember(member);
+        Long couponId;
+        if(coupon.isEmpty()){
+            couponId = (long)0;
+        } else {
+            couponId = coupon.get().getId();
+        }
 
-        return coupon.get().getId();
+        return couponId;
     }
 
 }
