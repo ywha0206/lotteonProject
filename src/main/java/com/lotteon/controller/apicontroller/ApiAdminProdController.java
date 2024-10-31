@@ -5,6 +5,7 @@ import com.lotteon.dto.requestDto.PostProdAllDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.GetDeliInfoDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
@@ -121,5 +122,14 @@ public class ApiAdminProdController {
         Boolean result = orderService.updateOrderDeli(postOrderDeliDto);
         log.info("컨트롤러에서 서비스 성공했는지 확인 "+result);
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/order/delinfo")
+    public ResponseEntity<?> adminOrderDeliInfo(@RequestParam String deliveryId){
+
+        GetDeliInfoDto deliInfo = orderService.findByDeliveryId(deliveryId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("info",deliInfo);
+        return ResponseEntity.ok().body(map);
     }
 }

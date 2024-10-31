@@ -27,7 +27,6 @@ import java.util.List;
 public class AdminOrderController {
 
     private final OrderService orderService;
-    private final OrderItemService orderItemService;
 
     @ModelAttribute
     public void pageIndex(Model model) {
@@ -65,11 +64,24 @@ public class AdminOrderController {
     }
 
     @GetMapping("/deliverys")
-    public String deliverys(Model model) {
+    public String deliverys(
+            Model model,
+            @RequestParam(value = "page",defaultValue = "0") int page,
+            @RequestParam(value = "searchType",defaultValue = "0") String searchType,
+            @RequestParam(value = "keyword",defaultValue = "0") String keyword
+    ) {
         model.addAttribute("active","deliverys");
         Page<GetDeliveryDto> deliverys;
-        deliverys = orderService.findAllBySeller();
-
+        if(searchType.equals("0")){
+            deliverys = orderService.findAllBySeller(page);
+        } else {
+            deliverys = orderService.findAllBySellerAndSearchType(page,searchType,keyword);
+        }
+        model.addAttribute("deliverys", deliverys);
+        model.addAttribute("page",page);
+        model.addAttribute("totalPages", deliverys.getTotalPages());
+        model.addAttribute("searchType",searchType);
+        model.addAttribute("keyword",keyword);
         return "pages/admin/order/delivery";
     }
 }
