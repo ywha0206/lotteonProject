@@ -291,7 +291,7 @@ public class OrderService {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Seller seller = auth.getUser().getSeller();
         orders = orderRepository.findAllByOrderItems_Seller(seller,pageable);
-        System.out.println(orders.getContent());
+
 
         return null;
     }

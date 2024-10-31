@@ -19,90 +19,86 @@
     <link th:href="@{/js/jquery.bxslider.min.css}" rel="stylesheet" />
     <script defer th:src="@{/js/jquery.bxslider.min.js}"></script>
 </head>
-    <body>
+<body>
     <header id="header">
         <div id="headerIn">
-            <h1 class="logo">
-                <a style="z-index: 2; position: relative; top: 33px;" th:href="@{/}"><img th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo"></a>
-            </h1>
+            <h1 class="logo"><a style="z-index: 2; position: relative; top: 33px;" th:href="@{/}">
+                <img class="hlogo" th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo">
+            </a></h1><!--.logo-->
+
             <div class="utill">
                 <ul>
-                    <li sec:authorize="!isAuthenticated()">
-                        <a th:href="@{/auth/login/view}">로그인</a>
-                    </li>
-                    <li sec:authorize="isAuthenticated()">
-                        <a th:href="@{/auth/logout}">로그아웃</a>
-                    </li>
-                    <li sec:authorize="!isAuthenticated()">
-                        <a th:href="@{/auth/join}">회원가입</a></li>
-                    <!--                     <li sec:authorize="hasRole('customer')">-->
-                    <!--                         <a th:href="@{/my/index}">마이페이지</a></li>-->
-                    <!--                      마이페이지 로그인 시 확인가능 -->
-                    <!--                    <li-->
-                    <!--                        ><a th:href="@{/prod/cart}">장바구니</a></li>-->
-                    <li
-                    ><a th:href="@{/cs/index}">고객센터</a></li>
-                    <li  sec:authorize="hasRole('admin')"
-                    ><a th:href="@{/admin/config/index}">관리자</a></li>
-                    <li  sec:authorize="hasRole('seller')"
-                    ><a th:href="@{/admin/prod/products}">판매자</a></li>
-                    <li  sec:authorize="isAuthenticated()"
-                    ><a>이상훈님 환영합니다.</a></li>
+                    <li class="login" sec:authorize="!isAuthenticated()"><a th:href="@{/auth/login/view}">로그인</a></li><!-- .login -->
+                    <li class="logout" sec:authorize="isAuthenticated()"><a th:href="@{/auth/logout}">로그아웃</a></li><!-- .logout -->
+                    <li class="join" sec:authorize="!isAuthenticated()"><a th:href="@{/auth/join}">회원가입</a></li><!-- .join -->
+                    <li class="cs"><a th:href="@{/cs/index}">고객센터</a></li><!-- .cs -->
+                    <li sec:authorize="hasRole('admin')"><a th:href="@{/admin/config/index}">관리자</a></li>
+                    <li sec:authorize="hasRole('seller')"><a th:href="@{/admin/prod/products}">판매자</a></li>
+                    <li sec:authorize="isAuthenticated()"><a>이상훈님 환영합니다.</a></li>
                 </ul>
             </div><!--.utill-->
-            <nav class="gnb">
-            </nav><!--.gnb-->
+
+            <nav class="gnb"></nav><!--.gnb-->
+
             <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search2">
                 <input autocomplete="off" onclick="openRelated()" type="text" id="search2" name="search" placeholder="어떤 상품을 찾으세요?">
-                <input type="hidden" name="related" th:value="${related}">
-                <label for="search2"></label><button style="border: none;" type="submit" class="ico_sch"><img th:src="@{/images/ico_search.png}" alt="검색하기"></button>
-            </form><!--.search-->
+                <input type="hidden" name="related" th:value="${related}"/>
+                <label for="search2"></label><!--.search2-->
+                <button style="border: none;" type="submit" class="ico_sch">
+                    <img th:src="@{/images/ico_search.png}" alt="검색하기">
+                </button><!--.ico_sch-->
+            </form><!--.search2 -->
+
             <div id="related-box" class="related-search-box">
                 <div onclick="closeRelated()" class="close-related">X</div>
                 <h4>연관검색어</h4><br>
-                <div class="related-keyword"></div>
-            </div>
-        </div><!--.headerIn-->
-        <div style="
-                display: flex;
-                gap: 25px;
-                justify-content: flex-end;
-                margin-right: 150px;
-                position: relative;
-                top: -11px;"
-        >
+                <div class="related-keyword"></div><!--.related-keyword -->
+            </div><!--#related-box .related-search-box -->
 
-            <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}" style="width: 50px; height: 50px;"></a>
-            <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}" style="width: 50px; height: 50px;"></a>
-            <a><img class="img-header-link" th:src="@{/images/header-zzim.png}" style="width: 50px; height: 50px;"></a>
-        </div>
-        <div class="menu-box">
-            <div>
-                <span style="font-size: 1.5em; margin-right: 10px;">출석이벤트</span>
-                <span style="font-size: 1.5em;">쿠폰이벤트</span>
-                <span style="font-size: 1.5em;">뭐하지</span>
-                <span style="font-size: 1.5em;">어렵다</span>
-                <span style="font-size: 1.5em;">고객센터</span>
-                <span style="font-size: 1.5em;">회사소개</span>
-                <div class="search-slider">
-                    <ul class="searchSlider">
-                        <li>실시간 검색어 1</li>
-                        <li>실시간 검색어 2</li>
-                        <li>실시간 검색어 3</li>
-                        <li>실시간 검색어 4</li>
-                        <li>실시간 검색어 5</li>
-                    </ul>
-                </div>
-                <div style="position: relative; top: -72px; left: 1162px; padding-top: 20px; width: 0;">
-                    <img th:src="@{/images/icon_search_down.svg}">
-                </div>
-            </div>
-        </div>
+            <!-- 내 도구:마이롯데, 장바구니, 나의 찜 -->
+            <div class="myTool">
+                <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
+                <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"></a>
+                <a><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
+            </div><!-- .myTool -->
+
+            <!-- 메뉴 막스 -->
+            <div class="menu-box">
+                <div class="menu-box-in">
+
+                    <ul class="gnb cf">
+                        <li><a href="#">출석이벤트</a></li>
+                        <li><a href="#">쿠폰이벤트</a></li>
+                        <li><a href="#">오늘도</a></li>
+                        <li><a href="#">화이팅</a></li>
+                        <li><a href="#">로떼온</a></li>
+                        <li><a href="#">2조!!!</a></li>
+                    </ul><!-- .gnb -->
+
+                    <!-- 실시간 검색어 start -->
+                    <div class="search-slider">
+                        <ul class="searchSlider">
+                            <li><a href="#">실시간 검색어 1</a></li>
+                            <li><a href="#">실시간 검색어 2</a></li>
+                            <li><a href="#">실시간 검색어 3</a></li>
+                            <li><a href="#">실시간 검색어 4</a></li>
+                            <li><a href="#">실시간 검색어 5</a></li>
+                        </ul><!-- .searchSlider -->
+                        <div class="sch_ico_down">
+                            <img th:src="@{/images/icon_search_down.svg}" alt="실시간검색어ico(∨)">
+                        </div>
+                    </div><!-- .search-slider -->
+
+                </div><!-- .menu-box-in-->
+            </div><!-- .menu-box -->
+        </div><!--.headerIn-->
     </header><!--#header-->
 </body>
 
 <script>
+
     let timer;
+
     $(document).ready(function(){
         $('.searchSlider').bxSlider({
             mode: 'vertical',    // 세로로 슬라이드 이동
@@ -113,6 +109,7 @@
             pager: false,        // 하단 페이저 제거
             autoHover: true      // 마우스 호버 시 일시 정지
         });
+
     });
 
     function openRelated(){

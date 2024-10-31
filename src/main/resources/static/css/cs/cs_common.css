@@ -38,3 +38,19 @@ section>ul>li>a .content{white-space : nowrap; overflow : hidden; text-overflow:
 .btn_list{display: block; margin: 0 auto;} /* 위쪽 여백 간격은 해당 html에만 적용되는 css파일에 .btn_list{margin-top: 원하는 값;} */
 .btn_gray{width: 100px; height: 40px; background-color: #BFBFBF; border: none; color: #fff;}
 .btn_blue{width: 100px; height: 40px; background-color: #8EB4E3; border: none; color: #fff;}
+
+
+.q_nick {
+    margin-left: 10px; /* 아이디와 제목 사이의 여백을 조절 */
+    font-size: 0.9em; /* 아이디를 작게 표시해도 됨 */
+    color: gray; /* 필요한 스타일 추가 */
+    vertical-align: middle; /* 중앙에 정렬 */
+}
+
+.date {
+    margin-left: 5px; /* 날짜와 아이디 사이의 여백 */
+    font-size: 0.9em;
+    color: gray;
+}
+
+

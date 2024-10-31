@@ -101,10 +101,13 @@ public class AdminCsNoticeController {
     @GetMapping("/notice/categories/child")
     @ResponseBody
     public List<GetArticleCategoryDto> getChildCategories(@RequestParam Long parentId) {
-        return categoryArticleService.getChildCategories(parentId)
+        List<GetArticleCategoryDto> childCategories = categoryArticleService.getChildCategories(parentId)
                 .stream()
                 .map(CategoryArticle::toGetArticleCategoryDto)
                 .collect(Collectors.toList());
+
+        log.info("2차 카테고리 조회 결과: " + childCategories); // 로그로 데이터 확인
+        return childCategories;
     }
 
     // 공지사항 작성 처리

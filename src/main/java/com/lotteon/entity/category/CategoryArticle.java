@@ -44,6 +44,7 @@ public class CategoryArticle {
     @OneToMany(mappedBy = "parent")
     private List<CategoryArticle> children;
 
+    /* TODO: 이거 수정해야 할 것 같아서 남겨둬요 여기는 카테고리 아티클입니다! */
     // 공지사항 날짜 필드 추가
     @Column(name = "notice_date")
     private LocalDateTime noticeDate;

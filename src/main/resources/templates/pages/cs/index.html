@@ -70,7 +70,8 @@
                     <a href="">
                         <p class="cate" th:text="${qna.cate1.categoryName}">회원</p>
                         <p class="title" th:text="${qna.qnaTitle}">개인회원과 법인회원에 차이가 있나요?</p>
-                        <span th:text="${qna.member.memUid}" style="margin-left: 100px;" ></span>
+                        <span class="q_nick"
+                              th:text="${qna.member != null && qna.member.memUid != null ? (qna.member.memUid.length() >= 2 ? qna.member.memUid.substring(0, 2) + '**' : qna.member.memUid + '**') : 'N/A'}"></span>
                         <span class="date" th:text="${#temporals.format(qna.qnaRdate, 'yy.MM.dd')}"></span>
                     </a>
                 </li>
