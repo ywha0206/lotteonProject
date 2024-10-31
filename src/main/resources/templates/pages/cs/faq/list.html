@@ -7,48 +7,62 @@
             <aside class="cs_aside">
                 <h3 class="aside_title">자주묻는질문</h3>
                 <ul class="aside_cate">
-                    <li class="cate_list"><a href="#">회원</a></li>
-                    <li class="cate_list"><a href="#">쿠폰/이벤트</a></li>
-                    <li class="cate_list"><a href="#">주문/결제</a></li>
-                    <li class="cate_list"><a href="#">배송</a></li>
-                    <li class="cate_list"><a href="#">취소/반품/교환</a></li>
-                    <li class="cate_list"><a href="#">여행/숙박/항공</a></li>
-                    <li class="cate_list"><a href="#">안전거래</a></li>
+                    <li class="cate_list"><a th:href="@{/cs/faqs(category='user')}" th:classappend="${selectedCate1 == 'user'} ? 'active' : ''">회원</a></li>
+                    <li class="cate_list"><a th:href="@{/cs/faqs(category='coupon')}" th:classappend="${selectedCate1 == 'coupon'} ? 'active' : ''">쿠폰/이벤트</a></li>
+                    <li class="cate_list"><a th:href="@{/cs/faqs(category='order')}" th:classappend="${selectedCate1 == 'order'} ? 'active' : ''">주문/결제</a></li>
+                    <li class="cate_list"><a th:href="@{/cs/faqs(category='delivery')}" th:classappend="${selectedCate1 == 'delivery'} ? 'active' : ''">배송</a></li>
+                    <li class="cate_list"><a th:href="@{/cs/faqs(category='cancel')}" th:classappend="${selectedCate1 == 'cancel'} ? 'active' : ''">취소/반품/교환</a></li>
+                    <li class="cate_list"><a th:href="@{/cs/faqs(category='travel')}" th:classappend="${selectedCate1 == 'travel'} ? 'active' : ''">여행/숙박/항공</a></li>
+                    <li class="cate_list"><a th:href="@{/cs/faqs(category='safe')}" th:classappend="${selectedCate1 == 'safe'} ? 'active' : ''">안전거래</a></li>
+                </ul>
+            </aside>
                 </ul>
             </aside>
             <div id="main" style="height: auto">
                 <nav class="cs_nav">
                     <p class="cs_nav_tit"><span>홈</span> > <span>자주묻는질문</span></p>
                 </nav>
-                <!-- TODO: 일반 CS qna 글 목록 - 2차 유형 / 제목 / 상태 / 아이디 마스킹 / 날짜 -->
+                <!-- TODO: 일반 CS FAQ 글 목록 1,2차 간단히보기 더보기 -->
                 <section class="cs_faq">
                     <div class="cate_bar">
-                        <h3 class="cate_title">회원</h3>
-                        <p class="cate_des">회원관련 자주 묻는 질문입니다.</p>
+                        <h3 class="cate_title" th:text="${selectedCate1 == 'user' ? '회원' :
+                                      selectedCate1 == 'coupon' ? '쿠폰/이벤트' :
+                                      selectedCate1 == 'order' ? '주문/결제' :
+                                      selectedCate1 == 'delivery' ? '배송' :
+                                      selectedCate1 == 'cancel' ? '취소/반품/교환' :
+                                      selectedCate1 == 'travel' ? '여행/숙박/항공' :
+                                      selectedCate1 == 'safe' ? '안전거래' : '기타'}"></h3>
+                        <p class="cate_des" th:text="${selectedCate1 == 'user' ? '회원 관련 자주 묻는 질문입니다.' :
+                                  selectedCate1 == 'coupon' ? '쿠폰/이벤트 관련 자주 묻는 질문입니다.' :
+                                  selectedCate1 == 'order' ? '주문/결제 관련 자주 묻는 질문입니다.' :
+                                  selectedCate1 == 'delivery' ? '배송 관련 자주 묻는 질문입니다.' :
+                                  selectedCate1 == 'cancel' ? '취소/반품/교환 관련 자주 묻는 질문입니다.' :
+                                  selectedCate1 == 'travel' ? '여행/숙박/항공 관련 자주 묻는 질문입니다.' :
+                                  selectedCate1 == 'safe' ? '안전거래 관련 자주 묻는 질문입니다.' : '기타 자주 묻는 질문입니다.'}">
+                        </p>
+
                     </div>
                     <div class="faq_main">
-                        <h3 class="cate_title">가입</h3>
+                        <h3 th:text="${selectedCate1}">카테고리 이름</h3>
+
                         <table class="faq_list">
-                            <tr>
-                                <td><p><span class="Q">Q.</span>개인회원과 법인회원에 차이가 있나요?</p></td>
+                            <!-- 기본 3개 노출 -->
+                            <tr th:each="faq, iterStat : ${faqList}" th:if="${iterStat.index < 3}">
+                                <td><p><span class="Q">Q.</span> <span th:text="${faq.title}">질문 제목</span></p></td>
                             </tr>
-                            <tr>
-                                <td><p><span class="Q">Q.</span>개인회원과 법인회원에 차이가 있나요?</p></td>
-                            </tr>
-                            <tr>
-                                <td><p><span class="Q">Q.</span>개인회원과 법인회원에 차이가 있나요?</p></td>
-                            </tr>
-                            <tr>
-                                <td><p><span class="Q">Q.</span>개인회원과 법인회원에 차이가 있나요?</p></td>
-                            </tr>
-                            <tr>
-                                <td><p><span class="Q">Q.</span>개인회원과 법인회원에 차이가 있나요?</p></td>
-                            </tr>
-                            <tr class="faq_simple">
-                                <td><span class="showLess">간단히 보기</span></td>
+
+                            <!-- 추가 FAQ는 "더보기" 버튼을 눌러야 노출 -->
+                            <tr th:each="faq, iterStat : ${faqList}" th:if="${iterStat.index >= 3}" class="hidden">
+                                <td><p><span class="Q">Q.</span> <span th:text="${faq.title}">질문 제목</span></p></td>
                             </tr>
                         </table>
+                        <!-- 더보기/간단히보기 버튼 -->
+                        <tr class="faq_simple">
+                            <td><span class="loadMore" onclick="toggleFaqs()">더보기</span></td>
+                        </tr>
                     </div>
+
+
                     <div class="faq_main">
                         <h3 class="cate_title">탈퇴</h3>
                         <table class="faq_list">
@@ -62,7 +76,7 @@
                                 <td><p><span class="Q">Q.</span>회원가입 후 재가입이 가능한가요?</p></td>
                             </tr>
                             <tr class="faq_simple">
-                                <td><span class="loadMore">더보기</span></td>
+                                <td><span class="loadMore" onclick="toggleFaqs()">더보기</span></td>
                             </tr>
                         </table>
                     </div>
@@ -70,3 +84,22 @@
             </div>
         </main>
     <footer th:replace="layout/main/footer.html"></footer>
+
+    <script>
+        function toggleFaqs() {
+            const hiddenFaqs = document.querySelectorAll('.faq_list .hidden');
+            const loadMoreBtn = document.querySelector('.loadMore');
+
+            hiddenFaqs.forEach(faq => {
+                faq.classList.toggle('hidden');
+            });
+
+            // 버튼 텍스트 변경
+            if (loadMoreBtn.textContent === '더보기') {
+                loadMoreBtn.textContent = '간단히보기';
+            } else {
+                loadMoreBtn.textContent = '더보기';
+            }
+        }
+
+    </script>
