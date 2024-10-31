@@ -30,4 +30,6 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Page<Point> findAllByCustomer_CustEmail(String custEmail, Pageable pageable);
 
     Page<Point> findAllByCustomer_CustHp(String custHp, Pageable pageable);
+
+    List<Point> findAllByCustomerAndPointTypeOrderByPointExpirationAsc(Customer customer, int i);
 }

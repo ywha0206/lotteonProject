@@ -1,12 +1,20 @@
 package com.lotteon.dto;
 
 import com.lotteon.entity.article.Faq;
+import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.entity.member.Member;
 import lombok.*;
 
 import java.security.Timestamp;
 import java.time.LocalDateTime;
+
+/*
+ *  이름 : 박경림
+ *  날짜 : 2024-10-29
+ *  작업내용 :  fromEntity 메서드를 오버로딩하여 추가
+ *
+ * */
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,6 +44,8 @@ public class ArticleDto {
     private LocalDateTime updateDate;  // 업데이트된 날짜 (필요 시 추가)
     private String status;       // 글 상태 (예: '작성 중', '게시 완료' 등)
 
+
+    // 오버로딩: 같은 이름(fromEntity)을 사용 인자의 엔티티 타입(Faq, Qna)에 따라 서로 다른 처리
     public static ArticleDto fromEntity(Faq faq){
         return ArticleDto.builder()
                 .id(faq.getId())
@@ -49,6 +59,23 @@ public class ArticleDto {
                 .cate2Id(faq.getCate1() != null ? faq.getCate2().getCategoryId() : null)
                 .member(faq.getMember())
                 .memId(faq.getMember()!=null ? faq.getMember().getId() : null)
+                .build();
+    }
+
+    public static ArticleDto fromEntity(Qna qna){
+        return ArticleDto.builder()
+                .id(qna.getId())
+                .title(qna.getQnaTitle())
+                .content(qna.getQnaContent())
+                .rdate(qna.getQnaRdate())
+                .views(qna.getQnaViews())
+                .cate1(qna.getCate1())
+                .cate2(qna.getCate2())
+                .cate1Id(qna.getCate1() != null ? qna.getCate1().getCategoryId() : null)
+                .cate2Id(qna.getCate1() != null ? qna.getCate2().getCategoryId() : null)
+                .member(qna.getMember())
+                .memId(qna.getMember()!=null ? qna.getMember().getId() : null)
+                .answer(qna.getQnaAnswer())
                 .build();
     }
 }

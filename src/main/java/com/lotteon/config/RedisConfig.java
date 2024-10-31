@@ -42,9 +42,14 @@ public class RedisConfig {
 public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory connectionFactory) {
     RedisTemplate<String, Object> template = new RedisTemplate<>();
     template.setConnectionFactory(connectionFactory);
+
+    // Key Serializer 설정
     template.setKeySerializer(new StringRedisSerializer());
+
+    // Hash Key Serializer 설정
     template.setHashKeySerializer(new StringRedisSerializer());
 
+    // Hash Value Serializer 설정
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
@@ -52,7 +57,10 @@ public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory con
     // GenericJackson2JsonRedisSerializer에 ObjectMapper를 적용
     GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
+    // Value Serializer 설정
     template.setValueSerializer(serializer);
+
+    // Hash Value Serializer 설정
     template.setHashValueSerializer(serializer);
 
     template.afterPropertiesSet();

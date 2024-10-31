@@ -2,7 +2,7 @@
 <link rel="stylesheet" th:href="@{/css/cs/cs_index.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
-<main>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 230px;">
     <!--    <aside class="cs_aside">-->
     <!--        <h3 class="aside_title">문의하기</h3>-->
     <!--        <ul class="aside_cate">-->
@@ -22,21 +22,14 @@
         <section class="cs_index cs_index_notice">
             <h3 class="sub_title">공지사항<a th:href="@{/cs/notices}" class="viewAll">전체보기</a></h3>
             <ul class="notice_box">
-                <li class="notice"><a href="">
-                    <p class="cate">안내</p>
-                    <p class="content">해외결제사칭 문자주의</p><span class="date">22.10.31</span>
-                </a></li>
-
-                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span
-                        class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
-                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span
-                        class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
-                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span
-                        class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
-                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span
-                        class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
-                <li class="notice"><a href="#"><span class="cate notice_cate">안내</span> <span
-                        class="content notice_content">해외결제사칭 문자주의</span> <span class="date">22.10.31</span></a></li>
+                <li class="notice" th:each="notice, iterStat : ${notices}" th:if="${iterStat.index}<5">
+                    <!-- 공지사항 ID를 URL에 포함하여 view 페이지로 이동 -->
+                    <a th:href="@{/cs/notice/view/{id}(id=${notice.id})}">
+                        <p class="cate" th:text="${notice.cate1.categoryName}">공지 카테고리</p>
+                        <p class="content" th:text="${notice.noticeTitle}">공지사항 제목</p>
+                        <span class="date" th:text="${#dates.format(notice.noticeRdate, 'yy.MM.dd')}">등록일</span>
+                    </a>
+                </li>
             </ul>
         </section>
         <section class="cs_index cs_index_fnq">
@@ -68,34 +61,19 @@
                 </a></li>
             </ul>
         </section>
+
         <section class="cs_index cs_index_qna">
             <h3 class="sub_title">문의하기<a th:href="@{/cs/qnas}" class="viewAll">전체보기</a></h3>
+            <p th:text="${#lists.size(qnas)}"></p>
             <ul class="qna_ul">
-                <li class="qna"><a href="">
-                    <p class="cate">회원</p>
-                    <p class="content">개인회원과 법인회원에 차이가 있나요?</p>
-                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
-                </a></li>
-                <li class="qna"><a href="">
-                    <p class="cate">쿠폰/이벤트</p>
-                    <p class="content">스마일 포인트는 어디에 사용하나요?</p>
-                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
-                </a></li>
-                <li class="qna"><a href="">
-                    <p class="cate">배송</p>
-                    <p class="content">주문한 상품은 언제 배송되나요?</p>
-                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
-                </a></li>
-                <li class="qna"><a href="">
-                    <p class="cate">주문/결제</p>
-                    <p class="content">신용카드 결제 중 오류가 난 경우 어떻게 하나요?</p>
-                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
-                </a></li>
-                <li class="qna"><a href="">
-                    <p class="cate">취소/반품/교환</p>
-                    <p class="content">주문을 취소하고 싶어요</p>
-                    <span class="nick">chhak****</span><span class="date">22.10.31</span>
-                </a></li>
+                <li th:each="qna : ${qnas}" class="qna">
+                    <a href="">
+                        <p class="cate" th:text="${qna.cate1.categoryName}">회원</p>
+                        <p class="title" th:text="${qna.qnaTitle}">개인회원과 법인회원에 차이가 있나요?</p>
+                        <span th:text="${qna.member.memUid}" style="margin-left: 100px;" ></span>
+                        <span class="date" th:text="${#temporals.format(qna.qnaRdate, 'yy.MM.dd')}"></span>
+                    </a>
+                </li>
             </ul>
             <a th:href="@{/cs/qna/write}" class="qna_link">문의글 작성 ></a>
         </section>

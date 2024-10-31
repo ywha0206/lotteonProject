@@ -32,6 +32,8 @@ public class QSeller extends EntityPathBase<Seller> {
 
     public final StringPath sellCompany = createString("sellCompany");
 
+    public final StringPath sellEmail = createString("sellEmail");
+
     public final StringPath sellFax = createString("sellFax");
 
     public final NumberPath<Integer> sellGrade = createNumber("sellGrade", Integer.class);

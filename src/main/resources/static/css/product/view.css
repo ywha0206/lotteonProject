@@ -15,7 +15,7 @@ address{font-style: normal;}
 .cf::after {content: ""; display: block; clear: both;}
 
 /* hyper link */
-a, a:link, a:visited, a:active, a:hover{text-decoration: none; color: inherit;}
+#wrap a, a:link, a:visited, a:active, a:hover{text-decoration: none; color: inherit;}
 
 /* input outline */
 input:active{outline: none;}
@@ -47,7 +47,7 @@ input:focus{outline: none;}
     border: 2px solid #D9D9D9;
 }
 
-#navi {
+#wrap #navi {
     width: 765px;
     height: auto;
     display: flex;
@@ -57,7 +57,7 @@ input:focus{outline: none;}
     margin: 0 auto;
 }
 
-.sub_tit {
+#wrap .sub_tit {
     font-size: 16px;
     font-weight: 700;
     margin-left: 3px;
@@ -120,13 +120,15 @@ input:focus{outline: none;}
 .total > span:last-child{font-weight: 700;}
 
 /* 장바구니, 구매하기 버튼 */
-.buttons {display: flex;}
-.cart, .btnorder {width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff;  font-size: 16px;}
-.cart {background-color: #bfbfbf;}
-.btnorder > a{ display: inline-block; font-size: 16px; background-color: #558ed5; width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff; line-height: 35px;}
+#wrap .buttons {display: flex;}
+#wrap .cart, .btnorder {width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff;  font-size: 16px;}
+#wrap .cart {background-color: #bfbfbf;}
+#wrap .btnorder > a{ display: inline-block; font-size: 16px; background-color: #558ed5; width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff; line-height: 35px;}
+
+.view_banner { width: auto; height: auto; margin: 0 auto;}
 
 /* 상품 디테일 이미지 */
-.sub_tit2, .sub_tit3, .sub_tit4{
+#wrap .sub_tit2, .sub_tit3, .sub_tit4{
     font-size: 16px;
     font-weight: 700;
     margin-left: 3px;
@@ -162,7 +164,7 @@ input:focus{outline: none;}
 }
 .page > a{color: #595959;}
 
-button {
+#wrap button {
     background-color: #ffffff;
     border: 0.5px solid #bfbfbf;
     width: 30px;

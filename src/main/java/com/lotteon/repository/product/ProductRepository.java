@@ -13,6 +13,31 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
-    public Page<Product> findAllBySellId(Pageable pageable, Long sellId);
     List<Product> findAllByIdIn(List<Long> ids);
+
+    Page<Product> findAllByProdNameContainingOrderByProdViewsDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByProdNameContainingOrderByProdOrderCntDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByOrderByProdOrderCntDesc(Pageable pageable);
+
+    Page<Product> findAllByProdNameContainingOrderByProdPriceDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByProdNameContainingOrderByProdPriceAsc(String search, Pageable pageable);
+
+    Page<Product> findAllByProdNameContainingOrderByProdRatingDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByProdNameContainingOrderByProdReviewCntDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByProdNameContainingOrderByProdRdateDesc(String search, Pageable pageable);
+
+    Page<Product> findAllByOrderByProdRdateDesc(Pageable pageable);
+
+    Page<Product> findAllByOrderByProdReviewCntDesc(Pageable pageable);
+
+    Page<Product> findAllByOrderByProdRatingDesc(Pageable pageable);
+
+    Page<Product> findAllByOrderByProdPriceAsc(Pageable pageable);
+
+    Page<Product> findAllByOrderByProdPriceDesc(Pageable pageable);
 }

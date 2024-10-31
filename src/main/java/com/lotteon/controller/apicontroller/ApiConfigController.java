@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetBannerDTO;
+import com.lotteon.dto.responseDto.GetConfigDTO;
+import com.lotteon.dto.responseDto.GetConfigListDTO;
 import com.lotteon.entity.config.*;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.service.config.*;
@@ -61,9 +63,9 @@ public class ApiConfigController {
         }
     }
 
-    @PatchMapping("/banner/{id}/{state}")
-    public ResponseEntity<?> changeBannerState(@PathVariable("id") Long id, @PathVariable("state") Integer state) {
-        Banner banner = bannerService.updateBannerState(id, state);
+    @PatchMapping("/banner/{id}/{state}/{location}")
+    public ResponseEntity<?> changeBannerState(@PathVariable("id") Long id, @PathVariable("state") Integer state,@PathVariable("location") int location) {
+        Banner banner = bannerService.updateBannerState(id, state, location);
         return ResponseEntity.ok().body(banner);
     }
 
@@ -140,4 +142,23 @@ public class ApiConfigController {
         Terms terms = termsService.modifyTerms(postDTO);
         return ResponseEntity.ok().body(terms);
     }
+    @GetMapping("/list")
+    public ResponseEntity<?> viewList() {
+        List<GetConfigListDTO> configList = configService.getRecentConfigs();
+        return ResponseEntity.ok().body(configList);
+    }
+    @GetMapping("/pop/{no}")
+    public ResponseEntity<?> viewList(@PathVariable int no) {
+        GetConfigDTO config = configService.getConfigByIndex(no);
+        log.info(config.toString());
+        return ResponseEntity.ok().body(config);
+    }
+    @PatchMapping("/use/{id}/{no}")
+    public ResponseEntity<?> changeUsingConfig(@PathVariable Long id,@PathVariable int no){
+        Boolean success = configService.changeUsingConfig(id, no);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        return ResponseEntity.ok(response);
+    }
+
 }

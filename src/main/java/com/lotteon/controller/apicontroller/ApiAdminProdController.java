@@ -1,20 +1,24 @@
 package com.lotteon.controller.apicontroller;
 
-import ch.qos.logback.core.model.Model;
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostProdAllDTO;
-import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
+import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.product.OrderItemService;
+import com.lotteon.service.product.OrderService;
 import com.lotteon.service.product.ProductService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,16 +31,22 @@ public class ApiAdminProdController {
 
     private final ProductService productService;
     private final CategoryProductService categoryProductService;
+    private final OrderItemService orderItemService;
+    private final OrderService orderService;
 
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
 
-        log.info("124443" + postProdAllDTO.getPostProdDetailDTO());
         log.info("134443" + postProdAllDTO.getPostProductDTO());
-
-        Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO());
+        LocalDateTime localDateTime = postProdAllDTO.getPostProdDetailDTO().getMDate1().atStartOfDay();
+        Timestamp timestamp = Timestamp.valueOf(localDateTime);
+        postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
+        log.info("124443" + postProdAllDTO.getPostProdDetailDTO());
+        Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
         postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
-
+        postProdAllDTO.getPostProdDetailDTO().setProductId(result.getId());
+        log.info("323232323232323"+postProdAllDTO.getPostProdDetailDTO().getDescription());
+        productService.insertProdDetail(postProdAllDTO.getPostProdDetailDTO());
         categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
 
         Map<String, Object> response = new HashMap<>();
@@ -84,6 +94,27 @@ public class ApiAdminProdController {
         response.put("success", true);
         return ResponseEntity.ok(response);
 
+    }
+
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<?> adminOrderDetail(@PathVariable Long orderId, Authentication authentication) {
+
+        MyUserDetails auth2  =(MyUserDetails) authentication.getPrincipal();
+        log.info("컨트롤러에서 어드민인지 셀러인지 확인 "+auth2.getUser().getMemRole());
+        ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
+
+        if(responseOrderDto==null ){
+            return ResponseEntity.ok().body(false);
         }
 
+        return ResponseEntity.ok().body(responseOrderDto);
+    }
+
+    @PostMapping("/order/delivery")
+    public ResponseEntity<?> adminOrderDeli(@RequestBody PostOrderDeliDto postOrderDeliDto){
+        log.info("배송정보 업데이트 컨트롤러 확인 "+postOrderDeliDto.toString());
+        Boolean result = orderService.updateOrderDeli(postOrderDeliDto);
+        log.info("컨트롤러에서 서비스 성공했는지 확인 "+result);
+        return ResponseEntity.ok().body(result);
+    }
 }

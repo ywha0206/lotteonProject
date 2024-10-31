@@ -1,14 +1,12 @@
 package com.lotteon.controller.controller;
 
-import com.lotteon.dto.requestDto.PostCartDto;
-import com.lotteon.dto.requestDto.PostCartSaveDto;
-import com.lotteon.dto.responseDto.GetCartDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
+import com.lotteon.dto.responseDto.cartOrder.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
-import com.lotteon.dto.responseDto.GetOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.GetCouponDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
-import com.lotteon.entity.product.Cart;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.CustomerCouponService;
@@ -19,12 +17,9 @@ import com.lotteon.service.product.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -54,30 +49,6 @@ public class CartOrderController {
 
         model.addAttribute("category1", category1);
         return "pages/product/cart";
-    }
-
-    @PostMapping("/cart")
-    public String cart(PostCartDto postCartDto, Model model, HttpSession session) {
-
-        ResponseEntity result = cartService.insertCart(postCartDto, session);
-        log.info(result.getBody());
-
-        if(result.getStatusCode() == HttpStatus.UNAUTHORIZED){
-            return "redirect:/prod/cart";
-        }
-
-
-        Cart cart = (Cart) result.getBody();
-        ResponseEntity result2 = cartService.insertCartItem(postCartDto,cart);
-
-        if(result2.getBody().equals("insert")){
-            model.addAttribute(true);
-            return "redirect:/prod/cart";
-        }else {
-            model.addAttribute(false);
-            return "redirect:/prod/product";
-        }
-
     }
 
     @GetMapping("/cart/direct")
@@ -121,6 +92,7 @@ public class CartOrderController {
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
         model.addAttribute("category1", category1);
+        session.removeAttribute("orderItemIds");
         return "pages/product/complete";
     }
 }

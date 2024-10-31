@@ -16,7 +16,7 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 번호
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "mem_id")
     @ToString.Exclude
     private Member member;
@@ -41,6 +41,9 @@ public class Seller {
 
     @Column(name = "sell_fax")
     private String sellFax; // 팩스번호
+
+    @Column(name = "sell_email")
+    private String sellEmail;
 
     @Column(name = "sell_addr")
     private String sellAddr; // 판매자 주소

@@ -2,11 +2,11 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <script th:src="@{/js/main.js}"></script>
-<main style="margin-top: 140px; gap: 0">
+<main style="margin-top: 230px; gap: 0">
     <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
     <div id="wrap">
         <!-- .aside -->
-        <main id="main" style="height: auto;">
+        <div id="main" style="height: auto;">
             <nav id="navi" style="width: 810px">
                 <h2 class="sub_tit">상품검색결과</h2>
                 <p class="location">
@@ -18,34 +18,44 @@
             <table class="tb_search">
                 <tr>
                     <th>
-                        <span style="color: #c00000;">셔츠</span>
+                        <span th:if="${search != '0'}" style="color: #c00000;" th:text="${search}">셔츠</span>
+                        <span th:if="${search == '0'}" style="color: #c00000;">전체 판매상품</span>
                         <span>검색결과</span>
                         <span>&#40;총 :</span>
-                        <span style="color: #c00000;"> 20 </span>
+                        <span th:text="${totalCnt}" style="color: #c00000;"> 20 </span>
                         <span>건&#41;</span>
                     </th>
                 </tr>
                 <tr>
                     <td>
-                        <input type="text" class="search">
-                        <button class="btn_search"><a href="#">검색</a></button>
-                        <input type="checkbox">상품명
-                        <input type="checkbox">설명
-                        <input type="checkbox">가격
-                        <input type="number">
+                        <form>
+                            <input th:if="${keyword != '0'}" type="text" th:value="${keyword}" name="keyword" class="search">
+                            <input th:if="${keyword == '0'}" type="text" value="" name="keyword" class="search">
+                            <input type="hidden" th:value="${searchType}" name="searchType" class="searchType">
+                            <input type="hidden" th:value="${min}" id="min" name="min">
+                            <input type="hidden" th:value="${max}" id="max" name="max">
+                            <input type="hidden" name="search" th:value="${search}">
+                            <input type="hidden" name="page" th:value="${page}">
+                            <input type="hidden" name="sortBy" th:value="${sortBy}">
+                            <button type="submit" class="btn_search">검색</button>
+                        </form>
+                        <input onchange="updateSearchType(event, '판매자')" type="radio" name="additional">판매자
+                        <input onchange="updateSearchType(event, '설명')" type="radio" name="additional">설명
+<!--                        <input onchange="updateSearchType(event, '카테고리')" type="checkbox">카테고리-->
+                        <input th:value="${min}" oninput="updatePriceRange()" type="number" id="minPrice">
                         <span>&#126;</span>
-                        <input type="number">
+                        <input th:value="${max}" oninput="updatePriceRange()" type="number" id="maxPrice">
                     </td>
                 </tr>
             </table> <!-- .tb_search-->
             <div class="tab">
                 <ul class="array">
-                    <li><a href="#">판매많은순</a></li>
-                    <li><a href="#">낮은가격순</a></li>
-                    <li><a href="#">높은가격순</a></li>
-                    <li><a href="#">평점높은순</a></li>
-                    <li><a href="#">후기많은순</a></li>
-                    <li><a href="#">최근등록순</a></li>
+                    <li><a th:href="@{/prod/products/search(page=0,min=${min},max=${max},search=${search},sortby='order',searchType=${searchType}, keyword=${keyword})}">판매많은순</a></li>
+                    <li><a th:href="@{/prod/products/search(page=0,min=${min},max=${max},search=${search},sortby='asc',searchType=${searchType}, keyword=${keyword})}">낮은가격순</a></li>
+                    <li><a th:href="@{/prod/products/search(page=0,min=${min},max=${max},search=${search},sortby='desc',searchType=${searchType}, keyword=${keyword})}">높은가격순</a></li>
+                    <li><a th:href="@{/prod/products/search(page=0,min=${min},max=${max},search=${search},sortby='rating',searchType=${searchType}, keyword=${keyword})}">평점높은순</a></li>
+                    <li><a th:href="@{/prod/products/search(page=0,min=${min},max=${max},search=${search},sortby='review',searchType=${searchType}, keyword=${keyword})}">후기많은순</a></li>
+                    <li><a th:href="@{/prod/products/search(page=0,min=${min},max=${max},search=${search},sortby='rdate',searchType=${searchType}, keyword=${keyword})}">최근등록순</a></li>
                 </ul><!-- .array -->
             </div><!-- .tab -->
             <table class="tb1">
@@ -55,80 +65,143 @@
                     <col style="width: 20%;">
                     <col style="width: 20%;">
                 </colgroup>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
+                <tr class="table-tr" th:each="product : ${products}">
+                    <td><img style="width: 138px; height:110px;" th:src="'/file/' + ${product.img}" alt="상품 이미지"></td>
                     <td>
-                        <span style="font-size: 20px; font-weight: 700;">상품명</span> <br>
-                        <span style="font-size: 16px;">간단한 상품 설명</span>
+                        <span th:data-id="${product.id}" onclick="getProduct(event)" th:text="${product.title}" style="font-size: 20px; font-weight: 700; cursor: pointer">상품명</span> <br>
+                        <span th:data-id="${product.id}" onclick="getProduct(event)" th:text="${product.summary}" style="font-size: 16px;  cursor: pointer">간단한 상품 설명</span>
                     </td>
                     <td>
-                        <strong style="font-size: 20px;">27,000원</strong> <br>
-                        <del style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
-                        <span style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
-                        <span style="font-size: 16px;">배송비 2,500</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
+                        <strong class="realPrice" style="font-size: 20px;">27,000원</strong> <br>
+                        <del class="originalPrice" th:text="${product.price.intValue()} + '원'" style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
+                        <span class="discountRate" th:text="${product.discount.intValue()} + '%'" style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
+                        <span th:text="${product.deli} + '원'" style="font-size: 16px;">배송비 2,500</span>
+                        <div th:if="${product.deli == 0}" style="border: 1px solid #8cb3e3; width: 85px; text-align: center; color: #17365D; background-color: #dae5f1">무료배송</div>
                     </td>
                     <td>
-                        <img src="https://via.placeholder.com/19x19">
-                        <span style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
+                        <span th:text="${product.sell_uid}" style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
                         <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span style="font-size: 14px;">상품평</span>
-                        <img src="https://via.placeholder.com/56x17">
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
-                    <td>
-                        <span style="font-size: 20px; font-weight: 700;">상품명</span> <br>
-                        <span style="font-size: 16px;">간단한 상품 설명</span>
-                    </td>
-                    <td>
-                        <strong style="font-size: 20px;">27,000원</strong> <br>
-                        <del style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
-                        <span style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
-                        <span style="font-size: 16px;">배송비 2,500</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
-                    </td>
-                    <td>
-                        <img src="https://via.placeholder.com/19x19">
-                        <span style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span style="font-size: 14px;">상품평</span>
-                        <img src="https://via.placeholder.com/56x17">
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
-                    <td>
-                        <span style="font-size: 20px; font-weight: 700;">상품명</span> <br>
-                        <span style="font-size: 16px;">간단한 상품 설명</span>
-                    </td>
-                    <td>
-                        <strong style="font-size: 20px;">27,000원</strong> <br>
-                        <del style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
-                        <span style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
-                        <span style="font-size: 16px;">배송비 2,500</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
-                    </td>
-                    <td>
-                        <img src="https://via.placeholder.com/19x19">
-                        <span style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span style="font-size: 14px;">상품평</span>
-                        <img src="https://via.placeholder.com/56x17">
+                        <span th:if="${product.rating >= 10 && product.rating <20}" style="font-size: 14px;">
+                            <img style="width: 76px; height: 17px;" th:src="@{/images/star1.png}">
+                        </span>
+                            <span th:if="${product.rating >= 20 && product.rating <30}" style="font-size: 14px;">
+                            <img style="width: 76px; height: 17px;" th:src="@{/images/star2.png}">
+                        </span>
+                            <span th:if="${product.rating >= 30 && product.rating <40}" style="font-size: 14px;">
+                            <img style="width: 76px; height: 17px;" th:src="@{/images/star3.png}">
+                        </span>
+                            <span th:if="${product.rating >= 40 && product.rating <50}" style="font-size: 14px;">
+                            <img style="width: 76px; height: 17px;" th:src="@{/images/star4.png}">
+                        </span>
+                            <span th:if="${product.rating >= 50}" style="font-size: 14px;">
+                            <img style="width: 76px; height: 17px;" th:src="@{/images/star5.png}">
+                        </span>
+                            <span th:if="${product.rating  < 10}" style="font-size: 14px;">
+                            <img style="width: 76px; height: 17px;" th:src="@{/images/star1.png}">
+                        </span>
                     </td>
                 </tr>
             </table> <!-- tb1 -->
             <div class="page">
-                <a href="#">&lt; 이전</a>
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
-                <a href="#">다음 &gt;</a>
-            </div> <!-- page -->
+                <a class="none" th:href="@{/prod/products/search(page=0,related=${related},min=${min},max=${max},search=${search},sortby=${sortBy},searchType=${searchType}, keyword=${keyword})}"><<</a>
+                <a class="none" th:href="@{/prod/products/search(page=${page - 2},related=${related},min=${min},max=${max},search=${search},sortby=${sortBy}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${page - 1},related=${related},min=${min},max=${max},search=${search},sortby=${sortBy}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
+                <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${page + 1},related=${related},min=${min},max=${max},search=${search},sortby=${sortBy}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${page + 2},related=${related},min=${min},max=${max},search=${search},sortby=${sortBy}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                <a class="none" th:href="@{/prod/products/search(page=${totalPages - 1},related=${related},min=${min},max=${max},search=${search},sortby=${sortBy}, searchType=${searchType}, keyword=${keyword})}" >>></a>
+            </div>
         </div> <!-- #main-->
     </div><!-- #wrap -->
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 각 tr 요소를 반복하면서 가격 업데이트
+        const trs = document.querySelectorAll('.table-tr');
+
+        trs.forEach(tr => {
+            const originalPriceEl = tr.querySelector(".originalPrice"); // 기존 가격 요소 선택자 수정
+            const discountEl = tr.querySelector(".discountRate"); // 할인율 요소 선택자 수정
+            const realPriceEl = tr.querySelector(".realPrice"); // 최종 가격 요소
+
+            // originalPrice와 discountRate가 존재하는 경우에만 실행
+            if (originalPriceEl && discountEl && realPriceEl) {
+                // 가격과 할인율을 숫자로 변환
+                const originalPrice = parseInt(originalPriceEl.innerText.replace(/[^0-9]/g, ""), 10);
+                const discountRate = parseInt(discountEl.innerText.replace(/[^0-9]/g, ""), 10);
+
+                // 할인 적용된 가격 계산
+                const discountedPrice = originalPrice * (1 - discountRate / 100);
+
+                // 계산된 가격을 realPrice 요소에 표시
+                realPriceEl.innerText = discountedPrice.toLocaleString() + "원";
+            }
+        });
+    });
+    // searchType을 업데이트하는 함수
+    function updateSearchType(event, type) {
+        const searchTypeInput = document.querySelector('.searchType');
+        let searchTypeValue = searchTypeInput.value.split('/');
+
+        if (event.target.type === 'radio') {
+            // 라디오 버튼 선택 시
+            // 선택된 라디오 버튼의 값을 추가하고 나머지는 제거
+            searchTypeValue = searchTypeValue.filter(item => !item.includes("판매자") && !item.includes("설명")); // 라디오 버튼의 특정 값만 제거
+            searchTypeValue.push(type); // 현재 선택된 라디오 버튼 추가
+        } else if (event.target.type === 'checkbox') {
+            // 체크박스 선택 시
+            if (event.target.checked) {
+                // 체크된 경우 타입 추가
+                if (!searchTypeValue.includes(type)) {
+                    searchTypeValue.push(type);
+                }
+            } else {
+                // 체크 해제 시 타입 제거
+                searchTypeValue = searchTypeValue.filter(item => item !== type);
+            }
+        }
+
+        // searchTypeValue 배열에서 빈 요소 제거 및 값 업데이트
+        searchTypeInput.value = searchTypeValue.filter(Boolean).join('/');
+    }
+
+    // 최소 및 최대 가격 업데이트 함수
+    function updatePriceRange() {
+        const minPrice = document.getElementById("minPrice").value;
+        const maxPrice = document.getElementById("maxPrice").value;
+        const searchTypeInput = document.querySelector('.searchType');
+        let searchTypeValue = searchTypeInput.value.split('/');
+
+        // 최소값 추가/제거
+        if (minPrice) {
+            document.getElementById("min").value = minPrice; // 숨겨진 input에 최소값 업데이트
+            if (!searchTypeValue.includes("최소값")) {
+                searchTypeValue.push("최소값");
+            }
+        } else {
+            document.getElementById("min").value = ""; // 숨겨진 input 최소값 비우기
+            searchTypeValue = searchTypeValue.filter(item => item !== "최소값");
+        }
+
+        // 최대값 추가/제거
+        if (maxPrice) {
+            document.getElementById("max").value = maxPrice; // 숨겨진 input에 최대값 업데이트
+            if (!searchTypeValue.includes("최대값")) {
+                searchTypeValue.push("최대값");
+            }
+        } else {
+            document.getElementById("max").value = ""; // 숨겨진 input 최대값 비우기
+            searchTypeValue = searchTypeValue.filter(item => item !== "최대값");
+        }
+
+        // searchTypeValue 배열에서 빈 요소 제거 및 값 업데이트
+        searchTypeInput.value = searchTypeValue.filter(Boolean).join('/');
+    }
+
+    function getProduct(event) {
+        console.log(event.target.dataset.id)
+        window.location.href = "/prod/product?prodId="+event.target.dataset.id
+    }
+</script>

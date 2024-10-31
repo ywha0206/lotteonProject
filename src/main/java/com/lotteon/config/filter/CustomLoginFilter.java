@@ -3,12 +3,16 @@ package com.lotteon.config.filter;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.repository.member.MemberRepository;
+import com.lotteon.service.AuthService;
+import com.lotteon.service.member.MemberService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -30,10 +34,15 @@ import java.util.Optional;
 @Component
 public class CustomLoginFilter implements AuthenticationSuccessHandler {
 
-    private final MemberRepository memberRepository;
     private final RequestCache requestCache = new HttpSessionRequestCache();
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private final SavedRequestAwareAuthenticationSuccessHandler defaultSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+    private MemberService memberService;
+
+    @Autowired
+    public CustomLoginFilter(@Lazy MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
@@ -50,8 +59,11 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
             return;
         }
         if(customer == null) {
-            redirectStrategy.sendRedirect(request, response, "/");
+            defaultSuccessHandler.onAuthenticationSuccess(request, response, authentication);
             return;
+        }
+        if(!user.getUser().getMemState().equals("sleep")){
+            memberService.updateLastLoginDate(user);
         }
 
         LocalDate today = LocalDate.now();

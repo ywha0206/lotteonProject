@@ -4,9 +4,8 @@ import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @ToString
@@ -36,19 +35,25 @@ public class Member {
     @Column(name = "mem_state")
     private String memState; // 계정 상태 (활성, 비활성) [로그인, 로그아웃]
 
+    @Column(name = "mem_last_login_date")
+    private LocalDateTime memLastLoginDate; // 최근 로그인 날짜
+
+    @Column(name = "mem_etc")
+    private String memEtc; // 기타 (회원 기타 정보입력)
+
     @Column(name = "mem_edate")
     private Timestamp memSignout; // 탈퇴일자
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Customer customer;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Seller seller;
 
     // Entity -> DTO 변환
     public GetAdminUserDTO toGetAdminUserDTO() {
         return GetAdminUserDTO.builder()
-                .id(customer.getId()) // 번호
+                .custId(customer.getId()) // 번호
                 .memUid(String.valueOf(customer.getMember().getMemUid())) // 아이디
                 .custName(customer.getCustName()) // 이름
                 .custGender(customer.getCustGender()) // 성별
@@ -60,5 +65,21 @@ public class Member {
                 .memState(String.valueOf(memState)) // 계정 상태 (4가지 - 정산, 중지, 휴면, 탈퇴)
                 .build();
 
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public void updateLastLogin(LocalDateTime today) {
+        memLastLoginDate = today;
+    }
+
+    public void updateMemberStateToSleep() {
+        this.memState = "sleep";
+    }
+
+    public void updatePassword(String encode) {
+        this.memPwd = encode;
     }
 }

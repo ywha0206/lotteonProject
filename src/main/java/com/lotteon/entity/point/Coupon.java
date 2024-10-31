@@ -129,4 +129,12 @@ public class Coupon {
     public void updateCouponBannerState(int a) {
         this.couponBannerState = a;
     }
+
+    public void updateCouponUseCnt() {
+        this.couponUseCount = couponUseCount + 1;
+    }
+
+    public void updateCouponIssueCnt() {
+        this.couponIssueCount = couponIssueCount + 1;
+    }
 }

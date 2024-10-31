@@ -179,10 +179,14 @@ public class CustomerCoupon {
                     .couponDiscountOption(realOption)
                     .couponMinPrice(coupon.getCouponMinPrice())
                     .couponDiscount(coupon.getCouponDiscount())
-                    .sellId(coupon.getMember().getId())
+                    .sellId(coupon.getMember().getSeller().getId())
                     .build();
         }
+    }
 
-
+    public void useCoupon(int a){
+        LocalDateTime now = LocalDateTime.now();
+        this.couponState = a;
+        this.couponUDate = now;
     }
 }

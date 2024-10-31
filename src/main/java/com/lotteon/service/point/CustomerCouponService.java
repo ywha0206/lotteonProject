@@ -52,7 +52,7 @@ public class CustomerCouponService {
                 .getPrincipal();
 
         Coupon coupon = couponRepository.findById(id).orElseThrow();
-
+        coupon.updateCouponIssueCnt();
 
         CustomerCoupon newCustomerCoupon = CustomerCoupon.builder()
                 .coupon(coupon)
@@ -347,7 +347,7 @@ public class CustomerCouponService {
     @Cacheable(value = "dailyCoupon", key = "'daily_' + #id + '_' + #auth.user.id + '_' + T(java.time.LocalDate).now()", cacheManager = "cacheManager")
     public String postDailyCoupon(Long id, MyUserDetails auth) {
         Coupon coupon = couponRepository.findById(id).orElseThrow();
-
+        coupon.updateCouponIssueCnt();
         CustomerCoupon newCustomerCoupon = CustomerCoupon.builder()
                 .coupon(coupon)
                 .couponState(1)
@@ -359,7 +359,7 @@ public class CustomerCouponService {
         return "쿠폰 발급 완료";
     }
 
-    public List<GetCouponDto> findByCustomerAndSeller(List<Long> prodIds) {
+    public List<GetCouponDto>   findByCustomerAndSeller(List<Long> prodIds) {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
@@ -369,11 +369,11 @@ public class CustomerCouponService {
         Set<CustomerCoupon> uniqueCoupons = new HashSet<>();
         System.out.println(sellers);
         for (Member member : sellers) {
-            List<CustomerCoupon> couponsFromMember = customerCouponRepository.findAllByCustomerAndCoupon_Member(customer, member);
+            List<CustomerCoupon> couponsFromMember = customerCouponRepository.findAllByCustomerAndCoupon_MemberAndCouponState(customer, member,1);
             uniqueCoupons.addAll(couponsFromMember);
         }
 
-        List<CustomerCoupon> adminCoupons = customerCouponRepository.findAllByCustomerAndCoupon_Member_MemRole(customer, "admin");
+        List<CustomerCoupon> adminCoupons = customerCouponRepository.findAllByCustomerAndCoupon_Member_MemRoleAndCouponState(customer, "admin",1);
         uniqueCoupons.addAll(adminCoupons);
         List<CustomerCoupon> combinedCoupons = new ArrayList<>(uniqueCoupons);
 
@@ -385,10 +385,19 @@ public class CustomerCouponService {
         List<Member> members = new ArrayList<>();
         for(Long prodId : prodIds){
             Optional<Product> product = productRepository.findById(prodId);
-            Long sellId = product.get().getSellId();
-            Member member = memberRepository.findById(sellId).orElseThrow();
-            members.add(member);
+            Seller sellId = product.get().getSeller();
+            Optional<Member> member = memberRepository.findBySeller(sellId);
+            members.add(member.get());
         }
         return members;
+    }
+
+    public void useCoupon(Long couponId) {
+        Optional<CustomerCoupon> coupon = customerCouponRepository.findById(couponId);
+        if(coupon.isEmpty()){
+            return;
+        }
+        coupon.get().useCoupon(0);
+        coupon.get().getCoupon().updateCouponUseCnt();
     }
 }

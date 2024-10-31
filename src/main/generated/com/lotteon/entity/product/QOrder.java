@@ -36,7 +36,9 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final NumberPath<Integer> orderQuantity = createNumber("orderQuantity", Integer.class);
 
-    public final DateTimePath<java.sql.Timestamp> orderRdate = createDateTime("orderRdate", java.sql.Timestamp.class);
+    public final DateTimePath<java.time.LocalDateTime> orderRdate = createDateTime("orderRdate", java.time.LocalDateTime.class);
+
+    public final StringPath orderReq = createString("orderReq");
 
     public final NumberPath<Integer> orderState = createNumber("orderState", Integer.class);
 

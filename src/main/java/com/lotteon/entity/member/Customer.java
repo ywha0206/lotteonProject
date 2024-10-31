@@ -20,7 +20,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 번호
 
-    @OneToOne(fetch = FetchType.LAZY) // customer-member: 일대일 참조 (LAZY.실제로 필요할 때까지 로드되지 않음)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // customer-member: 일대일 참조 (LAZY.실제로 필요할 때까지 로드되지 않음)
     @JoinColumn(name = "mem_id")
     @ToString.Exclude
     private Member member;
@@ -60,7 +60,7 @@ public class Customer {
 
 
 
-    @OneToOne(mappedBy = "customer")
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     @ToString.Exclude
     private AttendanceEvent attendanceEvent;
 
@@ -69,11 +69,20 @@ public class Customer {
     }
 
     // 회원 정보 수정
+    // 이름, 성별, 이메일, 휴대폰, 우편, 기본, 상세주소, 기타
     public void updateUser(GetAdminUserDTO dto){
+        Member newMember = Member.builder()
+                .memRdate(dto.getMemRdate())
+                .memLastLoginDate(dto.getMemLastLoginDate())
+                .memEtc(dto.getMemEtc())
+                .build();
+
         this.custName = dto.getCustName();
         this.custGender = dto.getCustGender();
         this.custEmail = dto.getCustEmail();
         this.custHp = dto.getCustHp();
+        this.member = newMember;
+
     }
 
 }

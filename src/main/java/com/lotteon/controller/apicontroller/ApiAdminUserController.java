@@ -39,15 +39,25 @@ public class ApiAdminUserController {
     public ResponseEntity<?> popCust(@PathVariable("id") Long id) {
         log.info("id: "+id+"에 해당하는 회원 정보");
         GetAdminUserDTO custPop = authService.popCust(id);
+        log.info("api 컨트롤러 업데이트 커스트 "+custPop);
 
         return ResponseEntity.ok().body(custPop);
     }
 
     // 2. 관리자 회원 수정
     @PutMapping("/user/{id}")
-    public ResponseEntity<GetAdminUserDTO> updateCust(@PathVariable("id") Long id, @RequestBody GetAdminUserDTO getAdminUserDTO) {
-       GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
-       return null;
+    public ResponseEntity<GetAdminUserDTO> updateCust(
+                                @PathVariable("id") Long id,
+                                @RequestBody GetAdminUserDTO getAdminUserDTO) {
+
+
+        log.info("minhee : "+id);
+        log.info("getAdminUserDTO : "+ getAdminUserDTO);
+
+        GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
+
+
+        return ResponseEntity.ok().body(updatedCust);
     }
 
 

@@ -3,10 +3,16 @@ package com.lotteon.repository.impl;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
 import com.lotteon.entity.member.QSeller;
 import com.lotteon.entity.product.QProduct;
+import com.lotteon.entity.product.QReview;
 import com.lotteon.repository.custom.ProductRepositoryCustom;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +36,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final QProduct qProduct = QProduct.product;
     private final QSeller qSeller = QSeller.seller;
+    private final QReview qReview = QReview.review;
 
 
     @Override
@@ -56,9 +63,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
+                    .orderBy(qProduct.id.desc())
                     .fetch();
 
             log.info("content : "+content);
@@ -73,10 +81,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                 .from(qProduct)
                 .join(qSeller)
-                .on(qProduct.sellId.eq(qSeller.member.id))
-                .where(qProduct.sellId.eq(sellId))
+                .on(qProduct.seller.id.eq(qSeller.member.id))
+                .where(qProduct.seller.id.eq(sellId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(qProduct.id.desc())
                 .fetch();
 
         log.info("content : "+content);
@@ -84,7 +93,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             long total = queryFactory.select(qProduct.count())
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .fetchOne();
 
             return new PageImpl<Tuple>(content, pageable, total);
@@ -118,7 +127,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         BooleanExpression expression = null;
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(qProduct.sellId.eq(sellId));
+        builder.and(qProduct.seller.id.eq(sellId));
 
         if(type.equals("상품명")){
             builder.and(qProduct.prodName.contains(keyword));
@@ -139,10 +148,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .where(expression)
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
+                    .orderBy(qProduct.id.desc())
                     .fetch();
 
             BooleanBuilder builder2 = new BooleanBuilder();
@@ -150,7 +160,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
             long total = queryFactory.select(qProduct.count())
                     .from(qProduct)
-                    .join(qSeller).on(qProduct.sellId.eq(qSeller.id))
+                    .join(qSeller).on(qProduct.seller.id.eq(qSeller.id))
                     .where(expression).fetchOne();
 
             log.info("impl total : " + total);
@@ -161,15 +171,16 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             List<Tuple> content = queryFactory.select(qProduct, qSeller.sellCompany)
                     .from(qProduct)
                     .join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id))
+                    .on(qProduct.seller.id.eq(qSeller.member.id))
                     .where(builder)
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
+                    .orderBy(qProduct.id.desc())
                     .fetch();
 
             long total = queryFactory.select(qProduct.count())
                     .from(qProduct).where(builder).join(qSeller)
-                    .on(qProduct.sellId.eq(qSeller.member.id)).fetchOne();
+                    .on(qProduct.seller.id.eq(qSeller.member.id)).fetchOne();
 
         return new PageImpl<Tuple>(content, pageable, total);
 
@@ -179,15 +190,50 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public Page<Tuple> findProductsWithSellerInfoByIds(ProductPageRequestDTO pageRequestDTO, Pageable pageable, List<Long> productIds) {
+
+        String sort = pageRequestDTO.getSort();
+        OrderSpecifier<?> orderSpecifier = null;
+
+        if (sort != null && sort.startsWith("prodSold")){
+            orderSpecifier = qProduct.prodOrderCnt.desc();
+        }else if (sort != null && sort.startsWith("prodLowPrice")) {
+            orderSpecifier =  Expressions.numberTemplate(Double.class,
+                    "{0} - ({0} * ({1} / 100.0))",
+                    qProduct.prodPrice, qProduct.prodDiscount
+            ).asc();
+        }else if (sort != null && sort.startsWith("prodHighPrice")) {
+            orderSpecifier = Expressions.numberTemplate(Double.class,
+                    "{0} - ({0} * ({1} / 100.0))",
+                    qProduct.prodPrice, qProduct.prodDiscount
+            ).desc();
+        }else if (sort != null && sort.startsWith("prodScore")) {
+            orderSpecifier = qProduct.prodRating.desc();
+        }else if (sort != null && sort.startsWith("prodReview")) {
+            orderSpecifier = new OrderSpecifier<>(
+                    Order.DESC,
+                    JPAExpressions
+                            .select(qReview.count()) // 카운트 서브쿼리
+                            .from(qReview)
+                            .where(qReview.product.id.eq(qProduct.id))
+            );
+        }else if (sort != null && sort.startsWith("prodRdate")) {
+            orderSpecifier = qProduct.prodRdate.desc();
+        }else if (sort != null && sort.startsWith("prodDiscount")){
+            orderSpecifier = qProduct.prodDiscount.desc();
+        }else {
+            orderSpecifier = qProduct.id.desc();
+        }
+
         // productIds 리스트를 사용하여 Product와 Seller 정보 가져오기
         List<Tuple> content = queryFactory
                 .select(qProduct, qSeller.sellCompany, qSeller.sellGrade) // 필요한 컬럼 선택
                 .from(qProduct)
                 .join(qSeller) // Seller 테이블과 조인
-                .on(qProduct.sellId.eq(qSeller.member.id)) // 조건: Product의 sellId와 Seller의 id가 같을 때
+                .on(qProduct.seller.id.eq(qSeller.member.id)) // 조건: Product의 sellId와 Seller의 id가 같을 때
                 .where(qProduct.id.in(productIds)) // productIds 리스트를 사용하여 필터링
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(orderSpecifier)
                 .fetch(); // 쿼리 실행
 
         long total = queryFactory.select(qProduct.count())

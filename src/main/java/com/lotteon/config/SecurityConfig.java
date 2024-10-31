@@ -36,13 +36,15 @@ public class SecurityConfig implements WebMvcConfigurer {
                 )
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasAnyRole("admin","seller")
                         .requestMatchers("/admin/config/**").hasRole("admin")
-
+                        .requestMatchers("/admin/user/**").hasRole("admin")
+                        .requestMatchers("/admin/shop/**").hasRole("admin")
+                        .requestMatchers("/admin/prod/**").hasAnyRole("admin","seller")
+                        .requestMatchers("/admin/coupon/**").hasAnyRole("admin","seller")
+                        .requestMatchers("/admin/order/**").hasAnyRole("admin","seller")
                         .requestMatchers("/admin/cs/**").hasRole("admin")
                         .requestMatchers("/my/**").hasRole("customer")
                         .requestMatchers("/event/**").hasRole("customer")
-//                        .requestMatchers(HttpMethod.GET,"prod/order/**").authenticated()
                         .requestMatchers(HttpMethod.GET,"prod/cart/**").authenticated()
                         .requestMatchers("/**","/error/**", "/file/**", "/auth/**","/cs/**", "/company/**", "/prod/**","/policy/**").permitAll()
                         .anyRequest().authenticated()
@@ -77,19 +79,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
-
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails userDetails = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("1234"))
-//                .roles("admin")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(userDetails);
-//    }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

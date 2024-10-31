@@ -24,19 +24,19 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final NumberPath<Integer> deli = createNumber("deli", Integer.class);
 
-    public final StringPath deliCompany = createString("deliCompany");
-
     public final NumberPath<Integer> discount = createNumber("discount", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QOrder order;
 
+    public final NumberPath<Integer> orderDeliCompany = createNumber("orderDeliCompany", Integer.class);
+
+    public final StringPath orderDeliId = createString("orderDeliId");
+
     public final QProduct product;
 
     public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);
-
-    public final StringPath req = createString("req");
 
     public final ListPath<OrderItemOption, QOrderItemOption> selectedOptions = this.<OrderItemOption, QOrderItemOption>createList("selectedOptions", OrderItemOption.class, QOrderItemOption.class, PathInits.DIRECT2);
 
@@ -69,7 +69,7 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
     public QOrderItem(Class<? extends OrderItem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.order = inits.isInitialized("order") ? new QOrder(forProperty("order"), inits.get("order")) : null;
-        this.product = inits.isInitialized("product") ? new QProduct(forProperty("product")) : null;
+        this.product = inits.isInitialized("product") ? new QProduct(forProperty("product"), inits.get("product")) : null;
         this.seller = inits.isInitialized("seller") ? new com.lotteon.entity.member.QSeller(forProperty("seller"), inits.get("seller")) : null;
     }
 

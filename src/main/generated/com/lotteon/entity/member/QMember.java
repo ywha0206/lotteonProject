@@ -26,6 +26,10 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath memEtc = createString("memEtc");
+
+    public final DateTimePath<java.time.LocalDateTime> memLastLoginDate = createDateTime("memLastLoginDate", java.time.LocalDateTime.class);
+
     public final StringPath memPwd = createString("memPwd");
 
     public final DateTimePath<java.sql.Timestamp> memRdate = createDateTime("memRdate", java.sql.Timestamp.class);

@@ -22,11 +22,11 @@ public class CommonController {
     private final FCsService fcsService;
     private final CopyrightService copyrightService;
 
-    @Value(value = "${spring.application.name}")
-    private String appName;
-
-    @Value(value = "${spring.application.version}")
-    private String appVersion;
+//    @Value(value = "${spring.application.name}")
+//    private String appName;
+//
+//    @Value(value = "${spring.application.version}")
+//    private String appVersion;
 
     @ModelAttribute
     public void getCommon(Model model) {
@@ -38,8 +38,8 @@ public class CommonController {
         GetCopyrightDTO copyrightDTO = copyrightService.getRecentCopyright();
 
 
-        model.addAttribute("appName", appName);
-        model.addAttribute("appVersion", appVersion);
+        model.addAttribute("appName", ConfigDTO.getConfigTitle());
+        model.addAttribute("appVersion", ConfigDTO.getConfigVersion());
 
         model.addAttribute("site", ConfigDTO);
         model.addAttribute("fLotte", fLotteDTO);
