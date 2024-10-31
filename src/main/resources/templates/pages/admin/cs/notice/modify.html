@@ -85,13 +85,13 @@
           <tr>
             <th>제목</th>
             <td>
-              <input type="text" name="noticeTitle" th:value="${notice.noticeTitle}" placeholder="제목을 입력하세요." />
+              <input type="text" name="noticeTitle" th:value="${notice.noticeTitle}" class="noticeTitle" placeholder="제목을 입력하세요." />
             </td>
           </tr>
           <tr>
             <th>내용</th>
             <td>
-              <textarea name="noticeContent" th:text="${notice.noticeContent}" placeholder="내용을 입력하세요."></textarea>
+              <textarea name="noticeContent" th:text="${notice.noticeContent}" class="noticeContent" placeholder="내용을 입력하세요."></textarea>
             </td>
           </tr>
           </tbody>
