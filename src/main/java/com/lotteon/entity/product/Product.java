@@ -97,8 +97,8 @@ public class Product {
                 .price(prodPrice)
                 .rating(prodRating)
                 .summary(prodSummary)
-                .sell_uid(seller.getMember().getMemUid())
+                .sell_uid(seller.getSellCompany())
                 .grade(seller.getSellGrade())
-                .build();
+                .build(); 
     }
 }

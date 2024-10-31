@@ -1,13 +1,13 @@
 package com.lotteon.controller.controller;
 
-import com.lotteon.dto.requestDto.GetProductDto;
-import com.lotteon.dto.requestDto.PostProductDTO;
-import com.lotteon.dto.requestDto.PostProductOptionDTO;
-import com.lotteon.dto.requestDto.ProductPageRequestDTO;
+import com.lotteon.dto.requestDto.*;
+import com.lotteon.dto.responseDto.GetCateLocationDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.product.ProductOption;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.point.CouponService;
+import com.lotteon.service.product.ProductDetailService;
 import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,17 +35,20 @@ public class ProductController {
     private final CategoryProductService categoryProductService;
     private final ProductService productService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CouponService couponService;
+    private final ProductDetailService productDetailService;
+
 
     @GetMapping("/products")
     public String products(Model model, @RequestParam(value = "cate",required = false) String cate, ProductPageRequestDTO productPageRequestDTO) {
         log.info("123123123"+cate);
 
-        List<GetCategoryDto> navigation = null;
 
         ProductPageResponseDTO<PostProductDTO> products = categoryProductService.findProductCategory(cate, productPageRequestDTO);
-
+        GetCateLocationDTO location = categoryProductService.cateLocation(Long.parseLong(cate));
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
         model.addAttribute("products", products);
+        model.addAttribute("location", location);
         model.addAttribute("category1", category1);
         model.addAttribute("cate", cate);
 
@@ -61,14 +64,18 @@ public class ProductController {
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
         List<PostProductOptionDTO> options = productService.findOption(prodId);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
-
+        Long couponId = couponService.findCouponByProduct(prodId);
+        model.addAttribute("couponId", couponId);
+        PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
         Set<String> addedOptions = new HashSet<>();
 
-        model.addAttribute("addedOptions", addedOptions);
+        GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
 
+        model.addAttribute("addedOptions", addedOptions);
+        model.addAttribute("prodDetail", prodDetail);
         model.addAttribute("options", options);
+        model.addAttribute("location", location);
         model.addAttribute("product", postProductDTO);
-        log.info("4444"+postProductDTO);
         model.addAttribute("category1", category1);
         return "pages/product/view";
     }

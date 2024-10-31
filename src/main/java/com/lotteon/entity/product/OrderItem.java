@@ -44,6 +44,7 @@ public class OrderItem {
 
     @Column(name = "order_item_state2")
     @ColumnDefault("0")
+    @Setter
     private int state2;
 
     @Column(name = "order_item_discount")
@@ -55,11 +56,15 @@ public class OrderItem {
     @Column(name = "order_item_warranty")
     private Timestamp warranty;
 
-    @Column(name = "order_item_deli_company")
-    private String deliCompany;
-
     @OneToMany(mappedBy = "orderItem")
     private List<OrderItemOption> selectedOptions;
 
+    //추가 필드
+    @Setter
+    @Column(name = "order_deli_id")
+    private String orderDeliId;
 
+    @Setter
+    @Column(name = "order_deli_company")
+    private Integer orderDeliCompany;
 }

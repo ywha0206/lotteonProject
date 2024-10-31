@@ -43,6 +43,39 @@ public class NoticeService {
         return notices.map(this::mapNoticeToResponseDto);
     }
 
+    // cate1을 기준으로 공지사항 목록 조회
+    public Page<NoticeResponseDto> getNoticesByCate1(String cate1Name, Pageable pageable) {
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(cate1Name)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다. 이름: " + cate1Name));
+
+        Page<Notice> notices = noticeRepository.findByCate1(cate1, pageable);
+        return notices.map(this::mapNoticeToResponseDto);
+    }
+
+    // cate2을 기준으로 공지사항 목록 조회 (필요한 경우)
+    public Page<NoticeResponseDto> getNoticesByCate2(String cate2Name, Pageable pageable) {
+        CategoryArticle cate2 = categoryArticleRepository.findByCategoryName(cate2Name)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다. 이름: " + cate2Name));
+
+        Page<Notice> notices = noticeRepository.findByCate2(cate2, pageable);
+        return notices.map(this::mapNoticeToResponseDto);
+    }
+
+    // cate1과 제목을 기준으로 공지사항 목록 조회
+    public Page<NoticeResponseDto> getNoticesByCate1AndTitle(String type, String title, Pageable pageable) {
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(type)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다. 이름: " + type));
+
+        Page<Notice> notices = noticeRepository.findByCate1AndNoticeTitleContaining(cate1, title, pageable);
+        return notices.map(this::mapNoticeToResponseDto);
+    }
+
+    // 제목을 기준으로 공지사항 목록 조회
+    public Page<NoticeResponseDto> getNoticesByTitle(String title, Pageable pageable) {
+        Page<Notice> notices = noticeRepository.findByNoticeTitleContaining(title, pageable);
+        return notices.map(this::mapNoticeToResponseDto);
+    }
+
     // 조회수 증가 후 공지사항 단일 조회
     public NoticeResponseDto incrementViewsAndGetNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
@@ -101,14 +134,6 @@ public class NoticeService {
         noticeRepository.delete(notice);
     }
 
-    // 공지사항 단일 조회
-    public NoticeResponseDto getNotice(Long id) {
-        Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. ID: " + id));
-
-        return mapNoticeToResponseDto(notice);
-    }
-
     // 선택된 공지사항 삭제
     public void deleteSelectedNotices(List<Long> ids) {
         List<Notice> noticesToDelete = noticeRepository.findAllById(ids);
@@ -136,9 +161,11 @@ public class NoticeService {
         return responseDto;
     }
 
-    // 전체 공지사항 목록 조회 (페이징 포함)
-    public Page<Notice> findAll(Pageable pageable) {
-        return noticeRepository.findAllByOrderByIdDesc(pageable);
-    }
+    // 공지사항 단일 조회 메서드
+    public NoticeResponseDto getNotice(Long id) {
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. ID: " + id));
 
+        return mapNoticeToResponseDto(notice);
+    }
 }

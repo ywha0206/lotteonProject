@@ -87,6 +87,22 @@ public class ApiAuthController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/check/uid")
+    public ResponseEntity<?> checkUid(@RequestParam String uid){
+        Map<String,String> map = memberService.findByUid(uid);
+
+        return ResponseEntity.ok().body(map);
+    }
+
+
+    @PostMapping("/check/email")
+    public ResponseEntity<?> checkEmail(@RequestParam String email){
+        Map<String,String> map = memberService.findByEmail(email);
+
+        return ResponseEntity.ok().body(map);
+    }
+
+
 
 
 }

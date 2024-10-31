@@ -55,7 +55,7 @@ public class AdminCouponController {
             model.addAttribute("issuer",issuer);
             model.addAttribute("searchCondition","admin");
         } else if(auth.getUser().getMemRole().equals("seller")) {
-            issuer = auth.getUser().getSeller().getSellCompany();
+            issuer = auth.getUser().getMemUid();
             model.addAttribute("issuer",issuer);
             model.addAttribute("searchCondition","seller");
         }

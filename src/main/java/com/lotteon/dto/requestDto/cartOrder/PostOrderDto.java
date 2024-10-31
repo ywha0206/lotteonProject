@@ -14,4 +14,5 @@ import java.util.List;
 public class PostOrderDto {
     private OrderDto orderDto;
     private List<OrderItemDto> orderItemDto;
+    private OrderPointAndCouponDto orderPointAndCouponDto;
 }

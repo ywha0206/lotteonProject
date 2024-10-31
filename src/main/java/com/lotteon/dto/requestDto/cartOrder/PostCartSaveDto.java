@@ -1,8 +1,6 @@
-package com.lotteon.dto.requestDto;
+package com.lotteon.dto.requestDto.cartOrder;
 
 import lombok.*;
-
-import java.util.List;
 
 @Setter
 @Getter
@@ -15,5 +13,7 @@ public class PostCartSaveDto {
     private Long cartItemId;
     private Long productId;
     private int quantity;
+    private Long optionId;
+    private double totalPrice;
 
 }

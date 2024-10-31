@@ -59,11 +59,12 @@ public class OrderItemService {
             log.info("프로덕트 조회 : "+ optProduct.get());
 
             Long sellId = optProduct.get().getSeller().getId();
-
+            Seller seller = optProduct.get().getSeller();
+            System.out.println("1번 셀러"+seller);
             log.info("셀러 아이디 가지고 왔나요? : "+sellId);
 
             Optional<Seller> optSeller = sellerRepository.findById(sellId);
-
+            System.out.println("2번 셀러"+optSeller.get());
             if(!optSeller.isPresent()){
                 return ResponseEntity.ok().body(false);
             }
@@ -138,6 +139,7 @@ public class OrderItemService {
         String role = auth.getUser().getMemRole();
         Seller seller = auth.getUser().getSeller();
         Long memId = auth.getUser().getId();
+
         log.info("셀러인지 어드민인지 확인하기 "+role+memId);
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -154,6 +156,7 @@ public class OrderItemService {
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
             ResponseOrderItemDto orderItemDto = ResponseOrderItemDto.builder()
+                                                        .orderItemId(orderItem.getId())
                                                         .prodListImg(orderItem.getProduct().getProdListImg())
                                                         .prodName(orderItem.getProduct().getProdName())
                                                         .prodId(orderItem.getProduct().getId())
@@ -162,6 +165,7 @@ public class OrderItemService {
                                                         .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
                                                         .quantity(orderItem.getQuantity())
                                                         .delivery(orderItem.getDeli())
+                                                        .orderDeliId(orderItem.getOrderDeliId()==null?"":orderItem.getOrderDeliId())
                                                         .totalPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
                                                         .build();
 

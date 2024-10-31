@@ -1,5 +1,6 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.entity.member.Customer;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,12 +43,14 @@ public class Order {
     @Column(name = "order_total")
     private int orderTotal;
 
+    @Setter
     @Column(name = "order_deli")
     private int orderDeli;
 
     @Column(name = "order_quantity")
     private int orderQuantity;
 
+    @Setter
     @Column(name = "order_state")
     @ColumnDefault("0")
     private int orderState;
@@ -67,5 +71,28 @@ public class Order {
     @ToString.Exclude
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    public GetDeliveryDto toGetDeliveryDto() {
+        String company;
+        if(orderItems.get(0).getOrderDeliCompany()==1){
+            company = "로젠택배";
+        } else if(orderItems.get(0).getOrderDeliCompany()==2){
+            company = "한신택배";
+        } else if(orderItems.get(0).getOrderDeliCompany()==3){
+            company = "우체국";
+        } else {
+            company = "대한통운";
+        }
+//        Integer price;
+//        orderItems.stream().map(v->v.)
+        return GetDeliveryDto.builder()
+                .deliveryId(orderItems.get(0).getOrderDeliId())
+                .deliCompany(company)
+                .orderItemId(id)
+                .orderItemSize(orderItems.size())
+                .orderItemState2(orderState)
+//                .orderItemTotalPrice()
+//                .prodDeli(orderDeli)
+                .build();
+    }
 
 }

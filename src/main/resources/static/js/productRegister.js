@@ -1,6 +1,8 @@
-    const productAll = new FormData();
+    let productAll = new FormData();
     let submitData = [];
+    let totalStock = 0;
     window.onload = function (){
+        let duplication = 0;
         const prodInsert = document.getElementsByClassName('submit-btn')[0];
         prodInsert.addEventListener('click', (e) => {
 
@@ -16,16 +18,18 @@
         }
 
         e.preventDefault();
-        for (const [key, value] of prodCate.entries()) {
-            productAll.append(`postProdCateMapperDTO.${key}`, value)
+        if(duplication === 0){
+            for (const [key, value] of prodCate.entries()) {
+                productAll.append(`postProdCateMapperDTO.${key}`, value)
+            }
+            for (const [key, value] of productInfo.entries()) {
+                productAll.append(`postProductDTO.${key}`, value)
+            }
+            for (const [key, value] of detail.entries()) {
+                productAll.append(`postProdDetailDTO.${key}`, value)
+            }
+            duplication = 1;
         }
-        for (const [key, value] of productInfo.entries()) {
-            productAll.append(`postProductDTO.${key}`, value)
-        }
-        for (const [key, value] of detail.entries()) {
-            productAll.append(`postProdDetailDTO.${key}`, value)
-        }
-
         for (const [key, value] of productAll.entries()) {
             console.log(key, value)
         }
@@ -57,7 +61,6 @@
         } else {
             alert('결제 정보 등록에 실패하였습니다');
         }
-
         })
             .catch(err => {
              console.log(err);
@@ -155,30 +158,35 @@
 }
 
     document.querySelectorAll('.option_inputs').forEach(v => {
-    let name = v.querySelector('.option_input_name').value;
-    let value = v.querySelector('.option_input_value').value;
-    let name2 = v.querySelector('.option_input_name2').value;
-    let value2 = v.querySelector('.option_input_value2').value;
-    let name3 = v.querySelector('.option_input_name3').value;
-    let value3 = v.querySelector('.option_input_value3').value;
-    let price = v.querySelector('.option_input_price').value;
-    let stock = v.querySelector('.option_input_stock').value;
+        let name = v.querySelector('.option_input_name').value.trim() === '' ? null : v.querySelector('.option_input_name').value.trim();
+        let value = v.querySelector('.option_input_value').value.trim() === '' ? null : v.querySelector('.option_input_value').value.trim();
+        let name2 = v.querySelector('.option_input_name2').value.trim() === '' ? null : v.querySelector('.option_input_name2').value.trim();
+        let value2 = v.querySelector('.option_input_value2').value.trim() === '' ? null : v.querySelector('.option_input_value2').value.trim();
+        let name3 = v.querySelector('.option_input_name3').value.trim() === '' ? null : v.querySelector('.option_input_name3').value.trim();
+        let value3 = v.querySelector('.option_input_value3').value.trim() === '' ? null : v.querySelector('.option_input_value3').value.trim();
+        let price = v.querySelector('.option_input_price').value.trim() === '' ? null : v.querySelector('.option_input_price').value.trim();
+        let stock = v.querySelector('.option_input_stock').value.trim() === '' ? null : v.querySelector('.option_input_stock').value.trim();
 
-    let jsonData = {
-    optionName: name,
-    optionValue: value,
-    optionName2: name2,
-    optionValue2: value2,
-    optionName3: name3,
-    optionValue3: value3,
-    additionalPrice: price,
-    stock: stock,
-    productId: null
-};
 
+        let jsonData = {
+            optionName: name,
+            optionValue: value,
+            optionName2: name2,
+            optionValue2: value2,
+            optionName3: name3,
+            optionValue3: value3,
+            additionalPrice: price,
+            stock: stock,
+            productId: null
+        };
+        totalStock += parseInt(jsonData.stock);
     submitData.push(jsonData);
 });
     console.log(submitData)
+    console.log("totalStock"+totalStock);
+    document.getElementById('prodStock').value = totalStock;
+    console.log("prodStock"+document.getElementById('prodStock').value);
+    totalStock = 0;
 }
 
     function deleteOption(event) {

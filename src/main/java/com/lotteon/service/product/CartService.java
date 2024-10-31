@@ -1,9 +1,9 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
-import com.lotteon.dto.requestDto.PostCartDto;
-import com.lotteon.dto.responseDto.CartSessionDto;
-import com.lotteon.dto.responseDto.GetCartDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartDto;
+import com.lotteon.dto.responseDto.cartOrder.GetCartDto;
+import com.lotteon.dto.responseDto.cartOrder.CartProductDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.*;
 import com.lotteon.repository.impl.CartItemOptionRepositoryImpl;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -51,11 +50,12 @@ public class CartService {
 
         // 인증 정보가 없는 경우
         if (auth == null) {
-            // responseDto를 생성해서 세션에 저장
-            CartSessionDto cartSessionDto = new CartSessionDto(postCartDto.getProdId(), postCartDto.getQuantity(), postCartDto.getOptions());
-            session.setAttribute("cartSession", cartSessionDto);  // 세션에 저장
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated. Cart saved to session.");
+        }
+
+        if(auth.getUser().getMemRole()=="seller"){
+            return ResponseEntity.status(HttpStatus.CONTINUE).body("seller");
         }
 
         Customer customer = auth.getUser().getCustomer();
@@ -83,31 +83,25 @@ public class CartService {
     public ResponseEntity<?> insertCartItem(PostCartDto postCartDto, Cart cart) {
 
         long prodId = postCartDto.getProdId();
+
         Product product = productRepository.findById(prodId).orElse(null);
-        List<ProductOption> prodOptions = product.getOptions();//프로덕트 옵션 뽑기
         List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
 
-        //프로덕트 옵션과 dto 옵션이 일치하는지 확인
-        log.info("prod Options : "+prodOptions.toString());
 
-        List<Long> dtoOptions = postCartDto.getOptions();
-        log.info("dtoOptions : "+dtoOptions.toString());
+        Long optionId = null;
+        if(postCartDto.getOptionId()!=null){
+             optionId = postCartDto.getOptionId();
+        }else {
 
-        List<Long> matchOption = postCartDto.getOptions().stream()
-                .filter(dto -> prodOptions.stream().anyMatch(prod -> Objects.equals(dto, prod.getId()))).collect(Collectors.toList());
-
-        log.info("matchOptions : "+matchOption.toString());
+        }
 
         CartItem existingCartItem = null;
         for (CartItem cartItem : existingCartItems) {
             // 3. 선택된 옵션이 동일한지 확인
-            List<CartItemOption> existingOptions = cartItem.getSelectedOptions();
-            List<Long> existingOptionIds = existingOptions.stream()
-                    .map(CartItemOption::getProdOptionId)
-                    .collect(Collectors.toList());
+            Long findOptionId = cartItem.getOptionId();
 
             // 선택된 옵션 리스트가 동일한지 비교
-            if (new HashSet<>(existingOptionIds).containsAll(matchOption) && new HashSet<>(matchOption).containsAll(existingOptionIds)) {
+            if (optionId == findOptionId) {
                 existingCartItem = cartItem;
                 break;
             }
@@ -127,17 +121,10 @@ public class CartService {
                     .product(product)
                     .quantity(postCartDto.getQuantity())
                     .totalPrice(product.getProdPrice() * postCartDto.getQuantity())
+                    .optionId(optionId)
                     .build();
 
-            List<CartItemOption> newOptions = new ArrayList<>();
-            for (Long optionId : matchOption) {
-                CartItemOption newOption = CartItemOption.builder()
-                        .cartItem(newCartItem)
-                        .prodOptionId(optionId)
-                        .build();
-                newOptions.add(newOption);
-            }
-            newCartItem.getSelectedOptions().addAll(newOptions);
+
             cartItemRepository.save(newCartItem);
 
         }
@@ -170,19 +157,29 @@ public class CartService {
         // 5. 각 카트 아이템을 DTO로 변환
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();  // 카트 아이템에 연결된 상품
-            List<Long> sellectedOptions = cartItem.getSelectedOptions().stream()
-                    .map(cartItemOption ->  cartItemOption.getProdOptionId()).toList();
+            CartProductDto cartProductDto = modelMapper.map(product, CartProductDto.class);
 
-            List<ProductOption> options = sellectedOptions.stream()
-                    .map(sellectedOption -> productOptionRepository.findById(sellectedOption).orElse(null)).toList();
+            //옵션이 있으면 옵션리스트에 담기
+            Long optionId = null;
+            List<String> optionValue = new ArrayList<>();
+            if(cartItem.getOptionId()!=null){
+                optionId = cartItem.getOptionId();
+                ProductOption option = productOptionRepository.findById(optionId).orElse(null);
+
+                optionValue.add(option.getOptionValue());
+                optionValue.add(option.getOptionValue2());
+                optionValue.add(option.getOptionValue3());
+            }
+            log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
 
             // 6. DTO로 변환
             GetCartDto getCartDto = GetCartDto.builder()
                     .cartItemId(cartItem.getId())
                     .quantity(cartItem.getQuantity())
                     .totalPrice(cartItem.getTotalPrice())
-                    .cartItemOption(options)
-                    .product(product)  // 상품 정보를 포함
+                    .optionId(optionId)
+                    .optionValue(optionValue)
+                    .cartProductDto(cartProductDto)
                     .build();
 
             // 7. DTO 리스트에 추가

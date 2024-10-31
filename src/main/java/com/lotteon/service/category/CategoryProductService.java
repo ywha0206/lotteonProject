@@ -3,10 +3,7 @@ package com.lotteon.service.category;
 import com.lotteon.dto.requestDto.PostProdCateMapperDTO;
 import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
-import com.lotteon.dto.responseDto.GetCategoryDto;
-import com.lotteon.dto.responseDto.GetProdCateDTO;
-import com.lotteon.dto.responseDto.ProductPageResponseDTO;
-import com.lotteon.dto.responseDto.TestResponseDto;
+import com.lotteon.dto.responseDto.*;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
 import com.lotteon.entity.product.Product;
@@ -193,15 +190,25 @@ public class CategoryProductService {
             product = opt.get();
         }
 
-        CategoryProductMapper categoryProductMapper = CategoryProductMapper.builder()
+        CategoryProductMapper categoryProductMapper1 = CategoryProductMapper.builder()
                 .id(postProdCateMapperDTO.getId())
-                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId()))
+                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId1()))
+                .product(product)
+                .build();
+        CategoryProductMapper categoryProductMapper2 = CategoryProductMapper.builder()
+                .id(postProdCateMapperDTO.getId())
+                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId2()))
+                .product(product)
+                .build();
+        CategoryProductMapper categoryProductMapper3 = CategoryProductMapper.builder()
+                .id(postProdCateMapperDTO.getId())
+                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId3()))
                 .product(product)
                 .build();
 
-        System.out.println("22222222222233333333"+categoryProductMapper);
-
-        categoryProdMapperRepository.save(categoryProductMapper);
+        categoryProdMapperRepository.save(categoryProductMapper1);
+        categoryProdMapperRepository.save(categoryProductMapper2);
+        categoryProdMapperRepository.save(categoryProductMapper3);
     }
 
     public ProductPageResponseDTO<PostProductDTO> findProductCategory(String cate, ProductPageRequestDTO pageRequestDTO) {
@@ -252,4 +259,35 @@ public class CategoryProductService {
 
     }
 
+    public GetCateLocationDTO cateLocation(long id){
+        CategoryProduct cateLevel1 = categoryProductRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+        CategoryProduct cateLevel2 = categoryProductRepository.findById(cateLevel1.getParent().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+        CategoryProduct cateLevel3 = categoryProductRepository.findById(cateLevel2.getParent().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+
+        return GetCateLocationDTO.builder()
+                .level1Name(cateLevel1.getCategoryName())
+                .level2Name(cateLevel2.getCategoryName())
+                .level3Name(cateLevel3.getCategoryName())
+                .build();
+
+    }
+    public GetCateLocationDTO cateLocation2(long id){
+        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+        List<CategoryProductMapper> categoryProductMapper = categoryProdMapperRepository.findAllByProduct(product);
+
+        log.info("CategoryMapper::::"+categoryProductMapper);
+
+        CategoryProductMapper cate1 = null;
+        for(CategoryProductMapper cate : categoryProductMapper){
+            cate1 = cate;
+        }
+
+        log.info("cateMaper::::"+cate1);
+
+        return  GetCateLocationDTO.builder()
+                .level1Name(cate1.getCategory().getParent().getParent().getCategoryName())
+                .level2Name(cate1.getCategory().getParent().getCategoryName())
+                .level3Name(cate1.getCategory().getCategoryName())
+                .build();
+    }
 }

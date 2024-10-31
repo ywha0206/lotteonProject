@@ -1,9 +1,11 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
-import com.lotteon.dto.requestDto.PostCartSaveDto;
+import com.lotteon.dto.requestDto.GetDeliveryDto;
+import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
-import com.lotteon.dto.responseDto.GetOrderDto;
+import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
+import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
@@ -69,20 +71,43 @@ public class OrderService {
                                             .sellId(product.get().getSeller().getId())
                                             .stock(product.get().getProdStock())
                                             .build();
+            CartItemDto cartItemDto = new CartItemDto();
+            if(postCartSaveDto.getCartItemId()!=null) {
+                Long cartItemId = postCartSaveDto.getCartItemId();
+                Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
+                 cartItemDto = CartItemDto.builder()
+                        .cartId(cartItem.get().getCart().getId())
+                        .id(cartItem.get().getId())
+                        .quantity(cartItem.get().getQuantity())
+                        .build();
 
-            Long cartItemId = postCartSaveDto.getCartItemId();
-            Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
-            CartItemDto cartItemDto = CartItemDto.builder()
-                                                .cartId(cartItem.get().getCart().getId())
-                                                .id(cartItem.get().getId())
-                                                .quantity(cartItem.get().getQuantity())
-                                                .build();
+            }
 
+            //옵션이 있으면 옵션리스트에 담기
+            Long optionId = null;
+            List<String> optionValue = new ArrayList<>();
+            if(postCartSaveDto.getOptionId()!=null){
+                optionId = postCartSaveDto.getOptionId();
+                ProductOption option = productOptionRepository.findById(optionId).orElse(null);
 
-
+                optionValue.add(option.getOptionValue());
+                optionValue.add(option.getOptionValue2());
+                optionValue.add(option.getOptionValue3());
+            }
+            log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
+//
+//            Long optionId = postCartSaveDto.getOptionId();
+//            Optional<ProductOption> option = productOptionRepository.findById(optionId);
+//
+//            String option1 = option.get().getOptionValue()==null?"":option.get().getOptionValue();
+//            String option2 = option.get().getOptionValue2()==null?"":option.get().getOptionValue2();
+//            String option3 = option.get().getOptionValue3()==null?"":option.get().getOptionValue3();
 
             GetOrderDto orderDto = GetOrderDto.builder()
                                             .products(productDto)
+                                            .quantity(postCartSaveDto.getQuantity())
+                                            .optionValue(optionValue)
+                                            .totalPrice(postCartSaveDto.getTotalPrice())
                                             .cartItems(cartItemDto)
                                             .build();
 
@@ -239,5 +264,35 @@ public class OrderService {
 
         });
         return orderDtos;
+    }
+
+    public Boolean updateOrderDeli(PostOrderDeliDto postOrderDeliDto) {
+        log.info("서비스 배송정보 업데이트 "+postOrderDeliDto.toString());
+
+        Optional<Order> optOrder= orderRepository.findById(postOrderDeliDto.getOrderId());
+
+        log.info("서비스 오더아이디로 오더 찾기 "+optOrder.toString());
+        if(optOrder.isPresent()) {
+            List<OrderItem> orderItems = optOrder.get().getOrderItems();
+            for(OrderItem orderItem : orderItems) {
+                orderItem.setState2(postOrderDeliDto.getOrderState());
+                orderItem.setOrderDeliId(postOrderDeliDto.getOrderDeliId());
+                orderItem.setOrderDeliCompany(postOrderDeliDto.getOrderDeli());
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public Page<GetDeliveryDto> findAllBySeller() {
+        Pageable pageable = PageRequest.of(0,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Order> orders;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        orders = orderRepository.findAllByOrderItems_Seller(seller,pageable);
+
+
+        return null;
     }
 }
