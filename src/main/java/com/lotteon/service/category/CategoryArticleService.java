@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -35,12 +36,15 @@ public class CategoryArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다: " + cate1Id));
     }
 
-    // 1차 또는 2차 카테고리를 가져오는 메서드
-    public List<GetArticleCategoryDto> findCategory(int type, int level) {
-        // 주어진 타입에 따라 다른 레벨의 카테고리 가져오기
-        List<CategoryArticle> articles = categoryArticleRepository.findAllByCategoryTypeAndCategoryLevel(type, level);
-        log.info("2차 카테고리 결과 "+articles);
+    // 주어진 타입과 레벨에 따라 카테고리를 가져오는 메서드
+    public List<GetArticleCategoryDto> findCategory(int categoryType, int categoryLevel) {
+        List<CategoryArticle> articles = categoryArticleRepository.findByCategoryTypeAndCategoryLevel(categoryType, categoryLevel);
+
+        log.info("조회된 카테고리 목록: " + articles);  // 조회 결과를 로그로 출력
+
         // 카테고리 목록을 DTO로 변환하여 반환
-        return articles.stream().map(CategoryArticle::toGetArticleCategoryDto).toList();
+        return articles.stream()
+                .map(CategoryArticle::toGetArticleCategoryDto)
+                .collect(Collectors.toList());
     }
 }
