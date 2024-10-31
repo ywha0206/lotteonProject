@@ -177,6 +177,7 @@ public class CartService {
                     .cartItemId(cartItem.getId())
                     .quantity(cartItem.getQuantity())
                     .totalPrice(cartItem.getTotalPrice())
+                    .optionId(optionId)
                     .optionValue(optionValue)
                     .cartProductDto(cartProductDto)
                     .build();

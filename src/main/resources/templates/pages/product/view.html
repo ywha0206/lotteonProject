@@ -507,9 +507,7 @@
         const productForm = document.querySelector('#productForm');
 
         cart.addEventListener('click', async function (e){
-            alert('asdfas');
             e.preventDefault();
-            const totalPrice1 = document.querySelector('#totalPrice').value;
             const jsonData = {
                 "prodId": productForm.prodId.value,
                 "quantity":productForm.quantity.value,
