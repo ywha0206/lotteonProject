@@ -21,12 +21,12 @@
 
         <section class="categoryProduct">
             <form class="order-search">
-                <select>
-                    <option>송장번호</option>
-                    <option>주문번호</option>
-                    <option>수령인</option>
+                <select name="searchType">
+                    <option value="deliId">송장번호</option>
+                    <option value="orderId">주문번호</option>
+                    <option value="receiverName">수령인</option>
                 </select>
-                <input type="text" placeholder="검색어입력">
+                <input name="keyword" type="text" placeholder="검색어입력">
                 <button type="submit">검색</button>
             </form>
             <table class="tb1">
@@ -42,51 +42,27 @@
                     <th>배송상태</th>
                     <th>접수일</th>
                 </tr>
-                <tr>
-                    <td onclick="openDeliveryPopup()" style="text-decoration: underline; cursor: pointer">10121111</td>
-                    <td>로젠택배</td>
-                    <td>10121122020</td>
-                    <td>김유신</td>
-                    <td>OOO</td>
-                    <td>3</td>
-                    <td>68,400</td>
-                    <td>무료</td>
-                    <td style="color: #00B050;">배송준비</td>
-                    <td>2024.10.16<br>00:00:00</td>
-                </tr>
-                <tr>
-                    <td onclick="openDeliveryPopup()" style="text-decoration: underline; cursor: pointer">10121111</td>
-                    <td>로젠택배</td>
-                    <td>10121122020</td>
-                    <td>김유신</td>
-                    <td>OOO</td>
-                    <td>3</td>
-                    <td>68,400</td>
-                    <td>무료</td>
-                    <td style="color: #00B050;">배송준비</td>
-                    <td>2024.10.16<br>00:00:00</td>
-                </tr>
-                <tr>
-                    <td onclick="openDeliveryPopup()" style="text-decoration: underline; cursor: pointer">10121111</td>
-                    <td>로젠택배</td>
-                    <td>10121122020</td>
-                    <td>김유신</td>
-                    <td>OOO</td>
-                    <td>3</td>
-                    <td>68,400</td>
-                    <td>무료</td>
-                    <td style="color: #00B050;">배송준비</td>
-                    <td>2024.10.16<br>00:00:00</td>
+                <tr th:if="${deli.deliveryId} != null" th:each="deli : ${deliverys}">
+                    <td th:data-deli="${deli.deliveryId}" th:text="${deli.deliveryId}" onclick="openDeliveryPopup(event)" style="text-decoration: underline; cursor: pointer">10121111</td>
+                    <td th:text="${deli.deliCompany}">로젠택배</td>
+                    <td th:text="${deli.orderItemId}">10121122020</td>
+                    <td th:text="${deli.receiverName}">김유신</td>
+                    <td th:text="${deli.prodName}">OOO</td>
+                    <td th:text="${deli.orderItemSize}">3</td>
+                    <td th:text="${deli.orderItemTotalPrice}">68,400</td>
+                    <td th:text="${deli.prodDeli}">무료</td>
+                    <td th:text="${deli.orderItemState2}" style="color: #00B050;">배송준비</td>
+                    <td th:text="${deli.orderRdate}">2024.10.16<br>00:00:00</td>
                 </tr>
             </table>
             <div class="page">
-                <a href="#">이전</a>
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#">다음</a>
+                <a class="none" th:href="@{/admin/order/deliverys(page=0, searchType=${searchType}, keyword=${keyword})}"><<</a>
+                <a class="none" th:href="@{/admin/order/deliverys(page=${page - 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                <a class="none" th:href="@{/admin/order/deliverys(page=${page - 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
+                <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                <a class="none" th:href="@{/admin/order/deliverys(page=${page + 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                <a class="none" th:href="@{/admin/order/deliverys(page=${page + 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                <a class="none" th:href="@{/admin/order/deliverys(page=${totalPages - 1}, searchType=${searchType}, keyword=${keyword})}" >>></a>
             </div>
         </section>
         <div class="popup"></div>
@@ -98,65 +74,76 @@
 <script>
     const popup = document.querySelector('.popup')
     const bg = document.querySelector('.popupbg')
-    function openDeliveryPopup() {
+    async function openDeliveryPopup(event) {
+        const deliveryId = event.target.dataset.deli
+        console.log(deliveryId)
+        try {
+            const resp = await axios.get("/admin/prod/order/delinfo",{
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                params : {
+                    "deliveryId" : deliveryId
+                }
+            })
+            const data = resp.data.info;
+            popup.innerHTML = `
 
-        popup.innerHTML = `
+                <div class="header">
+                    <div class="title">배송입력 <span style="color: white">1012000000</span></div>
+                    <div onclick="closeShopPopup()" class="btn">X</div>
+                </div>
+                <div style="margin: 20px; margin-bottom: 30px;">
+                    <div class="header-gubun"></div>
+                    <form class="popup_form">
+                        <table class="tb3">
+                            <tr>
+                                <th>주문번호</th>
+                                <td><input type="text" class="input1" value="${data.orderId}" readonly></td>
+                            </tr>
+                            <tr>
+                                <th>수령인</th>
+                                <td><input type="text" class="input2" value="${data.receiverName}" readonly></td>
+                            </tr>
+                            <tr>
+                                <th>우편번호</th>
+                                <td><input type="text" class="input2" value="${data.addr1}" readonly></td>
+                            </tr>
+                            <tr>
+                                <th>기본주소</th>
+                                <td><input type="text" class="input3" value="${data.addr2}" readonly></td>
+                            </tr>
+                            <tr>
+                                <th>상세주소</th>
+                                <td><input type="text" class="input3"  value="${data.addr3}" readonly></td>
+                            </tr>
+                            <tr>
+                                <th>택배사</th>
+                                <td>
+                                    <input type="text" class="input3" value="${data.company}" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>운송장번호</th>
+                                <td><input type="text" class="input3" value="${data.deliveryId}" ></td>
+                            </tr>
+                            <tr>
+                                <th>기타</th>
+                                <td><textarea placeholder="기타정보입력">${data.orderReq}</textarea></td>
+                            </tr>
+                        </table>
+                        <button onclick="closeShopPopup()" class="btn_green">닫기</button>
+                    </form>
+                </div>
+                `
 
-        <div class="header">
-            <div class="title">배송입력 <span style="color: white">1012000000</span></div>
-            <div onclick="closeShopPopup()" class="btn">X</div>
-        </div>
-        <div style="margin: 20px; margin-bottom: 30px;">
-            <div class="header-gubun"></div>
-            <form class="popup_form">
-                <table class="tb3">
-                    <tr>
-                        <th>주문번호</th>
-                        <td><input type="text" class="input1" value="1012000000" readonly></td>
-                    </tr>
-                    <tr>
-                        <th>수령인</th>
-                        <td><input type="text" class="input2" value="홍길동" readonly></td>
-                    </tr>
-                    <tr>
-                        <th>우편번호</th>
-                        <td><input type="text" class="input2" value="12345" readonly></td>
-                    </tr>
-                    <tr>
-                        <th>기본주소</th>
-                        <td><input type="text" class="input3" value="부산광역시 부산진구 부전동 123" readonly></td>
-                    </tr>
-                    <tr>
-                        <th>상세주소</th>
-                        <td><input type="text" class="input3" value="빌딩 3층 301호" readonly></td>
-                    </tr>
-                    <tr>
-                        <th>택배사</th>
-                        <td>
-                            <select>
-                                <option>택배사선택</option>
-                                <option>롯데택배</option>
-                                <option>로젠택배</option>
-                                <option>대한통운</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>운송장번호</th>
-                        <td><input type="text" class="input3"  placeholder="발급받은 택배사 송장번호 입력"></td>
-                    </tr>
-                    <tr>
-                        <th>기타</th>
-                        <td><textarea placeholder="기타정보입력"></textarea></td>
-                    </tr>
-                </table>
-                <button class="btn_green">등록하기</button>
-            </form>
-        </div>
-        `
+            popup.style.display = "block";
+            bg.style.display = "flex";
+        } catch (e) {
+            
+        }
+        
 
-        popup.style.display = "block";
-        bg.style.display = "flex";
     }
 
     function closeShopPopup() {
