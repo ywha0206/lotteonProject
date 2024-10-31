@@ -130,17 +130,17 @@ public class CouponService {
             Member member = auth.getUser();
 
             if (searchType.equals("id")) {
-                Page<Coupon> coupons = couponRepository.findAllByIdAndMemberOrderByIdDesc(Long.parseLong(keyword),member, pageable);
+                Page<Coupon> coupons = couponRepository.findAllByIdAndMember_SellerOrderByIdDesc(Long.parseLong(keyword),member.getSeller(), pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
             } else if (searchType.equals("couponName")) {
-                Page<Coupon> coupons = couponRepository.findAllByCouponNameAndMemberOrderByIdDesc(keyword,member, pageable);
+                Page<Coupon> coupons = couponRepository.findAllByCouponNameAndMember_SellerOrderByIdDesc(keyword,member.getSeller(), pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
             } else {
-                Seller seller = sellerRepository.findBySellCompany(keyword).orElseThrow(()->new NoSuchElementException("Seller with id " + keyword + " not found."));
+                Seller seller = sellerRepository.findByMember_MemUid(keyword).orElseThrow(()->new NoSuchElementException("Seller with id " + keyword + " not found."));
 
                 Member member2 = seller.getMember();
 
-                Page<Coupon> coupons = couponRepository.findAllByMemberOrderByIdDesc(member2, pageable);
+                Page<Coupon> coupons = couponRepository.findAllByMember_SellerOrderByIdDesc(member2.getSeller(), pageable);
                 dtos = coupons.map(Coupon::toGetCouponDto);
             }
         }
