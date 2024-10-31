@@ -141,12 +141,16 @@ public class ApiProductController {
         log.info("컨트롤러에 들어왔나요?"+postOrderDto.toString());
         List<PostCartSaveDto> selectedProducts = (List<PostCartSaveDto>) session.getAttribute("selectedProducts");
 
+        List<Long> cartItemIds = new ArrayList<>();
         for(PostCartSaveDto postCartSaveDto : selectedProducts){
             if(postCartSaveDto.getCartItemId()!=null){
-
+                Long cartItemId = postCartSaveDto.getCartItemId();
+                cartItemIds.add(cartItemId);
             }
         }
-        List<Long> cartItemIds = selectedProducts.stream().map(cartItemId -> cartItemId.getCartItemId()).toList();
+        if(!cartItemIds.isEmpty()){
+            cartService.deleteCartItem(cartItemIds);
+        }
 
         log.info("카트 아이템 아이디 세션에 저장된 거 "+cartItemIds.toString());
         if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
@@ -161,9 +165,6 @@ public class ApiProductController {
 
         ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session);
 
-        if(cartItemIds!=null){
-            cartService.deleteCartItem(cartItemIds);
-        }
         session.removeAttribute("selectedProducts");
         return orderItemResult;
     }
