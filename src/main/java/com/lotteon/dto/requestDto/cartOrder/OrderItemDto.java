@@ -15,4 +15,5 @@ public class OrderItemDto {
     private int totalPrice;
     private int discount;
     private int deliver;
+    private int productPrice;
 }

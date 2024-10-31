@@ -1,6 +1,12 @@
-<link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
-<link rel="stylesheet" th:href="@{/css/basic.css}">
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항 목록</title>
+  <link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
+  <link rel="stylesheet" th:href="@{/css/basic.css}" />
+</head>
+<body>
 <header th:replace="layout/admin/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
   <aside th:replace="layout/admin/aside.html"></aside>
@@ -12,13 +18,18 @@
       </nav>
       <!-- 검색 및 카테고리 필터링 폼 -->
       <form th:action="@{/admin/cs/notices}" method="get" class="search">
-        <select name="type" class="select_type">
+        <select name="type" class="select_type search-input">
           <option value="typeselect" th:selected="${selectedType == 'typeselect'}">유형선택</option>
-          <option value="customer_service" th:selected="${selectedType == 'customer_service'}">고객서비스</option>
-          <option value="safe_transaction" th:selected="${selectedType == 'safe_transaction'}">안전거래</option>
-          <option value="hazardous_product" th:selected="${selectedType == 'hazardous_product'}">위해상품</option>
-          <option value="event_winner" th:selected="${selectedType == 'event_winner'}">이벤트 당첨</option>
+          <option th:each="category : ${cate1}"
+                  th:value="${category.categoryName}"
+                  th:text="${category.categoryName}"
+                  th:selected="${selectedType == category.categoryName}">
+          </option>
         </select>
+
+        <!-- 제목 검색 필드 추가 -->
+        <input type="text" name="title" placeholder="제목 검색" th:value="${title}" class="search-input" />
+
         <button type="submit">검색</button>
       </form>
     </div>
@@ -41,7 +52,14 @@
           <td><input type="checkbox" /></td>
           <td th:text="${notice.id}"></td> <!-- 번호 -->
           <td th:text="${notice.cate1.categoryName}"></td> <!-- 카테고리 1 -->
-          <td style="text-align: left" th:text="${notice.noticeTitle}"></td> <!-- 제목 -->
+
+          <!-- 제목을 클릭 시 보기 페이지로 이동 -->
+          <td style="text-align: left">
+            <a th:href="@{/admin/cs/notice/view/{id}(id=${notice.id})}" th:text="${notice.noticeTitle}" style="text-decoration: none; color: inherit;">
+              공지사항 제목
+            </a>
+          </td>
+
           <td th:text="${notice.noticeViews}"></td> <!-- 조회수 -->
           <td th:text="${#dates.format(notice.noticeRdate, 'yyyy-MM-dd')}"></td> <!-- 날짜 -->
           <td>
@@ -121,3 +139,5 @@
     });
   });
 </script>
+</body>
+</html>
