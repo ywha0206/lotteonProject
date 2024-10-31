@@ -16,22 +16,23 @@
                         <input name="pwd" class="pwd inp" type="password" placeholder="8~15자리 영문+숫자+특수문자 조합">
                         <button style="border :none;" type="submit" class="login-btn">로그인</button>
                     </div>
+                    <div class="inp-bottom">
+                        <div class="link-auto link"><label class="link"><input class="auto" type="checkbox" name="remember-me" value="true">자동로그인</label></div>
+
+                        <div class="link">|</div>
+                        <div class="link-find-id link">
+                            <a th:href="@{/auth/findid}">아이디 찾기</a>
+                        </div>
+                        <div class="link">|</div>
+                        <div class="link-find-pwd link">
+                            <a th:href="@{/auth/findpwd}">비밀번호 찾기</a>
+                        </div>
+                        <div class="link">|</div>
+                        <div class="link-signup link">
+                            <a th:href="@{/auth/join}">회원가입</a>
+                        </div>
+                    </div>
                 </form>
-                <div class="inp-bottom">
-                    <div class="link-auto link"><label class="link"><input class="auto" type="checkbox">자동로그인</label></div>
-                    <div class="link">|</div>
-                    <div class="link-find-id link">
-                        <a th:href="@{/auth/findid}">아이디 찾기</a>
-                    </div>
-                    <div class="link">|</div>
-                    <div class="link-find-pwd link">
-                        <a th:href="@{/auth/findpwd}">비밀번호 찾기</a>
-                    </div>
-                    <div class="link">|</div>
-                    <div class="link-signup link">
-                        <a th:href="@{/auth/join}">회원가입</a>
-                    </div>
-                </div>
             </div>
             <div class="main-img">
                 <th:block th:each="b:${banner}">
