@@ -2,8 +2,7 @@ package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.cartOrder.PostCartDto;
-import com.lotteon.dto.responseDto.CartSessionDto;
-import com.lotteon.dto.responseDto.GetCartDto;
+import com.lotteon.dto.responseDto.cartOrder.GetCartDto;
 import com.lotteon.dto.responseDto.cartOrder.CartProductDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.*;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -86,12 +84,17 @@ public class CartService {
 
 
         long prodId = postCartDto.getProdId();
-        long optionId = postCartDto.getOptionId();
-
 
         Product product = productRepository.findById(prodId).orElse(null);
         List<CartItem> existingCartItems = cartItemRepository.findAllByCartAndProduct(cart, product);
 
+
+        Long optionId = null;
+        if(postCartDto.getOptionId()!=null){
+             optionId = postCartDto.getOptionId();
+        }else {
+
+        }
 
         CartItem existingCartItem = null;
         for (CartItem cartItem : existingCartItems) {
@@ -155,19 +158,27 @@ public class CartService {
         // 5. 각 카트 아이템을 DTO로 변환
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();  // 카트 아이템에 연결된 상품
-            long optionId = cartItem.getOptionId();
-
-            ProductOption option = productOptionRepository.findById(optionId).orElse(null);
             CartProductDto cartProductDto = modelMapper.map(product, CartProductDto.class);
+
+            //옵션이 있으면 옵션리스트에 담기
+            Long optionId = null;
+            List<String> optionValue = new ArrayList<>();
+            if(cartItem.getOptionId()!=null){
+                optionId = cartItem.getOptionId();
+                ProductOption option = productOptionRepository.findById(optionId).orElse(null);
+
+                optionValue.add(option.getOptionValue());
+                optionValue.add(option.getOptionValue2());
+                optionValue.add(option.getOptionValue3());
+            }
+            log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
 
             // 6. DTO로 변환
             GetCartDto getCartDto = GetCartDto.builder()
                     .cartItemId(cartItem.getId())
                     .quantity(cartItem.getQuantity())
                     .totalPrice(cartItem.getTotalPrice())
-                    .optionValue(option.getOptionValue())
-                    .optionValue2(option.getOptionValue2())
-                    .optionValue3(option.getOptionValue3())
+                    .optionValue(optionValue)
                     .cartProductDto(cartProductDto)
                     .build();
 
