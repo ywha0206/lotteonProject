@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class GetDeliveryDto {
     private String deliCompany;
-    private Long deliveryId;
+    private String deliveryId;
     private Long orderItemId;
     private String receiverName;
     private String prodName;
