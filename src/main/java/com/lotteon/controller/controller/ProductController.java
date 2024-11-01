@@ -4,6 +4,7 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetCateLocationDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ProductOption;
@@ -11,6 +12,7 @@ import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.service.product.ProductDetailService;
+import com.lotteon.service.product.ProductOptionService;
 import com.lotteon.service.product.ProductService;
 import com.lotteon.service.product.RecommendationService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,7 @@ public class ProductController {
     private final ProductDetailService productDetailService;
     private final UserLogService userLogService;
     private final RecommendationService recommendationService;
+    private final ProductOptionService productOptionService;
 
 
     @GetMapping("/products")
@@ -67,15 +70,22 @@ public class ProductController {
         return "pages/product/list";
     }
 
+
     @GetMapping("/product")
     public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
 
+        List<Product> related = recommendationService.findRelatedProducts(prodId);
+        if(related.size()>0){
+            model.addAttribute("related", related);
+        }
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
-        List<PostProductOptionDTO> options = productService.findOption(prodId);
+        model.addAttribute("product", postProductDTO);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
+        model.addAttribute("category1", category1);
         Long couponId = couponService.findCouponByProduct(prodId);
         model.addAttribute("couponId", couponId);
         PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
+
         Set<String> addedOptions = new HashSet<>();
 
         GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
@@ -92,10 +102,10 @@ public class ProductController {
         }
         model.addAttribute("addedOptions", addedOptions);
         model.addAttribute("prodDetail", prodDetail);
-        model.addAttribute("options", options);
+        GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
         model.addAttribute("location", location);
-        model.addAttribute("product", postProductDTO);
-        model.addAttribute("category1", category1);
+        List<GetOption1Dto> option1 = productOptionService.findByProdId(prodId);
+        model.addAttribute("option1s", option1);
         return "pages/product/view";
     }
 
