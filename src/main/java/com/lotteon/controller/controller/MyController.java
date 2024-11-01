@@ -88,15 +88,31 @@ public class MyController {
 
     @GetMapping("/orders")
     public String order(Model model,
-                        @RequestParam(name = "page",defaultValue = "0") int page
+                        @RequestParam(name = "page",defaultValue = "0") int page,
+                        @RequestParam(name = "type",defaultValue = "0") String type,
+                        @RequestParam(name = "keyword",defaultValue = "0") String keyword
     ) {
         log.info("마이페이지 오더 컨트롤러 접속 ");
-        Page<ResponseOrdersDto> orders = orderService.selectedOrderList(page);
+        Page<ResponseOrdersDto> orders;
+
+        if(!type.equals("0")&&!keyword.equals("0")){
+            orders = orderService.findAllBySearch(page,type,keyword);
+        }else {
+            orders = orderService.selectedOrderList(page);
+        }
+
+        log.info("마이페이지 오더 컨트롤러 오더 잘 뽑혔는지 확인 "+orders);
+        if(orders.isEmpty()){
+            model.addAttribute("noItem",true);
+            return "pages/my/order";
+        }
 
         model.addAttribute("orders", orders);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", orders.getTotalPages());
-
+        model.addAttribute("noItem",false);
+        model.addAttribute("type", type);
+        model.addAttribute("keyword", keyword);
         return "pages/my/order";
     }
     @GetMapping("/points")

@@ -518,7 +518,7 @@
           <tr class="couponMatchers" th:data-sellid="${order.products.sellId}" th:each="order: ${orders}">
             <td>
               <div class="img">
-                <img src="https://via.placeholder.com/74x69" />
+                <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${order.products.getProdListImg()}}" />
               </div>
             </td>
             <td th:data-product-id="${order.products.id}">
