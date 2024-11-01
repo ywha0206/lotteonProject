@@ -74,10 +74,6 @@ public class ProductController {
     @GetMapping("/product")
     public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
 
-        List<Product> related = recommendationService.findRelatedProducts(prodId);
-        if(related.size()>0){
-            model.addAttribute("related", related);
-        }
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
         model.addAttribute("product", postProductDTO);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
@@ -88,7 +84,6 @@ public class ProductController {
 
         Set<String> addedOptions = new HashSet<>();
 
-        GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
