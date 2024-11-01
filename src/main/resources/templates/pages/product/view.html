@@ -199,7 +199,7 @@
             </div> <!-- .refund-->
             <div id="related-products">
                 <div th:each="prod : ${related}" class="relaties">
-                    <img th:src="@{'/file/'+${prod.getProdBasicImg()}}">
+                    <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
                     <div class="related-descriptions">
                         <p th:text="${prod.prodName}"></p>
                         <p th:text="${prod.prodSummary}"></p>
