@@ -9,6 +9,9 @@ import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 
 @Log4j2
@@ -31,7 +35,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SocialService {
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private final MemberRepository memberRepository;
+    private final CustomerRepository customerRepository;
+
+    @Value("${kakao.client_id}")
     private String KAKAO_CLIENT_ID;
 
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -45,5 +52,4 @@ public class SocialService {
                 + "&client_id=" + KAKAO_CLIENT_ID
                 + "&redirect_uri=" + KAKAO_REDIRECT_URL;
     }
-
 }

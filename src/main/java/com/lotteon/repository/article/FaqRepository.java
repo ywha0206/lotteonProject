@@ -19,6 +19,7 @@ public interface FaqRepository extends JpaRepository<Faq,Long> {
     // 더보기 기능으로 카테고리별 최대 10개의 FAQ를 조회
     List<Faq> findTop10ByCate1AndCate2OrderByFaqRdateDesc(CategoryArticle cate1, CategoryArticle cate2);
 
+
     Page<Faq> findByCate1(CategoryArticle cate1, Pageable pageable);
 
 }

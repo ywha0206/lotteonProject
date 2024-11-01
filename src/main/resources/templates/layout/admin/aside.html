@@ -1,9 +1,11 @@
-
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <link rel="stylesheet" th:href="@{/css/layout/admin/aside.css}">
 
 
     <aside id="sidebar">
-        <div class="navi">
+        <div sec:authorize="hasRole('admin')" class="navi">
             <li class="side1" th:classappend="${config == 'config'} ? 'asideBg' : ''" onclick="openMenu(event, 'menu1')">환경설정</li>
             <div th:classappend="${config} == 'config' ? 'open' : ''"
                     class="menues" id="menu1">
@@ -13,14 +15,14 @@
                 <a th:classappend="${active} == 'versions' ? 'active' : ''" th:href="@{/admin/config/versions}">- 버전관리</a>
             </div>
         </div>
-        <div class="navi">
+        <div sec:authorize="hasRole('admin')" class="navi">
             <li class="side1" th:classappend="${config == 'shop'} ? 'asideBg' : ''" onclick="openMenu(event, 'menu2')">상점관리</li>
             <div th:classappend="${config} == 'shop' ? 'open' : ''"  class="menues" id="menu2">
                 <a th:classappend="${active} == 'shop' ? 'active' : ''" th:href="@{/admin/shop/shop}">- 상점목록</a>
                 <a th:classappend="${active} == 'income' ? 'active' : ''" th:href="@{/admin/shop/income}">- 매출현황</a>
             </div>
         </div>
-        <div class="navi">
+        <div sec:authorize="hasRole('admin')" class="navi">
             <li class="side1" th:classappend="${config == 'user'} ? 'asideBg' : ''" onclick="openMenu(event, 'menu3')">회원관리</li>
             <div th:classappend="${config} == 'user' ? 'open' : ''"  class="menues" id="menu3">
                 <a th:classappend="${active} == 'user' ? 'active' : ''" th:href="@{/admin/user/user}">- 회원목록</a>
@@ -57,7 +59,7 @@
                 <a th:classappend="${active} == 'notices' ? 'active' : ''" th:href="@{/admin/cs/notices}">- 공지사항</a>
                 <a th:classappend="${active} == 'faqs' ? 'active' : ''" th:href="@{/admin/cs/faqs}">- 자주묻는질문</a>
                 <a th:classappend="${active} == 'qnas' ? 'active' : ''" th:href="@{/admin/cs/qnas}">- 문의하기</a>
-                <a th:classappend="${active} == 'recruits' ? 'active' : ''" th:href="@{/admin/cs/recruits}">- 채용하기</a>
+                <a sec:authorize="hasRole('admin')" th:classappend="${active} == 'recruits' ? 'active' : ''" th:href="@{/admin/cs/recruits}">- 채용하기</a>
             </div>
         </div>
     </aside>
