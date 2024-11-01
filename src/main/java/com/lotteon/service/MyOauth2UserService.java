@@ -70,35 +70,34 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
                 if (customer != null) {
                     Optional<Member> optMember = memberRepository.findByCustomer_id(customer.getId());
                     member = optMember.orElse(null);
-                } else {
-                    // 필드 값이 null일 경우 대비하여 기본값 설정
-                    String custName = account.path("profile").path("nickname").asText("Unknown User");
-                    String hp = Optional.ofNullable(account.path("phone_number").asText(null)).orElse("Unknown Phone");
-                    String custHp = hp;
-                    if(!hp.equals("Unknown Phone")){ custHp = "0"+hp.split(" ")[1]; }
-                    Boolean custGender = "female".equals(account.path("gender").asText(null));
-                    String birthyear = account.path("birthyear").asText("0000");
-                    String birthday = account.path("birthday").asText("0000");
-                    String custBirth = birthyear + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2, 4);
-
-
-                    PostCustSignupDTO dto = PostCustSignupDTO.builder()
-                            .memId(memUid)
-                            .memPwd(UUID.randomUUID()+"")
-                            .custHp(custHp)
-                            .custName(custName)
-                            .custGender(custGender)
-                            .custBirth(custBirth)
-                            .custOptional(false)
-                            .custEmail(custEmail)
-                            .basicAddr(false)
-                            .build();
-
-                    member = customerService.insertCustomer(dto);
                 }
-            } else {
-                log.warn("Customer email is null for Kakao account: {}", account);
+            }else {
+                // 필드 값이 null일 경우 대비하여 기본값 설정
+                String custName = account.path("profile").path("nickname").asText("Unknown User");
+                String hp = Optional.ofNullable(account.path("phone_number").asText(null)).orElse("Unknown Phone");
+                String custHp = hp;
+                if(!hp.equals("Unknown Phone")){ custHp = "0"+hp.split(" ")[1]; }
+                Boolean custGender = "female".equals(account.path("gender").asText(null));
+                String birthyear = account.path("birthyear").asText("0000");
+                String birthday = account.path("birthday").asText("0000");
+                String custBirth = birthyear + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2, 4);
+
+
+                PostCustSignupDTO dto = PostCustSignupDTO.builder()
+                        .memId(memUid)
+                        .memPwd(UUID.randomUUID()+"")
+                        .custHp(custHp)
+                        .custName(custName)
+                        .custGender(custGender)
+                        .custBirth(custBirth)
+                        .custOptional(false)
+                        .custEmail(custEmail)
+                        .basicAddr(false)
+                        .build();
+
+                member = customerService.insertCustomer(dto);
             }
+
         }
         if (member == null) {
             throw new OAuth2AuthenticationException("User could not be created or retrieved");

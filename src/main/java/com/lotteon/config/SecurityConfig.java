@@ -4,7 +4,6 @@ import com.lotteon.config.filter.CustomLoginFilter;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.service.MyOauth2UserService;
-import com.lotteon.service.SocialService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
