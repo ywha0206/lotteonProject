@@ -138,7 +138,6 @@
             `
     } else {
       let id = event.target.dataset.id || event.target.parentElement.dataset.id;
-
       try {
         const resp = await axios.get("/admin/cs/recruit",{
           headers : {
@@ -148,6 +147,7 @@
             'id' : id
           }
         })
+        console.log("=============================================")
         const recruit = resp.data.recruit;
         console.log(recruit)
 

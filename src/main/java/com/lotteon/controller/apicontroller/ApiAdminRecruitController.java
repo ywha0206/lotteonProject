@@ -1,6 +1,7 @@
 package com.lotteon.controller.apicontroller;
 
 import com.lotteon.dto.requestDto.PostRecruitDto;
+import com.lotteon.dto.responseDto.GetRecruitDto;
 import com.lotteon.service.article.RecruitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ApiAdminRecruitController {
 
     @GetMapping("/recruit")
     public ResponseEntity<?> getRecruit(@RequestParam Long id){
-        PostRecruitDto recruit = recruitService.findById(id);
+        GetRecruitDto recruit = recruitService.findById(id);
         Map<String,Object> map = new HashMap<>();
         map.put("recruit",recruit);
         return ResponseEntity.ok().body(map);

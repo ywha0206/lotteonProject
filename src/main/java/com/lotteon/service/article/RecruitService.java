@@ -2,6 +2,7 @@ package com.lotteon.service.article;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostRecruitDto;
+import com.lotteon.dto.responseDto.GetRecruitDto;
 import com.lotteon.entity.article.Recruit;
 import com.lotteon.entity.member.Member;
 import com.lotteon.repository.article.RecruitRepository;
@@ -92,9 +93,9 @@ public class RecruitService {
         return recruits;
     }
 
-    public PostRecruitDto findById(Long id) {
+    public GetRecruitDto findById(Long id) {
         Optional<Recruit> recruit = recruitRepository.findById(id);
-        return recruit.get().toGetRecruitDto();
+        return recruit.get().toGet2RecruitDto();
     }
 
     public void updateRecruit(PostRecruitDto dto) {

@@ -1,6 +1,7 @@
 package com.lotteon.entity.article;
 
 import com.lotteon.dto.requestDto.PostRecruitDto;
+import com.lotteon.dto.responseDto.GetRecruitDto;
 import com.lotteon.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -67,6 +68,19 @@ public class Recruit {
                 .state(state)
                 .department(department)
                 .memUid(member.getMemUid())
+                .build();
+    }
+
+    public GetRecruitDto toGet2RecruitDto (){
+        return GetRecruitDto.builder()
+                .title(title)
+                .sdate(String.valueOf(sdate))
+                .department(department)
+                .type(type)
+                .etc(etc)
+                .career(career)
+                .edate(String.valueOf(edate))
+                .id(id)
                 .build();
     }
 
