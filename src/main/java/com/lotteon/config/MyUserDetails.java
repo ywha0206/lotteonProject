@@ -21,7 +21,7 @@ import java.util.Map;
 @Builder
 public class MyUserDetails implements UserDetails, OAuth2User{
     private Member user;
-
+    private String accessToken;
     private Map<String, Object> attributes;
 
     @Override
