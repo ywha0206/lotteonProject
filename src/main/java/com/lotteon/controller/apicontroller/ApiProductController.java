@@ -6,6 +6,7 @@ import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
+import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.entity.product.Order;
 import com.lotteon.repository.member.UserLogRepository;
 import com.lotteon.service.member.UserLogService;
@@ -16,6 +17,7 @@ import com.lotteon.service.point.PointService;
 import com.lotteon.service.product.CartService;
 import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
+import com.lotteon.service.product.ProductOptionService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -47,11 +49,23 @@ public class ApiProductController {
     private final CouponService couponService;
     private final UserLogRepository userLogRepository;
     private final UserLogService userLogService;
+    private final ProductOptionService productOptionService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
 
         customerCouponService.useCustCoupon();
+    }
+
+    @GetMapping("/option2")
+    public ResponseEntity<?> getOption2(
+            @RequestParam String optionValue,
+            @RequestParam Long prodId
+    ){
+        List<GetOption1Dto> options = productOptionService.findByOptionValue(optionValue,prodId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("option2s",options);
+        return ResponseEntity.ok().body(map);
     }
 
     @PostMapping("/customer/coupon")
