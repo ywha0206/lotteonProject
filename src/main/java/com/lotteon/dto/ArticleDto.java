@@ -62,7 +62,7 @@ public class ArticleDto {
     public static ArticleDto fromEntity(Faq faq) {
         return ArticleDto.builder()
                 .id(faq.getId())
-                .title(faq.getFaqTitle())
+                .title(faq.getFaqTitle()) // title 필드에 faqTitle 매핑
                 .content(faq.getFaqContent())
                 .rdate(faq.getFaqRdate())
                 .views(faq.getFaqViews())
