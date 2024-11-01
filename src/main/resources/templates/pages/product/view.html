@@ -38,6 +38,7 @@
                                     <span>[[${product.getProdName}]]</span> <br>
                                     <img src="https://via.placeholder.com/56x17" alt="별점">
                                     <a href="#prodReview">상품평보기</a>
+                                    <a href="#related-products">Ai추천 상품 보기</a>
                                 </td>
                             </tr>
                             <tr>
@@ -113,7 +114,7 @@
             </div>
             <h2 class="sub_tit2">상품보기</h2>
             <div class="detail_image">
-                <img src="https://via.placeholder.com/784x111" alt="상품 상세 이미지">
+                <img th:src="@{'/file/'+${prodDetail.getDescription()}}" alt="상품 상세보기 이미지">
             </div> <!-- .detail_image-->
             <h2 class="sub_tit3">
                 상품정보 제공고시
@@ -196,6 +197,15 @@
                 아울러, 교환반품보증 및 결제대금의 환급신청은 [나의 쇼핑정보]에서 하실 수 있으며, 자세한 문의는
                 개별 판매자에게 연락하여 주시기 바랍니다.</span>
             </div> <!-- .refund-->
+            <div id="related-products">
+                <div th:each="prod : ${related}" class="relaties">
+                    <img th:src="@{'/file/'+${prod.getProdBasicImg()}}">
+                    <div class="related-descriptions">
+                        <p th:text="${prod.prodName}"></p>
+                        <p th:text="${prod.prodSummary}"></p>
+                    </div>
+                </div>
+            </div>
             <h2 class="sub_tit4">상품리뷰</h2>
             <div class="cmt" id="prodReview">
                 <img src="https://via.placeholder.com/78x20"> <br>
@@ -338,14 +348,14 @@
         if (optionNames[0] === '옵션없음') {
             qty.style.display = 'table-cell';
             document.getElementById('optionId').value = optionIds[0];
+        }else{
+            optionValues.forEach(value => {
+                const optionElement = document.createElement('option');
+                optionElement.textContent = value;
+                optionElement.value = value;
+                selectElement1.appendChild(optionElement);
+           });
         }
-
-        optionValues.forEach(value => {
-            const optionElement = document.createElement('option');
-            optionElement.textContent = value;
-            optionElement.value = value;
-            selectElement1.appendChild(optionElement);
-        });
 
         selectElement1.addEventListener('change', function () {
             const selectedValue1 = selectElement1.value;
@@ -377,7 +387,11 @@
                     // 선택된 옵션의 텍스트를 업데이트
                     const selectedOption = selectElement1.querySelector(`option[value="${selectedValue1}"]`);
                     if (selectedOption) {
+                        if(additionalPriceFormatted.charAt(0) === '-'){
+                            selectedOption.textContent = `${selectedOption.value} (${additionalPriceFormatted}원)`;
+                        }else{
                         selectedOption.textContent = `${selectedOption.value} (+${additionalPriceFormatted}원)`;
+                        }
                         document.getElementById('optionId').value = optionId;
                         console.log("id"+document.getElementById('optionId').value);
                         document.getElementById('optionStock').value = optionStock;

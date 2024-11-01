@@ -6,10 +6,12 @@ import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
 import com.lotteon.dto.responseDto.GetDeliInfoDto;
+import com.lotteon.dto.responseDto.GetPointsDto;
 import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
+import com.lotteon.entity.point.Point;
 import com.lotteon.entity.product.*;
 import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -318,5 +322,62 @@ public class OrderService {
         System.out.println("===================");
         System.out.println(order.get().toGetDeliInfoDto());
         return order.get().toGetDeliInfoDto();
+    }
+
+    public Page<ResponseOrdersDto> findAllBySearch(int page, String type, String keyword) {
+        Pageable pageable = PageRequest.of(page, 5);
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+
+        Page<Order> orders;
+        if(type.equals("date")){
+            orders = this.findAllByDate(pageable,customer,keyword);
+        } else if(type.equals("custom")){
+            orders = this.findAllByCustom(pageable,customer,keyword);
+        }else {
+            orders = this.findAllByMonth(pageable,customer,keyword);
+        }
+        Page<ResponseOrdersDto> dtos = orders.map(order->
+
+                ResponseOrdersDto.builder()
+                        .orderId(order.getId())
+                        .orderQuantity(order.getOrderQuantity())
+                        .orderState(order.getOrderState())
+                        .orderTotal(order.getOrderTotal())
+                        .orderRdate( new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderRdate()))
+                        .prodId(order.getOrderItems().get(0).getProduct().getId())
+                        .prodListImg(order.getOrderItems().get(0).getProduct().getProdListImg())
+                        .prodName(order.getOrderItems().get(0).getProduct().getProdName())
+                        .seller(order.getOrderItems().get(0).getSeller().getSellCompany())
+                        .orderItemCount(order.getOrderItems().size())
+                        .build()
+        );
+        return dtos;
+    }
+
+    private Page<Order> findAllByCustom(Pageable pageable, Customer customer, String keyword) {
+
+        String sDate = keyword.substring(0,keyword.indexOf("~"));
+        String eDate = keyword.substring(keyword.indexOf("~")+1);
+        Timestamp startDate = Timestamp.valueOf(LocalDate.parse(sDate).atStartOfDay());
+        Timestamp endDate = Timestamp.valueOf(LocalDate.parse(eDate).atStartOfDay().plusDays(1).minusNanos(1)); // 하루의 끝까지 포함하도록 설정
+        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,startDate,endDate,pageable);
+        return orders;
+    }
+
+    private Page<Order> findAllByMonth(Pageable pageable, Customer customer, String keyword) {
+        Timestamp today = Timestamp.valueOf(LocalDate.now().atStartOfDay().plusDays(1).minusNanos(1));
+        Timestamp varDay = Timestamp.valueOf(LocalDate.now().minusMonths(Integer.parseInt(keyword)).atStartOfDay());
+        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,varDay,today,pageable);
+        return orders;
+    }
+
+    private Page<Order> findAllByDate(Pageable pageable, Customer customer, String keyword) {
+        Timestamp today = Timestamp.valueOf(LocalDate.now().atStartOfDay().plusDays(1).minusNanos(1));
+        Timestamp varDay = Timestamp.valueOf(LocalDate.now().minusDays(Integer.parseInt(keyword)).atStartOfDay());
+        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,varDay,today,pageable);
+        return orders;
     }
 }

@@ -203,13 +203,13 @@
             <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
             <td>
               <div class="img">
-                <img src="https://via.placeholder.com/74x69" />
+                <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${cartItem.cartProductDto.getProdListImg()}}" />
               </div>
             </td>
-            <td><div class="name_desc">
-              <span th:text="${cartItem.cartProductDto.prodName}">상품명</span> <br />
+            <td class="name_box">
+              <span th:text="${cartItem.cartProductDto.prodName}">상품명</span><br>
               <span th:text="${cartItem.cartProductDto.prodSummary}">상품설명</span>
-            </div></td>
+            </td>
             <td>
               <div class="cartOptions">
                 <th:block th:if="${cartItem.optionValue.isEmpty()}">
