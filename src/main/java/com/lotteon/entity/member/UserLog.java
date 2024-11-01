@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @Getter
 public class UserLog {
     @Id
-
     private String id;
     private Long custId;
     private Long prodId;
