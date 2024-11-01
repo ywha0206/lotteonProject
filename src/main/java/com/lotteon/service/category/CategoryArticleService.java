@@ -47,4 +47,6 @@ public class CategoryArticleService {
                 .map(CategoryArticle::toGetArticleCategoryDto)
                 .collect(Collectors.toList());
     }
+
+    
 }

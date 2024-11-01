@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.security.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /*
  *  이름 : 박경림
@@ -45,8 +46,20 @@ public class ArticleDto {
     private String status;       // 글 상태 (예: '작성 중', '게시 완료' 등)
 
 
+    // 2차 카테고리별 FAQ 목록을 포함할 리스트
+    private List<CategoryFaq> categoryFaqs;
+
+    // 2차 카테고리와 FAQ 목록을 저장할 내부 클래스 정의
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class CategoryFaq {
+        private String categoryName; // 2차 카테고리 이름
+        private List<ArticleDto> faqs; // FAQ 목록
+    }
+
     // 오버로딩: 같은 이름(fromEntity)을 사용 인자의 엔티티 타입(Faq, Qna)에 따라 서로 다른 처리
-    public static ArticleDto fromEntity(Faq faq){
+    public static ArticleDto fromEntity(Faq faq) {
         return ArticleDto.builder()
                 .id(faq.getId())
                 .title(faq.getFaqTitle())
@@ -56,11 +69,12 @@ public class ArticleDto {
                 .cate1(faq.getCate1())
                 .cate2(faq.getCate2())
                 .cate1Id(faq.getCate1() != null ? faq.getCate1().getCategoryId() : null)
-                .cate2Id(faq.getCate1() != null ? faq.getCate2().getCategoryId() : null)
+                .cate2Id(faq.getCate2() != null ? faq.getCate2().getCategoryId() : null)
                 .member(faq.getMember())
-                .memId(faq.getMember()!=null ? faq.getMember().getId() : null)
+                .memId(faq.getMember() != null ? faq.getMember().getId() : null)
                 .build();
     }
+
 
     public static ArticleDto fromEntity(Qna qna){
         return ArticleDto.builder()

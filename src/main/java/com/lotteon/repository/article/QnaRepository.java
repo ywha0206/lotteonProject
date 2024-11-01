@@ -19,6 +19,15 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
 
     List<Qna> findTop5ByOrderByQnaRdateDesc();
 
+    // 1차 카테고리로 QnA 목록 조회
+    Page<Qna> findByCate1(CategoryArticle cate1, Pageable pageable);
 
+/*
+    // 2차 카테고리로 QnA 목록 조회
+    Page<Qna> findByCate2(CategoryArticle cate2, Pageable pageable);
+
+    // 페이징 처리하여 검색하는 기능
+    Page<Qna> findByQnaTitleContainingOrQnaContentContaining(String titleKeyword, String contentKeyword, Pageable pageable);
+*/
 
 }

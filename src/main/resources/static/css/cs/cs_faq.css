@@ -9,6 +9,9 @@
 .faq_simple td{ border-bottom: none; line-height: 40px;}
 .Q{display: inline-block; width: 50px;}
 
+.hidden {
+    display: none;
+}
 
 /* faq view */
 .view_title{width: 780px; height: 50px; line-height: 50px; display: flex; flex-wrap: wrap; padding: 10px 0;margin-left: 50px;  

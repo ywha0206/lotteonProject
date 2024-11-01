@@ -64,13 +64,13 @@
 
         <section class="cs_index cs_index_qna">
             <h3 class="sub_title">문의하기<a th:href="@{/cs/qnas}" class="viewAll">전체보기</a></h3>
-            <p th:text="${#lists.size(qnas)}"></p>
             <ul class="qna_ul">
                 <li th:each="qna : ${qnas}" class="qna">
                     <a href="">
-                        <p class="cate" th:text="${qna.cate1.categoryName}">회원</p>
+                        <p class="cate" th:data-value="${qna.cate1.categoryName}" th:text="${qna.cate1.categoryName}">회원</p>
                         <p class="title" th:text="${qna.qnaTitle}">개인회원과 법인회원에 차이가 있나요?</p>
-                        <span th:text="${qna.member.memUid}" style="margin-left: 100px;" ></span>
+                        <span class="q_nick"
+                              th:text="${qna.member != null && qna.member.memUid != null ? (qna.member.memUid.length() >= 2 ? qna.member.memUid.substring(0, 2) + '**' : qna.member.memUid + '**') : 'N/A'}"></span>
                         <span class="date" th:text="${#temporals.format(qna.qnaRdate, 'yy.MM.dd')}"></span>
                     </a>
                 </li>
@@ -102,3 +102,22 @@
     </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+<script>
+    const firstCategoryMap = {
+        "user": "회원",
+        "coupon": "쿠폰/이벤트",
+        "order": "주문/결제",
+        "delivery": "배송",
+        "cancel": "취소/반품/환불",
+        "travel": "여행/숙박/항공",
+        "safe": "안전결제"
+    };
+
+    // 1차 카테고리명을 한글로 변환하여 표시
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.cate').forEach(function (item) {
+            const value = item.getAttribute('data-value');
+            item.textContent = firstCategoryMap[value] || value; // 한글로 변환 또는 기본값 유지
+        });
+    });
+</script>

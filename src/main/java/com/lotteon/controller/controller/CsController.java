@@ -30,7 +30,7 @@ import java.util.List;
  *
  *
  * 수정이력
-      -
+      - 2024/10/31 박경림 - CS qna 카테고리별 QNA 목록 조회 컨트롤러 추가
 
  * */
 @Controller
@@ -55,7 +55,7 @@ public class CsController {
         model.addAttribute("qnas", qnaList);
         return "pages/cs/index";
     }
-
+    /* 공지사항 */
     @GetMapping("/notices")
     public String notices(@RequestParam(required = false) String category, Model model, Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(
@@ -98,8 +98,26 @@ public class CsController {
         return "pages/cs/notice/view";  // 공지사항 상세보기 페이지로 이동
     }
 
+
+    /* 자주묻는 질문*/
+    /* TODO: 자주묻는질문 1,2차 유형별 목록 */
+    // 자주 묻는 질문 페이지
     @GetMapping("/faqs")
-    public String faqs(Model model) {
+    public String getFaqs(@RequestParam(required = false) String category,
+                          @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                          Model model) {
+        // 기본 카테고리 설정
+        category = (category == null || category.isEmpty()) ? "user" : category;
+        model.addAttribute("selectedCate1", category);
+
+        // 카테고리에 따른 FAQ 목록 페이징 조회
+        Page<ArticleDto> faqPage = faqService.getFaqsByCategory(category, pageable);
+        List<ArticleDto> faqs = faqPage.getContent();
+
+        // 페이징 정보 및 FAQ 목록을 모델에 추가
+        model.addAttribute("faqs", faqs);
+        model.addAttribute("page", faqPage);
+
         return "pages/cs/faq/list";
     }
 
@@ -109,21 +127,27 @@ public class CsController {
     }
 
 
-    /*TODO: 회원만 작성 가능하게 나중에 추가하기*/
 
-    // QNA 문의하기 글 목록
+    /* 문의하기 */
+    // 카테고리별 QNA 목록 조회
     @GetMapping("/qnas")
-    public String qnasForUser(
+    public String qnasByCategory(
+            @RequestParam(required = false) String category,
             Model model,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // Page<ArticleDto> 타입의 qnasPage를 가져옴
-        Page<ArticleDto> qnasPage = qnaService.getAllQnas(pageable);
+        // category가 null이거나 빈 문자열이면 "회원"을 기본값으로 설정 (전체 글 목록이 없어서)
+        if (category == null || category.isEmpty()) {
+            category = "user";
+        }
 
-        // Page 객체와 해당 페이지의 콘텐츠를 모델에 추가
+        // 카테고리에 해당하는 QNA 목록 조회
+        Page<ArticleDto> qnasPage = qnaService.getQnasByCategory(category, pageable);
+
         model.addAttribute("qnas", qnasPage.getContent());
-        model.addAttribute("page", qnasPage); // 페이지 정보 전달
+        model.addAttribute("page", qnasPage);
+        model.addAttribute("selectedCate1", category); // 선택된 카테고리 전달
 
-        return "pages/cs/qna/list"; // 일반 사용자용 CS 페이지 경로
+        return "pages/cs/qna/list";
     }
 
 

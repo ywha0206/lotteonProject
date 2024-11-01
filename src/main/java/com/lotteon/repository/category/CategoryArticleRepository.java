@@ -1,7 +1,9 @@
 package com.lotteon.repository.category;
 
 import com.lotteon.entity.category.CategoryArticle;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,4 +32,8 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
 
     // 특정 카테고리 ID로 카테고리 조회
     CategoryArticle findByCategoryId(Long category1);
+
+    // CategoryArticleRepository에 부모 ID로 2차 카테고리를 조회하는 메서드 추가
+    @Query("SELECT c FROM CategoryArticle c WHERE c.parent.categoryId = :parentId")
+    List<CategoryArticle> findByParentCategoryId(@Param("parentId") Long parentId);
 }

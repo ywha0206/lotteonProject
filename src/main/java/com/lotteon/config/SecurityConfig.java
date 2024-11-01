@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,11 +24,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ToString
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig implements WebMvcConfigurer  {
     private final CustomLoginFilter customLoginFilter;
     private final UserDetailsService userDetailsService;
     private final PersistentTokenRepository tokenRepository;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
