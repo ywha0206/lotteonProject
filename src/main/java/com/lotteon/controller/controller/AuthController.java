@@ -1,9 +1,11 @@
 package com.lotteon.controller.controller;
 
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
+import com.lotteon.entity.member.Member;
 import com.lotteon.service.SocialService;
 import com.lotteon.service.config.BannerService;
 import com.lotteon.service.member.CustomerService;
@@ -15,6 +17,9 @@ import lombok.extern.log4j.Log4j2;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +51,17 @@ public class AuthController {
     public String socialLogin(@PathVariable String type, @RequestParam String code, Model model) {
         String accessCode = socialService.getAccessToken(code,type);
         log.info("accessCode : " +accessCode);
-        return login(model);
+        MyUserDetails member = socialService.getUserInfo(accessCode,type);
+        // Authentication 객체 생성 (principal = member, credential = null, 권한 목록)
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                member, null, member.getAuthorities()
+        );
+
+        // SecurityContextHolder에 인증 객체 설정
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 로그인 후 리다이렉트할 경로 설정
+        return "redirect:/";
     }
 
     @GetMapping("/join")
