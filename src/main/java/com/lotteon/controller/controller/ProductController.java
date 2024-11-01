@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,7 +69,7 @@ public class ProductController {
 
     @GetMapping("/product")
     public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
         List<PostProductOptionDTO> options = productService.findOption(prodId);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
@@ -77,9 +79,17 @@ public class ProductController {
         Set<String> addedOptions = new HashSet<>();
 
         GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
-        userLogService.saveUserLog(auth.getUser().getCustomer().getId(),prodId,"view");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+            if (auth.getUser() != null) {
+                userLogService.saveUserLog(auth.getUser().getCustomer().getId(), prodId, "view");
+            }
+        }
         List<Product> related = recommendationService.findRelatedProducts(prodId);
-        model.addAttribute("related", related);
+        if(related.size()>0){
+            model.addAttribute("related", related);
+        }
         model.addAttribute("addedOptions", addedOptions);
         model.addAttribute("prodDetail", prodDetail);
         model.addAttribute("options", options);

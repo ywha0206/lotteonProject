@@ -92,7 +92,9 @@ public class ApiProductController {
             ResponseEntity result2 = cartService.insertCartItem(postCartDto,cart);
             response.put("status", "customer"); // Add a default response
         }
-        userLogService.saveUserLog(auth.getUser().getCustomer().getId(),postCartDto.getProdId(),"cart");
+        if(auth.getUser() != null) {
+            userLogService.saveUserLog(auth.getUser().getCustomer().getId(),postCartDto.getProdId(),"cart");
+        }
         return ResponseEntity.ok(response);
     }
 
@@ -137,9 +139,11 @@ public class ApiProductController {
             session.setAttribute("selectedProducts", selectedProducts);
             response.put("status", "customer");
         }
-        selectedProducts.forEach(v->{
-            userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
-        });
+        if(auth.getUser() != null) {
+            selectedProducts.forEach(v->{
+                userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
+            });
+        }
         return ResponseEntity.ok(response);
 
     }

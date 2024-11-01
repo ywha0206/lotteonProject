@@ -24,16 +24,16 @@ public class MyUserDetails implements UserDetails, OAuth2User{
 
     private Map<String, Object> attributes;
 
-    // 일반 로그인
-    public MyUserDetails(Member user) {
-        this.user = user;
-    }
+//    // 일반 로그인
+//    public MyUserDetails(Member user) {
+//        this.user = user;
+//    }
 
-    // oauth 로그인
-    public MyUserDetails(Member user, Map<String, Object> attributes) {
-        this.user = user;
-        this.attributes = attributes;
-    }
+//    // oauth 로그인
+//    public MyUserDetails(Member user, Map<String, Object> attributes) {
+//        this.user = user;
+//        this.attributes = attributes;
+//    }
 
     @Override
     public Map<String, Object> getAttributes() {
