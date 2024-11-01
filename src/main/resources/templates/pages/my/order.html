@@ -13,16 +13,16 @@
       <article class="byDate">
         <span class="tit">기간별조회</span>
         <ul class="date_3ea">
-          <li><a href="#">1주일</a></li>
-          <li><a href="#">15일</a></li>
-          <li><a href="#">1개월</a></li>
+          <li><a th:classappend="${type == 'date' && keyword == '7'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='date',keyword=7)}">1주일</a></li>
+          <li><a th:classappend="${type == 'date' && keyword == '15'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='date',keyword=15)}">15일</a></li>
+          <li><a th:classappend="${type == 'date' && keyword == '30'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='date',keyword=30)}">1개월</a></li>
         </ul>
         <ul class="date_5ea">
-          <li><a href="#" class="5month_before">5월</a></li>
-          <li><a href="#" class="4month_before">6월</a></li>
-          <li><a href="#" class="3month_before">7월</a></li>
-          <li><a href="#" class="2month_before">8월</a></li>
-          <li><a href="#" class="1month_before">9월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '5'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='month',keyword=5)}" class="5month_before">5월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '6'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='month',keyword=6)}">6월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '7'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='month',keyword=7)}">7월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '8'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='month',keyword=8)}">8월</a></li>
+          <li><a th:classappend="${type == 'month' && keyword == '9'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='month',keyword=9)}">9월</a></li>
         </ul>
         <p>
           <input type="date" max="9999-12-31" /><span>~</span
@@ -43,7 +43,7 @@
             <td>
               <div class="thumb">
                 <a href="#">
-                  <img src="https://via.placeholder.com/120x120" alt="" />
+                  <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${order.getProdListImg()}}" alt="상품 이미지" />
                 </a>
               </div>
               <ul>
