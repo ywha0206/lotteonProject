@@ -307,7 +307,7 @@ public class ProductService {
         for (String type : types) {
             switch (type) {
                 case "판매자":
-                    builder.and(QProduct.product.seller.member.memUid.containsIgnoreCase(keyword)); // 판매자 검색 추가
+                    builder.and(QProduct.product.seller.sellCompany.containsIgnoreCase(keyword)); // 판매자 검색 추가
                     break;
                 case "설명":
                     builder.and(QProduct.product.prodSummary.containsIgnoreCase(keyword)); // 설명 검색 추가
