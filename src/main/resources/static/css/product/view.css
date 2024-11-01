@@ -182,3 +182,26 @@ input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+#related-products {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+#related-products .relaties {
+    display: flex;
+    width: 150px;
+    height: 80px;
+    gap: 10px;
+}
+
+#related-products .relaties .related-descriptions{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#related-products .relaties img {
+    width: 80px;
+    height: 80px;
+}

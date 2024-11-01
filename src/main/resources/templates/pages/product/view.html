@@ -38,6 +38,7 @@
                                     <span>[[${product.getProdName}]]</span> <br>
                                     <img src="https://via.placeholder.com/56x17" alt="별점">
                                     <a href="#prodReview">상품평보기</a>
+                                    <a href="#related-products">Ai추천 상품 보기</a>
                                 </td>
                             </tr>
                             <tr>
@@ -196,6 +197,15 @@
                 아울러, 교환반품보증 및 결제대금의 환급신청은 [나의 쇼핑정보]에서 하실 수 있으며, 자세한 문의는
                 개별 판매자에게 연락하여 주시기 바랍니다.</span>
             </div> <!-- .refund-->
+            <div id="related-products">
+                <div th:each="prod : ${related}" class="relaties">
+                    <img th:src="@{'/file/'+${prod.getProdBasicImg()}}">
+                    <div class="related-descriptions">
+                        <p th:text="${prod.prodName}"></p>
+                        <p th:text="${prod.prodSummary}"></p>
+                    </div>
+                </div>
+            </div>
             <h2 class="sub_tit4">상품리뷰</h2>
             <div class="cmt" id="prodReview">
                 <img src="https://via.placeholder.com/78x20"> <br>

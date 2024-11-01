@@ -1,20 +1,25 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetCateLocationDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
+import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ProductOption;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.service.product.ProductDetailService;
 import com.lotteon.service.product.ProductService;
+import com.lotteon.service.product.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +42,8 @@ public class ProductController {
     private final RedisTemplate<String, Object> redisTemplate;
     private final CouponService couponService;
     private final ProductDetailService productDetailService;
+    private final UserLogService userLogService;
+    private final RecommendationService recommendationService;
 
 
     @GetMapping("/products")
@@ -60,7 +67,7 @@ public class ProductController {
 
     @GetMapping("/product")
     public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
-
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
         List<PostProductOptionDTO> options = productService.findOption(prodId);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
@@ -70,7 +77,9 @@ public class ProductController {
         Set<String> addedOptions = new HashSet<>();
 
         GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
-
+        userLogService.saveUserLog(auth.getUser().getCustomer().getId(),prodId,"view");
+        List<Product> related = recommendationService.findRelatedProducts(prodId);
+        model.addAttribute("related", related);
         model.addAttribute("addedOptions", addedOptions);
         model.addAttribute("prodDetail", prodDetail);
         model.addAttribute("options", options);

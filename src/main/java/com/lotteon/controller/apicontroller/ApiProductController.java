@@ -7,6 +7,8 @@ import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
 import com.lotteon.entity.product.Order;
+import com.lotteon.repository.member.UserLogRepository;
+import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.service.point.CustomerCouponService;
@@ -43,6 +45,8 @@ public class ApiProductController {
     private final RedisTemplate<String,Object> redisTemplate;
     private final PointService pointService;
     private final CouponService couponService;
+    private final UserLogRepository userLogRepository;
+    private final UserLogService userLogService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
@@ -88,6 +92,7 @@ public class ApiProductController {
             ResponseEntity result2 = cartService.insertCartItem(postCartDto,cart);
             response.put("status", "customer"); // Add a default response
         }
+        userLogService.saveUserLog(auth.getUser().getCustomer().getId(),postCartDto.getProdId(),"cart");
         return ResponseEntity.ok(response);
     }
 
@@ -132,6 +137,9 @@ public class ApiProductController {
             session.setAttribute("selectedProducts", selectedProducts);
             response.put("status", "customer");
         }
+        selectedProducts.forEach(v->{
+            userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
+        });
         return ResponseEntity.ok(response);
 
     }
@@ -139,6 +147,7 @@ public class ApiProductController {
     @PostMapping("/order")
     public ResponseEntity order(@RequestBody PostOrderDto postOrderDto, HttpSession session){
         log.info("컨트롤러에 들어왔나요?"+postOrderDto.toString());
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<PostCartSaveDto> selectedProducts = (List<PostCartSaveDto>) session.getAttribute("selectedProducts");
 
         List<Long> cartItemIds = new ArrayList<>();
@@ -164,7 +173,9 @@ public class ApiProductController {
         List<OrderItemDto> orderItemDto = postOrderDto.getOrderItemDto();
 
         ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session);
-
+        selectedProducts.forEach(v->{
+            userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
+        });
         session.removeAttribute("selectedProducts");
         return orderItemResult;
     }
