@@ -82,7 +82,7 @@ public class ProductController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
-            if (auth.getUser() != null) {
+            if (auth.getUser().getCustomer() != null) {
                 userLogService.saveUserLog(auth.getUser().getCustomer().getId(), prodId, "view");
             }
         }
