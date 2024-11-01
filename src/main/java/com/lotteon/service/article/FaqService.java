@@ -112,17 +112,20 @@ public class FaqService {
 
 
     /* 일반 cs 기능 */
-    /*    TODO: faq 1차 유형별 페이지 조회 (1031 예정) */
     // 카테고리별 FAQ 목록 조회
 
-
-    // 더보기 기능으로 최대 10개의 FAQ를 가져옴
-    public List<ArticleDto> getFaqsCount10(CategoryArticle cate1, CategoryArticle cate2) {
+    // 더보기 기능으로 최대 10개의 FAQ를 가져옴    10개까지 FAQ 데이터를 불러오고, 제목을 ArticleDto로 매핑하여 반환
+    public List<ArticleDto> getTop10FaqsByCategory(CategoryArticle cate1, CategoryArticle cate2) {
         List<Faq> faqs = faqRepository.findTop10ByCate1AndCate2OrderByFaqRdateDesc(cate1, cate2);
         return faqs.stream()
-                .map(faq -> modelMapper.map(faq, ArticleDto.class))
+                .map(ArticleDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+
+
+
+
     /**
      * faq를 페이지네이션으로 들고오는 함수
      *
@@ -142,6 +145,11 @@ public class FaqService {
     public ArticleDto getDetailById(Long id) {
         Faq faq = faqRepository.findById(id).orElseThrow(() -> new RuntimeException("FAQ not found"));
         return modelMapper.map(faq, ArticleDto.class); // FAQ -> DTO 변환
+    }
+
+    public CategoryArticle getCategoryByName(String categoryName) {
+        return categoryArticleRepository.findByCategoryName(categoryName)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다: " + categoryName));
     }
 
 

@@ -76,8 +76,9 @@ input:focus{outline: none;}
 .tb1 th{height: 49px; border-bottom: 1px solid #bfbfbf; text-align: center; /*border: 1px solid;*/}
 .tb1 td{height: 101px; border-bottom: 1px solid #bfbfbf; font-size: 14px; text-align: center;/*border: 1px solid;*/}
 
-.name_desc > span {display: flex; flex-direction: column; line-height: 1px;}
-.name_desc > span:last-child {color: #7f7f7f;}
+
+
+.name_box > span:last-child {color: #7f7f7f;}
 .tb1 td:last-child{color: #c00000;}
 .cartOptions div {display: flex; justify-content: center;}
 .cartOptions span{margin: 3px 2px;}

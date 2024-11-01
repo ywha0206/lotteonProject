@@ -70,37 +70,7 @@ public class ProductController {
         return "pages/product/list";
     }
 
-//    @GetMapping("/product")
-//    public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
-//
-//        PostProductDTO postProductDTO = productService.selectProduct(prodId);
-//        List<PostProductOptionDTO> options = productService.findOption(prodId);
-//        List<GetCategoryDto> category1 = categoryProductService.findCategory();
-//        Long couponId = couponService.findCouponByProduct(prodId);
-//        model.addAttribute("couponId", couponId);
-//        PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
-//        Set<String> addedOptions = new HashSet<>();
-//
-//        GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-//            MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
-//            if (auth.getUser().getCustomer() != null) {
-//                userLogService.saveUserLog(auth.getUser().getCustomer().getId(), prodId, "view");
-//            }
-//        }
-//        List<Product> related = recommendationService.findRelatedProducts(prodId);
-//        if(related.size()>0){
-//            model.addAttribute("related", related);
-//        }
-//        model.addAttribute("addedOptions", addedOptions);
-//        model.addAttribute("prodDetail", prodDetail);
-//        model.addAttribute("options", options);
-//        model.addAttribute("location", location);
-//        model.addAttribute("product", postProductDTO);
-//        model.addAttribute("category1", category1);
-//        return "pages/product/view";
-//    }
+
     @GetMapping("/product")
     public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
 
@@ -115,6 +85,22 @@ public class ProductController {
         Long couponId = couponService.findCouponByProduct(prodId);
         model.addAttribute("couponId", couponId);
         PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
+
+        Set<String> addedOptions = new HashSet<>();
+
+        GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+            if (auth.getUser().getCustomer() != null) {
+                userLogService.saveUserLog(auth.getUser().getCustomer().getId(), prodId, "view");
+            }
+        }
+        List<Product> related = recommendationService.findRelatedProducts(prodId);
+        if(related.size()>0){
+            model.addAttribute("related", related);
+        }
+        model.addAttribute("addedOptions", addedOptions);
         model.addAttribute("prodDetail", prodDetail);
         GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
         model.addAttribute("location", location);

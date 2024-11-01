@@ -21,19 +21,8 @@ import java.util.Map;
 @Builder
 public class MyUserDetails implements UserDetails, OAuth2User{
     private Member user;
-
+    private String accessToken;
     private Map<String, Object> attributes;
-
-//    // 일반 로그인
-//    public MyUserDetails(Member user) {
-//        this.user = user;
-//    }
-
-//    // oauth 로그인
-//    public MyUserDetails(Member user, Map<String, Object> attributes) {
-//        this.user = user;
-//        this.attributes = attributes;
-//    }
 
     @Override
     public Map<String, Object> getAttributes() {

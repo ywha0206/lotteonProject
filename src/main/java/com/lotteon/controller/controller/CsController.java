@@ -5,6 +5,7 @@ import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.NoticeResponseDto;
 import com.lotteon.entity.article.Notice;
 import com.lotteon.entity.article.Qna;
+import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.repository.category.CategoryArticleRepository;
 import com.lotteon.service.article.FaqService;
 import com.lotteon.service.article.NoticeService;
@@ -22,7 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /*
  *  이름 : 박경림
  *  날짜 : 2024-10-30
@@ -48,6 +52,7 @@ public class CsController {
     public String join(Model model) {
         // 최신 공지사항 10개를 가져와서 모델에 추가
         List<Notice> noticeList = noticeService.getTop10Notices();
+        log.info("컨트롤러 노티스 "+noticeList.toString());
         model.addAttribute("notices", noticeList);
 
         // 최신 문의하기 리스트 5개
@@ -100,30 +105,47 @@ public class CsController {
 
 
     /* 자주묻는 질문*/
-    /* TODO: 자주묻는질문 1,2차 유형별 목록 */
     // 자주 묻는 질문 페이지
     @GetMapping("/faqs")
-    public String getFaqs(@RequestParam(required = false) String category,
-                          @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                          Model model) {
-        // 기본 카테고리 설정
-        category = (category == null || category.isEmpty()) ? "user" : category;
-        model.addAttribute("selectedCate1", category);
+    public String getFaqsByCategory(@RequestParam(required = false) String category, Model model) {
+        // 기본 카테고리를 설정합니다. category가 없으면 "user"를 기본으로 사용합니다.
+        final String selectedCategory = (category == null || category.isEmpty()) ? "user" : category;
+        model.addAttribute("selectedCate1", selectedCategory);
 
-        // 카테고리에 따른 FAQ 목록 페이징 조회
-        Page<ArticleDto> faqPage = faqService.getFaqsByCategory(category, pageable);
-        List<ArticleDto> faqs = faqPage.getContent();
 
-        // 페이징 정보 및 FAQ 목록을 모델에 추가
-        model.addAttribute("faqs", faqs);
-        model.addAttribute("page", faqPage);
+        // 1차 카테고리를 조회합니다.
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(selectedCategory, 1, 2)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다: " + selectedCategory));
 
-        return "pages/cs/faq/list";
+        // 2차 카테고리 리스트를 가져옵니다.
+        List<CategoryArticle> cate2List = categoryArticleRepository.findByParentCategoryId(cate1.getCategoryId());
+
+        // 각 2차 카테고리별 FAQ를 Map 형태로 저장하고, 모델에 추가합니다.
+        Map<String, List<ArticleDto>> faqMap = new HashMap<>();
+        cate2List.forEach(cate2 -> {
+            List<ArticleDto> faqList = faqService.getTop10FaqsByCategory(cate1, cate2); // FAQ 데이터 가져오기
+            faqMap.put(cate2.getCategoryName(), faqList);  // cate2 이름을 키로 추가
+        });
+
+        model.addAttribute("faqMap", faqMap); // FAQ 데이터를 Map으로 전달
+        return "pages/cs/faq/list";  // 뷰 파일로 이동
     }
 
-    @GetMapping("/faq")
-    public String faq(Model model) {
-        return "pages/cs/faq/view";
+    // FAQ 상세 보기
+    @GetMapping("/faq/view/{id}")
+    public String faqView(@PathVariable Long id, Model model) {
+        // 서비스에서 FAQ 가져오기
+        ArticleDto faq = faqService.getFaqById(id);
+        model.addAttribute("faq", faq);
+
+        // 1차 카테고리 정보 가져오기
+        CategoryArticle cate1 = faq.getCate1(); // 1차 카테고리 엔티티
+        if (cate1 != null) {
+            model.addAttribute("selectedCate1", cate1.getCategoryName()); // 1차 카테고리 이름 설정
+            model.addAttribute("categoryWarning", cate1.getCategoryWarning()); // 카테고리 경고 메시지 설정
+        }
+
+        return "pages/cs/faq/view"; // 상세보기 페이지로 이동
     }
 
 
