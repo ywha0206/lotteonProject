@@ -1,11 +1,6 @@
 package com.lotteon.dto.requestDto;
 
-import com.lotteon.entity.member.Member;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
