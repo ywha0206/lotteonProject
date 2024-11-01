@@ -247,6 +247,7 @@
     let count = 0;
     let basePrice = parseFloat([[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]);
     if(noOption){
+
         qty.style.display='block'
     }
     if(endOption){
@@ -341,6 +342,8 @@
         totalPrice.value = totalPriceValue;
     }
 
+
+
     async function optionIdChanger(event){
         if(endOption){
             const selectedOption = event.target.options[event.target.selectedIndex];
@@ -348,6 +351,7 @@
                 optionId.value = selectedOption.dataset.id;
                 if(selectedOption.dataset.price){
                     selectedAdditionalPrice = Number(selectedOption.dataset.price);
+                    calculateTotalPrice()
                 }
             }
         } else if(nextOption){
@@ -400,13 +404,27 @@
             qty.style.display='block'
             if(selectedOption.dataset.price){
                 selectedAdditionalPrice = Number(selectedOption.dataset.price);
+                calculateTotalPrice()
             }
 
         }
     }
 
-
     window.onload = function () {
+        const select1 = document.getElementById('select1');
+
+        if (endOption) {
+            const selectedOption = select1.options[select1.selectedIndex];
+            if (selectedOption.classList.contains("endOption")) {
+                optionId.value = selectedOption.dataset.id;
+                if (selectedOption.dataset.price) {
+                    selectedAdditionalPrice = Number(selectedOption.dataset.price);
+                    calculateTotalPrice();
+                }
+            }
+        }
+
+
         const cart= document.querySelector('.cart');
         const productForm = document.querySelector('#productForm');
 
@@ -492,6 +510,4 @@
 
     };
 
-
 </script>
-
