@@ -1,12 +1,16 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.GetAddressDto;
 import com.lotteon.dto.responseDto.GetCustomerCouponDto;
 import com.lotteon.dto.responseDto.GetMyCouponDto;
 import com.lotteon.dto.responseDto.GetPointsDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
+import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.member.Customer;
+import com.lotteon.entity.member.Member;
+import com.lotteon.service.article.QnaService;
 import com.lotteon.service.member.AddressService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.CouponService;
@@ -17,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,6 +45,8 @@ public class MyController {
     private final CustomerService customerService;
     private final PointService pointService;
     private final AddressService addressService;
+    private final QnaService qnaService;
+
 
     @ModelAttribute
     public void commonAttributes(Model model) {
@@ -141,10 +149,16 @@ public class MyController {
 
         return "pages/my/point";
     }
+
     @GetMapping("/qnas")
-    public String qna(Model model) {
-        return "pages/my/qna";
+    public String getMyQnas(Model model, Principal principal) {
+        MyUserDetails userDetails = (MyUserDetails) ((Authentication) principal).getPrincipal();
+        Member memberId = userDetails.getUser(); // MyUserDetails에서 ID를 가져오는 메서드 사용
+        List<ArticleDto> qnaList = qnaService.getMyQnas(memberId.getId());
+        model.addAttribute("qnaList", qnaList);
+        return "pages/my/qna"; // 뷰 파일로 연결
     }
+
     @GetMapping("/reviews")
     public String review(Model model) {
         return "pages/my/review";

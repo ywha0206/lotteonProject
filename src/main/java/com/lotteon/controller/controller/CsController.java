@@ -105,7 +105,6 @@ public class CsController {
 
 
     /* 자주묻는 질문*/
-    /* TODO: 자주묻는질문 1,2차 유형별 목록 */
     // 자주 묻는 질문 페이지
     @GetMapping("/faqs")
     public String getFaqsByCategory(@RequestParam(required = false) String category, Model model) {
