@@ -47,23 +47,6 @@ public class AuthController {
         return "pages/auth/login";
     }
 
-    @RequestMapping("/{type}/callback")
-    public String socialLogin(@PathVariable String type, @RequestParam String code, Model model) {
-        String accessCode = socialService.getAccessToken(code,type);
-        log.info("accessCode : " +accessCode);
-        MyUserDetails member = socialService.getUserInfo(accessCode,type);
-        // Authentication 객체 생성 (principal = member, credential = null, 권한 목록)
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                member, null, member.getAuthorities()
-        );
-
-        // SecurityContextHolder에 인증 객체 설정
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // 로그인 후 리다이렉트할 경로 설정
-        return "redirect:/";
-    }
-
     @GetMapping("/join")
     public String join() {
         return "pages/auth/join";
