@@ -450,7 +450,7 @@
                 addItems.innerHTML = product.map(v=>`
                 <li><a href="/prod/product?prodId=${v.id}">
                     <div class="photo1">
-                        <img src="/file/+${v.img}" class="bImg" alt="베스트 상품 이미지 1">
+                        <img src="/file/${v.img}" class="bImg" alt="베스트 상품 이미지 1">
                     </div><!--.photo-->
                     <dl>
                         <dt class="Btit cf">
@@ -468,7 +468,7 @@
                 addItems.innerHTML = product.map(v=>`
                     <li><a href="/prod/product?prodId=${v.id}">
                         <div class="photo">
-                            <img src="/file/+${v.img}" alt="hit photo1">
+                            <img src="/file/${v.img}" alt="hit photo1">
                         </div><!--.photo-->
                         <dl>
                             <dt class="proTit cf">
