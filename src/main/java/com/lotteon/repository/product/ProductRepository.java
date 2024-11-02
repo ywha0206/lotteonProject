@@ -40,4 +40,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
     Page<Product> findAllByOrderByProdPriceAsc(Pageable pageable);
 
     Page<Product> findAllByOrderByProdPriceDesc(Pageable pageable);
+
+    List<Product> findTop3ByOrderByProdOrderCntDesc();
+
+    List<Product> findTop4ByOrderByProdViewsDesc();
+
+    List<Product> findTop4ByOrderByProdRdateDesc();
+
+    List<Product> findTop4ByOrderByProdRatingDesc();
 }

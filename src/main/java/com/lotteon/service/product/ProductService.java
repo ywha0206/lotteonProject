@@ -2,6 +2,7 @@ package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
+import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Product;
@@ -357,6 +358,30 @@ public class ProductService {
         Page<Product> products2 = new PageImpl<>(products, pageable, total);
         Page<GetProductDto> dtos = products2.map(v->v.toGetProductDto());
         System.out.println(dtos);
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findBestItem() {
+        List<Product> products = productRepository.findTop3ByOrderByProdOrderCntDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainBestDto).toList();
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findHitItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdViewsDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findRecentItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdRdateDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findRecommendItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdRatingDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
         return dtos;
     }
 }
