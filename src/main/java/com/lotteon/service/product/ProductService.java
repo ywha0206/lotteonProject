@@ -46,6 +46,7 @@ public class ProductService {
     private final ModelMapper modelMapper;
     private final SellerRepository sellerRepository;
     private final JPAQueryFactory queryFactory;
+
     @Value("${file.upload-dir}")
     private String uploadPath;
 

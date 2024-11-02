@@ -131,4 +131,8 @@ public class Product {
                 .type("hit")
                 .build();
     }
+
+    public void updateRating(double averageScore) {
+        this.prodRating = (int)averageScore;
+    }
 }

@@ -1,6 +1,7 @@
 package com.lotteon.controller.apicontroller;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.PostReviewDto;
 import com.lotteon.dto.requestDto.cartOrder.*;
 import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
@@ -49,6 +50,7 @@ public class ApiProductController {
     private final UserLogService userLogService;
     private final ProductOptionService productOptionService;
     private final ProductService productService;
+    private final ReviewService reviewService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
@@ -215,6 +217,15 @@ public class ApiProductController {
         map.put("products",products);
 
         return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<?> insertReview(
+            @RequestBody PostReviewDto review
+    ){
+        String result = reviewService.addReview(review);
+
+        return ResponseEntity.ok().body(result);
     }
 
 }

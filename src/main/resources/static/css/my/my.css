@@ -70,8 +70,8 @@ body{height: 100vh;}
 #my table.order .prodPrice {margin-top: 6px;font-family: '고딕';font-size: 16px;font-weight: bold;color: #222;}
 #my table.order .prodPrice::after {content: '원';font-size: 12px;}
 #my table.order .confirm{display: flex; flex-direction: column; align-items: center;}
-#my table.order .confirm > a {display: block;width: 100px;height: 30px; padding: 6px; box-sizing: border-box; font-size: 12px;}
-#my table.order a {margin-top: 2px;font-family: '돋움';color: #676767;line-height: 19px;}
+#my table.order .confirm > button {display: block;width: 100px; height: 30px; padding: 6px; box-sizing: border-box; font-size: 12px; border: none;}
+#my table.order button {margin-top: 2px;font-family: '돋움';color: #676767;line-height: 19px;}
 
 
 #my table.order .color{background: #558ED5; color: #FFF;}

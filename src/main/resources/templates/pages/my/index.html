@@ -1,5 +1,6 @@
 <link rel="stylesheet" th:href="@{/css/my/my.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/my/popup.css}">
 <header th:replace="layout/main/header.html"></header>
 <th:block th:replace="layout/my/modal.html"></th:block>
 <main>
@@ -40,10 +41,10 @@
             </td>
             <td class="status" th:text="${order.orderState==0}?'배송중':'배송완료'">배송완료</td>
             <td class="confirm">
-              <a href="#" class="receive color">수취확인</a>
-              <a href="#" class="review color">상품평쓰기</a>
-              <a href="#" class="refund grey">반품신청</a>
-              <a href="#" class="exchange grey">교환신청</a>
+              <button class="receive color">수취확인</button>
+              <button onclick="openReviewWrite(event)" th:data-name="${order.prodName}" th:data-id="${order.orderId}" th:data-prod="${order.prodId}" class="review color">상품평쓰기</button>
+              <button class="refund grey">반품신청</button>
+              <button class="exchange grey">교환신청</button>
             </td>
           </tr>
         </table>
@@ -177,5 +178,62 @@
   </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+
+<script th:inline="javascript">
+  let orderId;
+  let prodId;
+  let content;
+  let score;
+  function openReviewWrite(event) {
+    orderId = event.target.dataset.id;
+    prodId = event.target.dataset.prod;
+    const prodName = event.target.dataset.name;
+    const popReviewDialog = document.getElementById("popReview");
+    const productNameElement = popReviewDialog.querySelector(".productName");
+    productNameElement.textContent = event.target.dataset.name;
+    popReviewDialog.showModal();
+  }
+
+  const stars = document.querySelectorAll('.star');
+  // const selectedRatingDisplay = document.getElementById('selected-rating');
+
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+      const ratingValue = this.dataset.value;
+
+      stars.forEach(s => {
+        if (s.dataset.value <= ratingValue) {
+          s.classList.add('filled');
+        } else {
+          s.classList.remove('filled');
+        }
+      });
+      score = ratingValue;
+    });
+  });
+
+  document.getElementById('review-content').addEventListener('input',(e)=>{
+    content = e.target.value;
+  })
+
+  document.getElementById('reviewButton').addEventListener('click',async ()=>{
+    const submitData = {
+      "prodId" : prodId,
+      "orderId" : orderId,
+      "review" : content,
+      "score" : score
+    }
+    try {
+      const resp = await axios.post("/prod/review",submitData,{
+        headers: {
+          "Content-Type" : "application/json"
+        }
+      })
+      alert(resp.data)
+    } catch (e) {
+
+    }
+  })
+</script>
 
 
