@@ -6,6 +6,7 @@ import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
+import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.entity.product.Order;
 import com.lotteon.repository.member.UserLogRepository;
@@ -14,10 +15,7 @@ import com.lotteon.service.point.CouponService;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.point.PointService;
-import com.lotteon.service.product.CartService;
-import com.lotteon.service.product.OrderItemService;
-import com.lotteon.service.product.OrderService;
-import com.lotteon.service.product.ProductOptionService;
+import com.lotteon.service.product.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -50,6 +48,7 @@ public class ApiProductController {
     private final UserLogRepository userLogRepository;
     private final UserLogService userLogService;
     private final ProductOptionService productOptionService;
+    private final ProductService productService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
@@ -196,6 +195,26 @@ public class ApiProductController {
         });
         session.removeAttribute("selectedProducts");
         return orderItemResult;
+    }
+
+    @GetMapping("/main")
+    public ResponseEntity<?> getMainPage(
+            @RequestParam String type
+    ){
+        List<GetMainProductDto> products;
+        Map<String,Object> map = new HashMap<>();
+        if(type.equals("bestRank")){
+            products = productService.findBestItem();
+        } else if(type.equals("hit")){
+            products = productService.findHitItem();
+        } else if(type.equals("recent")){
+            products = productService.findRecentItem();
+        } else {
+            products = productService.findRecommendItem();
+        }
+        map.put("products",products);
+
+        return ResponseEntity.ok(map);
     }
 
 }
