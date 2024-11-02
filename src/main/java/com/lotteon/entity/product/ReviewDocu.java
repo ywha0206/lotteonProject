@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,18 +22,18 @@ public class ReviewDocu {
     private String id;
 
     @JoinColumn(name = "prod_id")
-    private Product product;
+    private Long prodId;
 
     @JoinColumn(name = "cust_id")
-    private Customer customer;
+    private Long custId;
 
     @Column(name = "review_score")
-    private int reviewScore;
+    private Integer reviewScore;
 
     @Column(name = "review_content")
     private String reviewContent;
 
     @Column(name = "review_rdate")
     @CreationTimestamp
-    private Timestamp reviewRdate;
+    private LocalDateTime reviewRdate;
 }

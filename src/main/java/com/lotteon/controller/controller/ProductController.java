@@ -11,10 +11,7 @@ import com.lotteon.entity.product.ProductOption;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
-import com.lotteon.service.product.ProductDetailService;
-import com.lotteon.service.product.ProductOptionService;
-import com.lotteon.service.product.ProductService;
-import com.lotteon.service.product.RecommendationService;
+import com.lotteon.service.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -26,9 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,6 +44,7 @@ public class ProductController {
     private final UserLogService userLogService;
     private final RecommendationService recommendationService;
     private final ProductOptionService productOptionService;
+    private final ReviewService reviewService;
 
 
     @GetMapping("/products")

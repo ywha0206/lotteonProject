@@ -437,8 +437,6 @@
         addItems.innerHTML = `<img src="/images/spinner.gif">`
         let url = "/prod/main?type="+category
         if (isLoading) return; // 이미 로딩 중이면 실행하지 않음
-        // isLoading = true;
-        // spinner.style.display = 'block'; // 스피너 표시
         try {
             const resp = await axios.get(url,{
                 headers : {
