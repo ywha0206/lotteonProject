@@ -28,6 +28,10 @@
      수정이력
       - 2025/10/30 (수) 김민희 - 실시간 검색어 및 GNB 영역 마크업 구조 수정
       - 2025/11/02 (토) 김민희 - 로그인 시 관리자,판매자,일반사용자 구분 되는 인가설정
+
+     날짜 : 2024/11/03
+     이름 : 이상훈
+     내용 : 메인 카테고리 출력, 섹션별 상품출력, 캐싱처리, 권한 오류 수정 연관검색기능구현, 실시간 검색어 구현
 -->
 
 <body>
@@ -63,7 +67,7 @@
                     <li sec:authorize="hasRole('seller')"><a>안녕하세요, 판매자님 환영합니다.</a></li>
 
                     <!-- (customer)일반사용자로 로그인 시 사용자등급별 출력 -->
-                    <li sec:authorize="isAuthenticated()">
+                    <li sec:authorize="hasRole('customer')">
                         안녕하세요&nbsp;
                         <span th:text="${#authentication.principal.user.customer.custName}"></span>&nbsp;님&nbsp;
                         &#40;<span th:switch="${#authentication.principal.user.customer.custGrade}">
@@ -119,11 +123,11 @@
                     <!-- 실시간 검색어 start -->
                     <div class="search-slider">
                         <ul class="searchSlider">
-                            <li><a href="#">실시간 검색어 1</a></li>
-                            <li><a href="#">실시간 검색어 2</a></li>
-                            <li><a href="#">실시간 검색어 3</a></li>
-                            <li><a href="#">실시간 검색어 4</a></li>
-                            <li><a href="#">실시간 검색어 5</a></li>
+<!--                            <li><a href="#">실시간 검색어 1</a></li>-->
+<!--                            <li><a href="#">실시간 검색어 2</a></li>-->
+<!--                            <li><a href="#">실시간 검색어 3</a></li>-->
+<!--                            <li><a href="#">실시간 검색어 4</a></li>-->
+<!--                            <li><a href="#">실시간 검색어 5</a></li>-->
                         </ul><!-- .searchSlider -->
                         <div class="sch_ico_down">
                             <img th:src="@{/images/icon_search_down.svg}" alt="실시간검색어ico(∨)">
@@ -140,18 +144,36 @@
 
     let timer;
 
-    $(document).ready(function(){
-        $('.searchSlider').bxSlider({
-            mode: 'vertical',    // 세로로 슬라이드 이동
-            auto: true,          // 자동 슬라이드 설정
-            speed: 500,          // 슬라이드 전환 속도
-            pause: 3000,         // 슬라이드 대기 시간
-            controls: false,     // 이전/다음 버튼 제거
-            pager: false,        // 하단 페이저 제거
-            autoHover: true      // 마우스 호버 시 일시 정지
-        });
+    window.onload = async function (){
+        try {
+            const resp = await axios.get("/search/live-search-top10",{
+                headers:{
+                    "Content-Type" : "application/json"
+                }
+            })
+            const searches = resp.data.searches
+            document.querySelector('.searchSlider').innerHTML = searches.map((v, index) => `
+                <li><a href="/prod/products/search?keyword=${v.keyword.replace(/"/g, '')}">${v.keyword.replace(/"/g, '')}&nbsp;&nbsp;&nbsp;${index + 1}</a></li>
+            `).join('');
 
-    });
+            $(document).ready(function(){
+                $('.searchSlider').bxSlider({
+                    mode: 'vertical',    // 세로로 슬라이드 이동
+                    auto: true,          // 자동 슬라이드 설정
+                    speed: 500,          // 슬라이드 전환 속도
+                    pause: 3000,         // 슬라이드 대기 시간
+                    controls: false,     // 이전/다음 버튼 제거
+                    pager: false,        // 하단 페이저 제거
+                    autoHover: true      // 마우스 호버 시 일시 정지
+                });
+
+            });
+        } catch (e) {
+
+        }
+    }
+
+
 
     function openRelated(){
         const related = document.getElementById('related-box')
