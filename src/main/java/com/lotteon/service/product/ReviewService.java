@@ -77,7 +77,6 @@ public class ReviewService {
 
         return "리뷰가 성공적으로 작성되었습니다.";
     }
-
     private void updatePoint(Customer customer) {
 
         LocalDate today = LocalDate.now().plusMonths(2);
@@ -95,7 +94,6 @@ public class ReviewService {
         customer.updatePoint(points);
         customerRepository.save(customer);
     }
-
     public List<GetReviewsDto> findTop3() {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer = auth.getUser().getCustomer();
