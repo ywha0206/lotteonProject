@@ -223,6 +223,7 @@ public class ProductService {
         double total = postProductDTO.getProdPrice() - postProductDTO.getProdPrice() * (postProductDTO.getProdDiscount()/100);
         log.info("123432114455" + total);
         postProductDTO.setTotalPrice(total);
+        opt.get().updateViewCnt();
 
         return postProductDTO;
     }
@@ -430,5 +431,17 @@ public class ProductService {
         if (cachedProducts == null || !cachedProducts.equals(dtos)) {
             bestredisTemplate.opsForValue().set("best_products", dtos, 2, TimeUnit.HOURS);
         }
+    }
+
+    public List<GetMainProductDto> findDiscountItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdDiscountDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findSavePointItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdPointDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
     }
 }

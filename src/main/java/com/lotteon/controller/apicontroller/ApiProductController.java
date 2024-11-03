@@ -216,8 +216,12 @@ public class ApiProductController {
             products = productService.findHitItem();
         } else if(type.equals("recent")){
             products = productService.findRecentItem();
-        } else {
+        } else if(type.equals("recommend")) {
             products = productService.findRecommendItem();
+        } else if(type.equals("discount")){
+            products = productService.findDiscountItem();
+        } else {
+            products = productService.findSavePointItem();
         }
         map.put("products",products);
 

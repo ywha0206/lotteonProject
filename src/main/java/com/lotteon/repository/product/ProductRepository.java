@@ -48,4 +48,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
     List<Product> findTop4ByOrderByProdRdateDesc();
 
     List<Product> findTop4ByOrderByProdRatingDesc();
+
+    List<Product> findTop4ByOrderByProdDiscountDesc();
+
+    List<Product> findTop4ByOrderByProdPointDesc();
 }

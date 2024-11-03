@@ -143,4 +143,8 @@ public class Product {
                 .prodId(id)
                 .build();
     }
+
+    public void updateViewCnt() {
+        this.prodViews = prodViews +1;
+    }
 }
