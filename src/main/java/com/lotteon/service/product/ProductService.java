@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,8 @@ public class ProductService {
     private final JPAQueryFactory queryFactory;
     private final OrderRepository orderRepository;
     private final RedisTemplate<String,Object> redisTemplate;
+    private final RedisTemplate<String,List<GetMainProductDto>> bestredisTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
@@ -374,9 +377,25 @@ public class ProductService {
     }
 
     public List<GetMainProductDto> findBestItem() {
+
+        List<GetMainProductDto> cachedProducts = bestredisTemplate.opsForValue().get("best_products");
+        System.out.println(cachedProducts);
+        if (cachedProducts != null) {
+            return cachedProducts;
+        }
+
         List<Product> products = productRepository.findTop3ByOrderByProdOrderCntDesc();
-        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainBestDto).toList();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainBestDto).collect(Collectors.toList());
+
+        bestredisTemplate.opsForValue().set("best_products", dtos, 2, TimeUnit.HOURS);
         return dtos;
+    }
+
+    public void updateBestItems() {
+        List<GetMainProductDto> bestProducts = findBestItem();
+
+        // 클라이언트에게 실시간으로 베스트 상품 정보 전송
+        messagingTemplate.convertAndSend("/topic/bestProducts", bestProducts);
     }
 
     public List<GetMainProductDto> findHitItem() {

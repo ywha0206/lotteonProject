@@ -81,6 +81,35 @@
     let isLoading = false;
     const sections = ['bestRank','hi']
     const loadedSections = new Set();
+
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function () {
+        stompClient.subscribe('/topic/bestProducts', function (message) {
+            const bestProducts = JSON.parse(message.body);
+            console.log(bestProducts)
+
+            // 클라이언트에 베스트 상품 정보를 표시
+            document.querySelector('.bestRank').innerHTML = bestProducts.map(v => `
+            <li><a href="/prod/product?prodId=${v.id}">
+                    <div class="photo1">
+                        <img style="width:140px;" src="/file/${v.img}" class="bImg" alt="베스트 상품 이미지 1">
+                    </div><!--.photo-->
+                    <dl>
+                        <dt class="Btit cf">
+                            <p>${v.prodName}</p>
+                            <p class="oPrice cf">${v.prodPrice} </p>
+                            <em class="dis cf">${v.prodDiscount}%&#8595;</em>
+                        </dt><!--.Btit-->
+                        <dd class="dPrice">
+                            ${v.prodPrice}
+                        </dd><!--.price-->
+                    </dl>
+                </a></li>
+            `).join('');
+        });
+    });
     window.addEventListener('scroll', () => {
         if (isLoading) return;
         sections.forEach(section => {

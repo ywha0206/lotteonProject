@@ -182,12 +182,7 @@ public class ApiProductController {
         }
 
         log.info("카트 아이템 아이디 세션에 저장된 거 "+cartItemIds.toString());
-        if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
-            pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
-        }
-        if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
-            customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
-        }
+
 
         OrderDto orderDto = postOrderDto.getOrderDto();
         List<OrderItemDto> orderItemDto = postOrderDto.getOrderItemDto();
@@ -196,6 +191,12 @@ public class ApiProductController {
         selectedProducts.forEach(v->{
             userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
         });
+        if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
+            pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
+        }
+        if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
+            customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
+        }
         session.removeAttribute("selectedProducts");
         return orderItemResult;
     }
