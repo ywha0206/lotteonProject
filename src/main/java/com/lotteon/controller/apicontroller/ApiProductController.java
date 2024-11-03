@@ -1,6 +1,7 @@
 package com.lotteon.controller.apicontroller;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.GetProductNamesDto;
 import com.lotteon.dto.requestDto.PostReviewDto;
 import com.lotteon.dto.requestDto.cartOrder.*;
 import com.lotteon.dto.requestDto.PostCouponDto;
@@ -226,6 +227,16 @@ public class ApiProductController {
         String result = reviewService.addReview(review);
 
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/review/names")
+    public ResponseEntity<?> findReviewNames(
+            @RequestParam Long orderId
+    ){
+        List<GetProductNamesDto> names = productService.findReviewNames(orderId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("names",names);
+        return ResponseEntity.ok(map);
     }
 
 }

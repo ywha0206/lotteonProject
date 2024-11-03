@@ -1,5 +1,6 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.dto.responseDto.GetReviewsDto;
 import com.lotteon.entity.member.Customer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,6 +26,9 @@ public class ReviewDocu {
     @JoinColumn(name = "prod_id")
     private Long prodId;
 
+    @JoinColumn(name = "prod_name")
+    private String prodName;
+
     @JoinColumn(name = "cust_id")
     private Long custId;
 
@@ -36,4 +41,16 @@ public class ReviewDocu {
     @Column(name = "review_rdate")
     @CreationTimestamp
     private LocalDateTime reviewRdate;
+
+    public GetReviewsDto toGetReviewsDto() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String rdate = reviewRdate.format(formatter);
+        return GetReviewsDto.builder()
+                .review(reviewContent)
+                .prodId(prodId)
+                .score(reviewScore)
+                .prodName(prodName)
+                .rdate(rdate)
+                .build();
+    }
 }

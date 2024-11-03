@@ -5,11 +5,9 @@ import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.member.Seller;
-import com.lotteon.entity.product.Product;
-import com.lotteon.entity.product.ProductDetail;
-import com.lotteon.entity.product.ProductOption;
-import com.lotteon.entity.product.QProduct;
+import com.lotteon.entity.product.*;
 import com.lotteon.repository.member.SellerRepository;
+import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductDetailRepository;
 import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
@@ -46,6 +44,7 @@ public class ProductService {
     private final ModelMapper modelMapper;
     private final SellerRepository sellerRepository;
     private final JPAQueryFactory queryFactory;
+    private final OrderRepository orderRepository;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
@@ -383,6 +382,13 @@ public class ProductService {
     public List<GetMainProductDto> findRecommendItem() {
         List<Product> products = productRepository.findTop4ByOrderByProdRatingDesc();
         List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetProductNamesDto> findReviewNames(Long orderId) {
+        Optional<Order> order = orderRepository.findById(orderId);
+        List<Product> products = order.get().getOrderItems().stream().map(v->v.getProduct()).toList();
+        List<GetProductNamesDto> dtos = products.stream().map(Product::toGetProductNamesDto).toList();
         return dtos;
     }
 }

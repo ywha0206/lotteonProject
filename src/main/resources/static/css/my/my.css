@@ -327,3 +327,10 @@ body{height: 100vh;}
     font-weight: bold;
 }
 
+.page {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 10px;
+}
