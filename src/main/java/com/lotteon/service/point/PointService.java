@@ -1,6 +1,7 @@
 package com.lotteon.service.point;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.responseDto.GetPointsDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.point.Point;
@@ -172,4 +173,5 @@ public class PointService {
         }
 
     }
+
 }

@@ -50,7 +50,7 @@ public class SearchService {
         return Collections.emptyList();
     }
 
-    @Scheduled(fixedRate = 7100000)
+    @Scheduled(fixedRate = 3600000)
     public void updateTopSearches() {
         Set<ZSetOperations.TypedTuple<String>> topSearches = redisTemplate.opsForZSet()
                 .reverseRangeWithScores("search_count", 0, 9);
@@ -64,6 +64,8 @@ public class SearchService {
                 assert searchKeyword != null;
                 redisTemplate.opsForZSet().add("search_count", searchKeyword, newScore);
             }
+
+            redisTemplate.expire("search_count", 2, TimeUnit.HOURS);
         }
     }
 }
