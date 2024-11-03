@@ -422,4 +422,13 @@ public class ProductService {
         List<GetProductNamesDto> dtos = products.stream().map(Product::toGetProductNamesDto).toList();
         return dtos;
     }
+
+    public void top3UpdateBoolean() {
+        List<GetMainProductDto> cachedProducts = bestredisTemplate.opsForValue().get("best_products");
+        List<Product> products = productRepository.findTop3ByOrderByProdOrderCntDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainBestDto).collect(Collectors.toList());
+        if (cachedProducts == null || !cachedProducts.equals(dtos)) {
+            bestredisTemplate.opsForValue().set("best_products", dtos, 2, TimeUnit.HOURS);
+        }
+    }
 }
