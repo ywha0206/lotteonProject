@@ -4,11 +4,16 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostReviewDto;
 import com.lotteon.dto.responseDto.GetReviewsDto;
 import com.lotteon.entity.member.Customer;
+import com.lotteon.entity.point.Point;
 import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ReviewDocu;
+import com.lotteon.repository.member.CustomerRepository;
+import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductRepository;
 import com.lotteon.repository.product.ReviewDocuRepository;
+import com.lotteon.service.member.CustomerService;
+import com.lotteon.service.point.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +34,10 @@ public class ReviewService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final ReviewDocuRepository reviewDocuRepository;
+    private final PointService pointService;
+    private final PointRepository pointRepository;
+    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
 
     public String addReview(PostReviewDto dto) {
         Optional<Product> product = productRepository.findById(dto.getProdId());
@@ -63,7 +73,27 @@ public class ReviewService {
         product.get().updateRating(averageScore);
         productRepository.save(product.get());
 
+        this.updatePoint(customer);
+
         return "리뷰가 성공적으로 작성되었습니다.";
+    }
+
+    private void updatePoint(Customer customer) {
+
+        LocalDate today = LocalDate.now().plusMonths(2);
+        
+        Point point = Point.builder()
+                .pointVar(50)
+                .pointType(1)
+                .pointEtc("리뷰작성")
+                .customer(customer)
+                .pointExpiration(today)
+                .build();
+        pointRepository.save(point);
+
+        int points = customerService.updateCustomerPoint(customer);
+        customer.updatePoint(points);
+        customerRepository.save(customer);
     }
 
     public List<GetReviewsDto> findTop3() {

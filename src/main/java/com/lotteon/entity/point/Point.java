@@ -138,4 +138,8 @@ public class Point {
     public void changePointVar(int pointVar) {
         this.pointVar = pointVar;
     }
+
+    public void expirationPoint() {
+        this.pointType = 0;
+    }
 }

@@ -20,7 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -45,6 +48,7 @@ public class ProductService {
     private final SellerRepository sellerRepository;
     private final JPAQueryFactory queryFactory;
     private final OrderRepository orderRepository;
+    private final RedisTemplate<String,Object> redisTemplate;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
@@ -239,6 +243,13 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, 7);
         Page<Product> products;
         Page<GetProductDto> dtos;
+        if(!search.equals("0")){
+            String redisKey = "search_count"; // ZSet 키
+            double incrementValue = 1.0; // 점수로 사용할 값 (1 증가)
+            redisTemplate.opsForZSet().incrementScore(redisKey, search, incrementValue);
+            redisTemplate.expire(redisKey, 2, TimeUnit.HOURS);
+        }
+
         if(sortBy.equals("0")){
             if(search.equals("0")){
                 products = productRepository.findAllByOrderByProdOrderCntDesc(pageable);
@@ -253,6 +264,7 @@ public class ProductService {
             }
         }
         dtos = products.map(v->v.toGetProductDto());
+
         return dtos;
     }
 
