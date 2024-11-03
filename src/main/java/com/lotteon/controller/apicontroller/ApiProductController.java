@@ -198,6 +198,9 @@ public class ApiProductController {
             customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
         }
         session.removeAttribute("selectedProducts");
+
+        productService.top3UpdateBoolean();
+
         return orderItemResult;
     }
 

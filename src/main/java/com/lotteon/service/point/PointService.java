@@ -41,6 +41,12 @@ public class PointService {
         }
     }
 
+    @Scheduled(cron = "30 59 23 * * ?")
+    public void deletePoint(){
+        List<Point> points = pointRepository.findAllByPointType(0);
+        pointRepository.deleteAll(points);
+    }
+
     public Page<GetPointsDto> findAllByCustomer(int page) {
         Pageable pageable = PageRequest.of(page, 5);
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
