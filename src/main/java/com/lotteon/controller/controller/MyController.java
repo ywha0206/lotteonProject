@@ -2,10 +2,7 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
-import com.lotteon.dto.responseDto.GetAddressDto;
-import com.lotteon.dto.responseDto.GetCustomerCouponDto;
-import com.lotteon.dto.responseDto.GetMyCouponDto;
-import com.lotteon.dto.responseDto.GetPointsDto;
+import com.lotteon.dto.responseDto.*;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
 import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.member.Customer;
@@ -17,6 +14,7 @@ import com.lotteon.service.point.CouponService;
 import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.point.PointService;
 import com.lotteon.service.product.OrderService;
+import com.lotteon.service.product.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -46,6 +44,7 @@ public class MyController {
     private final PointService pointService;
     private final AddressService addressService;
     private final QnaService qnaService;
+    private final ReviewService reviewService;
 
 
     @ModelAttribute
@@ -66,6 +65,13 @@ public class MyController {
         if(points.isEmpty()){
             model.addAttribute("noPoint",true);
             return "pages/my/index";
+        }
+        List<GetReviewsDto> reviews = reviewService.findTop3();
+        if(reviews!=null){
+            model.addAttribute("reviews",reviews);
+            model.addAttribute("noReview",false);
+        } else {
+            model.addAttribute("noReview",true);
         }
         model.addAttribute("orders", orders);
         model.addAttribute("points", points);
@@ -160,7 +166,20 @@ public class MyController {
     }
 
     @GetMapping("/reviews")
-    public String review(Model model) {
+    public String review(
+            Model model,
+            @RequestParam(value = "page",defaultValue = "0") int page
+    ) {
+        Page<GetReviewsDto> reviews = reviewService.findAll(page);
+        if(reviews==null) {
+            model.addAttribute("noReview",true);
+        } else {
+            model.addAttribute("reviews",reviews);
+            model.addAttribute("noReview",false);
+            model.addAttribute("totalPages", reviews.getTotalPages());
+        }
+        model.addAttribute("page", page);
+
         return "pages/my/review";
     }
     @GetMapping("/address")

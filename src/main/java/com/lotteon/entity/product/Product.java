@@ -1,6 +1,7 @@
 package com.lotteon.entity.product;
 
 import com.lotteon.dto.requestDto.GetProductDto;
+import com.lotteon.dto.requestDto.GetProductNamesDto;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
@@ -134,5 +135,12 @@ public class Product {
 
     public void updateRating(double averageScore) {
         this.prodRating = (int)averageScore;
+    }
+
+    public GetProductNamesDto toGetProductNamesDto(){
+        return GetProductNamesDto.builder()
+                .productName(prodName)
+                .prodId(id)
+                .build();
     }
 }

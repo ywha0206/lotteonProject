@@ -2,6 +2,7 @@ package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostReviewDto;
+import com.lotteon.dto.responseDto.GetReviewsDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ReviewDocu;
@@ -9,6 +10,9 @@ import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductRepository;
 import com.lotteon.repository.product.ReviewDocuRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +50,7 @@ public class ReviewService {
                 .prodId(dto.getProdId())
                 .reviewContent(dto.getReview())
                 .reviewRdate(LocalDateTime.now())
+                .prodName(product.get().getProdName())
                 .build();
         reviewDocuRepository.save(review);
 
@@ -59,5 +64,30 @@ public class ReviewService {
         productRepository.save(product.get());
 
         return "리뷰가 성공적으로 작성되었습니다.";
+    }
+
+    public List<GetReviewsDto> findTop3() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        List<ReviewDocu> reviews = reviewDocuRepository.findTop3ByCustIdOrderByReviewRdateDesc(customer.getId());
+        if(reviews.isEmpty()){
+            return null;
+        }
+        List<GetReviewsDto> dtos = reviews.stream().map(ReviewDocu::toGetReviewsDto).toList();
+
+        return dtos;
+    }
+
+    public Page<GetReviewsDto> findAll(int page) {
+        Pageable pageable = PageRequest.of(page,10);
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        Page<ReviewDocu> reviews = reviewDocuRepository.findAllByCustIdOrderByReviewRdateDesc(customer.getId(),pageable);
+        if(reviews.getTotalElements()==0){
+            return null;
+        }
+        Page<GetReviewsDto> dtos = reviews.map(ReviewDocu::toGetReviewsDto);
+
+        return dtos;
     }
 }
