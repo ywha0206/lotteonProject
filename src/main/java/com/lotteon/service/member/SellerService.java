@@ -64,23 +64,25 @@ public class SellerService {
             Member member = Member.builder()
                     .memUid(postSellerSignupDTO.getMemId())
                     .memPwd(passwordEncoder.encode(postSellerSignupDTO.getMemPwd()))
-                    .memRole("customer") // 기본 사용자 유형 "customer"
+                    .memRole("seller") // 기본 사용자 유형 "customer"
                     .memState("basic")   // 기본 계정 상태 "basic"
                     .build();
 
             memberRepository.save(member);
 
+            String addr = postSellerSignupDTO.getAddr1() + "/" + postSellerSignupDTO.getAddr2() + "/" + postSellerSignupDTO.getAddr3();
             // Seller 객체 생성 및 저장 (판매자 DB에 회사명,대표,사업자등록번호,통신판매업번호,전화번호,팩스,주소(7)저장)
             Seller seller = Seller.builder()
                     .member(member)
                     .sellCompany(postSellerSignupDTO.getSellCompany())               // 회사명
                     .sellRepresentative(postSellerSignupDTO.getSellRepresentative()) // 대표
-                    .sellGrade(postSellerSignupDTO.getSellGrade())                   // 판매자 회원 등급
+                    .sellGrade(0)
                     .sellBusinessCode(postSellerSignupDTO.getSellBusinessCode())     // 사업자등록번호
                     .sellOrderCode(postSellerSignupDTO.getSellOrderCode())           // 통신판매업번호
                     .sellHp(postSellerSignupDTO.getSellHp())                         // 전화번호
                     .sellFax(postSellerSignupDTO.getSellFax())                       // 팩스번호
-                    .sellAddr(postSellerSignupDTO.getSellAddr())                     // 회사주소
+                    .sellAddr(addr)
+                    .sellEmail(postSellerSignupDTO.getSellEmail())
                     .build();
 
             sellerRepository.save(seller);
