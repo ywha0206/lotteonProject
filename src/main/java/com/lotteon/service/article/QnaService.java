@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QnaService {
 
-    @Autowired
     private final QnaRepository qnaRepository;
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
@@ -64,21 +63,25 @@ public class QnaService {
         return ArticleDto.fromEntity(qna);
     }
 
-    // QNA 목록 조회 (전부)
+
+
     public Page<ArticleDto> getAllQnas(Pageable pageable) {
-        // 1. QnaRepository에서 페이징 처리된 결과가 반환되게
-        Page<Qna> qnaPage;
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Member member = auth.getUser();
-        if(member.getMemRole().equals("seller")){
-            qnaPage = qnaRepository.findAllByMember_Seller(member.getSeller(),pageable);
-        } else {
-            qnaPage = qnaRepository.findAll(pageable);
-        }
-        // 2. Qna타입을 갖고있는 page를 ArticleDto타입을 갖는 page로 변환
-        Page<ArticleDto> result = qnaPage.map(qna-> ArticleDto.fromEntity(qna));
-        return result;
+    MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Member member = auth.getUser();
+
+    Page<Qna> qnaPage;
+        if ("seller".equals(member.getMemRole())) {
+        // 판매자일 경우 자신의 상품에 대한 QnA만 조회
+        qnaPage = qnaRepository.findAllByMember_Seller(member.getSeller(), pageable);
+    } else {
+        // 관리자는 모든 QnA를 조회
+        qnaPage = qnaRepository.findAll(pageable);
+
     }
+
+    // Qna 엔티티를 ArticleDto로 변환하여 반환
+        return qnaPage.map(ArticleDto::fromEntity);
+}
 
     // 답변 여부 확인
     public boolean hasAnswer(Long id) {
@@ -87,12 +90,6 @@ public class QnaService {
         return qna.getQnaAnswer() != null && !qna.getQnaAnswer().isEmpty();
     }
 
-    // Qna 삭제
-    public void deleteQna(Long id) {
-        Qna qna = qnaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 자주묻는질문을 찾을 수 없습니다. ID: " + id));
-        qnaRepository.delete(qna);
-    }
 
     public void deleteSelectedqnas(List<Long> ids) {
         List<Qna> qnasToDelete = qnaRepository.findAllById(ids);
@@ -148,10 +145,13 @@ public class QnaService {
         articleDto.setMemId(memberId);
 
         // 카테고리 설정 (1차, 2차 카테고리)
-        CategoryArticle cate1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate1Name(),1,2)
-                .orElseThrow(()->new IllegalArgumentException("해당 카테고리가 없습니다."));
-        CategoryArticle cate2 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate2Name(),2,2)
-                .orElseThrow(()->new IllegalArgumentException("해당 카테고리가 없습니다."));
+        // 기존 코드에서는 findByCategoryNameAndCategoryLevelAndCategoryType 메서드를 사용하여 카테고리를 찾았으나, 중복 결과로 인한 오류를 방지하기 위해 findFirstByCategoryNameAndCategoryLevelAndCategoryType 메서드로 수정했습니다.
+        CategoryArticle cate1 = categoryArticleRepository
+                .findFirstByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate1Name(), 1, 2)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
+        CategoryArticle cate2 = categoryArticleRepository
+                .findFirstByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate2Name(), 2, 2)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         // 회원 정보 설정
         Member member = memberRepository.findById(memberId)
@@ -176,7 +176,24 @@ public class QnaService {
         return savedQna.getId(); // 저장된 QnA ID 반환
     }
 
+    // QNA 삭제
+    public void deleteQna(Long id) {
+        Qna qna = qnaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 문의를 찾을 수 없습니다. ID: " + id));
+        qnaRepository.delete(qna);
+    }
 
+
+    // 선택 삭제
+    public void deleteSelectedQnas(List<Long> ids) {
+        List<Qna> qnasToDelete = qnaRepository.findAllById(ids);
+
+        if (qnasToDelete.isEmpty()) {
+            throw new IllegalArgumentException("삭제할 문의가 없습니다.");
+        }
+
+        qnaRepository.deleteAllById(ids);
+    }
 
 
     /* 일반 CS (목록, 보기) */

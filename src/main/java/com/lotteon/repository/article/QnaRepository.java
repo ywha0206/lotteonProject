@@ -2,6 +2,8 @@ package com.lotteon.repository.article;
 
 import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.category.CategoryArticle;
+import com.lotteon.entity.member.Member;
+
 import com.lotteon.entity.member.Seller;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
 
     List<Qna> findByMemberId(Long memberId); // 사용자 ID로 조회하는 메서드 추가
 
+    Page<Qna> findAllByMember_Seller(Seller seller, Pageable pageable);
 
     Page<Qna> findAllByMember_Seller(Seller seller, Pageable pageable);
 }

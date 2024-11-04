@@ -22,4 +22,5 @@ public interface FaqRepository extends JpaRepository<Faq,Long> {
 
     Page<Faq> findByCate1(CategoryArticle cate1, Pageable pageable);
 
+
 }

@@ -51,8 +51,9 @@
           </tbody>
         </table>
         <div class="button-group">
-          <button class="button--delete">삭제</button>
-          <button class="button--back">목록</button>
+          <!-- 삭제 버튼 클릭 시 폼 전송을 방지하고 JavaScript로만 삭제 동작을 수행 -->
+          <button th:data-id="${qna.id}" class="button--delete" th:onclick="|deleteQna(${qna.id}, event)|">삭제</button>
+          <button type="button" class="button--back" onclick="goToList();">목록</button>
         </div>
       </form>
     </article>
@@ -170,6 +171,33 @@
       return false;
     }
     return true;
+  }
+  // 개별 삭제 기능
+  function deleteQna(qnaId, event) {
+    // 기본 폼 제출 동작을 막아 POST 요청이 발생하지 않도록 합니다.
+    event.preventDefault();
+
+    if (confirm("정말로 이 문의를 삭제하시겠습니까?")) {
+      fetch(`/admin/cs/qna/delete/${qnaId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+              .then(response => {
+                if (response.ok) {
+                  alert("삭제가 완료되었습니다.");
+                  // 삭제가 완료된 후 목록 페이지로 이동
+                  window.location.href = "/admin/cs/qnas";
+                } else {
+                  return response.text().then(text => { throw new Error(text); });
+                }
+              })
+              .catch(error => {
+                console.error("삭제 중 오류가 발생했습니다:", error);
+                alert("삭제에 실패했습니다: " + error.message);
+              });
+    }
   }
 </script>
 
