@@ -101,6 +101,7 @@ public class OrderItemService {
                     .total(orderItem.getTotalPrice())
                     .discount(orderItem.getDiscount())
                     .deli(orderItem.getDeliver())
+                    .optionId(orderItem.getOptionId())
                     .build();
 
             log.info("오더아이템디티오 엔티티로 변환 : "+savedorderItem);
@@ -152,7 +153,10 @@ public class OrderItemService {
                                                                         .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
                                                                         .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
                                                                         .quantity(orderItem.getQuantity())
-                                                                        .totalPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
+                                                                        .delivery(orderItem.getDeli())
+                                                                        .prodPoint(orderItem.getProduct().getProdPoint())
+                                                                        .optionId(orderItem.getOptionId())
+                                                                        .totalPrice((int)Math.round(orderItem.getTotal()))
                                                                         .build();
             orderItemDtos.add(responseOrderItemDto);
         }
@@ -166,6 +170,7 @@ public class OrderItemService {
                 .receiverName(order.getReceiverName())
                 .receiverHp(order.getReceiverHp())
                 .receiverAddr1(order.getReceiverAddr())
+                .payment(order.getOrderPayment())
                 .orderItemDtos(orderItemDtos)
                 .build();
 

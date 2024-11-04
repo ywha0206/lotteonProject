@@ -24,10 +24,12 @@ public class ResponseOrderItemDto{
     private int discount;
     private int quantity;
     private int totalPrice;
+    private int prodPoint;
 
     //추가필드
     private Long prodId;
     private int delivery;
     private String sellerName;
     private String orderDeliId;
+    private Long optionId;
 }
