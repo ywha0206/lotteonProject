@@ -97,7 +97,9 @@
                         <td th:text="${cust.custPoint}" class="custPoint">포인트</td>
                         <td th:text="${cust.custEmail}" class="custEmail">이메일</td>
                         <td th:text="${cust.custHp}" class="custHp">휴대폰</td>
-                        <td th:text="${cust.memRdate}" class="memRdate">가입일</td>
+<!--                        <td th:text="${cust.memRdate}" class="memRdate">가입일</td>-->
+                        <td th:text="${#dates.format(cust.memRdate, 'yy-MM-dd HH:mm:ss')}" class="memRdate">가입일</td>
+
 
                         <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
                         <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState stop">중지</td>
@@ -146,6 +148,7 @@
     async function openCustUpdatePopup(event,type) {
         const id = event.target.dataset.id;
         console.log(id);
+
         try {
             const resp = await fetch(`/admin/user/user/${id}`, {
                 method: 'GET',
@@ -161,8 +164,9 @@
             const data = await resp.json();
             console.log("패치 "+data.custId)
             console.log("패치2222 "+data.id)
-            if (data!=null) {
-                // 팝업 내용 설정
+            // 데이터가 있고, 사용자 유형이 "customer"일 때,
+            if (data!=null&&data.memRole==='customer') {
+                // "customer" 팝업 내용 설정
                 popup.innerHTML = `
                 <div class="header">
                     <div class="title">회원수정</div>
@@ -236,6 +240,46 @@
 
                 popup.style.display = "block";
                 bg.style.display = "flex";
+
+
+            } else {
+                // Guest 팝업 내용 설정 (소설 sns 회원 = Guest)
+                popup.innerHTML = `
+                <div class="header">
+                    <div class="title">소셜 회원수정</div>
+                    <div onclick="closePopup()" class="btn">X</div>
+                </div>
+
+                <div style="margin: 20px; margin-bottom: 30px;">
+                    <table class="tb4">
+                        <tr>
+                            <th>아이디</th>
+                            <td><input name="memUid" value="${data.memUid}" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>이름</th>
+                            <td><input name="custName" value="${data.custName}"></td>
+                        </tr>
+                        <tr>
+                            <th>이메일</th>
+                            <td><input name="custEmail" value="${data.custEmail}"></td>
+                        </tr>
+                        <tr>
+                            <th>가입일</th>
+                            <td>${data.memRdate}</td>
+                        </tr>
+                        <tr>
+                            <th>최근 로그인 날짜</th>
+                            <td>${data.lastLoginDate}</td>
+                        </tr>
+                        <input type="hidden" name="custId" value="${data.custId}">
+                    </table>
+                </div>
+                <div style="margin-bottom:20px" class="btns">
+                    <button onclick="submitForm(${data.id})">수정하기</button>
+                </div>
+                `;
+
             }
         } catch (err) {
             console.error('Error:', err);
