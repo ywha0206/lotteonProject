@@ -38,7 +38,7 @@ public class GetAdminUserDTO {
 
     private Timestamp memRdate;     // 가입일
     private String memState;        // 계정 상태 (활성, 비활성) [로그인, 로그아웃]
-
+    private String memRole;         // 사용자 등급 (admin, seller, customer, guest)
 
     // 회원 수정 (팝업에 필요한 추가 필드)
     // 아이디(x), 이름(-), 성별(-), 등급(-), 상태(x), 등급(x), 이메일(-), 휴대폰(-),
@@ -47,7 +47,9 @@ public class GetAdminUserDTO {
     private String custAddr2; // 주소
     private String custAddr3; // 상세주소
 
-    private LocalDateTime memLastLoginDate; // 최근 로그인 날짜
+
+    private String memLastLoginDate; // 최근 로그인 날짜 (YY-MM-DD HH-MM-SS)
+
 
     private String  memEtc; // 기타 (회원 기타 정보입력)
 

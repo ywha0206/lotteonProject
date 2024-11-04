@@ -8,14 +8,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface  MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMemUid(String username);
-    List<Member> findAllByMemRole(String role);
+    List<Member> findAllByMemRole(String memRole);
     Optional<Member> findByMemRole(String role);
+    //List<String> roles = Arrays.asList("customer", "guest");
+    List<Member> findAllByMemRoleIn(List<String> memRole);
 
     Page<Member> findAllByMemRole(String customer, Pageable pageable);
 
