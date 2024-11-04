@@ -11,7 +11,7 @@
       <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
     </nav>
     <article>
-      <form class="formBox" method="post" th:action="@{/qna/reply/{id}(id=${qna.id})}" onsubmit="return checkSelection();">
+      <form class="formBox" method="post" th:action="@{/admin/cs/faq/modify/{id}(id=${faq.id})}" onsubmit="return checkSelection();">
         <input type="hidden" name="faqNo" th:value="${faq.id}" />
         <input type="hidden" name="faqCate2" th:value="${faq.cate1.categoryName}" />
         <input type="hidden" name="faqType2" th:value="${faq.cate2.categoryName}" />
@@ -60,7 +60,7 @@
           </tbody>
         </table>
         <div class="button-group">
-          <button type="button" class="button--back" onclick="goBack();">취소하기</button>
+          <button type="button" class="button--back" onclick="goToList();">취소하기</button>
           <button type="submit" class="button--write" onclick="goModify(event);">수정하기</button>
         </div>
         </div>
@@ -109,7 +109,7 @@
     ],
     "coupon": [
       {value: "lpoint", text: "L.POINT"},
-      {value: "coupon", text: "쿠폰"},
+      {value: "coupon2", text: "쿠폰"},
       {value: "event", text: "이벤트/경품"},
       {value: "attendance", text: "출석체크"},
       {value: "gift", text: "사은품"}
@@ -125,7 +125,7 @@
       {value: "applePay", text: "애플페이"}
     ],
     "delivery": [
-      {value: "delivery", text: "배송"},
+      {value: "delivery2", text: "배송"},
       {value: "deliveryFee", text: "배송비"},
       {value: "deliveryMethod", text: "배송방법"},
       {value: "deliverySchedule", text: "배송일정"},
@@ -187,4 +187,8 @@
      select2.value=cate2Name;
    }
  }
+
+  function goToList() {
+    window.location.href = '/admin/cs/faqs'; // 원하는 목록 페이지의 URL로 변경
+  }
 </script>

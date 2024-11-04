@@ -436,6 +436,11 @@
             e.preventDefault();
             let readPrice = totalPrice.value
             const optionId = document.getElementById('optionId').value
+
+            if(readPrice==null){
+                readPrice = basePrice;
+            }
+
             const jsonData = {
                 "prodId": productForm.prodId.value,
                 "quantity":productForm.quantity.value,
@@ -475,10 +480,9 @@
             let readPrice = totalPrice.value
             const optionId = document.getElementById('optionId').value
 
-
-
-            readPrice = basePrice;
-
+            if(readPrice==null){
+                readPrice = basePrice;
+            }
 
             const jsonData = {
                 "productId": productForm.prodId.value,

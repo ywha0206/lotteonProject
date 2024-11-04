@@ -83,6 +83,7 @@ public class FaqService {
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 2을 찾을 수 없습니다."));
 
         faq.update(articleDto.getTitle(), articleDto.getContent(), cate1, cate2);
+        faqRepository.save(faq);
         return ArticleDto.fromEntity(faq);
     }
 

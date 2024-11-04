@@ -42,9 +42,6 @@ public class AdminUserController {
             @RequestParam(name = "keyword", defaultValue = "0") String keyword
 
     ) {
-        // 1-1. 회원 목록 customers에 담기
-        List<GetAdminUserDTO> customers = authService.selectCustAll();
-        log.info("민힁"+customers);
 
         Page<GetAdminUserDTO> cust2 = authService.selectCustAll2(page);
 
