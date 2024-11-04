@@ -16,6 +16,7 @@ public class ProxyController {
     private final String API_URL = "https://bizno.net/api/fapi";
 
     @GetMapping("/api/bizno")
+
     public String getBiznoInfo(@RequestParam String brno) {
         String url = String.format("%s?key=%s&gb=%d&q=%s&type=%s", API_URL, SERVICE_KEY, 1, brno, "json");
         System.out.println(restTemplate.getForObject(url, String.class).toString());

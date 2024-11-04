@@ -238,10 +238,6 @@
         }
 
         async function checkBusiness(currentValue) {
-            const submitData = {
-                "b_no": [currentValue]
-            };
-            const serviceKey = 'WwuCEfbV5O3Rn1TWY7ADGxenhuVbqxdw1lsQIXqTaUFV6V9kLY1Xwoqg4mkOF4jKeKxcN/5O4gIpuqQd9yCHiQ==';
 
             try {
                 const response = await fetch(`http://localhost:8080/api/bizno?brno=${currentValue}`, {
