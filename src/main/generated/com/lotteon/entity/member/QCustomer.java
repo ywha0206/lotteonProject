@@ -50,6 +50,8 @@ public class QCustomer extends EntityPathBase<Customer> {
 
     public final QMember member;
 
+    public final ListPath<com.lotteon.entity.point.Point, com.lotteon.entity.point.QPoint> points = this.<com.lotteon.entity.point.Point, com.lotteon.entity.point.QPoint>createList("points", com.lotteon.entity.point.Point.class, com.lotteon.entity.point.QPoint.class, PathInits.DIRECT2);
+
     public QCustomer(String variable) {
         this(Customer.class, forVariable(variable), INITS);
     }

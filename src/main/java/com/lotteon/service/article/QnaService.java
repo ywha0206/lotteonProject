@@ -76,7 +76,6 @@ public class QnaService {
     } else {
         // 관리자는 모든 QnA를 조회
         qnaPage = qnaRepository.findAll(pageable);
-
     }
 
     // Qna 엔티티를 ArticleDto로 변환하여 반환

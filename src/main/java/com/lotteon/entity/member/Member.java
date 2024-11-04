@@ -1,11 +1,13 @@
 package com.lotteon.entity.member;
 
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
+import com.lotteon.entity.point.Coupon;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @ToString
@@ -50,7 +52,10 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Seller seller;
 
-    // Entity -> DTO 변환
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Coupon> coupons;
+
     public GetAdminUserDTO toGetAdminUserDTO() {
         if(memRole.equals("customer")){
             return GetAdminUserDTO.builder()

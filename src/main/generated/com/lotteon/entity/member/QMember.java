@@ -22,6 +22,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public static final QMember member = new QMember("member1");
 
+    public final ListPath<com.lotteon.entity.point.Coupon, com.lotteon.entity.point.QCoupon> coupons = this.<com.lotteon.entity.point.Coupon, com.lotteon.entity.point.QCoupon>createList("coupons", com.lotteon.entity.point.Coupon.class, com.lotteon.entity.point.QCoupon.class, PathInits.DIRECT2);
+
     public final QCustomer customer;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

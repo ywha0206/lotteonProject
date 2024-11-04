@@ -1,11 +1,13 @@
 package com.lotteon.entity.member;
 
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
+import com.lotteon.entity.point.Point;
 import jakarta.persistence.*;
 import lombok.*;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @ToString
@@ -24,6 +26,10 @@ public class Customer {
     @JoinColumn(name = "mem_id")
     @ToString.Exclude
     private Member member;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "customer",orphanRemoval = true)
+    @ToString.Exclude
+    private List<Point> points;
 
     @Column(name = "cust_point")
     private Integer custPoint; // 포인트

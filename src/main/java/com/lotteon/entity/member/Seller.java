@@ -1,8 +1,11 @@
 package com.lotteon.entity.member;
 
 import com.lotteon.dto.responseDto.GetShopsDto;
+import com.lotteon.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @ToString
@@ -21,6 +24,10 @@ public class Seller {
     @JoinColumn(name = "mem_id")
     @ToString.Exclude
     private Member member;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "seller")
+    @ToString.Exclude
+    private List<Product> product;
 
     @Column(name = "sell_grade")
     private int sellGrade; // 판매자 등급
