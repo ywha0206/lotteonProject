@@ -57,12 +57,12 @@
             <span th:text="${orderItem.prodName}">상품명</span><br>
             <span th:text="${orderItem.prodSummary}">상품설명</span>
           </td>
-          <td>옵션</td>
+          <td th:text="${orderItem.optionId}">옵션</td>
           <td th:text="${orderItem.quantity}">1</td>
           <td th:text="${orderItem.prodPrice}">27,000</td>
           <td th:text="${orderItem.discount}">-1,350</td>
-          <td>포인트</td>
-          <td>배송비</td>
+          <td th:text="${orderItem.prodPoint}">포인트</td>
+          <td th:text="${orderItem.delivery}">배송비</td>
           <td th:text="${orderItem.totalPrice}">25,650</td>
         </tr>
       </table>
@@ -97,7 +97,14 @@
         </tr>
         <tr>
           <th>결제방법</th>
-          <td>신용카드</td>
+          <td class="payment" th:switch="${order.payment}">
+            <span th:case="1">신용카드</span>
+            <span th:case="2">체크카드</span>
+            <span th:case="3">계좌이체</span>
+            <span th:case="4">무통장입금</span>
+            <span th:case="5">휴대폰결제</span>
+            <span th:case="6">카카오페이</span>
+          </td>
         </tr>
         <tr>
           <th>주문자/연락처</th>
@@ -105,7 +112,7 @@
         </tr>
         <tr>
           <th>총 결제금액</th>
-          <td style="color: #c00000">24,650원</td>
+          <td th:text="${order.orderTotal}" style="color: #c00000">24,650원</td>
         </tr>
       </table>
       <!-- .tb3-->
