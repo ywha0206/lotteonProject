@@ -68,6 +68,7 @@ public class CustomerService {
                     .custEmail(postCustSignupDTO.getCustEmail())
                     .custHp(postCustSignupDTO.getCustHp())
                     .custAddr(postCustSignupDTO.getAddr1() + "/" + postCustSignupDTO.getAddr2() + "/" + postCustSignupDTO.getAddr3())
+                    .custGrade("FAMILY")
                     .build();
 
             customerRepository.save(customer);
