@@ -25,6 +25,9 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
 
     Optional<CategoryArticle> findByCategoryNameAndCategoryLevelAndCategoryType(String categoryName1, int i, int i1);
 
+    // 특정 이름, 레벨, 타입을 가진 카테고리를 조회
+    // 이 메서드는 중복된 결과가 반환될 경우 NonUniqueResultException이 발생할 수 있음
+    Optional<CategoryArticle> findFirstByCategoryNameAndCategoryLevelAndCategoryType(String categoryName, int categoryLevel, int categoryType);
 
 
     // 최신순으로 10개의 공지사항을 가져오는 메서드 추가

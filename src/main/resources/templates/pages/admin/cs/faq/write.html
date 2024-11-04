@@ -67,7 +67,7 @@
                     </tbody>
                 </table>
                 <div class="button-group">
-                    <button class="button--back" type="button" onclick="goBack()">취소하기</button>
+                    <button class="button--back" type="button" onclick="goToList();">취소하기</button>
                     <button type="submit" class="button--write">등록하기</button>
                 </div>
             </form>
@@ -166,4 +166,9 @@
             });
         }
     });
+
+
+    function goToList() {
+        window.location.href = '/admin/cs/faqs'; // 원하는 목록 페이지의 URL로 변경
+    }
 </script>

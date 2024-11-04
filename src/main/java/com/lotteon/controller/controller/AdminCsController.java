@@ -138,6 +138,7 @@ public class AdminCsController {
         return "redirect:/admin/cs/faqs";
     }
 
+
     // FAQ 삭제 처리
     @GetMapping("/faq/delete/{id}")
     public String deleteFaq1(@PathVariable Long id) {
@@ -155,8 +156,9 @@ public class AdminCsController {
     public ResponseEntity<?> deleteFaq(@PathVariable Long id) {
         try {
             faqService.deleteFaq(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("삭제 성공");
         } catch (Exception e) {
+            log.error("FAQ 삭제 실패", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
         }
     }
@@ -229,32 +231,45 @@ public class AdminCsController {
     }
 
 
-
-  /*  // QNA 답변하기 (답변 없는 글)
-    @GetMapping("/qna/reply/{id}")
-    public String qnaReply(Model model, @PathVariable Long id) {
-        ArticleDto qna = qnaService.getById(id);
-        log.debug("qnaReplay method called with id: {} and answer: {}", id, qna.getAnswer());
-        model.addAttribute("qna", qna);
-
-        return "/pages/admin/cs/qna/reply";
+    // QNA 삭제 처리
+    @GetMapping("/qna/delete/{id}")
+    public String deleteQna1(@PathVariable Long id) {
+        try {
+            qnaService.deleteQna(id);
+            return "redirect:/admin/cs/qnas"; // 성공 시 리다이렉트
+        } catch (Exception e) {
+            return "redirect:/admin/cs/qnas?error=true";
+        }
     }
 
-    // QNA 답변 작성 후 처리
-    @PostMapping("/qna/reply/{id}")
-    public String qnaReplay(@PathVariable Long id, @RequestParam("answer") String answer) {
-        qnaService.reply(id, answer);
-        return "redirect:/admin/cs/qnas";
-    }*/
-
-/* 관리자 답변 수정기능 제공 안 함
-
-    @GetMapping("/qna/modify")
-    public String qnaModify(Model model) {
-        model.addAttribute("config", getSideValue());
-        return "pages/admin/cs/qna/modify";
+    @DeleteMapping("/qna/delete/{id}")
+    public ResponseEntity<?> deleteQna(@PathVariable Long id) {
+        try {
+            qnaService.deleteQna(id);
+            return ResponseEntity.ok("삭제 성공");
+        } catch (Exception e) {
+            log.error("QnA 삭제 실패", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
+        }
     }
-*/
+
+
+    // 선택 삭제
+    @PostMapping("/qna/deleteSelected")
+    @ResponseBody
+    public Map<String, Object> deleteSelectedQnas(@RequestBody List<Long> ids) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            qnaService.deleteSelectedQnas(ids);
+            result.put("success", true);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
+
 
     @GetMapping("/qna")
     public String qnaView(Model model) {
