@@ -57,50 +57,91 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
         // OAuth2User의 속성에서 필요한 정보를 추출합니다.
         Map<String, Object> attributes = oAuth2User.getAttributes();
         JsonNode rootNode = new ObjectMapper().convertValue(attributes, JsonNode.class);
+
         Member member = null;
 
+        log.info(provider);
+        log.info(rootNode);
+
+        String custEmail = null,
+                memUid = null,
+                custHp = "Unknown Phone",
+                birthyear = null,
+                birthday = null,
+                custBirth = "0000-00-00",
+                custName = "Unknown User";
+
+        Boolean custGender = null;
+
+        JsonNode account = null;
+
         if (provider.equals("kakao")) {
-            JsonNode account = rootNode.path("kakao_account");
-            String custEmail = account.path("email").asText(null);
-            String memUid = "KAKAO_SOCIAL_" + rootNode.path("id").asLong();
 
-            if (custEmail != null) {
-                Customer customer = customerRepository.findByCustEmail(custEmail);
+            account = rootNode.path("kakao_account");
+            custEmail = account.path("email").asText(null);
+            memUid = "KAKAO_SOCIAL_" + rootNode.path("id").asLong();
 
-                if (customer != null) {
-                    Optional<Member> optMember = memberRepository.findByCustomer_id(customer.getId());
-                    member = optMember.orElse(null);
-                }
-            }else {
-                // 필드 값이 null일 경우 대비하여 기본값 설정
-                String custName = account.path("profile").path("nickname").asText("Unknown User");
-                String hp = Optional.ofNullable(account.path("phone_number").asText(null)).orElse("Unknown Phone");
-                String custHp = hp;
-                if(!hp.equals("Unknown Phone")){ custHp = "0"+hp.split(" ")[1]; }
-                Boolean custGender = "female".equals(account.path("gender").asText(null));
-                String birthyear = account.path("birthyear").asText("0000");
-                String birthday = account.path("birthday").asText("0000");
-                String custBirth = birthyear + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2, 4);
+        }else if(provider.equals("google")){
 
+            custEmail = rootNode.path("email").asText(null);
+            memUid = "GOOGLE_SOCIAL_" + rootNode.path("sub").asText();
 
-                PostCustSignupDTO dto = PostCustSignupDTO.builder()
-                        .memId(memUid)
-                        .memPwd(UUID.randomUUID()+"")
-                        .custHp(custHp)
-                        .custName(custName)
-                        .custGender(custGender)
-                        .custBirth(custBirth)
-                        .custOptional(false)
-                        .custEmail(custEmail)
-                        .basicAddr(false)
-                        .build();
+        }else if(provider.equals("naver")){
 
-                member = customerService.insertCustomer(dto);
-            }
+            account = rootNode.path("response");
+            custEmail = account.path("email").asText(null);
+            memUid = "NAVER_SOCIAL_" + UUID.randomUUID();
 
         }
-        if (member == null) {
-            throw new OAuth2AuthenticationException("User could not be created or retrieved");
+        log.info(custEmail);
+        log.info(memUid);
+
+        if (custEmail != null) {
+            Customer customer = customerRepository.findByCustEmail(custEmail);
+            if (customer != null) {
+                Optional<Member> optMember = memberRepository.findByCustomer_id(customer.getId());
+                member = optMember.orElse(null);
+            }else {
+
+            if (provider.equals("kakao")){
+
+                custName = account.path("profile").path("nickname").asText("Unknown User");
+                String hp = Optional.ofNullable(account.path("phone_number").asText(null)).orElse("Unknown Phone");
+                if (!hp.equals("Unknown Phone")) {custHp = "0" + hp.split(" ")[1];}
+                custGender = "male".equals(account.path("gender").asText(null));
+                birthyear = account.path("birthyear").asText("0000");
+                birthday = account.path("birthday").asText("0101");
+                custBirth = birthyear + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2, 4);
+
+            }else if(provider.equals("google")){
+
+                custName = rootNode.path("given_name").asText("Unknown User");
+
+            }else if(provider.equals("naver")){
+
+                custName = account.path("name").asText("Unknown User");
+                custHp = account.path("mobile").asText("Unknown Phone");
+                custGender = "M".equals(account.path("gender").asText(null));
+                birthyear = account.path("birthyear").asText("0000");
+                birthday = account.path("birthday").asText("01-01");
+                custBirth = birthyear + "-" + birthday;
+
+            }
+
+            PostCustSignupDTO dto = PostCustSignupDTO.builder()
+                    .memId(memUid)
+                    .memPwd("SOCIAL")
+                    .custHp(custHp)
+                    .custName(custName)
+                    .custGender(custGender)
+                    .custBirth(custBirth)
+                    .custOptional(false)
+                    .custEmail(custEmail)
+                    .basicAddr(false)
+                    .build();
+            log.info(dto);
+            member = customerService.insertCustomer(dto);
+        }
         }
 
         return MyUserDetails.builder()
