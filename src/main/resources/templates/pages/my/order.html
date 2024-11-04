@@ -34,6 +34,7 @@
         <table border="0" class="order">
           <tr>
             <th>날짜</th>
+            <th>이미지</th>
             <th>상품정보</th>
             <th>상태</th>
             <th>확인/신청</th>
@@ -46,6 +47,8 @@
                   <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${order.getProdListImg()}}" alt="상품 이미지" />
                 </a>
               </div>
+            </td>
+            <td>
               <ul>
                 <li class="company" th:text="${order.seller}">(주) 회사명</li>
                 <li class="prodName"><a href="#" th:text="${order.orderItemCount}>1 ? ${order.prodName}+'외'+(${order.orderItemCount}-1)+'개' : ${order.prodName}">상품명</a></li>
@@ -56,12 +59,16 @@
                 <li class="prodPrice" th:text="${order.orderTotal}==null?0:${order.orderTotal}">34,000</li>
               </ul>
             </td>
-            <td class="status" th:text="${order.orderState==0}?'배송중':'배송완료'">배송완료</td>
+            <td class="status" th:switch="${order.orderState}">
+              <span th:case="0">결제완료</span>
+              <span th:case="1">배송중</span>
+              <span th:case="2">배송완료</span>
+            </td>
             <td class="confirm">
-              <a href="#" class="receive color">수취확인</a>
-              <a href="#" class="review color">상품평쓰기</a>
-              <a href="#" class="refund grey">반품신청</a>
-              <a href="#" class="exchange grey">교환신청</a>
+              <a href="#" class="receive color" th:if="${order.orderState>0}">수취확인</a>
+              <button href="#" class="review color">상품평쓰기</button>
+              <button href="#" class="refund grey">반품신청</button>
+              <button href="#" class="exchange grey">교환신청</button>
             </td>
           </tr>
         </table>
