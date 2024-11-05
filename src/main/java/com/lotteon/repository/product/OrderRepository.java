@@ -47,4 +47,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Page<Order> findAllByIdAndOrderItems_SellerOrderByIdDesc(long l, Seller seller, Pageable pageable);
 
     Page<Order> findAllByOrderItems_SellerAndCustomer_CustNameOrderByIdDesc(Seller seller, String keyword, Pageable pageable);
+
+    Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(Customer customer, Timestamp varDay, Timestamp today, Pageable pageable);
 }

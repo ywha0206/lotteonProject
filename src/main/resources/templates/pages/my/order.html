@@ -66,9 +66,9 @@
             </td>
             <td class="confirm">
               <a href="#" class="receive color" th:if="${order.orderState>0}">수취확인</a>
-              <button href="#" class="review color">상품평쓰기</button>
-              <button href="#" class="refund grey">반품신청</button>
-              <button href="#" class="exchange grey">교환신청</button>
+              <button class="review color">상품평쓰기</button>
+              <button class="refund grey">반품신청</button>
+              <button class="exchange grey">교환신청</button>
             </td>
           </tr>
         </table>
@@ -83,15 +83,14 @@
         >
           주문 내역이 없습니다.
         </div>
-
-        <div class="page">
-          <a class="none" th:href="@{/my/orders(page=0)}"><<</a>
-          <a class="none" th:href="@{/my/orders(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
-          <a class="none" th:href="@{/my/orders(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+        <div th:if="${noItem==false}" class="page">
+          <a class="none" th:href="@{/my/orders(page=0,type=${type},keyword=${keyword})}"><<</a>
+          <a class="none" th:href="@{/my/orders(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+          <a class="none" th:href="@{/my/orders(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
           <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
-          <a class="none" th:href="@{/my/orders(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
-          <a class="none" th:href="@{/my/orders(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-          <a class="none" th:href="@{/my/orders(page=${totalPages - 1})}" >>></a>
+          <a class="none" th:href="@{/my/orders(page=${page + 1},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+          <a class="none" th:href="@{/my/orders(page=${page + 2},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+          <a class="none" th:href="@{/my/orders(page=${totalPages - 1},type=${type},keyword=${keyword})}">>></a>
         </div>
       </article>
     </section>
