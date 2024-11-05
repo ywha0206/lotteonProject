@@ -102,6 +102,11 @@ public class Member {
         this.memState = "sleep";
     }
 
+    public void updateMemberStateToLeave() {
+        this.memState = "leave";
+    }
+
+
     public void updatePassword(String encode) {
         this.memPwd = encode;
     }
@@ -119,4 +124,7 @@ public class Member {
     }
 
 
+    public void updateMemberStateToStart() {
+        this.memState = "start";
+    }
 }

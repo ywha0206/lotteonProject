@@ -70,4 +70,5 @@ public class OrderItem {
 
     @Column(name = "order_item_option_id")
     private Long optionId;
+
 }
