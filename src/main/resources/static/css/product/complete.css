@@ -108,6 +108,7 @@ input:focus{outline: none;}
  .tb3 {width: 797px; height: 108px; border-collapse: collapse; margin: 0 auto;}
  .tb3 th {background-color: #f2f2f2;    height: 37px; width: 177px; padding: 0 20px; font-size: 14px;text-align: center;}
  .tb3 td {font-size: 14px; text-indent: 15px;}
+ .tb3 .payment span{font-size: 14px;}
 
  /* 배송 정보 */
  .sub_tit3 {

@@ -69,7 +69,7 @@ public class Coupon {
     @Column(name = "coupon_banner_state")
     private Integer couponBannerState;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "coupon")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "coupon", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
     private List<CustomerCoupon> customerCoupons = new ArrayList<>();

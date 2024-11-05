@@ -35,4 +35,18 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(Customer customer, Timestamp startDate, Timestamp endDate, Pageable pageable);
 
     boolean existsByCustomerAndOrderItems_Product(Customer customer, Product product);
+
+    Page<Order> findAllByIdOrderByIdDesc(long l, Pageable pageable);
+
+    Page<Order> findAllByCustomer_CustNameOrderByIdDesc(String keyword, Pageable pageable);
+
+    Page<Order> findAllByCustomer_Member_MemUidOrderByIdDesc(String keyword, Pageable pageable);
+
+    Page<Order> findAllByOrderItems_SellerAndCustomer_Member_MemUidOrderByIdDesc(Seller seller, String keyword, Pageable pageable);
+
+    Page<Order> findAllByIdAndOrderItems_SellerOrderByIdDesc(long l, Seller seller, Pageable pageable);
+
+    Page<Order> findAllByOrderItems_SellerAndCustomer_CustNameOrderByIdDesc(Seller seller, String keyword, Pageable pageable);
+
+    Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(Customer customer, Timestamp varDay, Timestamp today, Pageable pageable);
 }

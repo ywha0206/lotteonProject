@@ -64,29 +64,6 @@ public class QnaService {
     }
 
 
-
-/*
-    public Page<ArticleDto> getAllQnas(Pageable pageable) {
-     MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-     Member member = auth.getUser();
-
-      Page<Qna> qnaPage;
-        if ("seller".equals(member.getMemRole())) {
-        // 판매자일 경우 자신의 상품에 대한 QnA만 조회
-        qnaPage = qnaRepository.findAllByMember_Seller(member.getSeller(), pageable);
-     } else {
-        // 관리자는 모든 QnA를 조회
-        qnaPage = qnaRepository.findAll(pageable);
-
-       }
-
-     // Qna 엔티티를 ArticleDto로 변환하여 반환
-        return qnaPage.map(ArticleDto::fromEntity);
-}
-
- */
-
-
     public Page<ArticleDto> getAllQnas(Pageable pageable) {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member member = auth.getUser();

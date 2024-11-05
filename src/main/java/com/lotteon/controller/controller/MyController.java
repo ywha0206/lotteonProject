@@ -58,7 +58,7 @@ public class MyController {
     @GetMapping(value = {"","/","/index"})
     public String index(Model model) {
 
-        Page<ResponseOrdersDto> orders = orderService.selectedOrderList(0);
+        Page<ResponseOrdersDto> orders = orderService.selectedMyOrderList(0);
 
 
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
@@ -112,7 +112,7 @@ public class MyController {
         if(!type.equals("0")&&!keyword.equals("0")){
             orders = orderService.findAllBySearch(page,type,keyword);
         }else {
-            orders = orderService.selectedOrderList(page);
+            orders = orderService.selectedMyOrderList(page);
         }
 
         log.info("마이페이지 오더 컨트롤러 오더 잘 뽑혔는지 확인 "+orders);
@@ -154,6 +154,33 @@ public class MyController {
         model.addAttribute("totalPages", points.getTotalPages());
 
         return "pages/my/point";
+    }
+
+    @GetMapping("/points/use")
+    public String usePoint(
+            Model model,
+            @RequestParam(name = "page",defaultValue = "0") int page,
+            @RequestParam(name = "type",defaultValue = "0") String type,
+            @RequestParam(name = "keyword",defaultValue = "0") String keyword
+    ) {
+        Page<GetPointsDto> points;
+        if(!type.equals("0")&&!keyword.equals("0")){
+            points = pointService.findAllBySearch2(page,type,keyword);
+        } else {
+            points = pointService.findAllByCustomer2(page);
+        }
+        if(points.isEmpty()){
+            model.addAttribute("noItem",true);
+            return "pages/my/usepoint";
+        }
+        model.addAttribute("noItem",false);
+        model.addAttribute("points", points);
+        model.addAttribute("type", type);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", points.getTotalPages());
+
+        return "pages/my/usepoint";
     }
 
     @GetMapping("/qnas")

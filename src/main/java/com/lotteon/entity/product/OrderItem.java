@@ -56,8 +56,8 @@ public class OrderItem {
     @Column(name = "order_item_warranty")
     private Timestamp warranty;
 
-    @OneToMany(mappedBy = "orderItem")
-    private List<OrderItemOption> selectedOptions;
+//    @OneToMany(mappedBy = "orderItem")
+//    private List<OrderItemOption> selectedOptions;
 
     //추가 필드
     @Setter
@@ -67,4 +67,8 @@ public class OrderItem {
     @Setter
     @Column(name = "order_deli_company")
     private Integer orderDeliCompany;
+
+    @Column(name = "order_item_option_id")
+    private Long optionId;
+
 }

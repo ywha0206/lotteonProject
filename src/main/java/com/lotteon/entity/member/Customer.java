@@ -1,11 +1,13 @@
 package com.lotteon.entity.member;
 
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
+import com.lotteon.entity.point.Point;
 import jakarta.persistence.*;
 import lombok.*;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @ToString
@@ -24,6 +26,10 @@ public class Customer {
     @JoinColumn(name = "mem_id")
     @ToString.Exclude
     private Member member;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "customer",orphanRemoval = true)
+    @ToString.Exclude
+    private List<Point> points;
 
     @Column(name = "cust_point")
     private Integer custPoint; // 포인트
@@ -68,7 +74,7 @@ public class Customer {
         this.custPoint = point;
     }
 
-    // 회원 정보 수정
+    // 회원 정보 수정 (팝업호출) (Member Entity에는 회원 수정할 내용이 없다!)
     // 이름, 성별, 이메일, 휴대폰, 우편+기본+상세주소, 기타
     public void updateUser(GetAdminUserDTO dto){
         this.custName = dto.getCustName();

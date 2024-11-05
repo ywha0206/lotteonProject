@@ -190,18 +190,18 @@ public class ApiProductController {
         OrderDto orderDto = postOrderDto.getOrderDto();
         List<OrderItemDto> orderItemDto = postOrderDto.getOrderItemDto();
 
+        if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
+            pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
+        }
+
         ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session);
         selectedProducts.forEach(v->{
             userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
         });
-        if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
-            pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
-        }
+
         if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
             customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
         }
-
-
         productService.top3UpdateBoolean();
 
         return orderItemResult;

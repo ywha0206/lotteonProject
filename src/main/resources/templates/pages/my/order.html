@@ -34,6 +34,7 @@
         <table border="0" class="order">
           <tr>
             <th>날짜</th>
+            <th>이미지</th>
             <th>상품정보</th>
             <th>상태</th>
             <th>확인/신청</th>
@@ -46,6 +47,8 @@
                   <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${order.getProdListImg()}}" alt="상품 이미지" />
                 </a>
               </div>
+            </td>
+            <td>
               <ul>
                 <li class="company" th:text="${order.seller}">(주) 회사명</li>
                 <li class="prodName"><a href="#" th:text="${order.orderItemCount}>1 ? ${order.prodName}+'외'+(${order.orderItemCount}-1)+'개' : ${order.prodName}">상품명</a></li>
@@ -56,12 +59,16 @@
                 <li class="prodPrice" th:text="${order.orderTotal}==null?0:${order.orderTotal}">34,000</li>
               </ul>
             </td>
-            <td class="status" th:text="${order.orderState==0}?'배송중':'배송완료'">배송완료</td>
+            <td class="status" th:switch="${order.orderState}">
+              <span th:case="0">결제완료</span>
+              <span th:case="1">배송중</span>
+              <span th:case="2">배송완료</span>
+            </td>
             <td class="confirm">
-              <a href="#" class="receive color">수취확인</a>
-              <a href="#" class="review color">상품평쓰기</a>
-              <a href="#" class="refund grey">반품신청</a>
-              <a href="#" class="exchange grey">교환신청</a>
+              <a href="#" class="receive color" th:if="${order.orderState>0}">수취확인</a>
+              <button class="review color">상품평쓰기</button>
+              <button class="refund grey">반품신청</button>
+              <button class="exchange grey">교환신청</button>
             </td>
           </tr>
         </table>
@@ -76,15 +83,14 @@
         >
           주문 내역이 없습니다.
         </div>
-
-        <div class="page">
-          <a class="none" th:href="@{/my/orders(page=0)}"><<</a>
-          <a class="none" th:href="@{/my/orders(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
-          <a class="none" th:href="@{/my/orders(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+        <div th:if="${noItem==false}" class="page">
+          <a class="none" th:href="@{/my/orders(page=0,type=${type},keyword=${keyword})}"><<</a>
+          <a class="none" th:href="@{/my/orders(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+          <a class="none" th:href="@{/my/orders(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
           <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
-          <a class="none" th:href="@{/my/orders(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
-          <a class="none" th:href="@{/my/orders(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-          <a class="none" th:href="@{/my/orders(page=${totalPages - 1})}" >>></a>
+          <a class="none" th:href="@{/my/orders(page=${page + 1},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+          <a class="none" th:href="@{/my/orders(page=${page + 2},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+          <a class="none" th:href="@{/my/orders(page=${totalPages - 1},type=${type},keyword=${keyword})}">>></a>
         </div>
       </article>
     </section>
