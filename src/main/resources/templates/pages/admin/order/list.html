@@ -79,15 +79,43 @@
 
 
 
-                apiUrl = `/admin/prod/order/${orderId}`;
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error('주문 상세 정보를 불러오지 못했습니다.');
+            apiUrl = `/admin/prod/order/${orderId}`;
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error('주문 상세 정보를 불러오지 못했습니다.');
 
-                data = await response.json();
+            data = await response.json();
 
-                console.log(data)
+            console.log(data)
 
-                if(a===1){
+            let paymentMethod;
+            switch (data.payment) {
+                case 1:
+                    paymentMethod = "신용카드";
+                    break;
+                case 2:
+                    paymentMethod = "체크카드";
+                    break;
+                case 3:
+                    paymentMethod = "계좌이체";
+                    break;
+                case 4:
+                    paymentMethod = "무통장입금";
+                    break;
+                case 5:
+                    paymentMethod = "휴대폰결제";
+                    break;
+                case 6:
+                    paymentMethod = "카카오페이";
+                    break;
+            }
+
+            const totalProdPrice = data.orderItemDtos.reduce((sum, item) => sum + item.prodPrice, 0);
+            const totalDiscount = data.orderItemDtos.reduce((sum, item) => sum + item.discount*item.quantity, 0);
+            const totalDeliPrice = data.orderItemDtos.reduce((sum, item) => sum + item.delivery, 0);
+            const totalOrderPrice = data.orderItemDtos.reduce((sum, item) => sum + item.totalPrice, 0);
+
+
+            if(a===1){
                     popup.innerHTML = `
                     <div class="header fixed">
                         <div class="title">주문상세 <span style="color: white">${data.order.orderId}</span></div>
@@ -120,22 +148,23 @@
                                 <td>${item.discount}</td>
                                 <td>${item.quantity}</td>
                                 <td>${item.delivery}</td>
-                                <td>${item.totalPrice}</td>
+                                <td>${item.totalPrice}원</td>
                             </tr>`).join('')}
                         </table>
                         <div class="total">
                             <div class="right-bg">
                                 <div>
-                                    <p>총 상품금액</p><p>스크립트 처리</p>
+                                    <p>총 상품금액</p><p>${totalProdPrice}원</p>
                                 </div>
                                 <div>
-                                    <p>총 할인금액</p><p>-7,100원</p>
+                                    <p>총 할인금액</p><p>${totalDiscount}원</p>
                                 </div>
                                 <div>
-                                    <p>배송비</p><p>3,000원</p>
+                                    <p>배송비</p><p>${totalDeliPrice}원</p>
                                 </div>
                                 <div>
                                     <p>총 결제금액</p><p style="color: red">${data.order.orderTotal}</p>
+
                                 </div>
                             </div>
                         </div>
@@ -152,6 +181,7 @@
                             <tr>
                                 <th>결제방법</th>
                                 <td>${data.order.payment}</td>
+
                             </tr>
                             <tr>
                                 <th>주문자 / 연락처</th>
@@ -164,6 +194,7 @@
                         </table>
                         <div class="total-price">
                             <p>총 결제금액</p><p style="color: red">${data.order.orderTotal}</p>
+
                         </div>
                         <div class="header2">
                             <span class="header-title">배송정보</span>

@@ -111,7 +111,6 @@ public class ApiProductController {
         if(auth.getUser() != null) {
             userLogService.saveUserLog(auth.getUser().getCustomer().getId(),postCartDto.getProdId(),"cart");
         }
-
         return ResponseEntity.ok(response);
     }
 
@@ -251,15 +250,4 @@ public class ApiProductController {
         return ResponseEntity.ok(map);
     }
 
-    @PatchMapping("/cart/option")
-    public ResponseEntity<?> patchOption(@RequestParam Long id,@RequestParam Long prod){
-        cartService.updateCartOption(id,prod);
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/cart/quantity")
-    public ResponseEntity<?> patchQuantity(@RequestParam Long cart,@RequestParam Integer quantity){
-        cartService.updateQuantity(cart,quantity);
-        return ResponseEntity.ok().build();
-    }
 }

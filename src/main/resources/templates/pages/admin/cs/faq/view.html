@@ -32,10 +32,9 @@
       </table>
       <div class="button-group">
         <button th:data-id="${faq.id}" class="button--delete" th:onclick="|deleteFaq(${faq.id})|">삭제</button>
-        <a class="button--modify" th:href="@{'/admin/cs/faq/modify/' + ${faq.id}}">수정
+        <a th:href="@{'/admin/cs/faq/modify/' + ${faq.id}}" class="button--modify">수정
         </a>
-        <button type="button" class="button--back" id="goToListButton">목록</button>
-
+        <button type="button" class="button--back" onclick="goToList();">목록</button>
       </div>
     </article>
   </section>
@@ -81,7 +80,7 @@
   const secondCategoryMap = {
     "user": {
       "regi": "가입",
-      "leave": "탈퇴",
+      "leave": "탈퇴", 한글로
       "info": "회원정보",
       "login": "로그인"
     },
@@ -159,12 +158,12 @@
     window.location.href = '/admin/cs/faq/modify?faqNo=' + faqId;
   }
 
-  // 페이지가 로드된 후 함수가 실행되도록 설정
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('goToListButton').addEventListener('click', function() {
-      window.location.href = '/admin/cs/faqs';
-    });
-  });
+  function goToList() {
+    window.location.href = '/admin/cs/faqs'; // 원하는 목록 페이지의 URL로 변경
+  }
+
+
+
 </script>
 
 

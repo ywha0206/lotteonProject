@@ -16,6 +16,9 @@ public interface PointRepository extends JpaRepository<Point, Long> {
 
     Page<Point> findAllByCustomer(Customer customer, Pageable pageable);
 
+
+    Page<Point> findAllByCustomerAndPointRdateBetweenOrderByPointExpirationAsc(Customer customer, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
     Page<Point> findAllByCustomerOrderByPointExpiration(Customer customer, Pageable pageable);
 
     Page<Point> findAllByCustomer_CustName(String custName, Pageable pageable);
@@ -43,6 +46,4 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Page<Point> findAllByCustomer_CustHpOrderByPointRdateDesc(String custHp, Pageable pageable);
 
     List<Point> findAllByPointType(int i);
-
-    Page<Point> findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointExpirationAsc(Customer customer, int i, LocalDate varDay, LocalDate today, Pageable pageable);
 }
