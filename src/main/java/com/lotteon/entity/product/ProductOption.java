@@ -97,4 +97,23 @@ public class ProductOption {
                     .build();
         }
     }
+
+    public GetOption1Dto toGetCartOptions(){
+        String variableValue = "";
+        if(optionValue!=null){
+            variableValue = optionValue;
+        }
+        if(optionValue2!=null){
+            variableValue = optionValue+" "+optionValue2;
+        }
+        if(optionValue==null){
+            variableValue = "옵션없음";
+        }
+        return GetOption1Dto.builder()
+                .optionValue(variableValue)
+                .optionId(id)
+                .optionPrice(additionalPrice)
+                .optionStock(stock)
+                .build();
+    }
 }
