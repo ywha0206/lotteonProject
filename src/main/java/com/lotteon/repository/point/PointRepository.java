@@ -45,4 +45,6 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     List<Point> findAllByPointType(int i);
 
     Page<Point> findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointExpirationAsc(Customer customer, int i, LocalDate varDay, LocalDate today, Pageable pageable);
+
+    List<Point> findAllByPointRdateBefore(LocalDate twoYear);
 }
