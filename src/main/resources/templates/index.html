@@ -9,7 +9,13 @@
     <style>
         #prevBtn {left:10px;background:url(/images/icon_prev_arrow.png) no-repeat}
         #nextBtn {right:10px;background:url(/images/icon_next_arrow.png) no-repeat}
+        #header{margin-top: 80px}
+        #main{margin-top: 160px}
+        #main, #header {
+            transition: transform 0.3s ease, opacity 0.3s ease; /* 위치와 불투명도 애니메이션 */
+        }
     </style>
+
 <header th:replace="layout/main/header.html"></header>
 <div id="wrap" style="margin-top: 80px;">
     <main id="main">
@@ -725,6 +731,17 @@
         });
         // 초기 페이지 설정
         $('.totalSlider').text(' / ' + slider.getSlideCount());
+    });
+
+    const header = document.getElementById("header");
+    const main = document.getElementById("main");
+    window.addEventListener("scroll", function () {
+        // 현재 스크롤 위치를 가져옵니다.
+        const scrollY = window.scrollY;
+
+        // 스크롤 위치에 따라 배너와 헤더를 이동시킵니다.
+        header.style.transform = `translateY(-${Math.min(80, scrollY)}px)`;
+        main.style.transform = `translateY(-${Math.min(80, scrollY)}px)`;
     });
 </script>
 
