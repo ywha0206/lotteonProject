@@ -46,14 +46,19 @@
                     <th>날짜</th>
                     <th>관리</th>
                 </tr>
-                <!-- 번호를 1부터 오름차순으로 표시 -->
+                <!-- totalFaqCount를 기준으로 페이지당 내림차순 번호 계산 -->
                 <tr th:each="faq, stat : ${faqs}" th:data-id="${faq.id}">
                     <td><input type="checkbox"/></td>
-                    <!-- 번호를 1부터 카운트하여 오름차순으로 표시 (stat.count 사용) -->
-                    <td th:text="${faq.id}">1</td>
+                    <!-- 전체 개수에서 현재 페이지 첫 글의 시작 번호를 계산 -->
+<!--
+                    <td th:text="${totalFaqCount - ((pageable?.pageNumber ?: 0) * (pageable?.pageSize ?: 1)) - stat.index}">1</td>
+-->
+                    <!-- totalFaqCount에서 현재 페이지의 첫 번째 글 번호부터 각 글의 순서를 감소 -->
+                    <td th:text="${totalFaqCount - (faqsPage.number * faqsPage.size) - stat.index}">번호</td>
+
                     <!-- 한글 변환 후 출력 -->
                     <td class="cate1" th:data-value="${faq.cate1.categoryName}">회원</td>
-                    <td class="cate2" th:data-value="${faq.cate2.categoryName}"th:data-parent="${faq.cate1.categoryName}">로그인
+                    <td class="cate2" th:data-value="${faq.cate2.categoryName}" th:data-parent="${faq.cate1.categoryName}">로그인
                     </td>
 
                     <!-- 글 제목을 클릭하면 해당 글의 상세보기 페이지로 이동 -->
@@ -90,12 +95,22 @@
             <button class="button--write" onclick="goToWrite();">작성하기</button>
         </div>
 
+        <!-- 페이지 네비게이션 -->
         <div class="paging">
-            <a href="#" class="prev">이전</a>
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#" class="next">다음</a>
+            <!-- 처음 페이지로 이동 -->
+            <a class="first" th:href="@{|/admin/cs/faqs?page=0|}" th:if="${faqsPage.number > 0}">처음</a>
+
+            <!-- 현재 페이지 목록을 표시하며, 현재 페이지에 클래스 추가 -->
+            <ol>
+                <li th:each="i : ${#numbers.sequence(0, faqsPage.totalPages - 1)}">
+                    <a th:href="@{'/admin/cs/faqs?page=' + ${i}}"
+                       th:text="${i + 1}"
+                       th:classappend="${faqsPage.number == i} ? 'active'">1</a>
+                </li>
+            </ol>
+
+            <!-- 끝 페이지로 이동 -->
+            <a class="last" th:href="@{|/admin/cs/faqs?page=${faqsPage.totalPages - 1}|}" th:if="${faqsPage.number < faqsPage.totalPages - 1}">마지막</a>
         </div>
     </section>
 </main>
@@ -171,6 +186,7 @@
         }
     };
 
+/*
     // DOMContentLoaded 시 1차 및 2차 카테고리를 한글로 변환하여 표시하는 함수
     document.addEventListener('DOMContentLoaded', function () {
         // 1차 카테고리 변환
@@ -184,6 +200,23 @@
             const value = item.getAttribute('data-value');
             const parentValue = item.getAttribute('data-parent');
             item.textContent = secondCategoryMap[parentValue]?.[value] || value;
+        });
+    });
+*/
+
+    // DOMContentLoaded 시 1차 및 2차 카테고리를 한글로 변환하여 표시하는 함수
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1차 카테고리 변환
+        document.querySelectorAll('.cate1').forEach(function (item) {
+            const value = item.getAttribute('data-value');
+            item.textContent = firstCategoryMap[value] || value; // 1차 카테고리 한글 변환
+        });
+
+        // 2차 카테고리 변환
+        document.querySelectorAll('.cate2').forEach(function (item) {
+            const value = item.getAttribute('data-value');
+            const parentValue = item.getAttribute('data-parent'); // 상위 카테고리 참조
+            item.textContent = secondCategoryMap[parentValue]?.[value] || value; // 2차 카테고리 한글 변환
         });
     });
 
