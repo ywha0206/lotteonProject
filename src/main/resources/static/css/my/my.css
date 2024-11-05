@@ -46,8 +46,8 @@ body{height: 100vh;}
 #my article > table {table-layout: fixed;}
 #my article > table  {width: 100%;height: auto;border-top: 2px solid #444;margin-top: 6px;border-collapse: collapse;}
 #my article > table  * {font-family: '돋움';color: #444;}
-#my article > table th {padding: 6px;background-color: #a5a7a5;box-sizing: border-box;color: #fff; font-weight: 600;}
-#my article > table td {padding: 10px;box-sizing: border-box;overflow: hidden; padding: 20px 0;}
+#my article > table>tbody>tr>th {padding: 6px;background-color: #a5a7a5;box-sizing: border-box;color: #fff; font-weight: 600;text-align: center}
+#my article > table td {padding: 10px;box-sizing: border-box;overflow: hidden; padding: 20px 0; text-align: center}
 #my article > table tr {border-bottom: 1px solid #aaa;}
 #my article > table .warning {color:red;}
 #my table.review td:nth-of-type(3),
@@ -57,12 +57,14 @@ body{height: 100vh;}
 #my table.qna td:nth-of-type(4){white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 
 /* 주문내역 테이블 */
-/*#my table.order tr > th:nth-child(1) { width: 15%; }*/
-/*#my table.order tr > th:nth-child(2) { width: 50%; }*/
-/*#my table.order tr > th:nth-child(3) { width: 15%; }*/
-/*#my table.order tr > th:nth-child(4) { width: 20%; }*/
+#my table.order tr > th:nth-child(1) { width: 15%; }
+#my table.order tr > th:nth-child(2) { width: 15%; }
+#my table.order tr > th:nth-child(3) { width: 35%; }
+#my table.order tr > th:nth-child(4) { width: 15%; }
+#my table.order tr > th:nth-child(5) { width: 20%; }
 
-#my table.order .thumb {float: left;width: 120px;height: 120px;overflow: hidden;text-align: center;}
+#my table.order tr > td:nth-child(2) { display: flex; justify-content: center}
+#my table.order .thumb {float: left;width: 120px;height: 120px;overflow: hidden;display: flex;justify-content: center;align-items: center}
 #my table.order .thumb > img {max-width: 100%;width: auto;height: 100%;}
 
 #my table.order ul {float:left;margin-left: 10px;margin-right: 10px;}
@@ -74,7 +76,7 @@ body{height: 100vh;}
 #my table.order .confirm{height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 #my table.order .confirm > button {display: block;width: 100px;height: 30px; padding: 6px; box-sizing: border-box; font-size: 12px; border:none;}
 #my table.order button {margin-top: 2px;font-family: '돋움';color: #676767;line-height: 19px;}
-#my table.order li{text-align: center;}
+#my table.order li{text-align: left;}
 
 #my table.order .color{background: #558ED5; color: #FFF;}
 #my table.order .grey{background: #F2F2F2; color: #000; border: 1px solid #808080;}
@@ -101,6 +103,7 @@ body{height: 100vh;}
 #my table.qna tr > th:nth-child(4) { width: 39%; }
 #my table.qna tr > th:nth-child(5) { width: 14%; }
 #my table.qna tr > th:nth-child(6) { width: 12%; }
+    /*  답변완료 색상  */
 #my table.qna tr > td .success{color: #00B050;}
 #my table.qna tr > td .check{color: #808080;}
 
@@ -125,7 +128,6 @@ body{height: 100vh;}
 #my table.user a[href]{text-decoration: underline; color: #0070C0;}
 #my table.user td{border-left: #BFBFBF 1px solid; border-width: 0 0 0 1px; text-align: left; padding: 0 20px;}
 #my table.user p{ color: #808080; text-align: left; box-sizing: border-box; margin-top: 10px;}
-
 
 #my table.myInfo{width: 100%;height: auto;border: 1px solid #000000; border-width: 0.4px 0 0.4px 0 ; margin-top: 6px;border-collapse: collapse;}
 #my table.myInfo  * {font-family: '돋움';color: #444; text-align: left;}
