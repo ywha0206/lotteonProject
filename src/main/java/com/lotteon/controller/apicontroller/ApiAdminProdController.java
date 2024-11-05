@@ -4,6 +4,7 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostProdAllDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
+import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetDeliInfoDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
@@ -117,7 +118,8 @@ public class ApiAdminProdController {
         MyUserDetails auth2  =(MyUserDetails) authentication.getPrincipal();
         log.info("컨트롤러에서 어드민인지 셀러인지 확인 "+auth2.getUser().getMemRole());
         ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
-        log.info("디스카운트 제대로 뽑히는지 확인 "+responseOrderDto);
+        List<GetAdminOrderNameDto> itemNames = orderItemService.selectAdminOrderItem(orderId);
+
         if(responseOrderDto==null ){
             return ResponseEntity.ok().body(false);
         }
