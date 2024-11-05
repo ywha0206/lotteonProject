@@ -20,12 +20,12 @@
 
         <section class="categoryProduct">
             <form class="order-search">
-                <select>
-                    <option>주문번호</option>
-                    <option>주문자</option>
-                    <option>주문자명</option>
+                <select name="searchType">
+                    <option value="orderId">주문번호</option>
+                    <option value="custId">주문자</option>
+                    <option value="custName">주문자명</option>
                 </select>
-                <input type="text" placeholder="검색어입력">
+                <input name="keyword" type="text" placeholder="검색어입력">
                 <button type="submit">검색</button>
             </form>
             <table class="tb1">
@@ -55,13 +55,13 @@
                 </tr>
             </table>
             <div class="page">
-                <a class="none" th:href="@{/admin/order/orders(page=0)}"><<</a>
-                <a class="none" th:href="@{/admin/order/orders(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
-                <a class="none" th:href="@{/admin/order/orders(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=0, searchType=${searchType}, keyword=${keyword})}"><<</a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page - 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page - 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
                 <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
-                <a class="none" th:href="@{/admin/order/orders(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
-                <a class="none" th:href="@{/admin/order/orders(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-                <a class="none" th:href="@{/admin/order/orders(page=${totalPages - 1})}" >>></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page + 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page + 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${totalPages - 1}, searchType=${searchType}, keyword=${keyword})}" >>></a>
             </div>
         </section>
         <div class="popup"></div>
