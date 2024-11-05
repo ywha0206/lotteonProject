@@ -64,28 +64,23 @@ public class QnaService {
     }
 
 
+
     public Page<ArticleDto> getAllQnas(Pageable pageable) {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Member member = auth.getUser();
+    MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Member member = auth.getUser();
 
-        Page<Qna> qnaPage;
+    Page<Qna> qnaPage;
         if ("seller".equals(member.getMemRole())) {
-            // 판매자일 경우 자신의 상품에 대한 QnA만 조회
-            qnaPage = qnaRepository.findAllByMember_Seller(member.getSeller(), pageable);
-        } else {
-            // 관리자는 모든 QnA를 조회
-            qnaPage = qnaRepository.findAll(pageable);
-        }
-
-        return qnaPage.map(ArticleDto::fromEntity); // QnA 엔티티를 ArticleDto로 변환하여 반환
+        // 판매자일 경우 자신의 상품에 대한 QnA만 조회
+        qnaPage = qnaRepository.findAllByMember_Seller(member.getSeller(), pageable);
+    } else {
+        // 관리자는 모든 QnA를 조회
+        qnaPage = qnaRepository.findAll(pageable);
     }
 
-
-    public long getTotalQnaCount() {
-        return qnaRepository.count();  // JpaRepository의 count 메서드를 통해 전체 개수를 반환
-    }
-
-
+    // Qna 엔티티를 ArticleDto로 변환하여 반환
+        return qnaPage.map(ArticleDto::fromEntity);
+}
 
     // 답변 여부 확인
     public boolean hasAnswer(Long id) {
@@ -95,6 +90,24 @@ public class QnaService {
     }
 
 
+    public void deleteSelectedqnas(List<Long> ids) {
+        List<Qna> qnasToDelete = qnaRepository.findAllById(ids);
+
+        if (qnasToDelete.isEmpty()) {
+            throw new IllegalArgumentException("삭제할 문의가 없습니다.");
+        }
+
+        qnaRepository.deleteAllById(ids);
+    }
+
+    public Page<ArticleDto> getAllqnas(Pageable pageable) {
+        // 1. qnaRepository에서 페이징 처리된 결과가 반환되게
+        Page<Qna> qnaPage = qnaRepository.findAll(pageable);
+        System.out.println("qnaPage.getContent() = " + qnaPage.getContent());
+        // 2. qna타입을 갖고있는 page를 ArticleDto타입을 갖는 page로 변환
+        Page<ArticleDto> result = qnaPage.map(qna-> ArticleDto.fromEntity(qna));
+        return result;
+    }
 
     // qna 상세 조회 (ID로 조회)
     public ArticleDto getQnaById(Long id) {
@@ -197,15 +210,14 @@ public class QnaService {
         return qnaPage.map(ArticleDto::fromEntity); // 기존 fromEntity 메서드 활용
     }
 
-
-    public Page<ArticleDto> getMyQnas(Long memberId, Pageable pageable) {
-        Page<Qna> qnaPage = qnaRepository.findByMemberId(memberId, pageable); // 페이징 기능 추가
-        return qnaPage.map(ArticleDto::fromEntity); // QnA 엔티티를 ArticleDto로 변환하여 반환
+    public List<ArticleDto> getMyQnas(Long memberId) {
+        List<Qna> qnas = qnaRepository.findByMemberId(memberId);
+        return qnas.stream()
+                .map(ArticleDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    public List<Qna> findTop5Qnas() {
-        return qnaRepository.findTop5ByOrderByQnaRdateDesc();
-    }
+
 
 }
 

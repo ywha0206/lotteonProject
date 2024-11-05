@@ -52,9 +52,4 @@ public class Faq {
         this.cate1 = cate1;
         this.cate2 = cate2;
     }
-
-    // 조회수 증가 메서드
-    public void addView() {
-        this.faqViews += 1;
-    }
 }

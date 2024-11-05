@@ -47,10 +47,9 @@
 
         <tr th:each="qna, stat : ${qnas}" th:data-id="${qna.id}">
           <td><input type="checkbox" /></td>
-          <!-- 전체 QnA 개수에서 현재 페이지 첫 글의 시작 번호를 계산하여 내림차순으로 번호 표시 -->
-          <td th:text="${totalQnaCount - (qnasPage.number * qnasPage.size) - stat.index}">번호</td>
-          <td class="cate1" th:data-value="${qna.cate1.categoryName}">카테고리1</td>
-          <td class="cate2" th:data-value="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}">카테고리2</td>
+          <td th:text="${stat.count}">1</td>
+          <td class="cate1" th:text="${qna.cate1.categoryName}">카테고리1</td>
+          <td class="cate2" th:text="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}">카테고리2</td>
           <td style="text-align: left">
             <!-- 제목 클릭 시 답변 여부에 따라 view 또는 reply 페이지로 이동 -->
             <a th:href="@{'/admin/cs/qna/viewOrReply/' + ${qna.id}}" th:text="${qna.title}">문의 제목</a>
@@ -70,30 +69,18 @@
         </tr>
       </table>
     </article>
+
+
     <div class="button-group">
       <a class="button--delete" onclick="deleteSelected();">선택삭제</a>
     </div>
-
-
-
-    <!-- 페이지 네비게이션 -->
     <div class="paging">
-      <!-- 처음 페이지로 이동 -->
-      <a class="first" th:href="@{|/admin/cs/qnas?page=0|}" th:if="${qnasPage.number > 0}">처음</a>
-
-      <!-- 현재 페이지 목록을 표시하며, 현재 페이지에 클래스 추가 -->
-      <ol>
-        <li th:each="i : ${#numbers.sequence(0, qnasPage.totalPages - 1)}">
-          <a th:href="@{'/admin/cs/qnas?page=' + ${i}}"
-             th:text="${i + 1}"
-             th:classappend="${qnasPage.number == i} ? 'active'">1</a>
-        </li>
-      </ol>
-
-      <!-- 끝 페이지로 이동 -->
-      <a class="last" th:href="@{|/admin/cs/qnas?page=${qnasPage.totalPages - 1}|}" th:if="${qnasPage.number < qnasPage.totalPages - 1}">마지막</a>
+      <a href="#" class="prev">이전</a>
+      <a href="#">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#" class="next">다음</a>
     </div>
-
   </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
@@ -112,30 +99,43 @@
 
   const secondCategoryMap = {
     "user": { "regi": "가입", "leave": "탈퇴", "info": "회원정보", "login": "로그인" },
-    "coupon": { "lpoint": "L.POINT", "coupon2": "쿠폰", "event": "이벤트/경품", "attendance": "출석체크", "gift": "사은품" },
+    "coupon": { "lpoint": "L.POINT", "coupon": "쿠폰", "event": "이벤트/경품", "attendance": "출석체크", "gift": "사은품" },
     "order": { "orderMethod": "주문방법", "orderChange": "주문변경", "paymentMethod": "결제방법", "easyPayment": "간편결제", "giftReceive": "선물받기" },
-    "delivery": { "delivery2": "배송", "deliveryFee": "배송비", "deliveryMethod": "배송방법", "todayArrival": "오늘도착" },
+    "delivery": { "delivery": "배송", "deliveryFee": "배송비", "deliveryMethod": "배송방법", "todayArrival": "오늘도착" },
     "cancel": { "orderCancel": "주문취소", "refundMethod": "환불방법", "cardRefund": "카드환불", "refundSchedule": "환불일정" },
     "travel": { "ecoupon": "e쿠폰", "flight": "항공", "accommodation": "숙박", "ticket": "티켓" },
     "safe": { "policyViolation": "법령 및 정책위반 상품", "ipViolation": "지적재산권침해", "serviceViolation": "서비스 이용규칙 위반" }
   };
 
+  document.querySelector(".qnaCate").addEventListener("change", function () {
+    const selectedValue = this.value;
+    const select2 = document.querySelector(".qnaType");
+    select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>';
 
-  // DOMContentLoaded 이벤트로 페이지가 로드된 후 실행
+    if (secondCategoryMap[selectedValue]) {
+      Object.keys(secondCategoryMap[selectedValue]).forEach(key => {
+        const optionText = secondCategoryMap[selectedValue][key];
+        const newOption = document.createElement("option");
+        newOption.value = key;
+        newOption.text = optionText;
+        select2.appendChild(newOption);
+      });
+    }
+  });
+
   document.addEventListener('DOMContentLoaded', function () {
-    // 1차 카테고리명을 한글로 변환하여 표시
     document.querySelectorAll('.cate1').forEach(function (item) {
       const value = item.getAttribute('data-value');
-      item.textContent = firstCategoryMap[value] || value; // value에 따라 한글 카테고리명으로 변환
+      item.textContent = firstCategoryMap[value] || value;
     });
 
-    // 2차 카테고리명을 한글로 변환하여 표시
     document.querySelectorAll('.cate2').forEach(function (item) {
       const value = item.getAttribute('data-value');
-      const parentValue = item.getAttribute('data-parent'); // 1차 카테고리를 가져옴
-      item.textContent = secondCategoryMap[parentValue]?.[value] || value; // value와 parentValue에 따라 한글 카테고리명으로 변환
+      const parentValue = item.getAttribute('data-parent');
+      item.textContent = secondCategoryMap[parentValue]?.[value] || value;
     });
   });
+
 
   // 선택 삭제 기능
   function deleteSelected() {

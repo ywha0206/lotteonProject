@@ -47,7 +47,7 @@ public class Qna {
     private int qnaState;
 
     @Column(name = "qna_type")
-    private Integer qnaType;
+    private int qnaType;
 
     @Column(name = "qna_answer", columnDefinition = "TEXT")
     private String qnaAnswer;

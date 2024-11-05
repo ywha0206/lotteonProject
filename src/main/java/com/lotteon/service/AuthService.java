@@ -5,7 +5,6 @@ import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
-import com.lotteon.entity.product.Order;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.member.SellerRepository;
@@ -16,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -73,15 +71,20 @@ public class AuthService implements UserDetailsService {
     // 1. 관리자 회원목록 출력기능
     public List<GetAdminUserDTO> selectCustAll() {
 
+//        String role = "customer";
+//        List<Member> customers = memberRepository.findAllByMemRole(role);
+//        log.info("커스터머 서비스 : "+customers);
+
         List<String> roles = Arrays.asList("customer", "guest");
         List<Member> customersAndGuests = memberRepository.findAllByMemRoleIn(roles);
 
         log.info("커스터머 서비스 : "+customersAndGuests);
 
+        // List<GetAdminUserDTO> cust = customers.stream().map(customer -> modelMapper.map(customer, GetAdminUserDTO.class)).toList();
         List<GetAdminUserDTO> cust = new ArrayList<>();
         customersAndGuests.forEach(customer -> {
             // 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리
-            if (customer.getMemRole().equals("customer")) {
+            if (customer.getCustomer() != null&&customer.getMemRole().equals("customer")) {
                 GetAdminUserDTO dto = GetAdminUserDTO.builder()
                         .custId(customer.getId()) // 번호
                         .memUid(String.valueOf(customer.getMemUid())) // 아이디
@@ -95,12 +98,14 @@ public class AuthService implements UserDetailsService {
                         .memState(String.valueOf(customer.getMemState())) // 상태
                         .build();
                 cust.add(dto);
-                log.info("거짓말 이거 사용 안 한다구??" + dto);
             }else {
                 GetAdminUserDTO dto = GetAdminUserDTO.builder()
                         .custId(customer.getId()) // 번호
                         .memUid(String.valueOf(customer.getMemUid())) // 아이디
                         .custName(customer.getCustomer().getCustName()) // 이름
+                        .custGender(customer.getCustomer().getCustGender()) // 성별(x)
+                        .custGrade(customer.getCustomer().getCustGrade()) // 등급(x)
+                        .custPoint(customer.getCustomer().getCustPoint()) // 포인트
                         .custEmail(customer.getCustomer().getCustEmail()) // 이메일
                         .custHp(customer.getCustomer().getCustHp()) // 휴대폰
                         .memRole(customer.getMemRole())
@@ -112,9 +117,10 @@ public class AuthService implements UserDetailsService {
             }
         });
         return cust;
+
     }
 
-    // 2. 관리자 회원수정 정보조회 (+팝업호출 = select) [수정] 버튼 클릭 시
+    // 2. 관리자 회원수정 정보조회 (+팝업호출 = select)
     public GetAdminUserDTO popCust(Long id) {
         Optional<Member> optMember = memberRepository.findByCustomer_id(id);
         log.info("opt 멤버 확인 "+optMember.get().toString());
@@ -122,97 +128,85 @@ public class AuthService implements UserDetailsService {
         // 전역 변수로 dto 사용해주기 !
         GetAdminUserDTO dto;
 
-        Member member = optMember.get();
-        log.info("여기까지는 들어오나? ");
+        // 사용자 유형이 "customer" 일 때,
+        if(optMember.get().getMemRole().equals("customer")) {
+            Member member = optMember.get();
+            log.info("여기까지는 들어오나? ");
 
-        String[] addr = member.getCustomer().getCustAddr().split("/");
-        log.info("배열에 들어가는지 확인 (addr 주소값) "+addr);
+            String[] addr = member.getCustomer().getCustAddr().split("/");
+            log.info("배열에 들어가는지 확인 (addr 주소값) "+addr);
 
-        String lastLogin = member.getMemLastLoginDate()!=null
-                ?
-                member.getMemLastLoginDate().toString().replace("T", " ")
-                :
-                "최근 로그인 기록 없음";
+            dto = GetAdminUserDTO.builder()
+                    .custId(member.getCustomer().getId())
+                    .memUid(member.getMemUid())
+                    .custName(member.getCustomer().getCustName())
+                    .custGrade(member.getCustomer().getCustGrade())
+                    .custGender(member.getCustomer().getCustGender())
+                    .custEmail(member.getCustomer().getCustEmail())
+                    .custHp(member.getCustomer().getCustHp())
+                    .memRdate(member.getMemRdate())
+                    .memState(member.getMemState())
+                    .custAddr1(addr[0])
+                    .custAddr2(addr[1])
+                    .custAddr3(addr[2])
+                    .memRole(member.getMemRole())
+                    .memEtc(member.getMemEtc())
+                    .memLastLoginDate(member.getMemLastLoginDate().toString().replace("T", " "))
+                    .build();
 
-        dto = GetAdminUserDTO.builder()
-                .custId(member.getCustomer().getId())
-                .memUid(member.getMemUid())
-                .custName(member.getCustomer().getCustName())
-                .custGrade(member.getCustomer().getCustGrade())
-                .custGender(member.getCustomer().getCustGender())
-                .custEmail(member.getCustomer().getCustEmail())
-                .custHp(member.getCustomer().getCustHp())
-                .memRdate(member.getMemRdate())
-                .memState(member.getMemState())
-                .custAddr1(addr[0])
-                .custAddr2(addr[1])
-                .custAddr3(addr[2])
-                .memRole(member.getMemRole())
-                .memEtc(member.getMemEtc())
-                .memLastLoginDate(lastLogin)
-                .build();
+            log.info("여기까지 들어오나 2 "+dto);
 
-        log.info("여기까지 들어오나 2 "+dto);
+        // 사용자 유형이 "guest" 일 때,
+        } else if(optMember.get().getMemRole().equals("guest")) {
+            Member member = optMember.get();
+            // 번호, 이름, 아이디, 이메일, 가입일, 최근로그인날짜, 사용자 유형
+            dto = GetAdminUserDTO.builder()
+                    .custId(member.getCustomer().getId())
+                    .memUid(member.getMemUid())
+                    .custName(member.getCustomer().getCustName())
+                    .custEmail(member.getCustomer().getCustEmail())
+                    .memRdate(member.getMemRdate())
+                    .memLastLoginDate(member.getMemLastLoginDate().toString().replace("T", " "))
+                    .memRole(member.getMemRole()                                                                                                                                                                                                                                                                                                                                                                                                                                      )
+                    .build();
+            log.info("여기까지 들어오나 3 "+dto);
 
+        } else {
+            return null;
+        }
+       // Optional<Member> custPop = memberRepository.findByMemUid(selectCustDto.getMemUid());
         return dto;
     }
 
-    // guest 일 때,
-    public GetAdminUserDTO popGuest(Long id) {
-
-        Optional<Member> optMember = memberRepository.findByCustomer_id(id);
-        log.info("opt 게스트 멤버 확인 "+optMember.get().toString());
-
-        // 전역 변수로 dto 사용해주기 !
-        GetAdminUserDTO dto;
-        Customer customer = optMember.get().getCustomer();
-        // 사용자 유형이 "guest" 일 때,
-        if(optMember.get().getMemRole().equals("guest")) {
-            Member member = optMember.get();
-            log.info("어이 게스트 들어오나? ");
-
-            // 게스트 정보로만 필요한 필드 세팅
-            return GetAdminUserDTO.builder()
-                    .custId(member.getId())
-                    .memUid(member.getMemUid())
-                    .memRdate(member.getMemRdate())
-                    .memState(member.getMemState().toString())
-                    .memRole(member.getMemRole())
-                    .build();
-        }
-        throw new IllegalArgumentException("해당 ID를 가진 guest가 없습니다.");
-    }
-
-    // customer 일 떄,
+    // 3. 관리자 회원 수정
     public GetAdminUserDTO updateCust(Long id, GetAdminUserDTO getAdminUserDTO) {
+
+        // Member 조회
         Optional<Customer> opt = customerRepository.findById(id);
-        if (opt.isPresent()) {
-            // `guest` 역할인 경우 null 반환 (수정하지 않음)
-            if (opt.get().getMember().getMemRole().equals("guest")) {
-                log.info("guest 사용자는 수정할 수 없습니다.");
-                return null;
-            } else {
-                // `customer`의 경우에만 수정 로직 진행
-                Customer cust = opt.get();
-                Member member = memberRepository.findById(cust.getMember().getId())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 회원이 없습니다: " + id));
+        if(opt.get().getMember().getMemRole().equals("guest")){
 
-                Customer customer = member.getCustomer();
-                customer.updateUser(getAdminUserDTO);
-                member.updateUser(customer, getAdminUserDTO.getMemEtc());
-
-                // 수정된 정보 저장
-                memberRepository.save(member);
-                customerRepository.save(customer);
-
-                return modelMapper.map(customer, GetAdminUserDTO.class);
+            return null;
+        } else {
+            Customer cust = null;
+            if(opt.isPresent()) {
+                cust = opt.get();
             }
+            Member member = memberRepository.findById(cust.getMember().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 회원이 없습니다: " + id));
+
+            // Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
+            Customer customer = member.getCustomer();
+            customer.updateUser(getAdminUserDTO);
+            member.updateUser(customer,getAdminUserDTO.getMemEtc());
+
+            // Member랑 Customer 정보 각각 저장
+            memberRepository.save(member);
+            customerRepository.save(customer);
+
+            return modelMapper.map(customer, GetAdminUserDTO.class);
         }
-        throw new IllegalArgumentException("해당 ID를 가진 회원이 없습니다.");
+
     }
-
-
-
 
     // 3. 관리자 회원목록 페이지 처리 (<이전 1,2,3 다음>)
     public Page<GetAdminUserDTO> selectCustAll2(int page) {
@@ -222,23 +216,6 @@ public class AuthService implements UserDetailsService {
         log.info("서비스 디티오 변환한 거 "+dtos.getContent());
         return dtos;
     }
-
-    public Page<GetAdminUserDTO> selectCustAndGuestAll(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-
-        // "customer"와 "guest" 역할을 함께 조회하기 위해 조건 리스트를 만듭니다.
-        List<String> roles = Arrays.asList("customer", "guest");
-
-        // MemRole이 "customer" 또는 "guest"인 회원을 조회
-        Page<Member> members = memberRepository.findAllByMemRoleInOrderByIdDesc(roles, pageable);
-
-        // Member 객체를 GetAdminUserDTO로 변환
-        Page<GetAdminUserDTO> dtos = members.map(v -> v.toGetAdminUserDTO());
-
-        log.info("서비스 DTO 변환 결과: " + dtos.getContent());
-        return dtos;
-    }
-
 
 
     // 4. 관리자 회원목록 선택삭제 기능
@@ -279,28 +256,8 @@ public class AuthService implements UserDetailsService {
         return "NF";
     }
 
-    // 검색 기능
-    public Page<GetAdminUserDTO> findAllSearchType(int page, String searchType, String keyword) {
-        log.info("연화를 찾아라1 ");
-        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
-        Page<Member> members;
 
-        if(searchType.equals("memUid")){  // 아이디
-            members = memberRepository.findAllByMemUidOrderByIdDesc(keyword,pageable);
-        } else if (searchType.equals("custName")){ // 이름
-            members = memberRepository.findAllByCustNameOrderByIdDesc(keyword,pageable);
-        } else if (searchType.equals("custEmail")){ // 이메일
-            members = memberRepository.findAllByCustEmailOrderByIdDesc(keyword,pageable);
-        } else { // 휴대폰
-            members = memberRepository.findAllByCustHpOrderByIdDesc(keyword,pageable);
-        }
-
-        log.info("연화를 찾아라 2"+members.getContent());
-        Page<GetAdminUserDTO> dtos = members.map(v -> v.toGetAdminUserDTO());
-        return dtos;
-    }
 }
-
 
 
 

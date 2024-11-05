@@ -18,9 +18,6 @@ import com.lotteon.service.product.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -33,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/my")
@@ -77,14 +73,6 @@ public class MyController {
         } else {
             model.addAttribute("noReview",true);
         }
-
-        // 최신 QnA 5개 불러오기
-        // QnaService에서 Qna를 ArticleDto로 변환하여 가져오도록 수정
-        List<ArticleDto> qnaList = qnaService.findTop5Qnas().stream()
-                .map(ArticleDto::fromEntity)
-                .collect(Collectors.toList());
-        model.addAttribute("qnaList", qnaList);
-
         model.addAttribute("orders", orders);
         model.addAttribute("points", points);
         model.addAttribute("noPoint",false);
@@ -168,65 +156,13 @@ public class MyController {
         return "pages/my/point";
     }
 
-    @GetMapping("/points/use")
-    public String usePoint(
-            Model model,
-            @RequestParam(name = "page",defaultValue = "0") int page,
-            @RequestParam(name = "type",defaultValue = "0") String type,
-            @RequestParam(name = "keyword",defaultValue = "0") String keyword
-    ) {
-        Page<GetPointsDto> points;
-        if(!type.equals("0")&&!keyword.equals("0")){
-            points = pointService.findAllBySearch2(page,type,keyword);
-        } else {
-            points = pointService.findAllByCustomer2(page);
-        }
-        if(points.isEmpty()){
-            model.addAttribute("noItem",true);
-            return "pages/my/usepoint";
-        }
-        model.addAttribute("noItem",false);
-        model.addAttribute("points", points);
-        model.addAttribute("type", type);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("page", page);
-        model.addAttribute("totalPages", points.getTotalPages());
-
-        return "pages/my/usepoint";
-    }
-
-  /*  @GetMapping("/qnas")
+    @GetMapping("/qnas")
     public String getMyQnas(Model model, Principal principal) {
         MyUserDetails userDetails = (MyUserDetails) ((Authentication) principal).getPrincipal();
         Member memberId = userDetails.getUser(); // MyUserDetails에서 ID를 가져오는 메서드 사용
         List<ArticleDto> qnaList = qnaService.getMyQnas(memberId.getId());
         model.addAttribute("qnaList", qnaList);
         return "pages/my/qna"; // 뷰 파일로 연결
-    }*/
-
-    @GetMapping("/qnas")
-    public String getMyQnas(Model model, Principal principal,
-                            @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
-        // 현재 로그인된 사용자 정보를 가져옴
-        MyUserDetails userDetails = (MyUserDetails) ((Authentication) principal).getPrincipal();
-        Member member = userDetails.getUser();
-
-        // 1. 로그인한 사용자의 페이징된 QnA 목록을 가져옴
-        Page<ArticleDto> qnasPage = qnaService.getMyQnas(member.getId(), pageable);
-
-        // 2. 현재 페이지의 QnA 목록 추출
-        List<ArticleDto> qnaList = qnasPage.getContent();
-
-        // 3. 전체 QnA 글 개수 가져오기
-        long totalQnaCount = qnasPage.getTotalElements();
-
-        // 4. 모델에 페이징 정보와 데이터 추가
-        model.addAttribute("qnasPage", qnasPage);       // 전체 페이지 정보 추가
-        model.addAttribute("qnaList", qnaList);         // 현재 페이지 QnA 목록 추가
-        model.addAttribute("totalQnaCount", totalQnaCount); // 전체 QnA 글 개수 추가
-
-        // 5. 마이페이지 QnA 목록 페이지 반환
-        return "pages/my/qna"; // 마이페이지 QnA 목록 뷰 파일
     }
 
     @GetMapping("/reviews")

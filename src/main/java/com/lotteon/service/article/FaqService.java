@@ -61,22 +61,13 @@ public class FaqService {
         return faqPage.map(faq -> modelMapper.map(faq, ArticleDto.class));
     }
 
-    public long getTotalCount() {
-        return faqRepository.count();  // JpaRepository의 count 메서드를 통해 전체 개수를 반환
-    }
-
-
 
     // FAQ 상세보기 기능 추가
     public ArticleDto getFaqById(Long id) {
-        // ID를 통해 FAQ 조회 & 조회수 증가
-        Faq faq = faqRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다. ID: " + id));
-
-        faq.addView(); // 조회수 증가
-        faqRepository.save(faq); // 변경된 조회수 저장
-
-        return ArticleDto.fromEntity(faq); // DTO로 변환하여 반환
+        // ID를 통해 FAQ 조회
+        return faqRepository.findById(id)
+                .map(ArticleDto::fromEntity) // DTO로 변환
+                .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다."));
     }
 
 
@@ -142,10 +133,13 @@ public class FaqService {
      * @param pageable
      * @return articleDTO 페이징
      */
-
     public Page<ArticleDto> getAllFaqs(Pageable pageable) {
+        // 1. faqRepository에서 페이징 처리된 결과가 반환되게
         Page<Faq> faqPage = faqRepository.findAll(pageable);
-        return faqPage.map(ArticleDto::fromEntity); // FAQ 엔티티를 ArticleDto로 변환
+        System.out.println("faqPage.getContent() = " + faqPage.getContent());
+        // 2. FAQ타입을 갖고있는 page를 ArticleDto타입을 갖는 page로 변환
+        Page<ArticleDto> result = faqPage.map(faq-> ArticleDto.fromEntity(faq));
+        return result;
     }
 
     // FAQ 상세 조회 (ID로 조회)

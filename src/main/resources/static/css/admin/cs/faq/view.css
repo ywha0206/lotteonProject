@@ -41,7 +41,7 @@ td {
   padding: 0 12px;
 }
 
-.button--delete{
+.button--delete {
   width: 100px;
   height: 40px;
   background: #cfcfcf;
@@ -59,14 +59,6 @@ td {
   color: white;
   font-weight: 700;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.button-group > a, .button-group >a:link, .button-group > a:visited, .button-group > a:active, .button-group>a:hover{
-  color: white;
 }
 
 .button--back {

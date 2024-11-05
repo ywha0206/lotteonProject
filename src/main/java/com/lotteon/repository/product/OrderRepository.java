@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +47,4 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Page<Order> findAllByOrderItems_SellerAndCustomer_CustNameOrderByIdDesc(Seller seller, String keyword, Pageable pageable);
 
     Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(Customer customer, Timestamp varDay, Timestamp today, Pageable pageable);
-
-    List<Order> findAllByOrderRdateAfter(Timestamp threeDaysAgo);
 }

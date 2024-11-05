@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -31,6 +29,4 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
     Page<Seller> findAllBySellBusinessCodeOrderByMember_MemRdateDesc(String keyword, Pageable pageable);
 
     Page<Seller> findAllBySellHpOrderByMember_MemRdateDesc(String keyword, Pageable pageable);
-
-    Page<Seller> findAllByOrderItems_Order_OrderRdateBetween(Timestamp startTimestamp, Timestamp endTimestamp, Pageable pageable);
 }
