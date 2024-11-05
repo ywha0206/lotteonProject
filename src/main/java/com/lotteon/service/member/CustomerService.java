@@ -148,8 +148,11 @@ public class CustomerService {
                 .getPrincipal();
 
         Customer customer = auth.getUser().getCustomer();
-        int point = customer.getCustPoint();
-        return point;
+
+        int points2 = this.updateCustomerPoint(customer);
+        customer.updatePoint(points2);
+        customerRepository.save(customer);
+        return points2;
     }
     //상훈 작업부분 포인트추가 끝
 

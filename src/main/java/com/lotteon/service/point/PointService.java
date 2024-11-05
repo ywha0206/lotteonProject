@@ -176,6 +176,11 @@ public class PointService {
 
             // 변경된 포인트를 업데이트합니다.
             pointRepository.save(point);
+
+            int points2 = customerService.updateCustomerPoint(customer);
+            customer.updatePoint(points2);
+            customerRepository.save(customer);
+
         }
 
     }

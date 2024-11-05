@@ -136,7 +136,12 @@ public class Point {
     }
 
     public void changePointVar(int pointVar) {
-        this.pointVar = pointVar;
+        if(pointVar==0){
+            this.pointVar = pointVar;
+            this.pointType = 0;
+        } else {
+            this.pointVar = pointVar;
+        }
     }
 
     public void expirationPoint() {

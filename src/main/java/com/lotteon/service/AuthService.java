@@ -61,7 +61,6 @@ public class AuthService implements UserDetailsService {
         Optional<Member> optUser = memberRepository.findByMemUid(username);
 
         if(optUser.isPresent()) {
-            // 시큐리티 사용자 인증객체 생성 후 반환
             return MyUserDetails.builder()
                     .user(optUser.get())
                     .build();
