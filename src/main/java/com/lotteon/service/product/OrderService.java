@@ -391,7 +391,7 @@ public class OrderService {
             dtos = sellers.map(Seller::toGetIncomeDto3);
         }
         return dtos;
-
+    }
     //ToDto 변환 메서드
     public ResponseOrdersDto ToResponseMyOrderDto(Order order){
         String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderRdate());
