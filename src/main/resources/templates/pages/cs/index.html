@@ -71,6 +71,25 @@
                 </li>
             </ul>
         </section>
+        <!-- 문의하기 섹션 (공지사항 스타일 적용) -->
+        <section class="cs_index cs_index_qna">
+            <h3 class="sub_title"><span>문의하기</span><a th:href="@{/cs/qnas}" class="viewAll">전체보기</a></h3>
+            <ul class="qna_ul">
+                <li class="qna_card" th:each="qna : ${qnas}">
+                    <a href="">
+                        <span class="category" th:data-value="${qna.cate1.categoryName}" th:text="${qna.cate1.categoryName}">카테고리</span>
+                        <div class="content">
+                            <p class="title" th:text="${qna.qnaTitle}">문의 제목</p>
+                            <span class="date" th:text="${#temporals.format(qna.qnaRdate, 'yy.MM.dd')}"></span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <!-- 링크를 오른쪽으로 정렬하기 위해 추가한 div -->
+            <div class="qna_write_btn">
+                <a th:href="@{/cs/qna/write}" class="qna_link">문의글 작성 ></a>
+            </div>
+        </section>
 
         <!-- 1:1 상담안내 섹션 (쇼핑몰 스타일로 업데이트) -->
         <section class="cs_index cs_index_info">
