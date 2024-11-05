@@ -1,6 +1,7 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
@@ -26,6 +27,10 @@ import com.lotteon.service.member.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -250,5 +255,29 @@ public class OrderItemService {
         return dtos;
     }
 
+    public Page<GetDeliveryDto> findAllBySeller(int page) {
+        Pageable pageable = PageRequest.of(page,10);
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        Page<OrderItem> orderItems = orderItemRepository.findAllBySellerAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,pageable);
+        Page<GetDeliveryDto> dtos = orderItems.map(OrderItem::toGetDeliveryDto);
+        return dtos;
+    }
+
+    public Page<GetDeliveryDto> findAllBySellerAndSearchType(int page, String searchType, String keyword) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<OrderItem> orders;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        if(searchType.equals("deliId")){
+            orders = orderItemRepository.findAllBySellerAndOrderDeliIdAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,keyword,pageable);
+        } else if (searchType.equals("orderId")){
+            orders = orderItemRepository.findAllBySellerAndIdAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,Long.parseLong(keyword),pageable);
+        } else {
+            orders = orderItemRepository.findAllBySellerAndOrder_ReceiverNameAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,keyword,pageable);
+        }
+        Page<GetDeliveryDto> dtos = orders.map(OrderItem::toGetDeliveryDto);
+        return dtos;
+    }
 
 }

@@ -125,8 +125,6 @@ public class CustomerService {
         for(Point v : points ){
             if(v.getPointType()==1){
                 point = point+v.getPointVar();
-            } else if(v.getPointType()==2){
-                point = point-v.getPointVar();
             }
         }
         return point;

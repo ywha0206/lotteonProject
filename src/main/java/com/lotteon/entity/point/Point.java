@@ -137,8 +137,7 @@ public class Point {
 
     public void changePointVar(int pointVar) {
         if(pointVar==0){
-            this.pointVar = pointVar;
-            this.pointType = 0;
+            this.pointType = 2;
         } else {
             this.pointVar = pointVar;
         }

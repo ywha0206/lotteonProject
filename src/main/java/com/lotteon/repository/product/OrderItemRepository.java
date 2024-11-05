@@ -28,4 +28,15 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     List<OrderItem> findAllByDeliSdateBefore(LocalDate threeDaysAgo);
 
     List<OrderItem> findAllByDeliSdateAfter(LocalDate threeDaysAgo);
+
+    Page<OrderItem> findAllBySellerAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNull(Seller seller, Pageable pageable);
+
+    Page<OrderItem> findAllBySellerAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(Seller seller, Pageable pageable);
+
+    Page<OrderItem> findAllBySellerAndOrderDeliIdAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(Seller seller, String keyword, Pageable pageable);
+
+    Page<OrderItem> findAllBySellerAndIdAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(Seller seller, long l, Pageable pageable);
+
+    Page<OrderItem> findAllBySellerAndOrder_ReceiverNameAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(Seller seller, String keyword, Pageable pageable);
+
 }

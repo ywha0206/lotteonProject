@@ -1,5 +1,6 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
 import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;
@@ -7,9 +8,12 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @ToString
@@ -91,4 +95,53 @@ public class OrderItem {
     public void setOrderDeliSdate(LocalDate today) {
         this.deliSdate = today;
     }
+
+    public GetDeliveryDto toGetDeliveryDto() {
+        String company;
+        if(orderDeliCompany==1){
+            company = "로젠택배";
+        } else if(orderDeliCompany==2){
+            company = "한신택배";
+        } else if(orderDeliCompany==3){
+            company = "우체국";
+        } else {
+            company = "대한통운";
+        }
+
+
+        Optional<Integer> maxDeli = order.getOrderItems().stream()
+                .map(OrderItem::getDeli)
+                .max(Integer::compareTo);
+
+        String state ;
+        if(order.getOrderState() == 0){
+            state = "배송준비중";
+        } else if(order.getOrderState() == 1) {
+            state = "배송중";
+        } else if(order.getOrderState() == 2) {
+            state = "부분완료";
+        } else if(order.getOrderState() == 3) {
+            state = "상품확인중";
+        } else {
+            state = "주문완료";
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date orderDate = Date.from(order.getOrderRdate().toInstant());
+        String formattedDate = dateFormat.format(orderDate);
+
+        return GetDeliveryDto.builder()
+                .deliveryId(orderDeliId)
+                .deliCompany(company)
+                .orderItemId(id)
+                .orderItemSize(order.getOrderItems().size())
+                .orderItemState2(state)
+                .orderItemTotalPrice(order.getOrderTotal())
+                .prodDeli(maxDeli.get())
+                .receiverName(order.getReceiverName())
+                .prodName(product.getProdName())
+                .orderRdate(formattedDate)
+                .build();
+    }
+
 }

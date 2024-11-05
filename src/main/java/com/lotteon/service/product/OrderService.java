@@ -281,33 +281,6 @@ public class OrderService {
         return true;
     }
 
-
-    public Page<GetDeliveryDto> findAllBySeller(int page) {
-        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
-        Page<Order> orders;
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Seller seller = auth.getUser().getSeller();
-        orders = orderRepository.findAllByOrderItems_SellerAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,pageable);
-        Page<GetDeliveryDto> dtos = orders.map(v->v.toGetDeliveryDto());
-        return dtos;
-    }
-
-    public Page<GetDeliveryDto> findAllBySellerAndSearchType(int page, String searchType, String keyword) {
-        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
-        Page<Order> orders;
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Seller seller = auth.getUser().getSeller();
-        if(searchType.equals("deliId")){
-            orders = orderRepository.findAllByOrderItems_SellerAndOrderItems_OrderDeliIdAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,keyword,pageable);
-        } else if (searchType.equals("orderId")){
-            orders = orderRepository.findAllByOrderItems_SellerAndIdAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,Long.parseLong(keyword),pageable);
-        } else {
-            orders = orderRepository.findAllByOrderItems_SellerAndReceiverNameAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,keyword,pageable);
-        }
-        Page<GetDeliveryDto> dtos = orders.map(v->v.toGetDeliveryDto());
-        return dtos;
-    }
-
     public GetDeliInfoDto findByDeliveryId(String deliveryId) {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Seller seller = auth.getUser().getSeller();
