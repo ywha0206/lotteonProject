@@ -71,12 +71,13 @@
                         <div th:if="${shop.state == '운영준비'}" class="cir3"></div>
                     </td>
                     <td class="td-admin">
-                        <input th:data-id="${shop.id}" type="button" value="[ 중단 ]">
+                        <input onclick="updateState(event)" th:if="${shop.state != '운영중지'}" th:data-id="${shop.id}" type="button" value="[ 중단 ]">
+                        <input onclick="updateState(event)" th:if="${shop.state == '운영중지'}" th:data-id="${shop.id}" type="button" value="[ 개시 ]">
                     </td>
                 </tr>
             </table>
             <div class="btns">
-                <button class="delete-btn" id="deleteButton">선택삭제</button>
+                <button class="delete-btn" id="deleteButton">영업중지</button>
                 <button onclick="openShopPopup()" class="insert-btn">상점등록</button>
             </div>
             <div class="page">
@@ -270,6 +271,26 @@
         });
     });
 
+    async function updateState(event){
+        const submitData = {
+            "id" : event.target.dataset.id
+        }
+
+        try {
+            const resp = await axios.patch(`/admin/shop/shop?id=${event.target.dataset.id}`,null,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.status===200){
+                window.location.href = "/admin/shop/shop"
+            }
+        } catch (e) {
+            
+        }
+    }
+
+
     // 각 체크박스 클릭 이벤트
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
@@ -305,7 +326,9 @@
                         "Content-Type" : "application/json"
                     }
                 })
-
+                if(resp.status===200){
+                    window.location.href = "/admin/shop/shop"
+                }
             } catch (e) {
 
             }

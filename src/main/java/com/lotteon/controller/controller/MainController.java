@@ -26,10 +26,8 @@ public class MainController {
     public String main(Model model, @RequestParam(value = "birth", defaultValue = "false") Boolean birth) {
         Object category1 = categoryProductService.findCategory();
         System.out.println(category1);
-        List<GetBannerDTO> bannerList1 = bannerService.selectUsingBannerAt(1);
-        List<GetBannerDTO> bannerList2 = bannerService.selectUsingBannerAt(2);
-        model.addAttribute("topb", bannerList1);
-        model.addAttribute("sliderb", bannerList2);
+        List<GetBannerDTO> banners = bannerService.selectUsingBannerAt(2);
+        model.addAttribute("sliderb", banners);
         model.addAttribute("category1", category1);
         model.addAttribute("birth", birth);
         return "index";

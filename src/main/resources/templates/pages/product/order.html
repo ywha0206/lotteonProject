@@ -31,7 +31,6 @@
     let totalAllDeliver = 0;
     let totalOrderPrice = 0;
     let totalAllPoint = 0;
-    let discountPrice = 0;
 
     listItems.forEach((row, index) => {
       if (index === 0) return;
@@ -45,7 +44,7 @@
       const deliveryFee = parseInt(cells[7]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 배송비 (숫자 외 제거)
       const totalPrice = parseInt(cells[8]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 총합 (숫자 외 제거)
 
-      discountPrice = parseInt((productPrice-(productPrice*(1-(discount/100))))*quantity);
+      const discountPrice = parseInt(productPrice-(productPrice*(1-(discount/100))));
 
       totalqty += quantity;
       totalAllPrice += productPrice;
@@ -64,7 +63,7 @@
     qty.innerText = totalqty;
     AllDiscount.innerText = totalAllDiscount;
     AllDeliver.innerText = totalAllDelivery;
-    OrderPrice.innerText = totalOrderPrice+totalAllDeliver;
+    OrderPrice.innerText = totalOrderPrice;
     AllsavedPoint.innerText = totalAllPoint;
 
     // 주문하기
@@ -95,7 +94,7 @@
         "orderReq":receiverReq,
         "orderDeli":totalAllDeliver,
         "orderDiscount":totalAllDiscount,
-        "orderTotal":totalOrderPrice+totalAllDeliver,
+        "orderTotal":totalOrderPrice,
         "orderQuantity":totalqty
       };
       console.log(orderData);

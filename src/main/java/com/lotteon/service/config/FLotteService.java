@@ -28,7 +28,9 @@ public class FLotteService {
     public GetFLotteDTO getRecentFLotte () {
         System.out.println("디비 접속 후 Footer 정보 조회");
         FLotte fLotte = fLotteRepository.findTopByOrderByIdDesc();
-        return modelMapper.map(fLotte, GetFLotteDTO.class);
+        GetFLotteDTO fLotteDTO= modelMapper.map(fLotte, GetFLotteDTO.class);
+        fLotteDTO.splitAddress();
+        return fLotteDTO;
     }
 
 
