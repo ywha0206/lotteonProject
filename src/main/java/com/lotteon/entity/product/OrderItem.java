@@ -80,5 +80,4 @@ public class OrderItem {
         this.state2 = i;
     }
 
-    
 }

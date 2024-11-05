@@ -119,6 +119,7 @@ public class ApiAdminProdController {
         log.info("컨트롤러에서 어드민인지 셀러인지 확인 "+auth2.getUser().getMemRole());
         ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
         List<GetAdminOrderNameDto> itemNames = orderItemService.selectAdminOrderItem(orderId);
+
         if(responseOrderDto==null ){
             return ResponseEntity.ok().body(false);
         }
