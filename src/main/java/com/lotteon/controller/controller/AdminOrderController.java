@@ -38,21 +38,36 @@ public class AdminOrderController {
 
     @GetMapping("/orders")
     public String orders(Model model,Authentication authentication,
-                         @RequestParam(name = "page",defaultValue = "0") int page
+                         @RequestParam(name = "page",defaultValue = "0") int page,
+                         @RequestParam(value = "searchType",defaultValue = "0") String searchType,
+                         @RequestParam(value = "keyword",defaultValue = "0") String keyword
     ) {
         MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
         String role = auth.getUser().getMemRole();
         log.info("auth 롤 체크 "+role);
 
-
+        Long sellerId = auth.getUser().getSeller().getId();
         Page<ResponseAdminOrderDto> orders;
 
-        if(role.equals("admin")){
-            orders = orderService.selectedAdminOrdersByAdmin(page);
-        }else{
-            orders = orderService.selectedAdminOrdersBySeller(page);
-        }
+//        if(role.equals("admin")){
+//            orders = orderService.selectedAdminOrdersByAdmin(page);
+//        }else{
+//            orders = orderService.selectedAdminOrdersBySeller(page);
+//        }
 
+        if (role.equals("admin") && searchType.equals("0")) {
+            // Admin 전체 조회
+            orders = orderService.selectedAdminOrdersByAdmin(page);
+        } else if (role.equals("admin")) {
+            // Admin 키워드 검색 조회
+            orders = orderService.findAdminOrdersByKeyword(page, searchType, keyword);
+        } else if (searchType.equals("0")) {
+            // Seller 전체 조회
+            orders = orderService.selectedAdminOrdersBySeller(page);
+        } else {
+            // Seller 키워드 검색 조회
+            orders = orderService.findSellerOrdersByKeyword(page, searchType, keyword);
+        }
 
         log.info("컨트롤러 페이지 오더 데이터 확인 "+orders.getContent());
 
