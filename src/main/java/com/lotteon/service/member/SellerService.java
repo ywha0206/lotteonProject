@@ -168,7 +168,8 @@ public class SellerService {
     public void delete(List<Long> ids) {
         ids.forEach(v->{
             Optional<Member> member = memberRepository.findBySeller(sellerRepository.findById(v).get());
-            memberRepository.delete(member.get());
+            member.get().updateMemberStateToSleep();
+            memberRepository.save(member.get());
         });
     }
 }

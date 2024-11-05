@@ -114,7 +114,7 @@ public class OrderItemService {
 
             Point point = Point.builder()
                     .pointType(1)
-                    .pointVar(orderItem.getSavePoint())
+                    .pointVar(orderItem.getSavePoint()*orderItem.getQuantity())
                     .customer(customer)
                     .pointEtc("상품구매 포인트적립")
                     .pointExpiration(today.plusMonths(2))

@@ -74,10 +74,5 @@ public class MyUserDetails implements UserDetails, OAuth2User{
         return String.valueOf(user.getId());
     }
 
-//    @Override
-//    public String getCustName(){
-//        return customer.getCustName(); // 사용자 이름
-//    }
-
 
 }
