@@ -43,7 +43,7 @@
             <td class="date" th:text="${order.orderRdate}">2022-12-13</td>
             <td>
               <div class="thumb">
-                <a href="#">
+                <a th:href="@{'/prod/product?prodId='+${order.prodId}}">
                   <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${order.getProdListImg()}}" alt="상품 이미지" />
                 </a>
               </div>
@@ -62,13 +62,17 @@
             <td class="status" th:switch="${order.orderState}">
               <span th:case="0">결제완료</span>
               <span th:case="1">배송중</span>
-              <span th:case="2">배송완료</span>
+              <span th:case="2">수취확인버튼발사대</span>
+              <span th:case="3">상품평버튼발사대</span>
+              <span th:case="4">주문완료</span>
             </td>
             <td class="confirm">
-              <a href="#" class="receive color" th:if="${order.orderState>0}">수취확인</a>
-              <button class="review color">상품평쓰기</button>
-              <button class="refund grey">반품신청</button>
-              <button class="exchange grey">교환신청</button>
+              <button th:if="${order.orderState==0}" class="exchange grey">주문취소</button>
+              <button th:if="${order.orderState==1}" class="exchange grey">배송예정일</button>
+              <button th:if="${order.orderState==2}" class="receive color">수취확인</button>
+              <button th:if="${order.orderState==2}" class="refund grey">반품신청</button>
+              <button th:if="${order.orderState==2}" class="exchange grey">교환신청</button>
+              <button th:if="${order.orderState==3}" onclick="openReviewWrite(event)" th:data-name="${order.prodName}" th:data-id="${order.orderId}" th:data-prod="${order.prodId}" class="review color">상품평쓰기</button>
             </td>
           </tr>
         </table>
