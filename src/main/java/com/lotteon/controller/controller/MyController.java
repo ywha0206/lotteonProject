@@ -58,7 +58,7 @@ public class MyController {
     @GetMapping(value = {"","/","/index"})
     public String index(Model model) {
 
-        Page<ResponseOrdersDto> orders = orderService.selectedOrderList(0);
+        Page<ResponseOrdersDto> orders = orderService.selectedMyOrderList(0);
 
 
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
@@ -112,7 +112,7 @@ public class MyController {
         if(!type.equals("0")&&!keyword.equals("0")){
             orders = orderService.findAllBySearch(page,type,keyword);
         }else {
-            orders = orderService.selectedOrderList(page);
+            orders = orderService.selectedMyOrderList(page);
         }
 
         log.info("마이페이지 오더 컨트롤러 오더 잘 뽑혔는지 확인 "+orders);

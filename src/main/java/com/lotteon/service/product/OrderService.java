@@ -167,7 +167,7 @@ public class OrderService {
     }
 
 
-    public Page<ResponseOrdersDto> selectedOrderList(int page) {
+    public Page<ResponseOrdersDto> selectedMyOrderList(int page) {
 
         MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer = auth.getUser().getCustomer();
@@ -182,20 +182,7 @@ public class OrderService {
 
         // Page<Order> 객체를 map을 이용해 Page<ResponseOrdersDto>로 변환
         Page<ResponseOrdersDto> responseOrdersDtos = orders.map(order -> {
-            String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderRdate());
-
-            return ResponseOrdersDto.builder()
-                    .orderId(order.getId())
-                    .orderQuantity(order.getOrderQuantity())
-                    .orderState(order.getOrderState())
-                    .orderTotal(order.getOrderTotal())
-                    .orderRdate(formattedDate)
-                    .prodId(order.getOrderItems().get(0).getProduct().getId())
-                    .prodListImg(order.getOrderItems().get(0).getProduct().getProdListImg())
-                    .prodName(order.getOrderItems().get(0).getProduct().getProdName())
-                    .seller(order.getOrderItems().get(0).getSeller().getSellCompany())
-                    .orderItemCount(order.getOrderItems().size())
-                    .build();
+            return ToResponseMyOrderDto(order);
         });
 
         return responseOrdersDtos;
@@ -211,43 +198,46 @@ public class OrderService {
         log.info("셀러 "+seller);
         Page<Order> orders = orderRepository.findAllByOrderItems_Seller(seller,pageable);
         Page<ResponseAdminOrderDto> orderDtos = orders.map(order -> {
-
-            String formattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(order.getOrderRdate());
-
-            // OrderItems에서 seller ID로 필터링
-            List<OrderItem> sellerOrderItems = order.getOrderItems().stream()
-                    .filter(item -> item.getSeller().getId().equals(seller.getId()))
-                    .collect(Collectors.toList());
-
-            log.info("셀러 아이템 필터링한 거 "+sellerOrderItems.toString());
-
-            // 필터링된 아이템의 개수
-            int sellerOrderItemCount = sellerOrderItems.size();
-
-            log.info("셀러 아이템 개수 "+sellerOrderItemCount);
-
-
-            // 필터링된 아이템의 총 가격 합산
-            int sellerOrderTotal = sellerOrderItems.stream()
-                    .mapToInt(OrderItem::getTotal) // OrderItem의 total 필드 사용
-                    .sum();
-
-            return ResponseAdminOrderDto.builder()
-                    .orderId(order.getId())
-                    .OrderRdate(formattedDate)
-                    .OrderState(order.getOrderItems().get(0).getState2())
-                    .OrderItemCount(sellerOrderItemCount)
-                    .OrderItemTotal(sellerOrderTotal)
-                    .memUid(order.getCustomer().getMember().getMemUid())
-                    .custName(order.getCustomer().getCustName())
-                    .ProdName(order.getOrderItems().get(0).getProduct().getProdName())
-                    .build();
-
+            return ToResponseAdminOrderDtoBySeller(order, seller);
         });
         log.info("오더 레포지토리 테스트 "+orders.getContent());
 
         return orderDtos;
     }
+    public Page<ResponseAdminOrderDto> findAdminOrdersByKeyword(int page, String searchType, String keyword) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Order> orders;
+        if(searchType.equals("custId")){
+            orders = orderRepository.findAllByCustomer_Member_MemUidOrderByIdDesc(keyword,pageable);
+        } else if (searchType.equals("orderId")){
+            orders = orderRepository.findAllByIdOrderByIdDesc(Long.parseLong(keyword),pageable);
+        } else {
+            orders = orderRepository.findAllByCustomer_CustNameOrderByIdDesc(keyword,pageable);
+        }
+
+        Page<ResponseAdminOrderDto> dtos = orders.map(order ->this.ToResponseAdminOrderDtoByAdmin(order));
+        return dtos;
+    }
+
+    public Page<ResponseAdminOrderDto> findSellerOrdersByKeyword(int page, String searchType, String keyword) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+
+        MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller  = auth.getUser().getSeller();
+
+        Page<Order> orders;
+        if(searchType.equals("custId")){
+            orders = orderRepository.findAllByOrderItems_SellerAndCustomer_Member_MemUidOrderByIdDesc(seller,keyword,pageable);
+        } else if (searchType.equals("orderId")){
+            orders = orderRepository.findAllByIdAndOrderItems_SellerOrderByIdDesc(Long.parseLong(keyword),seller,pageable);
+        } else {
+            orders = orderRepository.findAllByOrderItems_SellerAndCustomer_CustNameOrderByIdDesc(seller,keyword,pageable);
+        }
+
+        Page<ResponseAdminOrderDto> dtos = orders.map(order ->this.ToResponseAdminOrderDtoBySeller(order,seller));
+        return dtos;
+    }
+
 
     public Page<ResponseAdminOrderDto> selectedAdminOrdersByAdmin(int page) {
 
@@ -258,28 +248,7 @@ public class OrderService {
 
 
         Page<ResponseAdminOrderDto> orderDtos = orders.map(order -> {
-
-            String formattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(order.getOrderRdate());
-
-            // 필터링된 아이템의 개수
-            int sellerOrderItemCount = order.getOrderItems().size();
-
-            // 필터링된 아이템의 총 가격 합산
-            int sellerOrderTotal = order.getOrderItems().stream()
-                    .mapToInt(OrderItem::getTotal) // OrderItem의 total 필드 사용
-                    .sum();
-
-            return ResponseAdminOrderDto.builder()
-                    .orderId(order.getId())
-                    .OrderRdate(formattedDate)
-                    .OrderState(order.getOrderItems().get(0).getState2())
-                    .OrderItemCount(sellerOrderItemCount)
-                    .OrderItemTotal(sellerOrderTotal)
-                    .memUid(order.getCustomer().getMember().getMemUid())
-                    .custName(order.getCustomer().getCustName())
-                    .ProdName(order.getOrderItems().get(0).getProduct().getProdName())
-                    .build();
-
+            return ToResponseAdminOrderDtoByAdmin(order);
         });
         return orderDtos;
     }
@@ -393,5 +362,68 @@ public class OrderService {
         Timestamp varDay = Timestamp.valueOf(LocalDate.now().minusDays(Integer.parseInt(keyword)).atStartOfDay());
         Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,varDay,today,pageable);
         return orders;
+    }
+
+    //ToDto 변환 메서드
+    public ResponseOrdersDto ToResponseMyOrderDto(Order order){
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderRdate());
+        return ResponseOrdersDto.builder()
+                .orderId(order.getId())
+                .orderQuantity(order.getOrderQuantity())
+                .orderState(order.getOrderState())
+                .orderTotal(order.getOrderTotal())
+                .orderRdate(formattedDate)
+                .prodId(order.getOrderItems().get(0).getProduct().getId())
+                .prodListImg(order.getOrderItems().get(0).getProduct().getProdListImg())
+                .prodName(order.getOrderItems().get(0).getProduct().getProdName())
+                .seller(order.getOrderItems().get(0).getSeller().getSellCompany())
+                .orderItemCount(order.getOrderItems().size())
+                .build();
+    }
+    public ResponseAdminOrderDto ToResponseAdminOrderDtoBySeller(Order order, Seller seller){
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(order.getOrderRdate());
+        // OrderItems에서 seller ID로 필터링
+        List<OrderItem> sellerOrderItems = order.getOrderItems().stream()
+                .filter(item -> item.getSeller().getId().equals(seller.getId()))
+                .collect(Collectors.toList());
+        // 필터링된 아이템의 개수
+        int sellerOrderItemCount = sellerOrderItems.size();
+        // 필터링된 아이템의 총 가격 합산
+        int sellerOrderTotal = sellerOrderItems.stream()
+                .mapToInt(OrderItem::getTotal) // OrderItem의 total 필드 사용
+                .sum();
+        return ResponseAdminOrderDto.builder()
+                .orderId(order.getId())
+                .OrderRdate(formattedDate)
+                .OrderState(order.getOrderItems().get(0).getState2())
+                .OrderItemCount(sellerOrderItemCount)
+                .OrderItemTotal(sellerOrderTotal)
+                .memUid(order.getCustomer().getMember().getMemUid())
+                .custName(order.getCustomer().getCustName())
+                .ProdName(order.getOrderItems().get(0).getProduct().getProdName())
+                .build();
+    }
+    public ResponseAdminOrderDto ToResponseAdminOrderDtoByAdmin(Order order){
+
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(order.getOrderRdate());
+
+        // 필터링된 아이템의 개수
+        int sellerOrderItemCount = order.getOrderItems().size();
+
+        // 필터링된 아이템의 총 가격 합산
+        int sellerOrderTotal = order.getOrderItems().stream()
+                .mapToInt(OrderItem::getTotal) // OrderItem의 total 필드 사용
+                .sum();
+
+        return ResponseAdminOrderDto.builder()
+                .orderId(order.getId())
+                .OrderRdate(formattedDate)
+                .OrderState(order.getOrderItems().get(0).getState2())
+                .OrderItemCount(sellerOrderItemCount)
+                .OrderItemTotal(sellerOrderTotal)
+                .memUid(order.getCustomer().getMember().getMemUid())
+                .custName(order.getCustomer().getCustName())
+                .ProdName(order.getOrderItems().get(0).getProduct().getProdName())
+                .build();
     }
 }

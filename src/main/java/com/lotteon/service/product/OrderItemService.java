@@ -51,6 +51,10 @@ public class OrderItemService {
     private final CustomerRepository customerRepository;
     private final ProductOptionRepository productOptionRepository;
 
+    //주문수 +1
+    public void ProductOrderCount(Product product) {
+        product.setProdOrderCnt(product.getProdOrderCnt() + 1);
+    }
 
     public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session) {
         log.info("오더아이템 서비스 들어옴 ");
@@ -66,6 +70,9 @@ public class OrderItemService {
         List<Long> orderItemIds = new ArrayList<>();
         for(OrderItemDto orderItem :orderItemDto){
             Optional<Product> optProduct = productRepository.findById(orderItem.getProductId());
+            if(optProduct.isPresent()){
+                ProductOrderCount(optProduct.get());
+            }
 
             int orderItemQuantity = orderItem.getQuantity();
             Long optionId = orderItem.getOptionId();

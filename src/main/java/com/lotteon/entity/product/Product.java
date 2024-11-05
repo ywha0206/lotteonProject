@@ -65,6 +65,7 @@ public class Product {
     @Column(name = "prod_stock")
     private int prodStock;
 
+    @Setter
     @Column(name = "prod_order_cnt")
     private Integer prodOrderCnt;
 
