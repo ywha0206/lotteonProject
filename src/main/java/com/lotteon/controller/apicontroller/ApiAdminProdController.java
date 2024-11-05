@@ -104,7 +104,7 @@ public class ApiAdminProdController {
         MyUserDetails auth2  =(MyUserDetails) authentication.getPrincipal();
         log.info("컨트롤러에서 어드민인지 셀러인지 확인 "+auth2.getUser().getMemRole());
         ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
-
+        log.info("디스카운트 제대로 뽑히는지 확인 "+responseOrderDto);
         if(responseOrderDto==null ){
             return ResponseEntity.ok().body(false);
         }

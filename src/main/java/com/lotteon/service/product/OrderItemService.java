@@ -158,7 +158,7 @@ public class OrderItemService {
                                                                         .prodName(orderItem.getProduct().getProdName())
                                                                         .prodSummary(orderItem.getProduct().getProdSummary())
                                                                         .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
-                                                                        .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
+                                                                        .discount((int)Math.round(Double.valueOf(orderItem.getDiscount())/100*orderItem.getProduct().getProdPrice()))
                                                                         .quantity(orderItem.getQuantity())
                                                                         .delivery(orderItem.getDeli())
                                                                         .prodPoint(orderItem.getProduct().getProdPoint())
@@ -168,6 +168,7 @@ public class OrderItemService {
             orderItemDtos.add(responseOrderItemDto);
         }
         Order order = orderItems.get(0).getOrder();
+        log.info("제대로 나와라 좋은말로할때 : "+orderItemDtos.toString());
 
         ResponseOrderDto responseOrderDto = ResponseOrderDto.builder()
                 .orderId(order.getId())
@@ -213,11 +214,11 @@ public class OrderItemService {
                                                         .prodId(orderItem.getProduct().getId())
                                                         .sellerName(orderItem.getSeller().getSellCompany())
                                                         .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
-                                                        .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
+                                                        .discount((int)Math.round(Double.valueOf(orderItem.getDiscount())/100*orderItem.getProduct().getProdPrice()))
                                                         .quantity(orderItem.getQuantity())
                                                         .delivery(orderItem.getDeli())
                                                         .orderDeliId(orderItem.getOrderDeliId()==null?"":orderItem.getOrderDeliId())
-                                                        .totalPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
+                                                        .totalPrice((int)Math.round(orderItem.getTotal()))
                                                         .build();
 
             orderItemDtos.add(orderItemDto);
