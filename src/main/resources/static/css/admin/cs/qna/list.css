@@ -70,10 +70,38 @@ td {
 }
 
 .paging {
+  display: flex; /* 요소들을 중앙에 배치할 수 있도록 설정 */
+  justify-content: center; /* 중앙 정렬 */
   font-size: 20px;
   font-weight: 500;
-  text-align: center;
+  margin-top: 20px; /* 상단 여백 추가 */
 }
+
+.paging ol {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0; /* 기본 여백 제거 */
+}
+
+.paging ol li {
+  margin: 0 5px;
+}
+
+.paging a {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  margin: 0 2px;
+  color: #333;
+  text-decoration: none;
+  display: inline-block; /* 중앙 배치 */
+}
+
+.paging a.active {
+  background-color: #333;
+  color: #fff;
+}
+
 
 .qnaCate,
 .qnaType {

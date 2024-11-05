@@ -50,6 +50,16 @@ td {
   font-weight: 700;
   cursor: pointer;
 }
+.button--reply {
+  width: 100px;
+  height: 40px;
+  background: #cfcfcf;
+  border: 0;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 
 .button--back {
   background-color: #f44336;

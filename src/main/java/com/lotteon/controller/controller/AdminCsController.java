@@ -75,15 +75,22 @@ public class AdminCsController {
     // 목록
     @GetMapping("/faqs")
     public String faqs(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // 1. faq 서비스에서 페이징 처리된  faq를 반환
+        // 1. faq 서비스에서 페이징 처리된 FAQ를 반환
         Page<ArticleDto> faqsPage = faqService.getAllFaqs(pageable);
+
         // 2. faqsPage에서 데이터들을 뽑아옴
         List<ArticleDto> faqs = faqsPage.getContent();
         System.out.println("faqs = " + faqs);
-        // 3. model에 faqs 를 추가
-        model.addAttribute("faqs", faqs);
 
-        // 4. 웹 반환
+        // 3. model에 faqsPage와 faqs 추가
+        model.addAttribute("faqsPage", faqsPage); // 전체 페이지 정보를 추가하여 페이징 처리가 가능하도록 합니다.
+        model.addAttribute("faqs", faqs);         // FAQ 목록을 모델에 추가
+
+        // 4. 전체 FAQ 글 개수 가져오기
+        long totalFaqCount = faqService.getTotalCount(); // faqService에 getTotalCount 메서드가 있다고 가정합니다.
+        model.addAttribute("totalFaqCount", totalFaqCount); // 전체 FAQ 글 개수를 모델에 추가하여 HTML에서 사용할 수 있도록 합니다.
+
+        // 5. 웹 반환
         return "pages/admin/cs/faq/list";
     }
 
@@ -187,11 +194,16 @@ public class AdminCsController {
         Page<ArticleDto> qnasPage = qnaService.getAllQnas(pageable);
         // 2. qnasPage에서 데이터들을 뽑아옴
         List<ArticleDto> qnas = qnasPage.getContent();
-        // 3. model에 qnas 를 추가
-        model.addAttribute("qnas", qnas); // 모델 이름을 qnas로 변경
+        // 3. 전체 QnA 글 개수 가져오기
+        long totalQnaCount = qnaService.getTotalQnaCount(); // QnA 전체 개수
 
-        // 4. 웹 반환
-        return "pages/admin/cs/qna/list";
+        // 4. 모델에 데이터 추가
+        model.addAttribute("qnasPage", qnasPage); // 전체 페이지 정보를 추가하여 페이징 처리가 가능하도록 합니다.
+        model.addAttribute("qnas", qnas);         // QnA 목록을 모델에 추가
+        model.addAttribute("totalQnaCount", totalQnaCount); // 전체 QnA 글 개수
+
+        // 5. QnA 목록 페이지로 반환
+        return "pages/admin/cs/qna/list"; // QnA 목록 페이지
 
     }
 
