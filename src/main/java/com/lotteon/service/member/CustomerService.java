@@ -4,13 +4,11 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.requestDto.PostFindIdDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
-import com.lotteon.entity.member.Address;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.point.Point;
 
-import com.lotteon.repository.member.AddressRepository;
 import com.lotteon.repository.member.AttendanceEventRepository;
 
 import com.lotteon.repository.member.CustomerRepository;
@@ -25,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +41,6 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final PointRepository pointRepository;
     private final AttendanceEventRepository attendanceEventRepository;
-    private final AddressRepository addressRepository;
 
 
     @Transactional
@@ -164,22 +160,7 @@ public class CustomerService {
 
         MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member member = auth.getUser();
-
-        Optional<Address> addressEntity = addressRepository.findByCustomerAndBasicState(member.getCustomer(),1);
-        if(addressEntity.isEmpty()){
-            String address = member.getCustomer().getCustAddr();
-            String[] addr = address.split("/");
-            UserOrderDto user = UserOrderDto.builder()
-                    .memUid(member.getMemUid())
-                    .custName(member.getCustomer().getCustName())
-                    .custHp(member.getCustomer().getCustHp())
-                    .custZip(addr[0])
-                    .custAddr1(addr[1])
-                    .custAddr2(addr[2])
-                    .points(member.getCustomer().getCustPoint())
-                    .build();
-        }
-        String address = addressEntity.get().getAddress();
+        String address = member.getCustomer().getCustAddr();
         String[] addr = address.split("/");
 
         UserOrderDto user = UserOrderDto.builder()

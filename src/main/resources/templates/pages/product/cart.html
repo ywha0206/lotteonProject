@@ -36,14 +36,13 @@
               .filter(checkbox => checkbox.checked)  // 체크된 항목만 필터링
               .map(checkbox => {
                 const tr = checkbox.closest('tr');
-                const quantity = parseInt(tr.querySelector('td:nth-child(5) input').value); // 수량을 숫자로 변환
+                const quantity = parseInt(tr.querySelector('td:nth-child(5)').textContent.trim(), 10); // 수량을 숫자로 변환
                 const price = parseInt(tr.querySelector('td:nth-child(6)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 상품금액
                 const discount = parseFloat(tr.querySelector('td:nth-child(7)').textContent.trim().replace('%', '')); // 할인 (퍼센트)
                 const point = parseInt(tr.querySelector('td:nth-child(8)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 포인트
                 const deliver = tr.querySelector('td:nth-child(9)').textContent.trim()=='무료배송'
                         ? 0 :
                         parseInt(tr.querySelector('td:nth-child(9)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 배송비
-                tr.querySelector('td:nth-child(10)').textContent = Number(price) * Number(quantity) +'원'
                 const totalPrice = parseInt(tr.querySelector('td:nth-child(10)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 총금액
 
                 return {
@@ -238,20 +237,14 @@
                   <span>옵션없음</span>
                 </th:block>
                 <th:block th:unless="${cartItem.optionValue.isEmpty()}">
-                  <select onchange="changeOption(event)">
-                    <option th:each="option : ${options[cartItem.cartProductDto.id]}"
-                            th:value="${option.optionValue}"
-                            th:text="${option.optionValue} + ' (+' + ${option.optionPrice} + ') '"
-                            th:selected="${cartItem.optionId == option.optionId}"
-                            th:data-id="${option.optionId}"
-                            th:data-prod="${cartItem.cartItemId}"
-                    >
-                    </option>
-                  </select>
+                  <th:block th:each="option : ${cartItem.optionValue}">
+                    <span th:text="${option}">옵션있음</span>
+                  </th:block>
+                    <span th:text="${cartItem.additionalPrice<0?'('+cartItem.additionalPrice+')':'(+'+cartItem.additionalPrice+')'}">([[${cartItem.additionalPrice<0?}]])</span>
                 </th:block>
               </div>
             </td>
-            <td><input th:data-quant="${cartItem.quantity}" th:data-id="${cartItem.cartItemId}" onchange="changeQuantity(event)" style="width: 40px;" type="number" th:value="${cartItem.quantity}"></td>
+            <td>[[${cartItem.quantity}]]</td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodPrice, 1, 'COMMA') : 0}]]원</td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodDiscount, 1, 'COMMA') : 0}]] %</td>
             <td>[[${cartItem.cartProductDto.prodPoint}]] P</td>
@@ -308,43 +301,4 @@
   </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
-<script th:inline="javascript">
-  async function changeOption(event){
-    const selectedOption = event.target.options[event.target.selectedIndex]
-    const optionId = selectedOption.dataset.id;
-    const prodId = selectedOption.dataset.prod;
 
-    console.log(optionId)
-    console.log(prodId)
-    try {
-      const resp = await axios.patch(`/prod/cart/option?id=${optionId}&&prod=${prodId}`,null,{
-        headers:{
-          "Content-Type" : "application/json"
-        }
-      })
-      if(resp.status===200){
-        window.location.href = '/prod/cart'
-      }
-    } catch (e) {
-
-    }
-  }
-
-  async function changeQuantity(event){
-    const quantity = event.target.value;
-    const cartItemId = event.target.dataset.id;
-    try {
-      const resp = await axios.patch(`/prod/cart/quantity?cart=${cartItemId}&&quantity=${quantity}`,null,{
-        headers:{
-          "Content-Type" : "application/json"
-        }
-      })
-      if(resp.status===200){
-        window.location.href = '/prod/cart'
-      }
-
-    } catch (e) {
-
-    }
-  }
-</script>

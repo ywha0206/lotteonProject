@@ -32,7 +32,6 @@ public class CartItem {
     private int quantity;
 
     public void setQuantity(int quantity) {
-        this.totalPrice = (totalPrice/this.quantity)*quantity;
         this.quantity = quantity;
     }
 
@@ -51,7 +50,4 @@ public class CartItem {
     @Column(name = "option_id")
     private Long optionId;
 
-    public void updateOption(Long id) {
-        this.optionId = id;
-    }
 }

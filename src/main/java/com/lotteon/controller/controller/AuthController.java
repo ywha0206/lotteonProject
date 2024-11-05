@@ -25,7 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Random;
 
 @Log4j2
 @Controller
@@ -40,14 +39,8 @@ public class AuthController {
 
     @GetMapping("/login/view")
     public String login(Model model) {
-        List<GetBannerDTO> banners = bannerService.selectUsingBannerAt(4);
-        if(banners.size()>1){
-            Random random = new Random();
-            int randomIndex = random.nextInt(banners.size());
-            model.addAttribute("banner", banners.get(randomIndex));
-        }else{
-            model.addAttribute("banner", banners.get(0));
-        }
+        List<GetBannerDTO> bannerList = bannerService.selectUsingBannerAt(4);
+        model.addAttribute("banner", bannerList);
         return "pages/auth/login";
     }
 

@@ -42,9 +42,8 @@ public class AdminUserController {
             @RequestParam(name = "keyword", defaultValue = "0") String keyword
 
     ) {
-        // 페이지 처리
-        //Page<GetAdminUserDTO> cust2 = authService.selectCustAll2(page);
-        Page<GetAdminUserDTO> cust2 = authService.selectCustAndGuestAll(page);
+
+        Page<GetAdminUserDTO> cust2 = authService.selectCustAll2(page);
 
         // 2-1. 회원목록 모델에 담아서 뷰에서 보기
         model.addAttribute("customers", cust2);

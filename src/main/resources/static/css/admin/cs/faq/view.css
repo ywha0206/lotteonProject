@@ -41,17 +41,25 @@ td {
   padding: 0 12px;
 }
 
-.button--delete,
+.button--delete {
+  width: 100px;
+  height: 40px;
+  background: #cfcfcf;
+  border: 0;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .button--modify {
   width: 100px;
   height: 40px;
   background: #cfcfcf;
   border: 0;
-  color: white; !important;
+  color: white;
   font-weight: 700;
   cursor: pointer;
 }
-
 
 .button--back {
   width: 100px;

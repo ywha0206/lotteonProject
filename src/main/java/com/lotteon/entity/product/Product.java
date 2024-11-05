@@ -2,7 +2,6 @@ package com.lotteon.entity.product;
 
 import com.lotteon.dto.requestDto.GetProductDto;
 import com.lotteon.dto.requestDto.GetProductNamesDto;
-import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
@@ -34,7 +33,7 @@ public class Product {
     @JoinColumn(name = "sell_id")
     private Seller seller;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
     private List<CategoryProductMapper> categoryMappings = new ArrayList<>();
@@ -86,7 +85,7 @@ public class Product {
     @Column(name = "prod_review_cnt")
     private Integer prodReviewCnt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
     private List<ProductOption> options = new ArrayList<>();
@@ -148,25 +147,5 @@ public class Product {
 
     public void updateViewCnt() {
         this.prodViews = prodViews +1;
-    }
-
-    public void updateProduct(PostProductDTO dto) {
-        this.id = dto.getId();
-        this.seller = dto.getSeller();
-        this.prodName = dto.getProdName();
-        this.prodDetailImg = dto.getProdDetailImg();
-        this.prodBasicImg = dto.getProdBasicImg();
-        this.prodListImg = dto.getProdListImg();
-        this.prodOrderCnt = dto.getProdOrderCnt();
-        this.prodViews = dto.getProdViews();
-        this.prodRating = dto.getProdRating();
-        this.prodPoint = dto.getProdPoint();
-        this.prodDeliver = dto.getProdDeliver();
-        this.categoryMappings = dto.getCategoryMappings();
-        this.prodSummary = dto.getProdSummary();
-        this.prodPrice = dto.getProdPrice();
-        this.prodDiscount = dto.getProdDiscount();
-        this.prodStock = dto.getProdStock();
-        this.options = dto.getOptions();
     }
 }

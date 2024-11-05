@@ -39,12 +39,4 @@ public class ApiAdminShopController {
         sellerService.delete(ids);
         return ResponseEntity.ok("SU");
     }
-
-    @PatchMapping("/shop")
-    public ResponseEntity<?> updateShop(
-            @RequestParam Long id
-    ){
-        sellerService.updateState(id);
-        return ResponseEntity.ok("SU");
-    }
 }

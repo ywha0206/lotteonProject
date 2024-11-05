@@ -28,20 +28,16 @@
      내용 : 메인 header.html 생성
 
      수정이력
-      - 2024/10/30 (수) 김민희 - 실시간 검색어 및 GNB 영역 마크업 구조 수정
-      - 2024/11/02 (토) 김민희 - 로그인 시 관리자,판매자,일반사용자 구분 되는 인가설정
-      - 2024/11/03 (일) 이상훈 - 메인 카테고리 출력, 섹션별 상품출력, 캐싱처리, 권한 오류 수정 연관검색기능구현, 실시간 검색어 구현
-      - 2024/11/05 (화) 김주경 - 탑배너 출력 및 스크롤 가변
+      - 2025/10/30 (수) 김민희 - 실시간 검색어 및 GNB 영역 마크업 구조 수정
+      - 2025/11/02 (토) 김민희 - 로그인 시 관리자,판매자,일반사용자 구분 되는 인가설정
+
+     날짜 : 2024/11/03
+     이름 : 이상훈
+     내용 : 메인 카테고리 출력, 섹션별 상품출력, 캐싱처리, 권한 오류 수정 연관검색기능구현, 실시간 검색어 구현
 -->
 
 <body>
     <header id="header">
-        <a id="topBanner"
-           th:unless="${topBanner eq null}"
-           th:href="@{'/'+${topBanner.bannerLink}}"
-           th:style="'height: 80px;width: 100%; position: absolute; top: -80px; right: 0; left: 0; text-align:center ;background-color:'+${topBanner.bannerBg}">
-            <img th:src="@{'/file/'+${topBanner.bannerImg}}" th:alt="${topBanner.bannerName}" style="height: 100%">
-        </a>
         <div class="h_utill"></div><!--.h_utill-->
         <div id="headerIn">
             <h1 class="logo">

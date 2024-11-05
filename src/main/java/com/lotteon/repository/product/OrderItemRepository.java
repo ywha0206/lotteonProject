@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,4 +27,5 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     List<OrderItem> findAllByDeliSdateBefore(LocalDate threeDaysAgo);
 
     List<OrderItem> findAllByDeliSdateAfter(LocalDate threeDaysAgo);
+
 }

@@ -7,8 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -59,9 +57,6 @@ public class OrderItem {
     @Column(name = "order_item_warranty")
     private Timestamp warranty;
 
-    @Column(name = "order_deli_sdate")
-    private LocalDate deliSdate;
-
 //    @OneToMany(mappedBy = "orderItem")
 //    private List<OrderItemOption> selectedOptions;
 
@@ -91,4 +86,5 @@ public class OrderItem {
     public void setOrderDeliSdate(LocalDate today) {
         this.deliSdate = today;
     }
+
 }
