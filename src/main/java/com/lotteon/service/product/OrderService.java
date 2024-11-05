@@ -308,7 +308,7 @@ public class OrderService {
     }
 
     public Page<ResponseOrdersDto> findAllBySearch(int page, String type, String keyword) {
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 10);
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
@@ -346,21 +346,21 @@ public class OrderService {
         String eDate = keyword.substring(keyword.indexOf("~")+1);
         Timestamp startDate = Timestamp.valueOf(LocalDate.parse(sDate).atStartOfDay());
         Timestamp endDate = Timestamp.valueOf(LocalDate.parse(eDate).atStartOfDay().plusDays(1).minusNanos(1)); // 하루의 끝까지 포함하도록 설정
-        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,startDate,endDate,pageable);
+        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(customer,startDate,endDate,pageable);
         return orders;
     }
 
     private Page<Order> findAllByMonth(Pageable pageable, Customer customer, String keyword) {
         Timestamp today = Timestamp.valueOf(LocalDate.now().atStartOfDay().plusDays(1).minusNanos(1));
         Timestamp varDay = Timestamp.valueOf(LocalDate.now().minusMonths(Integer.parseInt(keyword)).atStartOfDay());
-        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,varDay,today,pageable);
+        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(customer,varDay,today,pageable);
         return orders;
     }
 
     private Page<Order> findAllByDate(Pageable pageable, Customer customer, String keyword) {
         Timestamp today = Timestamp.valueOf(LocalDate.now().atStartOfDay().plusDays(1).minusNanos(1));
         Timestamp varDay = Timestamp.valueOf(LocalDate.now().minusDays(Integer.parseInt(keyword)).atStartOfDay());
-        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,varDay,today,pageable);
+        Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(customer,varDay,today,pageable);
         return orders;
     }
 
