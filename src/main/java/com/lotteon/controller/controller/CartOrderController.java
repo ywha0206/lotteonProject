@@ -1,6 +1,7 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
+import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.dto.responseDto.cartOrder.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/prod")
@@ -42,11 +44,12 @@ public class CartOrderController {
     public String join(Model model, HttpSession session) {
 
         List<GetCartDto> cartItems = cartService.selectCart(session);
-        log.info("카트 아이템 데이터 구조 좀 보자 "+cartItems);
         model.addAttribute("cartItems", cartItems);
 
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
+        Map<Long,List<GetOption1Dto>> options = cartService.selectOptions();
+        model.addAttribute("options", options);
         model.addAttribute("category1", category1);
         return "pages/product/cart";
     }

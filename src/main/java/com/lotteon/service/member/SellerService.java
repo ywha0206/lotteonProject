@@ -4,6 +4,7 @@ import com.lotteon.dto.requestDto.PostAdminSellerDto;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.requestDto.PostFindIdDto;
 import com.lotteon.dto.requestDto.PostSellerSignupDTO;
+import com.lotteon.dto.responseDto.GetSellerInfoDto;
 import com.lotteon.dto.responseDto.GetShopsDto;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
@@ -168,8 +169,26 @@ public class SellerService {
     public void delete(List<Long> ids) {
         ids.forEach(v->{
             Optional<Member> member = memberRepository.findBySeller(sellerRepository.findById(v).get());
-            member.get().updateMemberStateToSleep();
+            member.get().updateMemberStateToLeave();
             memberRepository.save(member.get());
         });
+    }
+
+    public void updateState(Long id) {
+        Optional<Seller> seller = sellerRepository.findById(id);
+        if(seller.isEmpty()){
+            return;
+        }
+        if(seller.get().getMember().getMemState().equals("leave")){
+            seller.get().getMember().updateMemberStateToStart();
+        } else if(seller.get().getMember().getMemState().equals("start")) {
+            seller.get().getMember().updateMemberStateToLeave();
+        }
+    }
+
+    public GetSellerInfoDto findBySellerCompany(String company) {
+        Optional<Seller> seller = sellerRepository.findBySellCompany(company);
+
+        return seller.get().toGetSellerInfoDto();
     }
 }
