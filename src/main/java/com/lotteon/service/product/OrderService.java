@@ -6,6 +6,7 @@ import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
 import com.lotteon.dto.responseDto.GetDeliInfoDto;
+import com.lotteon.dto.responseDto.GetIncomeDto;
 import com.lotteon.dto.responseDto.GetPointsDto;
 import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
@@ -13,6 +14,7 @@ import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Point;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +59,7 @@ public class OrderService {
     private final ProductOptionRepository productOptionRepository;
     private final CartItemOptionRepository cartItemOptionRepository;
     private final ModelMapper modelMapper;
+    private final SellerRepository sellerRepository;
 
     public List<GetOrderDto> selectedOrders(List<PostCartSaveDto> selectedProducts) {
 
@@ -393,5 +399,28 @@ public class OrderService {
         Timestamp varDay = Timestamp.valueOf(LocalDate.now().minusDays(Integer.parseInt(keyword)).atStartOfDay());
         Page<Order> orders = orderRepository.findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(customer,varDay,today,pageable);
         return orders;
+    }
+
+    public Page<GetIncomeDto> findIncome(int page) {
+        Pageable pageable = PageRequest.of(page, 6);
+        Page<Seller> sellers;
+        sellers = sellerRepository.findAll(pageable);
+        Page<GetIncomeDto> dtos = sellers.map(Seller::toGetIncomeDto);
+        return dtos;
+    }
+
+    public Page<GetIncomeDto> findIncomeSearchType(int page, String searchType) {
+        Pageable pageable = PageRequest.of(page, 6);
+
+        Page<GetIncomeDto> dtos;
+        Page<Seller> sellers = sellerRepository.findAll(pageable);
+        if(searchType.equals("day")){
+            dtos = sellers.map(Seller::toGetIncomeDto);
+        } else if(searchType.equals("week")){
+            dtos = sellers.map(Seller::toGetIncomeDto2);
+        } else {
+            dtos = sellers.map(Seller::toGetIncomeDto3);
+        }
+        return dtos;
     }
 }

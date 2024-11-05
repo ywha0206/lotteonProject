@@ -26,6 +26,8 @@ public class QSeller extends EntityPathBase<Seller> {
 
     public final QMember member;
 
+    public final ListPath<com.lotteon.entity.product.OrderItem, com.lotteon.entity.product.QOrderItem> orderItems = this.<com.lotteon.entity.product.OrderItem, com.lotteon.entity.product.QOrderItem>createList("orderItems", com.lotteon.entity.product.OrderItem.class, com.lotteon.entity.product.QOrderItem.class, PathInits.DIRECT2);
+
     public final ListPath<com.lotteon.entity.product.Product, com.lotteon.entity.product.QProduct> product = this.<com.lotteon.entity.product.Product, com.lotteon.entity.product.QProduct>createList("product", com.lotteon.entity.product.Product.class, com.lotteon.entity.product.QProduct.class, PathInits.DIRECT2);
 
     public final StringPath sellAddr = createString("sellAddr");
