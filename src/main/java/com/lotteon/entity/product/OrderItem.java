@@ -71,4 +71,7 @@ public class OrderItem {
     @Column(name = "order_item_option_id")
     private Long optionId;
 
+    public void updateState2(int i) {
+        this.state2 = i;
+    }
 }
