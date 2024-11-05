@@ -71,6 +71,7 @@ public class PointService {
         Customer customer = auth.getUser().getCustomer();
 
         Page<Point> points = pointRepository.findAllByCustomerAndPointTypeOrderByPointExpirationAsc(customer,2,pageable);
+
         Page<GetPointsDto> dtos = points.map(v->v.toGetPointsDto());
 
         return dtos;
@@ -143,6 +144,7 @@ public class PointService {
         LocalDate startDate = LocalDate.parse(sDate);
         LocalDate endDate = LocalDate.parse(eDate);
         Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointExpirationAsc(customer,2,startDate,endDate,pageable);
+
         return points;
     }
 
@@ -150,6 +152,7 @@ public class PointService {
         LocalDate today = LocalDate.now();
         LocalDate varDay = today.minusMonths(Integer.parseInt(keyword));
         Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointExpirationAsc(customer,2,varDay,today,pageable);
+
         return points;
     }
 
@@ -157,6 +160,7 @@ public class PointService {
         LocalDate today = LocalDate.now();
         LocalDate varDay = today.minusDays(Integer.parseInt(keyword));
         Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointExpirationAsc(customer,2,varDay,today,pageable);
+
         return points;
     }
 

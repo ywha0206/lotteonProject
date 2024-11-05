@@ -255,7 +255,6 @@ public class OrderItemService {
         return dtos;
     }
 
-
     public Page<GetDeliveryDto> findAllBySeller(int page) {
         Pageable pageable = PageRequest.of(page,10);
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -280,4 +279,5 @@ public class OrderItemService {
         Page<GetDeliveryDto> dtos = orders.map(OrderItem::toGetDeliveryDto);
         return dtos;
     }
+
 }

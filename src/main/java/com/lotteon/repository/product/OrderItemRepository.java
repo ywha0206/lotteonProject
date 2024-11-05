@@ -38,4 +38,5 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     Page<OrderItem> findAllBySellerAndIdAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(Seller seller, long l, Pageable pageable);
 
     Page<OrderItem> findAllBySellerAndOrder_ReceiverNameAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(Seller seller, String keyword, Pageable pageable);
+
 }
