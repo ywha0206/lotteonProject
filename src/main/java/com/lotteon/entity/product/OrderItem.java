@@ -1,5 +1,6 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
 import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;
 import lombok.*;
@@ -80,5 +81,14 @@ public class OrderItem {
         this.state2 = i;
     }
 
-    
+    public GetAdminOrderNameDto toGetAdminOrderNameDto() {
+        return GetAdminOrderNameDto.builder()
+                .orderItemId(id)
+                .orderItemName(product.getProdName())
+                .build();
+    }
+
+    public void setOrderDeliSdate(LocalDate today) {
+        this.deliSdate = today;
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     List<OrderItem> findAllBySellerAndOrder_Id(Seller seller, Long orderId);
 
     Page<OrderItem> findAllByOrder_OrderRdateBetween(Timestamp startTimestamp, Timestamp endTimestamp, Pageable pageable);
+
+    List<OrderItem> findAllByDeliSdateBefore(LocalDate threeDaysAgo);
+
+    List<OrderItem> findAllByDeliSdateAfter(LocalDate threeDaysAgo);
 }

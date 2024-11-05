@@ -246,7 +246,9 @@ public class OrderItemService {
 
     public List<GetAdminOrderNameDto> selectAdminOrderItem(Long orderId) {
         List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(orderId);
-
-        return null;
+        List<GetAdminOrderNameDto> dtos = orderItems.stream().map(v->v.toGetAdminOrderNameDto()).toList();
+        return dtos;
     }
+
+
 }

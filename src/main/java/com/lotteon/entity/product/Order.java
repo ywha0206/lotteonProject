@@ -91,9 +91,15 @@ public class Order {
 
         String state ;
         if(orderState == 0){
-            state = "미완료";
+            state = "배송준비중";
+        } else if(orderState == 1) {
+            state = "배송중";
+        } else if(orderState == 2) {
+            state = "부분완료";
+        } else if(orderState == 3) {
+            state = "상품확인중";
         } else {
-            state = "완료";
+            state = "주문완료";
         }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

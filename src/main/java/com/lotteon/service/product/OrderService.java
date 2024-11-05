@@ -264,20 +264,23 @@ public class OrderService {
         log.info("서비스 배송정보 업데이트 "+postOrderDeliDto.toString());
 
         Optional<Order> optOrder= orderRepository.findById(postOrderDeliDto.getOrderId());
-
-        log.info("서비스 오더아이디로 오더 찾기 "+optOrder.toString());
-        if(optOrder.isPresent()) {
-            List<OrderItem> orderItems = optOrder.get().getOrderItems();
-            for(OrderItem orderItem : orderItems) {
-                orderItem.setState2(postOrderDeliDto.getOrderState());
-                orderItem.setOrderDeliId(postOrderDeliDto.getOrderDeliId());
-                orderItem.setOrderDeliCompany(postOrderDeliDto.getOrderDeli());
-            }
-            return true;
-        }else{
+        if(optOrder.isEmpty()){
             return false;
         }
+        Optional<OrderItem> orderItem = orderItemRepository.findById(postOrderDeliDto.getOrderItemId());
+        if(orderItem.isEmpty()){
+            return false;
+        }
+        LocalDate today = LocalDate.now();
+        orderItem.get().setState2(1);
+        orderItem.get().setOrderDeliId(postOrderDeliDto.getOrderDeliId());
+        orderItem.get().setOrderDeliCompany(postOrderDeliDto.getOrderDeli());
+        orderItem.get().setOrderDeliSdate(today);
+
+        optOrder.get().setOrderState(1);
+        return true;
     }
+
 
     public Page<GetDeliveryDto> findAllBySeller(int page) {
         Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
@@ -309,7 +312,6 @@ public class OrderService {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Seller seller = auth.getUser().getSeller();
         Optional<Order> order = orderRepository.findByOrderItems_SellerAndOrderItems_OrderDeliIdAndOrderItems_OrderDeliCompanyNotNull(seller,deliveryId);
-        System.out.println("===================");
         System.out.println(order.get().toGetDeliInfoDto());
         return order.get().toGetDeliInfoDto();
     }
@@ -456,17 +458,18 @@ public class OrderService {
                 .build();
     }
 
-    @Scheduled(cron = "0 30 14 * * *")
+    @Scheduled(cron = "0 13 20 * * *")
     public void updateOrderItemState(){
-        LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
-        Timestamp day = Timestamp.valueOf(threeDaysAgo);
-        List<Order> orders = orderRepository.findAllByOrderRdateAfter(day);
-        for(Order order : orders){
-            order.getOrderItems().forEach(v->{
-                if(v.getState2()==0){
-                    v.updateState2(4);
+        LocalDate threeDaysAgo = LocalDate.now().minusDays(2);
+
+        List<OrderItem> orderItems = orderItemRepository.findAllByDeliSdateBefore(threeDaysAgo);
+        for(OrderItem orderItem : orderItems){
+            if(orderItem.getState2()==1){
+                orderItem.setState2(4);
+                if(orderItem.getOrder().getOrderState()==1){
+                    orderItem.getOrder().setOrderState(2);
                 }
-            });
+            }
         }
     }
 }
