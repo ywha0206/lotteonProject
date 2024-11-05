@@ -244,4 +244,10 @@ public class OrderItemService {
                 .build();
     }
 
+    public List<GetAdminOrderNameDto> selectAdminOrderItem(Long orderId) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(orderId);
+        List<GetAdminOrderNameDto> dtos = orderItems.stream().map(v->v.toGetAdminOrderNameDto()).toList();
+        return dtos;
+    }
+
 }

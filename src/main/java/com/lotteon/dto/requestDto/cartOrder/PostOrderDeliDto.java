@@ -14,4 +14,5 @@ public class PostOrderDeliDto {
     private int orderDeli;
     private int orderState;
     private String orderDeliId;
+    private Long orderItemId;
 }

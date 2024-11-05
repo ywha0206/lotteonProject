@@ -72,7 +72,7 @@
 <script>
     const popup = document.querySelector('.popup')
     const bg = document.querySelector('.popupbg')
-
+    let orderItemId;
     async function openOrderPopup(a, orderId) {
         try {
             let apiUrl, data;
@@ -118,7 +118,7 @@
             if(a===1){
                     popup.innerHTML = `
                     <div class="header fixed">
-                        <div class="title">주문상세 <span style="color: white">${data.orderId}</span></div>
+                        <div class="title">주문상세 <span style="color: white">${data.order.orderId}</span></div>
                         <div onclick="closeShopPopup()" class="btn">X</div>
                     </div>
                     <div style="margin: 20px; margin-bottom: 30px;">
@@ -138,7 +138,7 @@
                                 <th>배송비</th>
                                 <th>결제금액</th>
                             </tr>
-                            ${data.orderItemDtos.map(item => `
+                            ${data.order.orderItemDtos.map(item => `
                             <tr>
                                 <td><img  style="width: 60px; height: 60px;" src="/file/${item.prodListImg}" alt="상품이미지" width="35" height="35"></td>
                                 <td>${item.prodId}</td>
@@ -163,7 +163,8 @@
                                     <p>배송비</p><p>${totalDeliPrice}원</p>
                                 </div>
                                 <div>
-                                    <p>총 결제금액</p><p style="color: red">${totalOrderPrice}원</p>
+                                    <p>총 결제금액</p><p style="color: red">${data.order.orderTotal}</p>
+
                                 </div>
                             </div>
                         </div>
@@ -175,23 +176,25 @@
                         <table class="tb3">
                             <tr>
                                 <th>주문번호</th>
-                                <td>${data.orderId}</td>
+                                <td>${data.order.orderId}</td>
                             </tr>
                             <tr>
                                 <th>결제방법</th>
-                                <td>${paymentMethod}</td>
+                                <td>${data.order.payment}</td>
+
                             </tr>
                             <tr>
                                 <th>주문자 / 연락처</th>
-                                <td>${data.custName} / ${data.custHp}</td>
+                                <td>${data.order.custName} / ${data.order.custHp}</td>
                             </tr>
                             <tr>
                                 <th>결제상태</th>
-                                <td>${data.orderState}</td>
+                                <td>${data.order.orderState}</td>
                             </tr>
                         </table>
                         <div class="total-price">
-                            <p>총 결제금액</p><p style="color: red">${totalOrderPrice}원</p>
+                            <p>총 결제금액</p><p style="color: red">${data.order.orderTotal}</p>
+
                         </div>
                         <div class="header2">
                             <span class="header-title">배송정보</span>
@@ -200,15 +203,15 @@
                         <table class="tb3">
                             <tr>
                                 <th>수취인</th>
-                                <td>${data.receiverName}</td>
+                                <td>${data.order.receiverName}</td>
                             </tr>
                             <tr>
                                 <th>연락처</th>
-                                <td>${data.receiverHp}</td>
+                                <td>${data.order.receiverHp}</td>
                             </tr>
                             <tr>
                                 <th>배송지주소</th>
-                                <td>${data.receiverAddr1} ${data.receiverAddr2} ${data.receiverAddr3}</td>
+                                <td>${data.order.receiverAddr1} ${data.order.receiverAddr2} ${data.order.receiverAddr3}</td>
                             </tr>
                         </table>
                     </div>
@@ -217,37 +220,40 @@
 
                     popup.innerHTML = `
                     <div class="header fixed">
-                        <div class="title">배송입력 <span style="color: white">${data.orderId}</span></div>
+                        <div class="title">배송입력 <span style="color: white">${data.order.orderId}</span></div>
                         <div onclick="closeShopPopup()" class="btn">X</div>
                     </div>
                     <div style="margin: 20px; margin-bottom: 30px;">
                         <table class="tb4">
                             <tr>
                                 <th>주문번호</th>
-                                <td><input type="text" value="${data.orderId}"></td>
+                                <td><input type="text" value="${data.order.orderId}"></td>
                             </tr>
-
                             <tr>
                                 <th>주문 상품</th>
-                                <td value="${data.orderItemDtos.map(item => `${item.orderItemId}`).join(', ')}">
-                                    <span>${data.orderItemDtos[0].prodName+' 외 '+(data.orderItemDtos.length-1)+'개'}</span>
+                                <td>
+                                    <select style="width: 175px;" onchange="selectItems(event)">
+                                    ${data.itemNames.map(v =>
+                                        `<option value="${v.orderItemId}">${v.orderItemName}</option>`).join('')}
+                                    )}
+                                    </select>
                                 </td>
                             </tr>
                             <tr>
                                 <th>수령인</th>
-                                <td><input value="${data.receiverName}"></td>
+                                <td><input value="${data.order.receiverName}"></td>
                             </tr>
                             <tr>
                                 <th>우편번호</th>
-                                <td><input value="${data.receiverAddr1}"></td>
+                                <td><input value="${data.order.receiverAddr1}"></td>
                             </tr>
                             <tr>
                                 <th>기본주소</th>
-                                <td><input value="${data.receiverAddr2}"></td>
+                                <td><input value="${data.order.receiverAddr2}"></td>
                             </tr>
                             <tr>
                                 <th>상세주소</th>
-                                <td><input value="${data.receiverAddr3}"></td>
+                                <td><input value="${data.order.receiverAddr3}"></td>
                             </tr>
                             <tr>
                                 <th>택배사</th>
@@ -262,11 +268,11 @@
                             </tr>
                             <tr>
                                 <th>운송장번호</th>
-                                <td><input placeholder="운송장번호를 입력하세요." value="${data.orderItemDtos[0].orderDeliId}"></td>
+                                <td><input placeholder="운송장번호를 입력하세요." value="${data.order.orderItemDtos[0].orderDeliId}"></td>
                             </tr>
                             <tr>
                                 <th>기타</th>
-                                <td><textarea readonly>${data.orderReq}</textarea></td>
+                                <td><textarea readonly>${data.order.orderReq}</textarea></td>
                             </tr>
                         </table>
                         <div class="btns"><button>등록하기</button></div>
@@ -287,19 +293,16 @@
         bg.style.display = "none";
     }
 
+    function selectItems(event){
+        const selectedItem = event.target.options[event.target.selectedIndex]
+        orderItemId = selectedItem.value;
+    }
+
      async function updateShippingData(e){
         e.preventDefault();
          const inputs = document.querySelectorAll('.tb4 input');
          const deli = document.querySelector('.tb4 select').value;
 
-
-         console.log(inputs[0].value);
-        console.log(inputs[1].value);
-        console.log(inputs[2].value);
-        console.log(inputs[3].value);
-        console.log(inputs[4].value);
-        console.log(deli);
-        console.log(inputs[5].value);
 
         if(!inputs[5].value.trim()){
             alert('운송장 번호를 입력해 주세요.');
@@ -310,7 +313,8 @@
             "orderId":inputs[0].value,
             "orderDeli":deli,
             "orderState":1,
-            "orderDeliId":inputs[5].value
+            "orderDeliId":inputs[5].value,
+            "orderItemId":orderItemId
         }
 
         try {

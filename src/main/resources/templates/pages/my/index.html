@@ -193,6 +193,40 @@
   let prodId;
   let content;
   let score;
+  async function openSellerInfo(event){
+    event.preventDefault();
+    const sellerDialog = document.getElementById('popSeller')
+    const company = event.target.dataset.sell
+    try {
+      const resp = await axios.get("/my/order/seller-info", {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        params: {
+          "company": company
+        }
+      })
+      const seller = resp.data;
+      document.querySelector('#popSeller .level').innerText = seller.sellGrade
+      document.querySelector('#popSeller .company').innerText = seller.company
+      document.querySelector('#popSeller .ceo').innerText = seller.name
+      document.querySelector('#popSeller .tel').innerText = seller.hp
+      document.querySelector('#popSeller .fax').innerText = seller.fax
+      document.querySelector('#popSeller .email').innerText = seller.email
+      document.querySelector('#popSeller .bizNum').innerText = seller.busiCode
+      document.querySelector('#popSeller .address').innerText = seller.address
+      sellerDialog.showModal();
+    } catch (e) {
+      console.log(e)
+    } 
+
+    const closeBtn = document.querySelector('#popSeller .close-btn')
+    closeBtn.addEventListener('click', () => {
+      sellerDialog.close(); // 다이얼로그 닫기
+    });
+  }
+
+
   async function openReviewWrite(event) {
     orderId = event.target.dataset.id;
     prodId = event.target.dataset.prod;
