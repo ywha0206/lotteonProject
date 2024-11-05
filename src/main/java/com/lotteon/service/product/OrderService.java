@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -453,5 +454,19 @@ public class OrderService {
                 .custName(order.getCustomer().getCustName())
                 .ProdName(order.getOrderItems().get(0).getProduct().getProdName())
                 .build();
+    }
+
+    @Scheduled(cron = "0 30 14 * * *")
+    public void updateOrderItemState(){
+        LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
+        Timestamp day = Timestamp.valueOf(threeDaysAgo);
+        List<Order> orders = orderRepository.findAllByOrderRdateAfter(day);
+        for(Order order : orders){
+            order.getOrderItems().forEach(v->{
+                if(v.getState2()==0){
+                    v.updateState2(4);
+                }
+            });
+        }
     }
 }
