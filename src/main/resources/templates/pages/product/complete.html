@@ -71,15 +71,15 @@
         <table class="tb2">
           <tr>
             <td>총 상품금액</td>
-            <td>27,000원</td>
+            <td class="totalProdPrice">27,000원</td>
           </tr>
           <tr>
             <td>총 할인금액</td>
-            <td>-1,350원</td>
+            <td class="discountPrice">-1,350원</td>
           </tr>
           <tr>
             <td>배송비</td>
-            <td>0원</td>
+            <td class="deliPrice">0원</td>
           </tr>
           <tr>
             <td>총 결제금액</td>
@@ -137,4 +137,42 @@
   </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+<script>
+  window.onload=function (){
+    const listItems = document.querySelectorAll('table.tb1 tr');
+
+    let totalAllPrice = 0;
+    let totalAllDiscount = 0;
+    let totalAllDeliver = 0;
+    let discountPrice = 0;
+
+    listItems.forEach((row, index) => {
+      if (index === 0) return;
+
+      const cells = row.querySelectorAll('td');  // 각 행의 모든 td 선택
+
+      const quantity =cells[3]?.textContent.trim();     // 수량 (그대로 정수로 변환)
+      let productPrice = parseInt(cells[4]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 상품금액 (숫자 이외의 문자 제거 후 정수로 변환)
+      let discount = parseInt(cells[5]?.textContent.replace(/[^\d]/g, '').trim()) || 0;  // 할인율 (% 제거)
+      const deliveryFee = parseInt(cells[7]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 배송비 (숫자 외 제거)
+
+      productPrice = productPrice*quantity;
+      discount = discount*quantity;
+
+      totalAllPrice += productPrice;
+      totalAllDiscount += discount;
+      totalAllDeliver += deliveryFee;
+    })
+    const totalAllDelivery= (totalAllDeliver === 0) ? "무료배송" : totalAllDeliver;
+
+    const totalProdPrice = document.querySelector('.totalProdPrice');
+    const totalDiscountPrice = document.querySelector('.discountPrice');
+    const totalDeliPrice = document.querySelector('.deliPrice');
+
+    totalProdPrice.innerText = totalAllPrice;
+    totalDiscountPrice.innerText = totalAllDiscount;
+    totalDeliPrice.innerText = totalAllDelivery;
+
+  }
+</script>
 

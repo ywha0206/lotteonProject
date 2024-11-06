@@ -169,11 +169,11 @@ public class OrderItem {
     public void updateState1(int itemState1) {
         this.state1 = itemState1;
     }
-
     public GetProductNamesDto toGetProductNamesDto(){
         return GetProductNamesDto.builder()
                 .productName(product.getProdName())
                 .prodId(product.getId())
                 .build();
     }
+
 }

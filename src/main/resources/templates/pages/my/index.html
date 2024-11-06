@@ -405,6 +405,7 @@
         }
       })
       const seller = resp.data;
+      console.log("콘솔 "+seller);
       document.querySelector('#popSeller .level').innerText = seller.sellGrade
       document.querySelector('#popSeller .company').innerText = seller.company
       document.querySelector('#popSeller .ceo').innerText = seller.name
