@@ -61,33 +61,34 @@
     <dialog  id="popOrder">
         <div class="popup">
             <nav class="popup_top color">
-                <h1>주문상세 <span>2024-10-11</span></h1>
+                <h1>주문상세 <span class="orderId">오더아이디</span></h1>
                 <button class="btn" onclick="closeModal()">X</button>
             </nav>
             <section>
                 <article class="order">
-                    <h3>주문정보</h3>
+                    <h3>주문정보<span class="orderDate">주문날짜</span></h3>
                     <table>
                         <tr>
-                            <th>날짜</th>
+                            <th>상품이미지</th>
                             <th>상품정보</th>
                             <th>결제금액</th>
                             <th>상태</th>
                         </tr>
                         <tr>
                             <td>
-                                <p class="date">2022-12-13</p>
-                            </td>
-                            <td>
                                 <div class="imgbox80">
                                     <img src="https://via.placeholder.com/80x80" alt="">
                                 </div>
+                            </td>
+                            <td>
                                 <ul>
-                                    주문번호 : <span class="ordNo">1012211341</span>
                                     <li class="company">상호명</li>
                                     <li class="prodName">상품명</li>
                                     <li>수량 : <span class="prodCount">1</span>개</li>
-                                    <li><strong class="prodPrice">34,000원</strong></li>
+                                    <li>옵션 : <span class="prodCount options">라지</span></li>
+                                    <li>운송장번호 :
+                                        (<span class="prodCount orderDeliCompany">택배사</span>)<span class="orderDeliId">12345679</span>
+                                    </li>
                                 </ul>
                             </td>
                             <td class="payment">
@@ -100,6 +101,10 @@
                                         <span>할인</span>
                                         <span>- 3,000원</span>
                                     </li>
+                                    <li class="discount">
+                                        <span>배송비</span>
+                                        <span>- 3,000원</span>
+                                    </li>
                                     <li class="total">
                                         <span>결제금액</span>
                                         <strong>34,000원</strong>
@@ -109,25 +114,40 @@
                             <td class="status">배송완료</td>
                         </tr>
                     </table>
+                    <div>
+                        <span>결제금액</span>
+                        <strong>얼마</strong>
+                    </div>
                 </article>
                 <article class="delivery">
                     <h3>배송정보</h3>
                     <table>
                         <tr>
                             <th>주문자</th>
-                            <td class="name">홍길동</td>
+                            <td class="custName">홍길동</td>
+                        </tr>
+                        <tr>
+                            <th>받는 사람</th>
+                            <td class="receiverName">홍길동</td>
                         </tr>
                         <tr>
                             <th>연락처</th>
-                            <td class="hp">010-1234-1001</td>
+                            <td class="receiverHp">010-1234-1001</td>
                         </tr>
                         <tr>
                             <th>배송지</th>
-                            <td class="address">[210**] 부산광역시 부산진구 대연동 121 10층 1004호</td>
+                            <td>[<span class="receiverAddr1">210**</span>]
+                                <span class="receiverAddr2">부산광역시 부산진구 대연동</span>
+                                <span class="receiverAddr3">121 10층 1004호</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>결제방법</th>
+                            <td class="payment">홍길동</td>
                         </tr>
                         <tr>
                             <th>배송요청사항</th>
-                            <td class="request">없음</td>
+                            <td class="orderReq">없음</td>
                         </tr>
                     </table>
                 </article>

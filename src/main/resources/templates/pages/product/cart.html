@@ -43,7 +43,6 @@
                 const deliver = tr.querySelector('td:nth-child(9)').textContent.trim()=='무료배송'
                         ? 0 :
                         parseInt(tr.querySelector('td:nth-child(9)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 배송비
-                tr.querySelector('td:nth-child(10)').textContent = Number(price) * Number(quantity) +'원'
                 const totalPrice = parseInt(tr.querySelector('td:nth-child(10)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 총금액
 
                 return {

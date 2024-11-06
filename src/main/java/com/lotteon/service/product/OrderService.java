@@ -47,19 +47,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderService {
 
-    /*
-        날짜:
-        이름: 박연화
-
-     */
-
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductOptionRepository productOptionRepository;
-    private final CartItemOptionRepository cartItemOptionRepository;
-    private final ModelMapper modelMapper;
     private final SellerRepository sellerRepository;
 
     public List<GetOrderDto> selectedOrders(List<PostCartSaveDto> selectedProducts) {
@@ -73,23 +65,23 @@ public class OrderService {
             Optional<Product> product = productRepository.findById(productId);
 
             ProductDto productDto = ProductDto.builder()
-                                            .id(product.get().getId())
-                                            .prodName(product.get().getProdName())
-                                            .prodDeliver(product.get().getProdDeliver())
-                                            .prodPrice(product.get().getProdPrice())
-                                            .prodDiscount(product.get().getProdDiscount())
-                                            .prodPoint(product.get().getProdPoint())
-                                            .prodSummary(product.get().getProdSummary())
-                                            .prodListImg(product.get().getProdListImg())
-                                            .totalPrice(postCartSaveDto.getTotalPrice())
-                                            .sellId(product.get().getSeller().getId())
-                                            .stock(product.get().getProdStock())
-                                            .build();
+                    .id(product.get().getId())
+                    .prodName(product.get().getProdName())
+                    .prodDeliver(product.get().getProdDeliver())
+                    .prodPrice(product.get().getProdPrice())
+                    .prodDiscount(product.get().getProdDiscount())
+                    .prodPoint(product.get().getProdPoint())
+                    .prodSummary(product.get().getProdSummary())
+                    .prodListImg(product.get().getProdListImg())
+                    .totalPrice(postCartSaveDto.getTotalPrice())
+                    .sellId(product.get().getSeller().getId())
+                    .stock(product.get().getProdStock())
+                    .build();
             CartItemDto cartItemDto = new CartItemDto();
             if(postCartSaveDto.getCartItemId()!=null) {
                 Long cartItemId = postCartSaveDto.getCartItemId();
                 Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
-                 cartItemDto = CartItemDto.builder()
+                cartItemDto = CartItemDto.builder()
                         .cartId(cartItem.get().getCart().getId())
                         .id(cartItem.get().getId())
                         .quantity(cartItem.get().getQuantity())
@@ -123,13 +115,13 @@ public class OrderService {
             log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
 
             GetOrderDto orderDto = GetOrderDto.builder()
-                                            .products(productDto)
-                                            .quantity(postCartSaveDto.getQuantity())
-                                            .optionId(optionId)
-                                            .optionValue(optionValue)
-                                            .totalPrice(postCartSaveDto.getTotalPrice())
-                                            .cartItems(cartItemDto)
-                                            .build();
+                    .products(productDto)
+                    .quantity(postCartSaveDto.getQuantity())
+                    .optionId(optionId)
+                    .optionValue(optionValue)
+                    .totalPrice(postCartSaveDto.getTotalPrice())
+                    .cartItems(cartItemDto)
+                    .build();
 
             orderDtos.add(orderDto);
         }
@@ -152,17 +144,17 @@ public class OrderService {
         String addr2 = orderDto.getReceiverAddr2();
 
         Order saveorder = Order.builder()
-                            .customer(auth.getUser().getCustomer())
-                            .orderPayment(orderDto.getOrderPayment())
-                            .receiverName(orderDto.getReceiverName())
-                            .receiverHp(orderDto.getReceiverHp())
-                            .receiverAddr(zip+"/"+addr1+"/"+addr2)
-                            .orderReq(orderDto.getOrderReq()==null?null:orderDto.getOrderReq())
-                            .orderDeli(orderDto.getOrderDeli())
-                            .orderDiscount(orderDto.getOrderDiscount())
-                            .orderQuantity(orderDto.getOrderQuantity())
-                            .orderTotal(orderDto.getOrderTotal())
-                            .build();
+                .customer(auth.getUser().getCustomer())
+                .orderPayment(orderDto.getOrderPayment())
+                .receiverName(orderDto.getReceiverName())
+                .receiverHp(orderDto.getReceiverHp())
+                .receiverAddr(zip+"/"+addr1+"/"+addr2)
+                .orderReq(orderDto.getOrderReq()==null?null:orderDto.getOrderReq())
+                .orderDeli(orderDto.getOrderDeli())
+                .orderDiscount(orderDto.getOrderDiscount())
+                .orderQuantity(orderDto.getOrderQuantity())
+                .orderTotal(orderDto.getOrderTotal())
+                .build();
 
         Order order = orderRepository.save(saveorder);
 
@@ -245,7 +237,6 @@ public class OrderService {
         return dtos;
     }
 
-
     public Page<ResponseAdminOrderDto> selectedAdminOrdersByAdmin(int page) {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
@@ -258,6 +249,31 @@ public class OrderService {
             return ToResponseAdminOrderDtoByAdmin(order);
         });
         return orderDtos;
+    }
+    public Page<GetDeliveryDto> findAllBySeller(int page) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Order> orders;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        orders = orderRepository.findAllByOrderItems_SellerAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,pageable);
+        Page<GetDeliveryDto> dtos = orders.map(v->v.toGetDeliveryDto());
+        return dtos;
+    }
+
+    public Page<GetDeliveryDto> findAllBySellerAndSearchType(int page, String searchType, String keyword) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Order> orders;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        if(searchType.equals("deliId")){
+            orders = orderRepository.findAllByOrderItems_SellerAndOrderItems_OrderDeliIdAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,keyword,pageable);
+        } else if (searchType.equals("orderId")){
+            orders = orderRepository.findAllByOrderItems_SellerAndIdAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,Long.parseLong(keyword),pageable);
+        } else {
+            orders = orderRepository.findAllByOrderItems_SellerAndReceiverNameAndOrderItems_OrderDeliIdIsNotNullAndOrderItems_OrderDeliCompanyNotNullOrderByIdDesc(seller,keyword,pageable);
+        }
+        Page<GetDeliveryDto> dtos = orders.map(v->v.toGetDeliveryDto());
+        return dtos;
     }
 
     public Boolean updateOrderDeli(PostOrderDeliDto postOrderDeliDto) {
