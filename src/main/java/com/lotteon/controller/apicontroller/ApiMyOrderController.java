@@ -6,6 +6,7 @@ import com.lotteon.dto.responseDto.GetSellerInfoDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.service.member.SellerService;
 import com.lotteon.service.product.OrderItemService;
+import com.lotteon.service.product.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class ApiMyOrderController {
 
     private final SellerService sellerService;
     private final OrderItemService orderItemService;
+    private final OrderService orderService;
 
     @GetMapping("/order/seller-info")
     public ResponseEntity<?> sellerInfo(
@@ -79,6 +81,16 @@ public class ApiMyOrderController {
             @RequestParam Long id
     ){
         orderItemService.patchItemState(id,3,1,3);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/order/cancel")
+    public ResponseEntity<?> orderCancel(
+            @RequestParam Long id
+    ){
+        log.info("주문취소 컨트롤러 id: " + id);
+        orderItemService.patchCancelState(id,6,0,5);
+        orderService.cancleOrder(id);
         return ResponseEntity.ok().build();
     }
 }
