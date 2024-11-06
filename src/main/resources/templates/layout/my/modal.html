@@ -1,6 +1,6 @@
 <div>
     <!-- 판매자정보 팝업 -->
-    <dialog  id="popSeller">
+    <dialog id="popSeller">
         <div class="popup">
             <nav class="popup_top color">
                 <h1>판매자 정보</h1>
@@ -57,7 +57,7 @@
     </dialog>
 
     <!-- 주문상세 팝업 -->
-    <dialog  id="popOrder">
+    <dialog id="popOrder">
         <div class="popup">
             <nav class="popup_top color">
                 <h1>주문상세 <span>2024-10-11</span></h1>
@@ -134,33 +134,33 @@
         </div>
     </dialog>
 
-<!--
-    TODO:  마이페이지 문의하기 팝업
--->
+    <!--
+        TODO:  마이페이지 문의하기 팝업
+    -->
     <!-- 문의하기 팝업 -->
-    <dialog  id="popQuestion">
+    <dialog id="popQuestion">
         <div class="popup">
             <nav class="popup_top color">
                 <h1>문의하기</h1>
                 <button class="btn close-btn">X</button>
             </nav>
             <section>
-                <form action="#">
+                <form method="post" >
+                    <input class="memId" type="hidden" name="memId" th:value="${memId}" />
                     <table>
                         <tr>
                             <th>문의종류</th>
                             <td class="kind">
-                                <label><input type="radio" name="kind"/>상품</label>
-                                <label><input type="radio" name="kind"/>배송</label>
-                                <label><input type="radio" name="kind"/>반품/취소</label>
-                                <label><input type="radio" name="kind"/>교환</label>
-                                <label><input type="radio" name="kind"/>기타</label>
+                                <label><input type="radio" name="cate2Name" value="product"/>상품</label>
+                                <label><input type="radio" name="cate2Name" value="delivery2"/>배송</label>
+                                <label><input type="radio" name="cate2Name" value="orderCancel"/>주문취소</label>
+                                <label><input type="radio" name="cate2Name" value="refundMethod"/>교환/환불</label>
                             </td>
                         </tr>
                         <tr>
                             <th>Email</th>
                             <td class="email">
-                                <input type="text" name="email" value="chh**@gmail.com"/>
+                                <input type="text" name="email" value="chh**@gmail.com" readonly/>
                             </td>
                         </tr>
                         <tr>
@@ -182,7 +182,7 @@
 
                     <div>
                         <input type="submit" class="btn color" value="등록하기"/>
-                        <button class="btn grey">취소</button>
+                        <button class="btn grey cancel-btn">취소</button>
                     </div>
                 </form>
             </section>
@@ -190,7 +190,7 @@
     </dialog>
 
     <!-- 수취확인 팝업 -->
-    <dialog  id="popReceive">
+    <dialog id="popReceive">
         <div class="popup">
             <nav class="popup_top color">
                 <h1>수취확인</h1>
@@ -211,7 +211,7 @@
     </dialog>
 
     <!-- 상품평쓰기 팝업 -->
-    <dialog  id="popReview">
+    <dialog id="popReview">
         <div class="popup">
             <nav class="popup_top color">
                 <h1>상품평 작성하기</h1>

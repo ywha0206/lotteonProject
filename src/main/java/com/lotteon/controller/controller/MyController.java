@@ -25,10 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -59,23 +56,23 @@ public class MyController {
         model.addAttribute("hasPoint", hasPoint);
     }
 
-    @GetMapping(value = {"","/","/index"})
-    public String index(Model model) {
+    @GetMapping(value = {"", "/", "/index"})
+    public String index(Model model, @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
         Page<ResponseOrdersDto> orders = orderService.selectedMyOrderList(0);
 
 
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
-        if(points.isEmpty()){
-            model.addAttribute("noPoint",true);
+        if (points.isEmpty()) {
+            model.addAttribute("noPoint", true);
             return "pages/my/index";
         }
         List<GetReviewsDto> reviews = reviewService.findTop3();
-        if(reviews!=null){
-            model.addAttribute("reviews",reviews);
-            model.addAttribute("noReview",false);
+        if (reviews != null) {
+            model.addAttribute("reviews", reviews);
+            model.addAttribute("noReview", false);
         } else {
-            model.addAttribute("noReview",true);
+            model.addAttribute("noReview", true);
         }
 
         // 최신 QnA 5개 불러오기
@@ -85,28 +82,49 @@ public class MyController {
                 .collect(Collectors.toList());
         model.addAttribute("qnaList", qnaList);
 
+        // 로그인이 됐을 경우
+        if (myUserDetails != null) {
+            // customer 가져옴
+            Customer customer = myUserDetails.getUser().getCustomer();
+            // customer email 출력
+            System.out.println("customer.getCustEmail() = " + customer.getCustEmail());
+            // model에 email 추가
+            model.addAttribute("email", customer.getCustEmail());
+            // model에 memId 추가
+            model.addAttribute("memId", myUserDetails.getUser().getId());
+        }
+
+
         model.addAttribute("orders", orders);
         model.addAttribute("points", points);
-        model.addAttribute("noPoint",false);
+        model.addAttribute("noPoint", false);
         return "pages/my/index";
     }
+
+    @PostMapping(value = {"", "/", "/index"})
+    public String indexPost(ArticleDto articleDto) {
+        qnaService.insertQnaToSeller(articleDto);
+        return "redirect:/my/index";
+    }
+
     @GetMapping("/coupons")
     public String coupon(
             Model model,
-            @RequestParam(name = "page",defaultValue = "0") int page
+            @RequestParam(name = "page", defaultValue = "0") int page
     ) {
         Page<GetMyCouponDto> coupons = customerCouponService.findAllByCustomer(page);
-        if(coupons==null){
-            model.addAttribute("noItem",true);
+        if (coupons == null) {
+            model.addAttribute("noItem", true);
             return "pages/my/coupon";
         }
-        model.addAttribute("noItem",false);
+        model.addAttribute("noItem", false);
         model.addAttribute("coupons", coupons);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", coupons.getTotalPages());
 
         return "pages/my/coupon";
     }
+
     @GetMapping("/info")
     public String info(Model model) {
         return "pages/my/info";
@@ -114,51 +132,52 @@ public class MyController {
 
     @GetMapping("/orders")
     public String order(Model model,
-                        @RequestParam(name = "page",defaultValue = "0") int page,
-                        @RequestParam(name = "type",defaultValue = "0") String type,
-                        @RequestParam(name = "keyword",defaultValue = "0") String keyword
+                        @RequestParam(name = "page", defaultValue = "0") int page,
+                        @RequestParam(name = "type", defaultValue = "0") String type,
+                        @RequestParam(name = "keyword", defaultValue = "0") String keyword
     ) {
         log.info("마이페이지 오더 컨트롤러 접속 ");
         Page<ResponseOrdersDto> orders;
 
-        if(!type.equals("0")&&!keyword.equals("0")){
-            orders = orderService.findAllBySearch(page,type,keyword);
-        }else {
+        if (!type.equals("0") && !keyword.equals("0")) {
+            orders = orderService.findAllBySearch(page, type, keyword);
+        } else {
             orders = orderService.selectedMyOrderList(page);
         }
 
-        log.info("마이페이지 오더 컨트롤러 오더 잘 뽑혔는지 확인 "+orders);
-        if(orders.isEmpty()){
-            model.addAttribute("noItem",true);
+        log.info("마이페이지 오더 컨트롤러 오더 잘 뽑혔는지 확인 " + orders);
+        if (orders.isEmpty()) {
+            model.addAttribute("noItem", true);
             return "pages/my/order";
         }
 
         model.addAttribute("orders", orders);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", orders.getTotalPages());
-        model.addAttribute("noItem",false);
+        model.addAttribute("noItem", false);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
         return "pages/my/order";
     }
+
     @GetMapping("/points")
     public String point(
             Model model,
-            @RequestParam(name = "page",defaultValue = "0") int page,
-            @RequestParam(name = "type",defaultValue = "0") String type,
-            @RequestParam(name = "keyword",defaultValue = "0") String keyword
-            ) {
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "type", defaultValue = "0") String type,
+            @RequestParam(name = "keyword", defaultValue = "0") String keyword
+    ) {
         Page<GetPointsDto> points;
-        if(!type.equals("0")&&!keyword.equals("0")){
-            points = pointService.findAllBySearch(page,type,keyword);
+        if (!type.equals("0") && !keyword.equals("0")) {
+            points = pointService.findAllBySearch(page, type, keyword);
         } else {
             points = pointService.findAllByCustomer(page);
         }
-        if(points.isEmpty()){
-            model.addAttribute("noItem",true);
+        if (points.isEmpty()) {
+            model.addAttribute("noItem", true);
             return "pages/my/point";
         }
-        model.addAttribute("noItem",false);
+        model.addAttribute("noItem", false);
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -171,21 +190,21 @@ public class MyController {
     @GetMapping("/points/use")
     public String usePoint(
             Model model,
-            @RequestParam(name = "page",defaultValue = "0") int page,
-            @RequestParam(name = "type",defaultValue = "0") String type,
-            @RequestParam(name = "keyword",defaultValue = "0") String keyword
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "type", defaultValue = "0") String type,
+            @RequestParam(name = "keyword", defaultValue = "0") String keyword
     ) {
         Page<GetPointsDto> points;
-        if(!type.equals("0")&&!keyword.equals("0")){
-            points = pointService.findAllBySearch2(page,type,keyword);
+        if (!type.equals("0") && !keyword.equals("0")) {
+            points = pointService.findAllBySearch2(page, type, keyword);
         } else {
             points = pointService.findAllByCustomer2(page);
         }
-        if(points.isEmpty()){
-            model.addAttribute("noItem",true);
+        if (points.isEmpty()) {
+            model.addAttribute("noItem", true);
             return "pages/my/usepoint";
         }
-        model.addAttribute("noItem",false);
+        model.addAttribute("noItem", false);
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -232,25 +251,26 @@ public class MyController {
     @GetMapping("/reviews")
     public String review(
             Model model,
-            @RequestParam(value = "page",defaultValue = "0") int page
+            @RequestParam(value = "page", defaultValue = "0") int page
     ) {
         Page<GetReviewsDto> reviews = reviewService.findAll(page);
-        if(reviews==null) {
-            model.addAttribute("noReview",true);
+        if (reviews == null) {
+            model.addAttribute("noReview", true);
         } else {
-            model.addAttribute("reviews",reviews);
-            model.addAttribute("noReview",false);
+            model.addAttribute("reviews", reviews);
+            model.addAttribute("noReview", false);
             model.addAttribute("totalPages", reviews.getTotalPages());
         }
         model.addAttribute("page", page);
 
         return "pages/my/review";
     }
+
     @GetMapping("/address")
     public String address(Model model) {
         List<GetAddressDto> addrs = addressService.findAllByCustomer();
-        model.addAttribute("addrs",addrs);
-        model.addAttribute("number",addrs.size());
+        model.addAttribute("addrs", addrs);
+        model.addAttribute("number", addrs.size());
         return "pages/my/address";
     }
 }
