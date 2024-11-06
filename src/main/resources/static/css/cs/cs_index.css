@@ -154,7 +154,7 @@
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+} 
 
 .info_card:hover {
     transform: scale(1.05);
@@ -186,4 +186,25 @@
     margin-top: 20px;
     display: inline-block;
     text-decoration: underline;
+}
+/* 문의글 작성 버튼 컨테이너 스타일 */
+.qna_write_btn {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 10px;
+}
+
+/* 문의글 작성 링크 스타일 */
+.qna_link {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #717171;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.qna_link:hover {
+    color: #0056b3; /* 호버 시 색상 변경 */
+    transform: scale(1.05); /* 호버 시 살짝 확대 */
 }
