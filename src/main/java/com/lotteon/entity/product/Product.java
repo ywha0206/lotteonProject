@@ -139,13 +139,6 @@ public class Product {
         this.prodRating = (int)averageScore;
     }
 
-    public GetProductNamesDto toGetProductNamesDto(){
-        return GetProductNamesDto.builder()
-                .productName(prodName)
-                .prodId(id)
-                .build();
-    }
-
     public void updateViewCnt() {
         this.prodViews = prodViews +1;
     }

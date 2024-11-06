@@ -9,12 +9,11 @@ import com.lotteon.service.product.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-
-@Log4j2
-
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
+@Log4j2
 @RestController
 @RequestMapping("/my")
 @RequiredArgsConstructor
@@ -31,6 +30,7 @@ public class ApiMyOrderController {
         return ResponseEntity.ok(seller);
     }
 
+
     @GetMapping("/order/orderInfo")
     public ResponseEntity<?> orderInfo(
             @RequestParam Long orderId
@@ -41,6 +41,7 @@ public class ApiMyOrderController {
         return ResponseEntity.ok(dtos);
     }
   
+
     @GetMapping("/order/delivery-date")
     public ResponseEntity<?> deliveryDate(
             @RequestParam Long id

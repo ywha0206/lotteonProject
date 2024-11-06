@@ -327,5 +327,110 @@
     popOrderDialog.close();
   }
 
+  async function openSellerInfo(event){
+    event.preventDefault();
+    const sellerDialog = document.getElementById('popSeller')
+    const company = event.target.dataset.sell
+    try {
+      const resp = await axios.get("/my/order/seller-info", {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        params: {
+          "company": company
+        }
+      })
+      const seller = resp.data;
+      document.querySelector('#popSeller .level').innerText = seller.sellGrade
+      document.querySelector('#popSeller .company').innerText = seller.company
+      document.querySelector('#popSeller .ceo').innerText = seller.name
+      document.querySelector('#popSeller .tel').innerText = seller.hp
+      document.querySelector('#popSeller .fax').innerText = seller.fax
+      document.querySelector('#popSeller .email').innerText = seller.email
+      document.querySelector('#popSeller .bizNum').innerText = seller.busiCode
+      document.querySelector('#popSeller .address').innerText = seller.address
+      sellerDialog.showModal();
+    } catch (e) {
+      console.log(e)
+    }
+
+    const closeBtn = document.querySelector('#popSeller .close-btn')
+    closeBtn.addEventListener('click', () => {
+      sellerDialog.close(); // 다이얼로그 닫기
+    });
+  }
+
+  async function openReviewWrite(event) {
+    orderId = event.target.dataset.id;
+    prodId = event.target.dataset.prod;
+
+    try {
+      const resp = await axios.get("/prod/review/names",{
+        headers:{
+          "Content-Type" : "application/json"
+        },
+        params : {
+          "orderId" : orderId
+        }
+      })
+      const prods = resp.data.names
+      const selectNames = document.getElementById('select-prod-name')
+      selectNames.innerHTML = prods.map(v=>`
+        <option value="${v.prodId}">${v.productName}</option>
+      `).join('');
+
+      selectNames.addEventListener('change', (event) => {
+        prodId = event.target.value;  // 선택된 값으로 prodId 업데이트
+        console.log('선택된 prodId:', prodId);  // 콘솔에 선택된 prodId 출력
+      });
+
+    } catch (e) {
+
+    }
+
+    const popReviewDialog = document.getElementById("popReview");
+    popReviewDialog.showModal();
+  }
+
+  const stars = document.querySelectorAll('.star');
+  // const selectedRatingDisplay = document.getElementById('selected-rating');
+
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+      const ratingValue = this.dataset.value;
+
+      stars.forEach(s => {
+        if (s.dataset.value <= ratingValue) {
+          s.classList.add('filled');
+        } else {
+          s.classList.remove('filled');
+        }
+      });
+      score = ratingValue;
+    });
+  });
+
+  document.getElementById('review-content').addEventListener('input',(e)=>{
+    content = e.target.value;
+  })
+
+  document.getElementById('reviewButton').addEventListener('click',async ()=>{
+    const submitData = {
+      "prodId" : prodId,
+      "orderId" : orderId,
+      "review" : content,
+      "score" : score
+    }
+    try {
+      const resp = await axios.post("/prod/review",submitData,{
+        headers: {
+          "Content-Type" : "application/json"
+        }
+      })
+      alert(resp.data)
+    } catch (e) {
+
+    }
+  })
 
 </script>
