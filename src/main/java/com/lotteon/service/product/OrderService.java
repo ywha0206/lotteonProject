@@ -292,8 +292,9 @@ public class OrderService {
         orderItem.get().setOrderDeliId(postOrderDeliDto.getOrderDeliId());
         orderItem.get().setOrderDeliCompany(postOrderDeliDto.getOrderDeli());
         orderItem.get().setOrderDeliSdate(today);
-
-        optOrder.get().setOrderState(1);
+        if(optOrder.get().getOrderState()==0){
+            optOrder.get().setOrderState(1);
+        }
         return true;
     }
 

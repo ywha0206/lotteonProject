@@ -5,6 +5,8 @@ import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
+import com.lotteon.dto.responseDto.GetDeliveryDateDto;
+import com.lotteon.dto.responseDto.GetReceiveConfirmDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderItemDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
@@ -56,6 +58,7 @@ public class OrderItemService {
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final OrderRepository orderRepository;
 
     //주문수 +1
     public void ProductOrderCount(Product product) {
@@ -328,4 +331,44 @@ public class OrderItemService {
         return optionValue;
     }
 
+
+
+    public List<GetDeliveryDateDto> findDeliveryDateAllByOrderId(Long id) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(id);
+        List<GetDeliveryDateDto> dtos = orderItems.stream().map(OrderItem::toGetDeliveryDateDto).toList();
+        return dtos;
+    }
+
+    public List<GetReceiveConfirmDto> findReceiveAllByOrderId(Long id) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_IdAndState2(id,4);
+        List<GetReceiveConfirmDto> dtos = orderItems.stream().map(OrderItem::toGetReceiveConfirmDto).toList();
+        return dtos;
+    }
+
+    public void patchItemState(Long id, int itemState2, int itemState1, int orderState) {
+        Optional<OrderItem> orderItem = orderItemRepository.findById(id);
+        orderItem.get().updateState2(itemState2);
+        orderItem.get().updateState1(itemState1);
+        orderItem.get().getOrder().updateState(orderState);
+        orderItemRepository.save(orderItem.get());
+        orderRepository.save(orderItem.get().getOrder());
+
+        int totalCnt = orderItem.get().getOrder().getOrderItems().size();
+        int variableCnt = 0;
+        List<OrderItem> orderItems = orderItem.get().getOrder().getOrderItems();
+        Long orderId = orderItem.get().getOrder().getId();
+        Optional<Order> order = orderRepository.findById(orderId);
+        List<OrderItem> orderItemList = order.get().getOrderItems();
+        for(OrderItem item : orderItemList){
+            if(item.getState1()==1){
+                variableCnt++;
+            }
+        }
+
+        if(totalCnt == variableCnt){
+            order.get().updateState(4);
+            orderRepository.save(order.get());
+        }
+    }
 }
+

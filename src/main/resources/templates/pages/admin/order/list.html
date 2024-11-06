@@ -227,7 +227,7 @@
                             <tr>
                                 <th>택배사</th>
                                 <td>
-                                    <select>
+                                    <select class="compa">
                                         <option value="1">로젠택배</option>
                                         <option value="2">한신택배</option>
                                         <option value="3">우체국택배</option>
@@ -271,7 +271,7 @@
      async function updateShippingData(e){
         e.preventDefault();
          const inputs = document.querySelectorAll('.tb4 input');
-         const deli = document.querySelector('.tb4 select').value;
+         const deli = document.querySelector('.tb4 .compa').value;
 
 
         if(!inputs[5].value.trim()){
@@ -286,7 +286,7 @@
             "orderDeliId":inputs[5].value,
             "orderItemId":orderItemId
         }
-
+        console.log(jsonData)
         try {
             const response = await fetch('/admin/prod/order/delivery',{
                 method:'POST',
