@@ -12,9 +12,13 @@ import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
+import com.lotteon.entity.point.CustomerCoupon;
 import com.lotteon.entity.point.Point;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.SellerRepository;
+import com.lotteon.repository.point.CustomerCouponRepository;
+import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -53,6 +57,10 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductOptionRepository productOptionRepository;
     private final SellerRepository sellerRepository;
+    private final OrderCancleRepository orderCancleRepository;
+    private final CustomerCouponRepository customerCouponRepository;
+    private final CustomerRepository customerRepository;
+    private final PointRepository pointRepository;
 
     public List<GetOrderDto> selectedOrders(List<PostCartSaveDto> selectedProducts) {
 
@@ -461,5 +469,35 @@ public class OrderService {
                 }
             }
         }
+    }
+
+    public void cancleOrder(Long id) {
+
+        Optional<OrderCancleDocument> orderCancleDocument = orderCancleRepository.findByOrderId(id);
+        Long couponId = orderCancleDocument.get().getCouponId();
+        int points = orderCancleDocument.get().getPoints();
+        Long custId = orderCancleDocument.get().getCustId();
+        LocalDateTime time = orderCancleDocument.get().getPointUdate();
+        LocalDateTime before = time.minusMinutes(2);
+        LocalDateTime after = time.plusMinutes(2);
+        if(couponId!=0){
+            Optional<CustomerCoupon> coupon = customerCouponRepository.findById(couponId);
+            coupon.get().updateCustCouponState(1);
+        }
+
+        if(points!=0){
+            List<Point> pointLists = pointRepository.findAllByCustomer_IdAndPointTypeAndPointUdateBetween(custId,2,before,after);
+            pointLists.forEach(v->{
+                v.updateReUsePoint();
+            });
+        }
+
+        Point point = pointRepository.findFirstByCustomer_IdAndPointTypeAndPointExpirationBetween(custId,1,before,after);
+        point.updateRobPoint();
+
+
+
+
+
     }
 }
