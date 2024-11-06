@@ -245,7 +245,7 @@ public class CustomerService {
                 .custAddr3(addr[2]) // 상세
                 .build();
 
-        log.info("DTO 정보: " + dto);
+        log.info("DTO 정보: " + dto);     
 
         return dto;
 
