@@ -22,7 +22,8 @@
               <tr>
                 <th>비밀번호</th>
                 <td>
-                  <a th:href="@{/my/info}" class="btn">수정하기</a>
+                    <input type="password" placeholder="수정할 비밀번호를 입력해 주세요." name="pass" />
+                    <a th:href="@{/my/info}" class="btn">수정하기</a>
 <!--                  <input type="button" value="수정하기" class="btn" />-->
                 </td>
               </tr>
@@ -43,8 +44,8 @@
               <tr>
                 <th>Email</th>
                 <td>
-                  <input type="text" name="email" /> @
-                  <input type="text" name="email" />
+                  <input type="text" name="email1" th:value="${cust.custEmail1}" /> @
+                  <input type="text" name="email2" th:value="${cust.custEmail2}" />
                   <select>
                     <option selected>직접입력</option>
                     <option>gmail.com</option>
@@ -57,13 +58,13 @@
               <tr>
                 <th>휴대폰</th>
                 <td>
-                  <input type="number" max="999" /> -
-                  <input type="number" max="9999" /> -
-                  <input type="number" max="9999" />
+                  <input type="text" th:value="${cust.custHp1}" max="999" /> -
+                  <input type="text" th:value="${cust.custHp2}" max="9999" /> -
+                  <input type="text" th:value="${cust.custHp3}" max="9999" />
                   <input type="button" class="btn" value="수정하기" />
                 </td>
               </tr>
-              <tr>
+              <tr> 
                 <th>주소</th>
                 <td>
 <!--                  <input name="zip" type="text" placeholder="우편번호" readonly />-->

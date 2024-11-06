@@ -98,17 +98,12 @@ public class MyController {
     @GetMapping("/info")
     public String info(Model model,Authentication authentication) {
         log.info("컨트롤러 접속 ");
-        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
-        Long custId = auth.getUser().getCustomer().getId();
-        log.info("커스터머 아이디 "+custId);
-        Optional<GetAdminUserDTO> getCust = customerService.myInfo(custId);
-        if (getCust.isPresent()) {
-            model.addAttribute("cust", getCust.get());
+
+        GetMyInfoDTO getCust = customerService.myInfo();
+        if(getCust!=null){
+            model.addAttribute("cust",getCust);
         } else {
-            // 예외 처리: 고객 정보가 없는 경우
-            log.warn("찾을 수 없는 id : " + custId);
-            model.addAttribute("errorMessage",
-                    "회원 정보를 찾을 수 없습니다.");
+            return "/";
         }
         return "pages/my/info";
     }

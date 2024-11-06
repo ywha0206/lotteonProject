@@ -346,8 +346,6 @@ public class OrderItemService {
         return result;
     }
 
-
-
     public List<GetDeliveryDateDto> findDeliveryDateAllByOrderId(Long id) {
         List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(id);
         List<GetDeliveryDateDto> dtos = orderItems.stream().map(OrderItem::toGetDeliveryDateDto).toList();

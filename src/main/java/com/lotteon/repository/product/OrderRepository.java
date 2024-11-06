@@ -52,4 +52,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(Customer customer, Timestamp varDay, Timestamp today, Pageable pageable);
 
     List<Order> findAllByOrderRdateAfter(Timestamp threeDaysAgo);
+
+    Optional<Order> findByIdAndOrderItems_State2(Long orderId, int i);
 }
