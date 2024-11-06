@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -77,7 +78,7 @@ public class MyController {
 
         // 최신 QnA 5개 불러오기
         // QnaService에서 Qna를 ArticleDto로 변환하여 가져오도록 수정
-        List<ArticleDto> qnaList = qnaService.findTop5Qnas().stream()
+        List<ArticleDto> qnaList = qnaService.getTop5Qnas().stream()
                 .map(ArticleDto::fromEntity)
                 .collect(Collectors.toList());
         model.addAttribute("qnaList", qnaList);
@@ -110,14 +111,14 @@ public class MyController {
     @GetMapping("/coupons")
     public String coupon(
             Model model,
-            @RequestParam(name = "page", defaultValue = "0") int page
+            @RequestParam(name = "page",defaultValue = "0") int page
     ) {
         Page<GetMyCouponDto> coupons = customerCouponService.findAllByCustomer(page);
-        if (coupons == null) {
-            model.addAttribute("noItem", true);
+        if(coupons==null){
+            model.addAttribute("noItem",true);
             return "pages/my/coupon";
         }
-        model.addAttribute("noItem", false);
+        model.addAttribute("noItem",false);
         model.addAttribute("coupons", coupons);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", coupons.getTotalPages());
@@ -125,59 +126,69 @@ public class MyController {
         return "pages/my/coupon";
     }
 
+    // 나의 쇼핑정보 > 나의 설정
     @GetMapping("/info")
-    public String info(Model model) {
+    public String info(Model model,Authentication authentication) {
+        log.info("컨트롤러 접속 ");
+
+        GetMyInfoDTO getCust = customerService.myInfo();
+        if(getCust!=null){
+            model.addAttribute("cust",getCust);
+        } else {
+            return "/";
+        }
         return "pages/my/info";
     }
 
+    // 나의 쇼핑정보 > 나의 설정 end
+
     @GetMapping("/orders")
     public String order(Model model,
-                        @RequestParam(name = "page", defaultValue = "0") int page,
-                        @RequestParam(name = "type", defaultValue = "0") String type,
-                        @RequestParam(name = "keyword", defaultValue = "0") String keyword
+                        @RequestParam(name = "page",defaultValue = "0") int page,
+                        @RequestParam(name = "type",defaultValue = "0") String type,
+                        @RequestParam(name = "keyword",defaultValue = "0") String keyword
     ) {
         log.info("마이페이지 오더 컨트롤러 접속 ");
         Page<ResponseOrdersDto> orders;
 
-        if (!type.equals("0") && !keyword.equals("0")) {
-            orders = orderService.findAllBySearch(page, type, keyword);
-        } else {
+        if(!type.equals("0")&&!keyword.equals("0")){
+            orders = orderService.findAllBySearch(page,type,keyword);
+        }else {
             orders = orderService.selectedMyOrderList(page);
         }
 
-        log.info("마이페이지 오더 컨트롤러 오더 잘 뽑혔는지 확인 " + orders);
-        if (orders.isEmpty()) {
-            model.addAttribute("noItem", true);
+        log.info("마이페이지 오더 컨트롤러 오더 잘 뽑혔는지 확인 "+orders);
+        if(orders.isEmpty()){
+            model.addAttribute("noItem",true);
             return "pages/my/order";
         }
 
         model.addAttribute("orders", orders);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", orders.getTotalPages());
-        model.addAttribute("noItem", false);
+        model.addAttribute("noItem",false);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
         return "pages/my/order";
     }
-
     @GetMapping("/points")
     public String point(
             Model model,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "type", defaultValue = "0") String type,
-            @RequestParam(name = "keyword", defaultValue = "0") String keyword
-    ) {
+            @RequestParam(name = "page",defaultValue = "0") int page,
+            @RequestParam(name = "type",defaultValue = "0") String type,
+            @RequestParam(name = "keyword",defaultValue = "0") String keyword
+            ) {
         Page<GetPointsDto> points;
-        if (!type.equals("0") && !keyword.equals("0")) {
-            points = pointService.findAllBySearch(page, type, keyword);
+        if(!type.equals("0")&&!keyword.equals("0")){
+            points = pointService.findAllBySearch(page,type,keyword);
         } else {
             points = pointService.findAllByCustomer(page);
         }
-        if (points.isEmpty()) {
-            model.addAttribute("noItem", true);
+        if(points.isEmpty()){
+            model.addAttribute("noItem",true);
             return "pages/my/point";
         }
-        model.addAttribute("noItem", false);
+        model.addAttribute("noItem",false);
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -190,21 +201,21 @@ public class MyController {
     @GetMapping("/points/use")
     public String usePoint(
             Model model,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "type", defaultValue = "0") String type,
-            @RequestParam(name = "keyword", defaultValue = "0") String keyword
+            @RequestParam(name = "page",defaultValue = "0") int page,
+            @RequestParam(name = "type",defaultValue = "0") String type,
+            @RequestParam(name = "keyword",defaultValue = "0") String keyword
     ) {
         Page<GetPointsDto> points;
-        if (!type.equals("0") && !keyword.equals("0")) {
-            points = pointService.findAllBySearch2(page, type, keyword);
+        if(!type.equals("0")&&!keyword.equals("0")){
+            points = pointService.findAllBySearch2(page,type,keyword);
         } else {
             points = pointService.findAllByCustomer2(page);
         }
-        if (points.isEmpty()) {
-            model.addAttribute("noItem", true);
+        if(points.isEmpty()){
+            model.addAttribute("noItem",true);
             return "pages/my/usepoint";
         }
-        model.addAttribute("noItem", false);
+        model.addAttribute("noItem",false);
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -214,7 +225,7 @@ public class MyController {
         return "pages/my/usepoint";
     }
 
-  /*  @GetMapping("/qnas")
+   /*  @GetMapping("/qnas")
     public String getMyQnas(Model model, Principal principal) {
         MyUserDetails userDetails = (MyUserDetails) ((Authentication) principal).getPrincipal();
         Member memberId = userDetails.getUser(); // MyUserDetails에서 ID를 가져오는 메서드 사용
@@ -251,26 +262,25 @@ public class MyController {
     @GetMapping("/reviews")
     public String review(
             Model model,
-            @RequestParam(value = "page", defaultValue = "0") int page
+            @RequestParam(value = "page",defaultValue = "0") int page
     ) {
         Page<GetReviewsDto> reviews = reviewService.findAll(page);
-        if (reviews == null) {
-            model.addAttribute("noReview", true);
+        if(reviews==null) {
+            model.addAttribute("noReview",true);
         } else {
-            model.addAttribute("reviews", reviews);
-            model.addAttribute("noReview", false);
+            model.addAttribute("reviews",reviews);
+            model.addAttribute("noReview",false);
             model.addAttribute("totalPages", reviews.getTotalPages());
         }
         model.addAttribute("page", page);
 
         return "pages/my/review";
     }
-
     @GetMapping("/address")
     public String address(Model model) {
         List<GetAddressDto> addrs = addressService.findAllByCustomer();
-        model.addAttribute("addrs", addrs);
-        model.addAttribute("number", addrs.size());
+        model.addAttribute("addrs",addrs);
+        model.addAttribute("number",addrs.size());
         return "pages/my/address";
     }
 }

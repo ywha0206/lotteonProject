@@ -3,12 +3,10 @@
 }
 
 .header{
-    margin-top: 50px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin: 0 auto;
-    margin-bottom: 20px;
+    margin: 50px auto 20px;
 }
 
 .header-title{
@@ -26,7 +24,7 @@
 
 .header-gubun {
     height: 3px;
-    background-image: url(../../images/Vector.png);
+    background-image: url(/images/Vector.png);
     margin: 0 auto;
     margin-bottom: 30px;
 }
@@ -75,7 +73,7 @@
 .header-gubun-bottom {
     width: 800px;
     height: 1px;
-    background-image: url(../../images/login-gubun-bottom.png);
+    background-image: url(/images/login-gubun-bottom.png);
     margin-top: 30px;
 }
 

@@ -40,12 +40,20 @@
               </li>
               <li class="prodPrice" th:text="${order.orderTotal}==null?0:${order.orderTotal}">34,000</li>
             </ul></td>
-            <td class="status" th:text="${order.orderState==0}?'배송중':'배송완료'">배송완료</td>
+            <td class="status" th:switch="${order.orderState}">
+              <span th:case="0">결제완료</span>
+              <span th:case="1">배송중</span>
+              <span th:case="2">확인중</span>
+              <span th:case="3">개별처리중</span>
+              <span th:case="4">주문완료</span>
+            </td>
             <td class="confirm">
-              <button class="receive color" th:if="${order.orderState>0}">수취확인</button>
-              <button onclick="openReviewWrite(event)" th:data-name="${order.prodName}" th:data-id="${order.orderId}" th:data-prod="${order.prodId}" class="review color">상품평쓰기</button>
-              <button class="refund grey">반품신청</button>
-              <button class="exchange grey">교환신청</button>
+              <button th:if="${order.orderState==0}" class="exchange grey">주문취소</button>
+              <button th:if="${order.orderState==1}" th:data-id="${order.orderId}" onclick="opendeliDate(event)" class="exchange grey">배송예정일</button>
+              <button th:if="${order.orderState==2 || order.orderState==3}" th:data-id="${order.orderId}" onclick="openReceive(event)" class="receive color">수취확인</button>
+              <button th:if="${order.orderState==3 || order.orderState==4}" onclick="openReviewWrite(event)" th:data-name="${order.prodName}" th:data-id="${order.orderId}" th:data-prod="${order.prodId}" class="review color">상품평쓰기</button>
+              <button th:if="${order.orderState==2 || order.orderState==3}" th:data-id="${order.orderId}" onclick="openReturn(event)" class="refund grey">반품신청</button>
+              <button th:if="${order.orderState==2 || order.orderState==3}" th:data-id="${order.orderId}" onclick="openChange(event)" class="exchange grey">교환신청</button>
             </td>
           </tr>
         </table>
@@ -160,32 +168,30 @@
       </article>
 
       <h3>나의설정</h3>
-      <article>
-        <table class="user">
-          <tr>
-            <td colspan="3"></td>
-          </tr>
-          <tr>
-            <td>
-              <div><b>기본배송지 설정</b> <a href="#">변경</a></div>
+      <article class="user-settings">
+        <section class="user">
+          <a th:href="@{/my/address}">
+            <article>
+              <div><b>기본배송지 설정</b> <a>변경</a></div>
               <p class="addr1">부산광역시 부산진구 대연동 120</p>
               <p class="addr2">한빛빌딩 10층</p>
-            </td>
-            <td>
-              <div><b>Email 설정</b> <a href="#">변경</a></div>
+            </article>
+          </a>
+          <a th:href="@{/my/info}">
+            <article>
+              <div><b>Email 설정</b> <a>변경</a></div>
               <p>abc123@naver.com</p>
               <p class="lastUpdate">(최종수정일 2021-12-10)</p>
-            </td>
-            <td>
-              <div><b>휴대폰 설정</b> <a href="#">변경</a></div>
+            </article>
+          </a>
+          <a th:href="@{/my/info}">
+            <article>
+              <div><b>휴대폰 설정</b> <a>변경</a></div>
               <p>010-1234-1001</p>
               <p class="lastUpdate">(최종수정일 2021-12-10)</p>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3"></td>
-          </tr>
-        </table>
+            </article>
+          </a>
+        </section>
       </article>
     </section>
     </main>
@@ -198,6 +204,195 @@
   let prodId;
   let content;
   let score;
+
+  async function openReturn(event){
+    const orderId = event.target.dataset.id;
+    const popReturn = document.getElementById('popReturn')
+    try {
+      const resp = await axios.get(`/my/order/receive?id=${orderId}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      const selectItem = popReturn.querySelector('select')
+      if(resp.data.length>0){
+        selectItem.innerHTML = resp.data.map(v=>`
+        <option value="${v.orderItemId}">${v.prodName}</option>
+      `)
+      } else {
+        selectItem.innerHTML = `
+          <option>배송완료된 상품이 없습니다.</option>
+        `
+      }
+      popReturn.showModal();
+    } catch (e) {
+
+    }
+  }
+
+  async function openChange(event){
+    const orderId = event.target.dataset.id;
+    const popChange = document.getElementById('popChange')
+    try {
+      const resp = await axios.get(`/my/order/receive?id=${orderId}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      const selectItem = popChange.querySelector('select')
+      if(resp.data.length>0){
+        selectItem.innerHTML = resp.data.map(v=>`
+        <option value="${v.orderItemId}">${v.prodName}</option>
+      `)
+      } else {
+        selectItem.innerHTML = `
+          <option>배송완료된 상품이 없습니다.</option>
+        `
+      }
+      popChange.showModal();
+    } catch (e) {
+
+    }
+  }
+
+  async function openReceive(event){
+    const orderId = event.target.dataset.id
+    try {
+      const popReceive = document.getElementById('popReceive')
+      const resp = await axios.get(`/my/order/receive?id=${orderId}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      const selectItem = popReceive.querySelector('select')
+      if(resp.data.length>0){
+        selectItem.innerHTML = resp.data.map(v=>`
+        <option value="${v.orderItemId}">${v.prodName}</option>
+      `)
+      } else {
+        selectItem.innerHTML = `
+          <option>배송완료된 상품이 없습니다.</option>
+        `
+      }
+
+      popReceive.showModal();
+    } catch (e) {
+
+    }
+  }
+
+  async function receiveConfirmBtn(){
+    const popReceive = document.getElementById('popReceive')
+    const selectItem = popReceive.querySelector('select')
+    const selectedItemId = selectItem.options[selectItem.selectedIndex]
+    const orderItemId = selectedItemId.value;
+
+    try {
+      const resp = await axios.patch(`/my/order/receive?id=${orderItemId}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      if(resp.status ===200){
+        document.getElementById('popReceive').close();
+        window.location.href = '/my/orders'
+      }
+    } catch (e) {
+
+    }
+  }
+
+  async function postReturn(){
+    const popReceive = document.getElementById('popReturn')
+    const selectItem = popReceive.querySelector('select')
+    const selectedItemId = selectItem.options[selectItem.selectedIndex]
+    const orderItemId = selectedItemId.value;
+    try {
+      const resp = await axios.patch(`/my/order/return?id=${orderItemId}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      if(resp.status ===200){
+        document.getElementById('popReturn').close();
+        window.location.href = '/my/orders'
+      }
+    } catch (e) {
+
+    }
+  }
+
+  async function postChange(){
+    const popReceive = document.getElementById('popChange')
+    const selectItem = popReceive.querySelector('select')
+    const selectedItemId = selectItem.options[selectItem.selectedIndex]
+    const orderItemId = selectedItemId.value;
+    try {
+      const resp = await axios.patch(`/my/order/change?id=${orderItemId}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      if(resp.status ===200){
+        document.getElementById('popChange').close();
+        window.location.href = '/my/orders'
+      }
+    } catch (e) {
+
+    }
+  }
+
+  function closeReceive(){
+    document.getElementById('popReceive').close();
+  }
+  function closeReturn(){
+    document.getElementById('popReturn').close();
+  }
+  function closeChange(){
+    document.getElementById('popChange').close();
+  }
+
+  async function opendeliDate(event){
+    console.log(event.target.dataset.id)
+    try {
+      const resp = await axios.get(`/my/order/delivery-date?id=${event.target.dataset.id}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      const deliModal = document.getElementById('popDeliveryDate')
+      deliModal.querySelector('section').innerHTML =
+              resp.data.map(v=>`
+        <div style="display: flex;justify-content: space-between; border-bottom: 1px solid black;">
+          <span style="font-weight: 600;">${v.prodName.length > 30 ? v.prodName.substring(0, 30) + '...' : v.prodName}</span>
+          <span>${v.date}</span>
+        </div>
+      `)
+      deliModal.showModal();
+    } catch (e) {
+      console.log(e)
+    }
+
+
+  }
+
+  function closeDelivery(){
+    document.getElementById('popDeliveryDate').close();
+  }
+
+  const popOrderDialog = document.getElementById("popOrder");
+  function orderPop(element) {
+    event.preventDefault();
+
+
+    popOrderDialog.showModal();
+
+
+  }
+
+  function closeModal(){
+    popOrderDialog.close();
+  }
 
   async function openSellerInfo(event){
     event.preventDefault();
@@ -213,6 +408,7 @@
         }
       })
       const seller = resp.data;
+      console.log("콘솔 "+seller);
       document.querySelector('#popSeller .level').innerText = seller.sellGrade
       document.querySelector('#popSeller .company').innerText = seller.company
       document.querySelector('#popSeller .ceo').innerText = seller.name

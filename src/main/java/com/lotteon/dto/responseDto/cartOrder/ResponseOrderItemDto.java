@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 /*
     날짜: 2024/10/29
     이름: 박연화
@@ -32,4 +34,9 @@ public class ResponseOrderItemDto{
     private String sellerName;
     private String orderDeliId;
     private Long optionId;
+
+    private int orderDeliCompany;
+    private int orderItemState2;
+    private List<String> options;
+    private int additionalPrice;
 }

@@ -1,5 +1,6 @@
 package com.lotteon.repository.member;
 
+import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+
+
     Optional<Customer> findByMemberId(Long memberId);
 
     Optional<Customer> findById(Long id);
@@ -29,9 +32,4 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<Customer> findByMember_MemUidAndCustEmail(String name, String email);
 
-    Page<Customer> findAllByCustNameOrderByIdDesc(String keyword, Pageable pageable);
-
-    Page<Customer> findAllByCustEmailOrderByIdDesc(String keyword, Pageable pageable);
-
-    Page<Customer> findAllByCustHpOrderByIdDesc(String keyword, Pageable pageable);
 }

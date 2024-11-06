@@ -4,9 +4,11 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostProdAllDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
+import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetDeliInfoDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrderItemDto;
 import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.product.OrderItemService;
@@ -116,13 +118,16 @@ public class ApiAdminProdController {
 
         MyUserDetails auth2  =(MyUserDetails) authentication.getPrincipal();
         log.info("컨트롤러에서 어드민인지 셀러인지 확인 "+auth2.getUser().getMemRole());
+        Map<String,Object> map = new HashMap<>();
         ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
-        log.info("디스카운트 제대로 뽑히는지 확인 "+responseOrderDto);
+        List<GetAdminOrderNameDto> itemNames = orderItemService.selectAdminOrderItem(orderId);
+        map.put("order", responseOrderDto);
+        map.put("itemNames", itemNames);
         if(responseOrderDto==null ){
             return ResponseEntity.ok().body(false);
         }
 
-        return ResponseEntity.ok().body(responseOrderDto);
+        return ResponseEntity.ok().body(map);
     }
 
     @PostMapping("/order/delivery")

@@ -84,6 +84,23 @@ public class Customer {
         this.custAddr = dto.getCustAddr1() + "/" + dto.getCustAddr2() + "/" + dto.getCustAddr3();
     }
 
+    public void setGrade(String grade){
+        this.custGrade = grade;
+    }
+
+    public void setCustHp(String custHp){
+        this.custHp = custHp;
+    }
+    public void setCustEmail(String custEmail){
+        this.custEmail = custEmail;
+    }
+    public void setCustAddr(String custAddr){
+        this.custAddr = custAddr;
+    }
+    public void setMemPwd(String memPwd){
+        this.member.updatePassword(memPwd);
+    }
+
 }
 
 

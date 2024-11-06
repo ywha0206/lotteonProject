@@ -27,6 +27,7 @@ import java.util.List;
 public class AdminOrderController {
 
     private final OrderService orderService;
+    private final OrderItemService orderItemService;
 
     @ModelAttribute
     public void pageIndex(Model model) {
@@ -82,9 +83,9 @@ public class AdminOrderController {
         model.addAttribute("active","deliverys");
         Page<GetDeliveryDto> deliverys;
         if(searchType.equals("0")){
-            deliverys = orderService.findAllBySeller(page);
+            deliverys = orderItemService.findAllBySeller(page);
         } else {
-            deliverys = orderService.findAllBySellerAndSearchType(page,searchType,keyword);
+            deliverys = orderItemService.findAllBySellerAndSearchType(page,searchType,keyword);
         }
         model.addAttribute("deliverys", deliverys);
         model.addAttribute("page",page);

@@ -45,7 +45,7 @@ public class VersionService {
 
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'"),
-                        @CacheEvict(value = "versionCache",key = "'version'")})
+                        @CacheEvict(value = "versionCache",allEntries = true)})
 
     public Version insertVersion(PostVersionDTO postVersionDTO) {
         Version version = modelMapper.map(postVersionDTO, Version.class);
@@ -58,7 +58,7 @@ public class VersionService {
         return versionRepository.save(version);
     }
 
-    @Cacheable(value = "versionCache",key = "'version'")
+    @Cacheable(value = "versionCache",key = "'version'+#page")
     public PageResponseDTO<GetVersionDTO> getPagedVersionList(int page) {
         int size = 5;
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
@@ -76,7 +76,7 @@ public class VersionService {
 
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'"),
-                        @CacheEvict(value = "versionCache",key = "'version'")})
+                        @CacheEvict(value = "versionCache",allEntries = true)})
     public boolean deleteVersionsById(List<Long> VersionIds) {
         try {
             for (Long VersionId : VersionIds) {

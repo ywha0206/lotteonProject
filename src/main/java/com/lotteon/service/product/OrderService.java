@@ -12,9 +12,13 @@ import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
+import com.lotteon.entity.point.CustomerCoupon;
 import com.lotteon.entity.point.Point;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.SellerRepository;
+import com.lotteon.repository.point.CustomerCouponRepository;
+import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -47,20 +51,16 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderService {
 
-    /*
-        날짜:
-        이름: 박연화
-
-     */
-
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductOptionRepository productOptionRepository;
-    private final CartItemOptionRepository cartItemOptionRepository;
-    private final ModelMapper modelMapper;
     private final SellerRepository sellerRepository;
+    private final OrderCancleRepository orderCancleRepository;
+    private final CustomerCouponRepository customerCouponRepository;
+    private final CustomerRepository customerRepository;
+    private final PointRepository pointRepository;
 
     public List<GetOrderDto> selectedOrders(List<PostCartSaveDto> selectedProducts) {
 
@@ -73,23 +73,23 @@ public class OrderService {
             Optional<Product> product = productRepository.findById(productId);
 
             ProductDto productDto = ProductDto.builder()
-                                            .id(product.get().getId())
-                                            .prodName(product.get().getProdName())
-                                            .prodDeliver(product.get().getProdDeliver())
-                                            .prodPrice(product.get().getProdPrice())
-                                            .prodDiscount(product.get().getProdDiscount())
-                                            .prodPoint(product.get().getProdPoint())
-                                            .prodSummary(product.get().getProdSummary())
-                                            .prodListImg(product.get().getProdListImg())
-                                            .totalPrice(postCartSaveDto.getTotalPrice())
-                                            .sellId(product.get().getSeller().getId())
-                                            .stock(product.get().getProdStock())
-                                            .build();
+                    .id(product.get().getId())
+                    .prodName(product.get().getProdName())
+                    .prodDeliver(product.get().getProdDeliver())
+                    .prodPrice(product.get().getProdPrice())
+                    .prodDiscount(product.get().getProdDiscount())
+                    .prodPoint(product.get().getProdPoint())
+                    .prodSummary(product.get().getProdSummary())
+                    .prodListImg(product.get().getProdListImg())
+                    .totalPrice(postCartSaveDto.getTotalPrice())
+                    .sellId(product.get().getSeller().getId())
+                    .stock(product.get().getProdStock())
+                    .build();
             CartItemDto cartItemDto = new CartItemDto();
             if(postCartSaveDto.getCartItemId()!=null) {
                 Long cartItemId = postCartSaveDto.getCartItemId();
                 Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
-                 cartItemDto = CartItemDto.builder()
+                cartItemDto = CartItemDto.builder()
                         .cartId(cartItem.get().getCart().getId())
                         .id(cartItem.get().getId())
                         .quantity(cartItem.get().getQuantity())
@@ -123,13 +123,13 @@ public class OrderService {
             log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
 
             GetOrderDto orderDto = GetOrderDto.builder()
-                                            .products(productDto)
-                                            .quantity(postCartSaveDto.getQuantity())
-                                            .optionId(optionId)
-                                            .optionValue(optionValue)
-                                            .totalPrice(postCartSaveDto.getTotalPrice())
-                                            .cartItems(cartItemDto)
-                                            .build();
+                    .products(productDto)
+                    .quantity(postCartSaveDto.getQuantity())
+                    .optionId(optionId)
+                    .optionValue(optionValue)
+                    .totalPrice(postCartSaveDto.getTotalPrice())
+                    .cartItems(cartItemDto)
+                    .build();
 
             orderDtos.add(orderDto);
         }
@@ -152,17 +152,17 @@ public class OrderService {
         String addr2 = orderDto.getReceiverAddr2();
 
         Order saveorder = Order.builder()
-                            .customer(auth.getUser().getCustomer())
-                            .orderPayment(orderDto.getOrderPayment())
-                            .receiverName(orderDto.getReceiverName())
-                            .receiverHp(orderDto.getReceiverHp())
-                            .receiverAddr(zip+"/"+addr1+"/"+addr2)
-                            .orderReq(orderDto.getOrderReq()==null?null:orderDto.getOrderReq())
-                            .orderDeli(orderDto.getOrderDeli())
-                            .orderDiscount(orderDto.getOrderDiscount())
-                            .orderQuantity(orderDto.getOrderQuantity())
-                            .orderTotal(orderDto.getOrderTotal())
-                            .build();
+                .customer(auth.getUser().getCustomer())
+                .orderPayment(orderDto.getOrderPayment())
+                .receiverName(orderDto.getReceiverName())
+                .receiverHp(orderDto.getReceiverHp())
+                .receiverAddr(zip+"/"+addr1+"/"+addr2)
+                .orderReq(orderDto.getOrderReq()==null?null:orderDto.getOrderReq())
+                .orderDeli(orderDto.getOrderDeli())
+                .orderDiscount(orderDto.getOrderDiscount())
+                .orderQuantity(orderDto.getOrderQuantity())
+                .orderTotal(orderDto.getOrderTotal())
+                .build();
 
         Order order = orderRepository.save(saveorder);
 
@@ -245,7 +245,6 @@ public class OrderService {
         return dtos;
     }
 
-
     public Page<ResponseAdminOrderDto> selectedAdminOrdersByAdmin(int page) {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
@@ -259,26 +258,6 @@ public class OrderService {
         });
         return orderDtos;
     }
-
-    public Boolean updateOrderDeli(PostOrderDeliDto postOrderDeliDto) {
-        log.info("서비스 배송정보 업데이트 "+postOrderDeliDto.toString());
-
-        Optional<Order> optOrder= orderRepository.findById(postOrderDeliDto.getOrderId());
-
-        log.info("서비스 오더아이디로 오더 찾기 "+optOrder.toString());
-        if(optOrder.isPresent()) {
-            List<OrderItem> orderItems = optOrder.get().getOrderItems();
-            for(OrderItem orderItem : orderItems) {
-                orderItem.setState2(postOrderDeliDto.getOrderState());
-                orderItem.setOrderDeliId(postOrderDeliDto.getOrderDeliId());
-                orderItem.setOrderDeliCompany(postOrderDeliDto.getOrderDeli());
-            }
-            return true;
-        }else{
-            return false;
-        }
-    }
-
     public Page<GetDeliveryDto> findAllBySeller(int page) {
         Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
         Page<Order> orders;
@@ -305,11 +284,32 @@ public class OrderService {
         return dtos;
     }
 
+    public Boolean updateOrderDeli(PostOrderDeliDto postOrderDeliDto) {
+        log.info("서비스 배송정보 업데이트 "+postOrderDeliDto.toString());
+
+        Optional<Order> optOrder= orderRepository.findById(postOrderDeliDto.getOrderId());
+        if(optOrder.isEmpty()){
+            return false;
+        }
+        Optional<OrderItem> orderItem = orderItemRepository.findById(postOrderDeliDto.getOrderItemId());
+        if(orderItem.isEmpty()){
+            return false;
+        }
+        LocalDate today = LocalDate.now();
+        orderItem.get().setState2(1);
+        orderItem.get().setOrderDeliId(postOrderDeliDto.getOrderDeliId());
+        orderItem.get().setOrderDeliCompany(postOrderDeliDto.getOrderDeli());
+        orderItem.get().setOrderDeliSdate(today);
+        if(optOrder.get().getOrderState()==0){
+            optOrder.get().setOrderState(1);
+        }
+        return true;
+    }
+
     public GetDeliInfoDto findByDeliveryId(String deliveryId) {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Seller seller = auth.getUser().getSeller();
         Optional<Order> order = orderRepository.findByOrderItems_SellerAndOrderItems_OrderDeliIdAndOrderItems_OrderDeliCompanyNotNull(seller,deliveryId);
-        System.out.println("===================");
         System.out.println(order.get().toGetDeliInfoDto());
         return order.get().toGetDeliInfoDto();
     }
@@ -456,17 +456,48 @@ public class OrderService {
                 .build();
     }
 
-    @Scheduled(cron = "0 30 14 * * *")
+    @Scheduled(cron = "0 13 20 * * *")
     public void updateOrderItemState(){
-        LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
-        Timestamp day = Timestamp.valueOf(threeDaysAgo);
-        List<Order> orders = orderRepository.findAllByOrderRdateAfter(day);
-        for(Order order : orders){
-            order.getOrderItems().forEach(v->{
-                if(v.getState2()==0){
-                    v.updateState2(4);
+        LocalDate threeDaysAgo = LocalDate.now().minusDays(2);
+
+        List<OrderItem> orderItems = orderItemRepository.findAllByDeliSdateBefore(threeDaysAgo);
+        for(OrderItem orderItem : orderItems){
+            if(orderItem.getState2()==1){
+                orderItem.setState2(4);
+                if(orderItem.getOrder().getOrderState()==1){
+                    orderItem.getOrder().setOrderState(2);
                 }
+            }
+        }
+    }
+
+    public void cancleOrder(Long id) {
+
+        Optional<OrderCancleDocument> orderCancleDocument = orderCancleRepository.findByOrderId(id);
+        Long couponId = orderCancleDocument.get().getCouponId();
+        int points = orderCancleDocument.get().getPoints();
+        Long custId = orderCancleDocument.get().getCustId();
+        LocalDateTime time = orderCancleDocument.get().getPointUdate();
+        LocalDateTime before = time.minusMinutes(2);
+        LocalDateTime after = time.plusMinutes(2);
+        if(couponId!=0){
+            Optional<CustomerCoupon> coupon = customerCouponRepository.findById(couponId);
+            coupon.get().updateCustCouponState(1);
+        }
+
+        if(points!=0){
+            List<Point> pointLists = pointRepository.findAllByCustomer_IdAndPointTypeAndPointUdateBetween(custId,2,before,after);
+            pointLists.forEach(v->{
+                v.updateReUsePoint();
             });
         }
+
+        Point point = pointRepository.findFirstByCustomer_IdAndPointTypeAndPointExpirationBetween(custId,1,before,after);
+        point.updateRobPoint();
+
+
+
+
+
     }
 }

@@ -36,6 +36,7 @@ import java.util.Optional;
       - 2025/10/27 (일) 김민희 - 회원정보조회 팝업호출 기능 메서드(popCust) 추가
       - 2025/10/28 (월) 김민희 - 회원수정 기능 메서드 추가
       - 2025/10/31 (목) 김민희 - 회원수정 기능 메서드 추가
+      - 2024/11/06 (수) 김주경 - 선택수정 기능 메서드 추가
 */
 
 @Log4j2
@@ -97,18 +98,9 @@ public class AuthService implements UserDetailsService {
                 cust.add(dto);
                 log.info("거짓말 이거 사용 안 한다구??" + dto);
             }else {
-                GetAdminUserDTO dto = GetAdminUserDTO.builder()
-                        .custId(customer.getId()) // 번호
-                        .memUid(String.valueOf(customer.getMemUid())) // 아이디
-                        .custName(customer.getCustomer().getCustName()) // 이름
-                        .custEmail(customer.getCustomer().getCustEmail()) // 이메일
-                        .custHp(customer.getCustomer().getCustHp()) // 휴대폰
-                        .memRole(customer.getMemRole())
-                        .memRdate(customer.getMemRdate()) // 가입일
-                        .memState(String.valueOf(customer.getMemState())) // 상태
-                        //.custAddr3("소셜로그인유저입니다.")
-                        .build();
-                cust.add(dto);
+
+
+
             }
         });
         return cust;
@@ -241,17 +233,37 @@ public class AuthService implements UserDetailsService {
 
 
 
-    // 4. 관리자 회원목록 선택삭제 기능
-    public boolean deleteCustsById(List<Long> deleteCustIds) {
+    // 4. 관리자 회원목록 선택수정 기능
+    public boolean modifyCustsGradeById(List<Long> ids, List<String> grades) {
         try{
-            for (Long deleteCustId : deleteCustIds) {
-                memberRepository.deleteById(deleteCustId);
+            int size = ids.size();
+            for (int i = 0 ; i<size ; i++) {
+                Optional<Customer> optCust = customerRepository.findById(ids.get(i));
+                if(optCust.isPresent()){
+                    Customer cust = optCust.get();
+                    cust.setGrade(grades.get(i));
+                }
             }
             return true;
         }catch (Exception e) {
             log.error(e.getMessage());
             return false;
         }
+    }
+
+    public boolean modifyCustStateById(Long id, String state) {
+        try {
+            Optional<Member> optMember = memberRepository.findByCustomer_id(id);
+            if(optMember.isPresent()){
+                Member member = optMember.get();
+                member.updateMemberState(state);
+                return true;
+            }
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
+        return false;
     }
 
 
@@ -286,13 +298,14 @@ public class AuthService implements UserDetailsService {
         Page<Member> members;
 
         if(searchType.equals("memUid")){  // 아이디
-            members = memberRepository.findAllByMemUidOrderByIdDesc(keyword,pageable);
+            List<String> roles = Arrays.asList("customer", "guest");
+            members = memberRepository.findAllByMemUidContainsAndMemRoleInOrderByIdDesc(keyword,roles,pageable);
         } else if (searchType.equals("custName")){ // 이름
-            members = memberRepository.findAllByCustNameOrderByIdDesc(keyword,pageable);
+            members = memberRepository.findAllByCustomer_CustNameContainsOrderByIdDesc(keyword,pageable);
         } else if (searchType.equals("custEmail")){ // 이메일
-            members = memberRepository.findAllByCustEmailOrderByIdDesc(keyword,pageable);
+            members = memberRepository.findAllByCustomer_CustEmailContainsOrderByIdDesc(keyword,pageable);
         } else { // 휴대폰
-            members = memberRepository.findAllByCustHpOrderByIdDesc(keyword,pageable);
+            members = memberRepository.findAllByCustomer_CustHpContainsOrderByIdDesc(keyword,pageable);
         }
 
         log.info("연화를 찾아라 2"+members.getContent());

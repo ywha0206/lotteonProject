@@ -1,39 +1,42 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
+import com.lotteon.dto.requestDto.cartOrder.OrderPointAndCouponDto;
+import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
+import com.lotteon.dto.responseDto.GetDeliveryDateDto;
+import com.lotteon.dto.responseDto.GetReceiveConfirmDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderItemDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Point;
-import com.lotteon.entity.product.Order;
-import com.lotteon.entity.product.OrderItem;
-import com.lotteon.entity.product.Product;
-import com.lotteon.entity.product.ProductOption;
+import com.lotteon.entity.product.*;
 import com.lotteon.repository.impl.OrderItemRepositoryImpl;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.point.PointRepository;
-import com.lotteon.repository.product.OrderItemRepository;
-import com.lotteon.repository.product.OrderRepository;
-import com.lotteon.repository.product.ProductOptionRepository;
-import com.lotteon.repository.product.ProductRepository;
+import com.lotteon.repository.product.*;
 import com.lotteon.service.member.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -50,18 +53,30 @@ public class OrderItemService {
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final OrderRepository orderRepository;
+    private final OrderCancleRepository orderCancleRepository;
 
     //주문수 +1
     public void ProductOrderCount(Product product) {
         product.setProdOrderCnt(product.getProdOrderCnt() + 1);
     }
 
-    public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session) {
+    public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session, OrderPointAndCouponDto dto) {
         log.info("오더아이템 서비스 들어옴 ");
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer = auth.getUser().getCustomer();
         LocalDate today = LocalDate.now();
         Order order = orderService.insertOrder(orderDto);
+
+        OrderCancleDocument orderCancleDocument = OrderCancleDocument.builder()
+                .points(dto.getPoints())
+                .custId(auth.getUser().getCustomer().getId())
+                .couponId(dto.getCouponId())
+                .orderId(order.getId())
+                .pointUdate(LocalDateTime.now())
+                .build();
+
+        orderCancleRepository.save(orderCancleDocument);
         log.info("오더 저장 성공 : "+order);
 
         if(order==null){
@@ -158,7 +173,7 @@ public class OrderItemService {
                                                                         .prodName(orderItem.getProduct().getProdName())
                                                                         .prodSummary(orderItem.getProduct().getProdSummary())
                                                                         .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
-                                                                        .discount((int)Math.round(Double.valueOf(orderItem.getDiscount())/100*orderItem.getProduct().getProdPrice()))
+                                                                        .discount((int)Math.round(orderItem.getProduct().getProdPrice()*(orderItem.getDiscount()/100)))
                                                                         .quantity(orderItem.getQuantity())
                                                                         .delivery(orderItem.getDeli())
                                                                         .prodPoint(orderItem.getProduct().getProdPoint())
@@ -168,7 +183,6 @@ public class OrderItemService {
             orderItemDtos.add(responseOrderItemDto);
         }
         Order order = orderItems.get(0).getOrder();
-        log.info("제대로 나와라 좋은말로할때 : "+orderItemDtos.toString());
 
         ResponseOrderDto responseOrderDto = ResponseOrderDto.builder()
                 .orderId(order.getId())
@@ -203,45 +217,209 @@ public class OrderItemService {
             log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
         }
 
-
-
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
-            ResponseOrderItemDto orderItemDto = ResponseOrderItemDto.builder()
-                                                        .orderItemId(orderItem.getId())
-                                                        .prodListImg(orderItem.getProduct().getProdListImg())
-                                                        .prodName(orderItem.getProduct().getProdName())
-                                                        .prodId(orderItem.getProduct().getId())
-                                                        .sellerName(orderItem.getSeller().getSellCompany())
-                                                        .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
-                                                        .discount((int)Math.round(Double.valueOf(orderItem.getDiscount())/100*orderItem.getProduct().getProdPrice()))
-                                                        .quantity(orderItem.getQuantity())
-                                                        .delivery(orderItem.getDeli())
-                                                        .orderDeliId(orderItem.getOrderDeliId()==null?"":orderItem.getOrderDeliId())
-                                                        .totalPrice((int)Math.round(orderItem.getTotal()))
-                                                        .build();
+            Long optionId = orderItem.getOptionId();
+            Map<String, Object> optionResult = findOptions(optionId);
+            Integer additionalPrice = (Integer) optionResult.get("additionalPrice");
+            List<String> options = (List<String>) optionResult.get("optionValues");
+            ResponseOrderItemDto orderItemDto = ResponseOrderItemDtoBuilder(orderItem,options,additionalPrice);
+            orderItemDtos.add(orderItemDto);
 
             orderItemDtos.add(orderItemDto);
         }
-        String[] addr = orderItems.get(0).getOrder().getReceiverAddr().split("/");
-        return ResponseOrderDto.builder()
-                .orderId(orderItems.get(0).getOrder().getId())
-                .payment(orderItems.get(0).getOrder().getOrderPayment())
-                .custName(orderItems.get(0).getOrder().getCustomer().getCustName())
-                .custHp(orderItems.get(0).getOrder().getCustomer().getCustHp())
-                .orderState(orderItems.get(0).getOrder().getOrderState())
-                .receiverName(orderItems.get(0).getOrder().getReceiverName())
-                .receiverHp(orderItems.get(0).getOrder().getReceiverHp())
-                .receiverAddr1(addr[0])
-                .receiverAddr2(addr[1])
-                .receiverAddr3(addr[2])
-                .orderReq(
-                        (orderItems.get(0).getOrder().getOrderReq() != null && !orderItems.get(0).getOrder().getOrderReq().isEmpty())
-                                ? orderItems.get(0).getOrder().getOrderReq()
-                                : ""
-                )
-                .orderItemDtos(orderItemDtos)
-                .build();
+        return ResponseOrderDtoBuilder(orderItems, orderItemDtos);
     }
 
+    public List<GetAdminOrderNameDto> selectAdminOrderItem(Long orderId) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(orderId);
+        List<GetAdminOrderNameDto> dtos = orderItems.stream().map(v->v.toGetAdminOrderNameDto()).toList();
+        return dtos;
+    }
+
+    public Page<GetDeliveryDto> findAllBySeller(int page) {
+        Pageable pageable = PageRequest.of(page,10);
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        Page<OrderItem> orderItems = orderItemRepository.findAllBySellerAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,pageable);
+        Page<GetDeliveryDto> dtos = orderItems.map(OrderItem::toGetDeliveryDto);
+        return dtos;
+    }
+
+    public Page<GetDeliveryDto> findAllBySellerAndSearchType(int page, String searchType, String keyword) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<OrderItem> orders;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        if(searchType.equals("deliId")){
+            orders = orderItemRepository.findAllBySellerAndOrderDeliIdAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,keyword,pageable);
+        } else if (searchType.equals("orderId")){
+            orders = orderItemRepository.findAllBySellerAndIdAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,Long.parseLong(keyword),pageable);
+        } else {
+            orders = orderItemRepository.findAllBySellerAndOrder_ReceiverNameAndOrderDeliIdIsNotNullAndOrderDeliCompanyNotNullOrderByDeliSdateDesc(seller,keyword,pageable);
+        }
+        Page<GetDeliveryDto> dtos = orders.map(OrderItem::toGetDeliveryDto);
+        return dtos;
+    }
+
+    public ResponseOrderDto selectMyOrderInfo(Long orderId) {
+        log.info("서비스 orderId : "+orderId);
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(orderId);
+        log.info("서비스 오더 아이템 뽑은 거 "+orderItems.toString());
+
+        List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
+        for(OrderItem orderItem : orderItems){
+            Long optionId = orderItem.getOptionId();
+            Map<String, Object> optionResult = findOptions(optionId);
+            Integer additionalPrice = (Integer) optionResult.get("additionalPrice");
+            List<String> options = (List<String>) optionResult.get("optionValues");
+            ResponseOrderItemDto orderItemDto = ResponseOrderItemDtoBuilder(orderItem, options,additionalPrice);
+            orderItemDtos.add(orderItemDto);
+        }
+        ResponseOrderDto dtos = ResponseOrderDtoBuilder(orderItems, orderItemDtos);
+
+        log.info("마이인포 주문상세 뽑은 데이터 확인 "+dtos.toString());
+        return dtos;
+    }
+
+    //toDto 메서드
+    public ResponseOrderDto ResponseOrderDtoBuilder(List<OrderItem> orderItems, List<ResponseOrderItemDto> orderItemDtos) {
+        String[] addr = orderItems.get(0).getOrder().getReceiverAddr().split("/");
+        return
+                ResponseOrderDto.builder()
+                        .orderId(orderItems.get(0).getOrder().getId())
+                        .payment(orderItems.get(0).getOrder().getOrderPayment())
+                        .custName(orderItems.get(0).getOrder().getCustomer().getCustName())
+                        .custHp(orderItems.get(0).getOrder().getCustomer().getCustHp())
+                        .orderState(orderItems.get(0).getOrder().getOrderState())
+                        .orderDate(new SimpleDateFormat("(yyyy.MM.dd)").format(orderItems.get(0).getOrder().getOrderRdate()))
+                        .receiverName(orderItems.get(0).getOrder().getReceiverName())
+                        .receiverHp(orderItems.get(0).getOrder().getReceiverHp())
+                        .receiverAddr1(addr[0])
+                        .receiverAddr2(addr[1])
+                        .receiverAddr3(addr[2])
+                        .OrderTotal(orderItems.get(0).getOrder().getOrderTotal())
+                        .orderReq(
+                                (orderItems.get(0).getOrder().getOrderReq() != null && !orderItems.get(0).getOrder().getOrderReq().isEmpty())
+                                        ? orderItems.get(0).getOrder().getOrderReq()
+                                        : null
+                        )
+                        .orderItemDtos(orderItemDtos)
+                        .build();
+    }
+    public ResponseOrderItemDto ResponseOrderItemDtoBuilder(OrderItem orderItem, List<String> options, int additionalPrice) {
+        return ResponseOrderItemDto.builder()
+                .orderItemId(orderItem.getId())
+                .prodListImg(orderItem.getProduct().getProdListImg())
+                .prodName(orderItem.getProduct().getProdName())
+                .prodId(orderItem.getProduct().getId())
+                .sellerName(orderItem.getSeller().getSellCompany())
+                .prodPrice((int)Math.round(orderItem.getProduct().getProdPrice()))
+                .discount((int)Math.round(Double.valueOf(orderItem.getDiscount())/100*orderItem.getProduct().getProdPrice()))
+                .quantity(orderItem.getQuantity())
+                .delivery(orderItem.getDeli())
+                .orderDeliCompany(orderItem.getOrderDeliCompany()==null?0:orderItem.getOrderDeliCompany())
+                .orderDeliId(orderItem.getOrderDeliId()==null?"":orderItem.getOrderDeliId())
+                .totalPrice((int)Math.round(orderItem.getTotal()))
+                .orderItemState2(orderItem.getState2())
+                .additionalPrice(additionalPrice)
+                .options(options)
+                .build();
+    }
+    public Map<String, Object> findOptions(Long optionId){
+        List<String> optionValue = new ArrayList<>();
+        Integer additionalPrice = null;
+        if(optionId!=null){
+            ProductOption option = productOptionRepository.findById(optionId).orElse(null);
+            if (option.getOptionValue() != null) {
+                optionValue.add(option.getOptionValue());
+            }
+            if (option.getOptionValue2() != null) {
+                optionValue.add(option.getOptionValue2());
+            }
+            if (option.getOptionValue3() != null) {
+                optionValue.add(option.getOptionValue3());
+            }
+            if(option.getAdditionalPrice()!=null){
+                additionalPrice = (int) Math.round(option.getAdditionalPrice());
+            }
+        }
+        log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("optionValues", optionValue);
+        result.put("additionalPrice", additionalPrice);
+
+        return result;
+    }
+
+    public List<GetDeliveryDateDto> findDeliveryDateAllByOrderId(Long id) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(id);
+        List<GetDeliveryDateDto> dtos = orderItems.stream().map(OrderItem::toGetDeliveryDateDto).toList();
+        return dtos;
+    }
+
+    public List<GetReceiveConfirmDto> findReceiveAllByOrderId(Long id) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_IdAndState2(id,4);
+        List<GetReceiveConfirmDto> dtos = orderItems.stream().map(OrderItem::toGetReceiveConfirmDto).toList();
+        return dtos;
+    }
+
+    public void patchItemState(Long id, int itemState2, int itemState1, int orderState) {
+        Optional<OrderItem> orderItem = orderItemRepository.findById(id);
+        orderItem.get().updateState2(itemState2);
+        orderItem.get().updateState1(itemState1);
+        orderItem.get().getOrder().updateState(orderState);
+        orderItemRepository.save(orderItem.get());
+        orderRepository.save(orderItem.get().getOrder());
+
+        int totalCnt = orderItem.get().getOrder().getOrderItems().size();
+        int variableCnt = 0;
+        List<OrderItem> orderItems = orderItem.get().getOrder().getOrderItems();
+        Long orderId = orderItem.get().getOrder().getId();
+        Optional<Order> order = orderRepository.findById(orderId);
+        List<OrderItem> orderItemList = order.get().getOrderItems();
+        for(OrderItem item : orderItemList){
+            if(item.getState1()==1){
+                variableCnt++;
+            }
+        }
+
+        if(totalCnt == variableCnt){
+            order.get().updateState(4);
+            orderRepository.save(order.get());
+        }
+    }
+
+    public void patchCancelState(Long id, int itemState2, int itemState1, int orderState) {
+        Optional<Order> order = orderRepository.findById(id);
+        order.get().updateState(orderState);
+
+        for(OrderItem orderItem : order.get().getOrderItems()){
+            orderItem.updateState2(itemState2);
+            orderItem.updateState1(itemState1);
+            log.info("서비스 확인 "+orderItem.toString());
+            orderItemRepository.save(orderItem);
+            prodCountUp(orderItem);
+            prodOrderCountDown(orderItem);
+        }
+    }
+
+    public void prodCountUp(OrderItem orderItem) {
+        Long optionId = orderItem.getOptionId();
+        Optional<ProductOption> productOption = productOptionRepository.findById(optionId);
+
+        int qty = orderItem.getQuantity();
+        int stock = productOption.get().getStock();
+        int editStock = stock + qty;
+
+        productOption.get().setStock(editStock);
+    }
+
+    public void prodOrderCountDown(OrderItem orderItem) {
+        Long prodId = orderItem.getProduct().getId();
+        Optional<Product> optProduct = productRepository.findById(prodId);
+        optProduct.get().setProdOrderCnt(optProduct.get().getProdOrderCnt()-1);
+    }
 }
+

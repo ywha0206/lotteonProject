@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -45,4 +46,14 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     List<Point> findAllByPointType(int i);
 
     Page<Point> findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointExpirationAsc(Customer customer, int i, LocalDate varDay, LocalDate today, Pageable pageable);
+  
+    List<Point> findAllByPointRdateBefore(LocalDate twoYear);
+
+    Page<Point> findAllByCustomerAndPointTypeOrderByPointRdateDesc(Customer customer, int i, Pageable pageable);
+
+    Page<Point> findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointRdateDesc(Customer customer, int i, LocalDate varDay, LocalDate today, Pageable pageable);
+
+    List<Point> findAllByCustomer_IdAndPointTypeAndPointUdateBetween(Long custId, int i, LocalDateTime before, LocalDateTime after);
+
+    Point findFirstByCustomer_IdAndPointTypeAndPointExpirationBetween(Long custId, int i, LocalDateTime before, LocalDateTime after);
 }

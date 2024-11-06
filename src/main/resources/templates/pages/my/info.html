@@ -4,98 +4,153 @@
 <main style="margin-top: 230px">
   <div id="my">
     <th:block th:replace="layout/my/aside.html"></th:block>
-    <main>
+<!--    <main>-->
       <th:block th:replace="layout/my/banner.html"></th:block>
     <section>
       <h3>나의설정</h3>
 
       <article>
-        <form>
-          <table border="0" class="myInfo">
-            <tr>
-              <th>사용자 ID</th>
-              <td>
-                <input type="text" disabled value="user123" />
-              </td>
-            </tr>
-            <tr>
-              <th>비밀번호</th>
-              <td>
-                <input type="button" value="수정하기" class="btn" />
-              </td>
-            </tr>
-            <tr>
-              <th>이름</th>
-              <td>
-                <input type="text" disabled value="홍길동" />
-              </td>
-            </tr>
-            <tr>
-              <th>생년월일</th>
-              <td>
-                <input type="text" disabled value="1990년 12월 30일" />
-              </td>
-            </tr>
-            <tr>
-              <th>Email</th>
-              <td>
-                <input type="text" name="email" /> @
-                <input type="text" name="email" />
-                <select>
-                  <option selected>직접입력</option>
-                  <option>gmail.com</option>
-                  <option>naver.com</option>
-                  <option>daum.net</option>
-                </select>
-                <input type="button" class="btn" value="수정하기" />
-              </td>
-            </tr>
-            <tr>
-              <th>휴대폰</th>
-              <td>
-                <input type="number" max="999" /> -
-                <input type="number" max="9999" /> -
-                <input type="number" max="9999" />
-                <input type="button" class="btn" value="수정하기" />
-              </td>
-            </tr>
-            <tr>
-              <th>주소</th>
-              <td>
-                <input
-                        name="zip"
-                        type="text"
-                        placeholder="우편번호"
-                        readonly
-                />
-                <input type="button" value="주소검색" class="btn" /><br />
-                <input
-                        name="addr1"
-                        class="addr"
-                        type="text"
-                        placeholder="기본주소"
-                        readonly
-                /><br />
-                <input
-                        name="addr2"
-                        class="addr"
-                        type="text"
-                        placeholder="상세주소"
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>탈퇴</th>
-              <td>
-                <input type="button" class="btn quit" value="탈퇴하기" />
-              </td>
-            </tr>
+        <form th:action="@{/my/info}" method="post">
+          <table border="0" class="myInfo" style="width: 700px;">
+<!--            <th:block th:each="cust : ${customer}">-->
+              <tr>
+                <th>사용자 ID</th>
+                <td>
+                    <input type="hidden" id="custId" th:value="${#authentication.principal.user.customer.id}">
+                  <input type="text" id="uid" class="uid" name="uid" th:value="${cust.memUid}" disabled/>
+                </td>
+              </tr>
+              <tr>
+                <th>비밀번호</th>
+                <td>
+
+                    <input type="password" placeholder="수정할 비밀번호를 입력해 주세요." name="pass" class="pass"/>
+                    <a th:href="@{/my/info}" class="btn modify" data-type="pass">수정하기</a>
+                    <span>영문, 숫자, 특수문자 8~12자 설정</span>
+
+<!--                  <input type="button" value="수정하기" class="btn" />-->
+                </td>
+              </tr>
+              <tr>
+                <th>이름</th>
+                <td>
+<!--                  <input type="text" disabled value="홍길동" />-->
+                  <input type="text" disabled th:text="${cust.custName}" />
+                </td>
+              </tr>
+              <tr>
+                <th>생년월일</th>
+                <td>
+<!--                  <input type="text" disabled value="1990년 12월 30일" />-->
+                  <input type="text" disabled th:value="${cust.custBirth}" />
+                </td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>
+
+                  <input type="text" name="email1" th:value="${cust.custEmail1}" class="email1"/> @
+                  <input type="text" name="email2" th:value="${cust.custEmail2}" class="email2"/>
+
+                  <select>
+                    <option selected>직접입력</option>
+                    <option>gmail.com</option>
+                    <option>naver.com</option>
+                    <option>daum.net</option>
+                  </select>
+                  <input type="button" class="btn modify" data-type="email" value="수정하기" />
+                </td>
+              </tr>
+              <tr>
+                <th>휴대폰</th>
+                <td>
+
+                  <input type="text" th:value="${cust.custHp1}" max="999" class="hp1"/> -
+                  <input type="text" th:value="${cust.custHp2}" max="9999" class="hp2"/> -
+                  <input type="text" th:value="${cust.custHp3}" max="9999" class="hp3"/>
+                  <input type="button" class="btn modify" data-type="hp" value="수정하기" />
+
+                </td>
+              </tr>
+              <tr> 
+                <th>주소</th>
+                <td>
+<!--                  <input name="zip" type="text" placeholder="우편번호" readonly />-->
+                  <input name="zip" type="text" placeholder="우편번호" th:value="${cust.custAddr1}" readonly class="addr1"/>
+
+                  <input type="button" value="주소검색" class="btn" /><br />
+                  <input name="addr1" class="addr addr2" type="text" placeholder="기본주소" th:value="${cust.custAddr2}" /><br />
+                  <input name="addr2" class="addr addr3" type="text" placeholder="상세주소" th:value="${cust.custAddr3}" />
+                </td>
+              </tr>
+              <tr>
+                <th>탈퇴</th>
+                <td>
+                  <input type="button" class="btn quit" value="탈퇴하기" />
+                </td>
+              </tr>
+<!--            </th:block>-->
           </table>
           <p><input type="submit" class="btn submit" value="수정하기" /></p>
         </form>
       </article>
     </section>
-    </main>
   </div>
 </main>
+<script>
+    document.addEventListener('click',function (e){
+        if(e.target.classList.contains('modify')){
+            e.preventDefault();
+            const button = e.target;
+            button.disabled = true; // 버튼 중복 클릭 방지
+
+            if(!confirm("수정하시겠습니까?")){
+                button.disabled = false; // 취소 시 버튼 다시 활성화
+                return;
+            }
+
+            const type = button.dataset.type;
+            const jsonData = {
+                "custId" : document.querySelector('#custId').value,
+                "memPwd" : document.querySelector('.pass').value,
+                "custEmail1" : document.querySelector('.email1').value,
+                "custEmail2" : document.querySelector('.email2').value,
+                "custHp1" : document.querySelector('.hp1').value,
+                "custHp2" : document.querySelector('.hp2').value,
+                "custHp3" : document.querySelector('.hp3').value,
+                "custAddr1" : document.querySelector('.addr1').value,
+                "custAddr2" : document.querySelector('.addr2').value,
+                "custAddr3" : document.querySelector('.addr3').value
+            }
+            fetch(`/my/info/${type}`,{
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+                .then(resp => {
+                    if (!resp.ok) throw new Error("서버 응답 오류");
+                    return resp.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('수정되었습니다.');
+                        // location.reload();
+                        //location.href="";
+                    } else {
+                        alert('수정에 실패했습니다.');
+                    }
+
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('수정 중 오류가 발생했습니다.');
+                })
+                .finally(() => {
+                    button.disabled = false; // 버튼 비활성화 (fetch 중복 방지)
+                });
+        }
+    });
+</script>
 <footer th:replace="layout/main/footer.html"></footer>

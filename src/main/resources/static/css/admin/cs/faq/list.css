@@ -107,7 +107,6 @@ td {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); !* 호버 시 섀도우 추가 *!
 }*/
 /* 삭제 버튼 (호버 효과) */
-
 .button--delete1:hover, .button--delete:hover {
   background-color: #d32f2f;
 }

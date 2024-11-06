@@ -31,7 +31,7 @@ public class ArticleDto {
     private LocalDateTime rdate;
     private int views;
     private int state;           // QnA 전용: 답변 상태 (답변 완료/대기 등)
-    private Integer type;        // QnA 전용: 문의 대상 (판매자 or 관리자), Integer로 정의하여 Null 처리가 가능하도록 함
+    private int type;            // QnA 전용: 문의 대상 (판매자 or 관리자)
     private Long cate1Id;
     private Long cate2Id;
     private String cate1Name;
@@ -76,6 +76,22 @@ public class ArticleDto {
     }
 
 
+    /*public static ArticleDto fromEntity(Qna qna){
+        return ArticleDto.builder()
+                .id(qna.getId())
+                .title(qna.getQnaTitle())
+                .content(qna.getQnaContent())
+                .rdate(qna.getQnaRdate())
+                .views(qna.getQnaViews())
+                .cate1(qna.getCate1())
+                .cate2(qna.getCate2())
+                .cate1Id(qna.getCate1() != null ? qna.getCate1().getCategoryId() : null)
+                .cate2Id(qna.getCate1() != null ? qna.getCate2().getCategoryId() : null)
+                .member(qna.getMember())
+                .memId(qna.getMember()!=null ? qna.getMember().getId() : null)
+                .answer(qna.getQnaAnswer())
+                .build();
+    }*/
     public static ArticleDto fromEntity(Qna qna) {
         return ArticleDto.builder()
                 .id(qna.getId())
@@ -93,15 +109,5 @@ public class ArticleDto {
                 .state(qna.getQnaState())   // **수정된 부분: QnA 전용 필드 state 매핑**
                 .type(qna.getQnaType())     // **수정된 부분: QnA 전용 필드 type 매핑**
                 .build();
-    }
-
-
-    // Getters, Setters
-    public Integer getQnaType() {
-        return type;
-    }
-
-    public void setQnaType(Integer qnaType) {
-        this.type = qnaType;
     }
 }

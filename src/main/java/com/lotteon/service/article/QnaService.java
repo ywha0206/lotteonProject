@@ -242,15 +242,19 @@ public class QnaService {
         return qnaPage.map(ArticleDto::fromEntity); // 기존 fromEntity 메서드 활용
     }
 
+    public List<ArticleDto> getMyQnas(Long memberId) {
+        List<Qna> qnas = qnaRepository.findByMemberId(memberId);
+        return qnas.stream()
+                .map(ArticleDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 
     public Page<ArticleDto> getMyQnas(Long memberId, Pageable pageable) {
-        Page<Qna> qnaPage = qnaRepository.findByMemberId(memberId, pageable); // 페이징 기능 추가
-        return qnaPage.map(ArticleDto::fromEntity); // QnA 엔티티를 ArticleDto로 변환하여 반환
+        Page<Qna> qnas = qnaRepository.findByMemberId(memberId, pageable);
+        return qnas
+                .map(ArticleDto::fromEntity);
     }
 
-    public List<Qna> findTop5Qnas() {
-        return qnaRepository.findTop5ByOrderByQnaRdateDesc();
-    }
 
 }
 

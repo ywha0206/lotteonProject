@@ -33,6 +33,8 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     Optional<Order> findByOrderItems_SellerAndOrderItems_OrderDeliIdAndOrderItems_OrderDeliCompanyNotNull(Seller seller, String deliveryId);
 
+    Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(Customer customer, Timestamp startDate, Timestamp endDate, Pageable pageable);
+
     boolean existsByCustomerAndOrderItems_Product(Customer customer, Product product);
 
     Page<Order> findAllByIdOrderByIdDesc(long l, Pageable pageable);
@@ -50,4 +52,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdDesc(Customer customer, Timestamp varDay, Timestamp today, Pageable pageable);
 
     List<Order> findAllByOrderRdateAfter(Timestamp threeDaysAgo);
+
+    Optional<Order> findByIdAndOrderItems_State2(Long orderId, int i);
 }
