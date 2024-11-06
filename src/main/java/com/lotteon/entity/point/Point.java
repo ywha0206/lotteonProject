@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Entity
@@ -45,6 +46,9 @@ public class Point {
 
     @Column(name = "point_expiration")
     private LocalDate pointExpiration;
+
+    @Column(name = "point_udate")
+    private LocalDateTime pointUdate;
 
     public GetPointsDto toGetPointsDto() {
         LocalDate today = LocalDate.now();
@@ -135,14 +139,24 @@ public class Point {
     }
 
     public void changePointVar(int pointVar) {
+        LocalDateTime now = LocalDateTime.now();
         if(pointVar==0){
             this.pointType = 2;
+            this.pointUdate = now;
         } else {
             this.pointVar = pointVar;
         }
     }
 
     public void expirationPoint() {
+        this.pointType = 0;
+    }
+
+    public void updateReUsePoint() {
+        this.pointType = 1;
+    }
+
+    public void updateRobPoint() {
         this.pointType = 0;
     }
 }

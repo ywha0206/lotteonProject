@@ -4,6 +4,7 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
+import com.lotteon.dto.requestDto.cartOrder.OrderPointAndCouponDto;
 import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
 import com.lotteon.dto.responseDto.GetDeliveryDateDto;
 import com.lotteon.dto.responseDto.GetReceiveConfirmDto;
@@ -13,18 +14,12 @@ import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.point.Point;
-import com.lotteon.entity.product.Order;
-import com.lotteon.entity.product.OrderItem;
-import com.lotteon.entity.product.Product;
-import com.lotteon.entity.product.ProductOption;
+import com.lotteon.entity.product.*;
 import com.lotteon.repository.impl.OrderItemRepositoryImpl;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.point.PointRepository;
-import com.lotteon.repository.product.OrderItemRepository;
-import com.lotteon.repository.product.OrderRepository;
-import com.lotteon.repository.product.ProductOptionRepository;
-import com.lotteon.repository.product.ProductRepository;
+import com.lotteon.repository.product.*;
 import com.lotteon.service.member.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Log4j2
@@ -58,18 +54,29 @@ public class OrderItemService {
     private final CustomerRepository customerRepository;
     private final ProductOptionRepository productOptionRepository;
     private final OrderRepository orderRepository;
+    private final OrderCancleRepository orderCancleRepository;
 
     //주문수 +1
     public void ProductOrderCount(Product product) {
         product.setProdOrderCnt(product.getProdOrderCnt() + 1);
     }
 
-    public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session) {
+    public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session, OrderPointAndCouponDto dto) {
         log.info("오더아이템 서비스 들어옴 ");
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer = auth.getUser().getCustomer();
         LocalDate today = LocalDate.now();
         Order order = orderService.insertOrder(orderDto);
+
+        OrderCancleDocument orderCancleDocument = OrderCancleDocument.builder()
+                .points(dto.getPoints())
+                .custId(auth.getUser().getCustomer().getId())
+                .couponId(dto.getCouponId())
+                .orderId(order.getId())
+                .pointUdate(LocalDateTime.now())
+                .build();
+
+        orderCancleRepository.save(orderCancleDocument);
         log.info("오더 저장 성공 : "+order);
 
         if(order==null){
@@ -382,6 +389,37 @@ public class OrderItemService {
             order.get().updateState(4);
             orderRepository.save(order.get());
         }
+    }
+
+    public void patchCancelState(Long id, int itemState2, int itemState1, int orderState) {
+        Optional<Order> order = orderRepository.findById(id);
+        order.get().updateState(orderState);
+
+        for(OrderItem orderItem : order.get().getOrderItems()){
+            orderItem.updateState2(itemState2);
+            orderItem.updateState1(itemState1);
+            log.info("서비스 확인 "+orderItem.toString());
+            orderItemRepository.save(orderItem);
+            prodCountUp(orderItem);
+            prodOrderCountDown(orderItem);
+        }
+    }
+
+    public void prodCountUp(OrderItem orderItem) {
+        Long optionId = orderItem.getOptionId();
+        Optional<ProductOption> productOption = productOptionRepository.findById(optionId);
+
+        int qty = orderItem.getQuantity();
+        int stock = productOption.get().getStock();
+        int editStock = stock + qty;
+
+        productOption.get().setStock(editStock);
+    }
+
+    public void prodOrderCountDown(OrderItem orderItem) {
+        Long prodId = orderItem.getProduct().getId();
+        Optional<Product> optProduct = productRepository.findById(prodId);
+        optProduct.get().setProdOrderCnt(optProduct.get().getProdOrderCnt()-1);
     }
 }
 

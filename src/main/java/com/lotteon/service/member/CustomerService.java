@@ -1,9 +1,13 @@
 package com.lotteon.service.member;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.PatchMyInfoDTO;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.requestDto.PostFindIdDto;
+
+
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
+
 import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Address;
@@ -27,7 +31,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -245,7 +248,36 @@ public class CustomerService {
         log.info("DTO 정보: " + dto);
 
         return dto;
+
+
+        }
+
+    // 나의 설정 정보 수정
+    public Boolean modifyInfo(String type, PatchMyInfoDTO patchMyInfoDTO) {
+        try{
+            Customer customer = customerRepository.findById(patchMyInfoDTO.getCustId()).get();
+            if(type.equals("pass")){ // 비밀번호
+                customer.setMemPwd(passwordEncoder.encode(patchMyInfoDTO.getMemPwd()));
+            }else if(type.equals("email")){ // 이메일
+                String email = patchMyInfoDTO.getCustEmail1()+"@"+patchMyInfoDTO.getCustEmail2();
+                customer.setCustEmail(email);
+            }else if(type.equals("hp")){ // 휴대폰
+                String hp = patchMyInfoDTO.getCustHp1()+patchMyInfoDTO.getCustHp2()+patchMyInfoDTO.getCustHp3();
+                customer.setCustHp(hp);
+            }else { // 주소
+               String addr = patchMyInfoDTO.getCustAddr1()+"/"+patchMyInfoDTO.getCustAddr2()+"/"+patchMyInfoDTO.getCustAddr3();
+                customer.setCustAddr(addr);
+            }
+            customerRepository.save(customer); // 수정된 Entity 저장
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return false;
+
     }
 
 
 }
+
+
