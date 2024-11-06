@@ -85,6 +85,7 @@ public class AdminConfigController {
     public String version(@PathVariable(value = "pg") Integer pg, Model model) {
         PageResponseDTO<GetVersionDTO> page = versionService.getPagedVersionList(pg);
         model.addAttribute("resp", page);
+        model.addAttribute("active","versions");
         return "pages/admin/config/version";
     }
 
