@@ -124,6 +124,10 @@
         </div>
       </article>
 
+
+<!--
+      TODO: my index 문의내역
+-->
       <h3>문의내역 <a th:href="@{/my/qnas/{page}(page=${page})}">더보기 &gt; </a></h3>
       <article>
         <table border="0" class="qna">
@@ -135,30 +139,31 @@
             <th>작성일</th>
             <th>상태</th>
           </tr>
-          <tr>
-            <td>1</td>
-            <td>고객센터</td>
-            <td>주문/결제</td>
-            <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
-            <td>2024-12-12</td>
-            <td><span class="check">검토중</span></td>
+          <tr th:each="qna, iterStat : ${qnaList}">
+            <td th:text="${iterStat.index + 1}">1</td>
+            <!-- 문의채널 -->
+            <td>
+            <span th:text="${qna.type != null ? (qna.qnaType == 0 ? '고객센터' : '판매자 게시판') : 'N/A'}"></span>
+            </td>
+            <!-- 1차 유형 -->
+            <td class="cate1" th:data-value="${qna.cate1.categoryName}">1차 유형</td>
+            <!-- 제목 -->
+            <td th:text="${qna.title}"></td>
+            <!-- 작성일 -->
+            <td th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2024-12-12</td>
+            <!-- 상태 -->
+            <td>
+        <span class="status confirm"
+              th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
+              th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}"></span>
+            </td>
+            <td>
+          <span th:classappend="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
+                th:text="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}">
+          </span>
+            </td>
           </tr>
-          <tr>
-            <td>2</td>
-            <td>고객센터</td>
-            <td>주문/결제</td>
-            <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
-            <td>2024-12-12</td>
-            <td><span class="success">답변완료</span></td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>판매자 게시판</td>
-            <td>배송</td>
-            <td>배송기간이 보통 얼마나 걸리나요?</td>
-            <td>2024-12-12</td>
-            <td><span class="success">답변완료</span></td>
-          </tr>
+
         </table>
       </article>
 
@@ -495,6 +500,56 @@
 
     }
   })
+
+  const firstCategoryMap = {
+    "user": "회원",
+    "coupon": "쿠폰/이벤트",
+    "order": "주문/결제",
+    "delivery": "배송",
+    "cancel": "취소/반품/환불",
+    "travel": "여행/숙박/항공",
+    "safe": "안전결제"
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.cate1').forEach(function (item) {
+      const value = item.getAttribute('data-value');
+      console.log('data-value:', value);  // data-value 출력
+      console.log('매핑 결과:', firstCategoryMap[value] || value);  // 매핑 결과 확인
+      item.textContent = firstCategoryMap[value] || value;
+    });
+
+    const popSeller = document.querySelector("#popSeller");
+    const submitBtn = document.querySelector("#qna-submit");
+
+    const popQuestion = document.querySelector('#popQuestion');
+    // x 버튼
+    const qnaCloseBtn = popQuestion.querySelector(".close-btn");
+    // 취소 버튼
+    const qnaCancelBtn = popQuestion.querySelector(".cancel-btn");
+
+    submitBtn.addEventListener('click', function(event) {
+      popSeller.close();
+      popQuestion.showModal();
+
+      const email  =  /*[[${email}]]*/ "";
+      // email input 을 가져옴
+      const emailInput = popQuestion.querySelector(".email > input");
+      // email input에 타임리프 변수 email 등록
+      emailInput.value = email;
+    })
+
+    qnaCloseBtn.addEventListener('click', function(event) {
+      popQuestion.close();
+    })
+
+    qnaCancelBtn.addEventListener('click', function(event) {
+      popSeller.showModal();
+      popQuestion.close();
+    })
+  });
+
+
 </script>
 
 
