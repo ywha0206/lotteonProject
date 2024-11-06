@@ -1,6 +1,7 @@
 package com.lotteon.entity.product;
 
 import com.lotteon.dto.requestDto.GetDeliveryDto;
+import com.lotteon.dto.requestDto.GetProductNamesDto;
 import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
 import com.lotteon.dto.responseDto.GetDeliveryDateDto;
 import com.lotteon.dto.responseDto.GetReceiveConfirmDto;
@@ -167,5 +168,12 @@ public class OrderItem {
 
     public void updateState1(int itemState1) {
         this.state1 = itemState1;
+    }
+
+    public GetProductNamesDto toGetProductNamesDto(){
+        return GetProductNamesDto.builder()
+                .productName(product.getProdName())
+                .prodId(product.getId())
+                .build();
     }
 }

@@ -11,10 +11,7 @@ import com.lotteon.entity.product.*;
 import com.lotteon.repository.category.CategoryProdMapperRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.member.SellerRepository;
-import com.lotteon.repository.product.OrderRepository;
-import com.lotteon.repository.product.ProductDetailRepository;
-import com.lotteon.repository.product.ProductOptionRepository;
-import com.lotteon.repository.product.ProductRepository;
+import com.lotteon.repository.product.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
@@ -59,6 +56,7 @@ public class ProductService {
     private final SimpMessagingTemplate messagingTemplate;
     private final MemberRepository memberRepository;
     private final CategoryProdMapperRepository categoryProdMapperRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
@@ -419,9 +417,8 @@ public class ProductService {
     }
 
     public List<GetProductNamesDto> findReviewNames(Long orderId) {
-        Optional<Order> order = orderRepository.findById(orderId);
-        List<Product> products = order.get().getOrderItems().stream().map(v->v.getProduct()).toList();
-        List<GetProductNamesDto> dtos = products.stream().map(Product::toGetProductNamesDto).toList();
+        List<OrderItem> orderItems = orderItemRepository.findByOrder_IdAndState2(orderId,5);
+        List<GetProductNamesDto> dtos = orderItems.stream().map(OrderItem::toGetProductNamesDto).toList();
         return dtos;
     }
 
