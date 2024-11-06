@@ -38,10 +38,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -214,8 +213,10 @@ public class OrderItemService {
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
             Long optionId = orderItem.getOptionId();
-            List<String> options = findOptions(optionId);
-            ResponseOrderItemDto orderItemDto = ResponseOrderItemDtoBuilder(orderItem,options);
+            Map<String, Object> optionResult = findOptions(optionId);
+            Integer additionalPrice = (Integer) optionResult.get("additionalPrice");
+            List<String> options = (List<String>) optionResult.get("optionValues");
+            ResponseOrderItemDto orderItemDto = ResponseOrderItemDtoBuilder(orderItem,options,additionalPrice);
             orderItemDtos.add(orderItemDto);
 
             orderItemDtos.add(orderItemDto);
@@ -262,8 +263,10 @@ public class OrderItemService {
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
             Long optionId = orderItem.getOptionId();
-            List<String> options = findOptions(optionId);
-            ResponseOrderItemDto orderItemDto = ResponseOrderItemDtoBuilder(orderItem, options);
+            Map<String, Object> optionResult = findOptions(optionId);
+            Integer additionalPrice = (Integer) optionResult.get("additionalPrice");
+            List<String> options = (List<String>) optionResult.get("optionValues");
+            ResponseOrderItemDto orderItemDto = ResponseOrderItemDtoBuilder(orderItem, options,additionalPrice);
             orderItemDtos.add(orderItemDto);
         }
         ResponseOrderDto dtos = ResponseOrderDtoBuilder(orderItems, orderItemDtos);
@@ -282,11 +285,13 @@ public class OrderItemService {
                         .custName(orderItems.get(0).getOrder().getCustomer().getCustName())
                         .custHp(orderItems.get(0).getOrder().getCustomer().getCustHp())
                         .orderState(orderItems.get(0).getOrder().getOrderState())
+                        .orderDate(new SimpleDateFormat("(yyyy.MM.dd)").format(orderItems.get(0).getOrder().getOrderRdate()))
                         .receiverName(orderItems.get(0).getOrder().getReceiverName())
                         .receiverHp(orderItems.get(0).getOrder().getReceiverHp())
                         .receiverAddr1(addr[0])
                         .receiverAddr2(addr[1])
                         .receiverAddr3(addr[2])
+                        .OrderTotal(orderItems.get(0).getOrder().getOrderTotal())
                         .orderReq(
                                 (orderItems.get(0).getOrder().getOrderReq() != null && !orderItems.get(0).getOrder().getOrderReq().isEmpty())
                                         ? orderItems.get(0).getOrder().getOrderReq()
@@ -295,7 +300,7 @@ public class OrderItemService {
                         .orderItemDtos(orderItemDtos)
                         .build();
     }
-    public ResponseOrderItemDto ResponseOrderItemDtoBuilder(OrderItem orderItem, List<String> options) {
+    public ResponseOrderItemDto ResponseOrderItemDtoBuilder(OrderItem orderItem, List<String> options, int additionalPrice) {
         return ResponseOrderItemDto.builder()
                 .orderItemId(orderItem.getId())
                 .prodListImg(orderItem.getProduct().getProdListImg())
@@ -310,11 +315,13 @@ public class OrderItemService {
                 .orderDeliId(orderItem.getOrderDeliId()==null?"":orderItem.getOrderDeliId())
                 .totalPrice((int)Math.round(orderItem.getTotal()))
                 .orderItemState2(orderItem.getState2())
+                .additionalPrice(additionalPrice)
                 .options(options)
                 .build();
     }
-    public List<String> findOptions(Long optionId){
+    public Map<String, Object> findOptions(Long optionId){
         List<String> optionValue = new ArrayList<>();
+        Integer additionalPrice = null;
         if(optionId!=null){
             ProductOption option = productOptionRepository.findById(optionId).orElse(null);
             if (option.getOptionValue() != null) {
@@ -326,9 +333,17 @@ public class OrderItemService {
             if (option.getOptionValue3() != null) {
                 optionValue.add(option.getOptionValue3());
             }
+            if(option.getAdditionalPrice()!=null){
+                additionalPrice = (int) Math.round(option.getAdditionalPrice());
+            }
         }
         log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
-        return optionValue;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("optionValues", optionValue);
+        result.put("additionalPrice", additionalPrice);
+
+        return result;
     }
 
     public List<GetDeliveryDateDto> findDeliveryDateAllByOrderId(Long id) {

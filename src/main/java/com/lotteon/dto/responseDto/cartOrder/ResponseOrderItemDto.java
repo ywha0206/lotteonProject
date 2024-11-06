@@ -38,4 +38,5 @@ public class ResponseOrderItemDto{
     private int orderDeliCompany;
     private int orderItemState2;
     private List<String> options;
+    private int additionalPrice;
 }
