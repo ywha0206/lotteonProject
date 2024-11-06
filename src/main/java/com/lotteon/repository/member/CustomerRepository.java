@@ -1,5 +1,6 @@
 package com.lotteon.repository.member;
 
+import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import org.springframework.data.domain.Page;
