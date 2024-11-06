@@ -101,7 +101,7 @@ input:focus{outline: none;}
     text-align: right;
     width: 800px;
     height: auto;
-    background-image: url(../../images/login-gubun-bottom.png);
+    background-image: url(/images/login-gubun-bottom.png);
     margin-top: 30px;
 }
 
