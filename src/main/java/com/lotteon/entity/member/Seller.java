@@ -1,6 +1,7 @@
 package com.lotteon.entity.member;
 
 import com.lotteon.dto.responseDto.GetIncomeDto;
+import com.lotteon.dto.responseDto.GetSellerInfoDto;
 import com.lotteon.dto.responseDto.GetShopsDto;
 import com.lotteon.entity.product.OrderItem;
 import com.lotteon.entity.product.Product;
@@ -229,5 +230,45 @@ public class Seller {
                 .id(id)
                 .build();
 
+    }
+
+    public static String formatFaxNumber(String number) {
+        if (number == null || (number.length() != 10 && number.length() != 11)) {
+            throw new IllegalArgumentException("Invalid fax number. It should be either 10 or 11 digits.");
+        }
+
+        // 10자리 또는 11자리 숫자에 따라 하이픈 추가
+        if (number.length() == 10) {
+            return number.substring(0, 3) + "-" + number.substring(3, 7) + "-" + number.substring(7);
+        } else { // 11자리
+            return number.substring(0, 3) + "-" + number.substring(3, 7) + "-" + number.substring(7);
+        }
+    }
+
+    public GetSellerInfoDto toGetSellerInfoDto(){
+        String grade;
+        if(sellGrade==0){
+            grade = "씨앗";
+        } else if(sellGrade==1){
+            grade = "새싹";
+        } else if(sellGrade==2){
+            grade = "파워";
+        } else if(sellGrade==3){
+            grade = "빅파워";
+        } else if(sellGrade==4){
+            grade = "프리미엄";
+        } else {
+            grade = "플래티넘";
+        }
+        return GetSellerInfoDto.builder()
+                .address(sellAddr)
+                .fax(formatFaxNumber(sellFax))
+                .hp(formatPhoneNumber(sellHp))
+                .company(sellCompany)
+                .email(sellEmail)
+                .busiCode(formatBusinessCode(sellBusinessCode))
+                .sellGrade(grade)
+                .name(sellRepresentative)
+                .build();
     }
 }

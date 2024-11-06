@@ -2,6 +2,7 @@ package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.cartOrder.PostCartDto;
+import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.dto.responseDto.cartOrder.GetCartDto;
 import com.lotteon.dto.responseDto.cartOrder.CartProductDto;
 import com.lotteon.entity.member.Customer;
@@ -21,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 
@@ -147,7 +149,6 @@ public class CartService {
         // 2. 사용자 ID로 카트 조회
         long custId = auth.getUser().getCustomer().getId();
         Optional<Cart> cartOptional = cartRepository.findByCustId(custId);
-
         // 3. 카트가 없으면 빈 리스트 반환
         if (!cartOptional.isPresent()) {
             return Collections.emptyList();  // 카트가 없을 경우
@@ -219,6 +220,31 @@ public class CartService {
             return null;
         }
 
+    }
+
+    public Map<Long,List<GetOption1Dto>> selectOptions() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        Optional<Cart> cartOptional = cartRepository.findByCustId(customer.getId());
+
+        Cart cart = cartOptional.get();
+        Map<Long,List<GetOption1Dto>> map = new HashMap<>();
+        cart.getItems().forEach(v->{
+            List<ProductOption> options = productOptionRepository.findAllByProduct(v.getProduct());
+            map.put(v.getProduct().getId(),options.stream().map(ProductOption::toGetCartOptions).toList());
+        });
+        System.out.println(map);
+        return map;
+    }
+
+    public void updateCartOption(Long id, Long prod) {
+        Optional<CartItem> cartItem = cartItemRepository.findById(prod);
+        cartItem.get().updateOption(id);
+    }
+
+    public void updateQuantity(Long cart, Integer quantity) {
+        Optional<CartItem> cartItem = cartItemRepository.findById(cart);
+        cartItem.get().setQuantity(quantity);
     }
 }
 
