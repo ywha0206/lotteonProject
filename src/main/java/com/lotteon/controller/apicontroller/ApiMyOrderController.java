@@ -3,12 +3,16 @@ package com.lotteon.controller.apicontroller;
 import com.lotteon.dto.responseDto.GetDeliveryDateDto;
 import com.lotteon.dto.responseDto.GetReceiveConfirmDto;
 import com.lotteon.dto.responseDto.GetSellerInfoDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.service.member.SellerService;
 import com.lotteon.service.product.OrderItemService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+@Log4j2
+
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
@@ -27,6 +31,16 @@ public class ApiMyOrderController {
         return ResponseEntity.ok(seller);
     }
 
+    @GetMapping("/order/orderInfo")
+    public ResponseEntity<?> orderInfo(
+            @RequestParam Long orderId
+    ) {
+        log.info("orderId: " + orderId);
+        ResponseOrderDto dtos  = orderItemService.selectMyOrderInfo(orderId);
+
+        return ResponseEntity.ok(dtos);
+    }
+  
     @GetMapping("/order/delivery-date")
     public ResponseEntity<?> deliveryDate(
             @RequestParam Long id
