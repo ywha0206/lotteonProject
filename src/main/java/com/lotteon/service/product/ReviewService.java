@@ -57,7 +57,9 @@ public class ReviewService {
         ReviewDocu review = ReviewDocu.builder()
                 .reviewScore(dto.getScore())
                 .custId(customer.getId())
+                .memUid(customer.getMember().getMemUid())
                 .prodId(dto.getProdId())
+                .prodImg(product.get().getProdListImg())
                 .reviewContent(dto.getReview())
                 .reviewRdate(LocalDateTime.now())
                 .prodName(product.get().getProdName())
@@ -116,6 +118,13 @@ public class ReviewService {
         }
         Page<GetReviewsDto> dtos = reviews.map(ReviewDocu::toGetReviewsDto);
 
+        return dtos;
+    }
+
+    public Page<GetReviewsDto> findAllByProdId(int page,long prodId) {
+        Pageable pageable = PageRequest.of(page,5);
+        Page<ReviewDocu> reviews = reviewDocuRepository.findAllByProdIdOrderByReviewRdateDesc(prodId,pageable);
+        Page<GetReviewsDto> dtos = reviews.map(ReviewDocu::toGetReviewsDto);
         return dtos;
     }
 }

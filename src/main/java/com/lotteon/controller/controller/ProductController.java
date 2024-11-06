@@ -2,12 +2,11 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
-import com.lotteon.dto.responseDto.GetCateLocationDTO;
-import com.lotteon.dto.responseDto.GetCategoryDto;
-import com.lotteon.dto.responseDto.GetOption1Dto;
-import com.lotteon.dto.responseDto.ProductPageResponseDTO;
+import com.lotteon.dto.responseDto.*;
 import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ProductOption;
+import com.lotteon.entity.product.ReviewDocu;
+import com.lotteon.repository.product.ReviewDocuRepository;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
@@ -15,9 +14,11 @@ import com.lotteon.service.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,6 +46,7 @@ public class ProductController {
     private final RecommendationService recommendationService;
     private final ProductOptionService productOptionService;
     private final ReviewService reviewService;
+    private final ReviewDocuRepository reviewDocuRepository;
 
 
     @GetMapping("/products")
@@ -68,7 +70,7 @@ public class ProductController {
 
 
     @GetMapping("/product")
-    public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
+    public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId, @RequestParam(value = "page",defaultValue = "0") int page) {
 
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
         model.addAttribute("product", postProductDTO);
@@ -97,6 +99,8 @@ public class ProductController {
         model.addAttribute("location", location);
         List<GetOption1Dto> option1 = productOptionService.findByProdId(prodId);
         model.addAttribute("option1s", option1);
+        Page<GetReviewsDto> reviews = reviewService.findAllByProdId(page,prodId);
+        model.addAttribute("reviews",reviews);
         return "pages/product/view";
     }
 
@@ -148,6 +152,15 @@ public class ProductController {
         model.addAttribute("max",max);
         model.addAttribute("related",search);
         return "pages/product/search";
+    }
+
+    @GetMapping("/reviews")
+    @ResponseBody
+    public List<GetReviewsDto> getReviews(@RequestParam int page, @RequestParam int size, @RequestParam Long id) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ReviewDocu> reviewPage = reviewDocuRepository.findAllByProdIdOrderByReviewRdateDesc(id,pageRequest);
+        Page<GetReviewsDto> dtos = reviewPage.map(ReviewDocu::toGetReviewsDto);
+        return dtos.getContent();
     }
 
 }
