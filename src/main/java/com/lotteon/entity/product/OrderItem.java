@@ -2,17 +2,17 @@ package com.lotteon.entity.product;
 
 import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.responseDto.GetAdminOrderNameDto;
+import com.lotteon.dto.responseDto.GetDeliveryDateDto;
+import com.lotteon.dto.responseDto.GetReceiveConfirmDto;
 import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -144,4 +144,28 @@ public class OrderItem {
                 .build();
     }
 
+    public GetDeliveryDateDto toGetDeliveryDateDto(){
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String deliDate;
+        if(deliSdate!=null){
+            deliDate = dateFormat.format(deliSdate.plusDays(3));
+        } else {
+            deliDate = "배송준비중";
+        }
+        return GetDeliveryDateDto.builder()
+                .prodName(product.getProdName())
+                .date(deliDate)
+                .build();
+    }
+
+    public GetReceiveConfirmDto toGetReceiveConfirmDto() {
+        return GetReceiveConfirmDto.builder()
+                .prodName(product.getProdName())
+                .orderItemId(id)
+                .build();
+    }
+
+    public void updateState1(int itemState1) {
+        this.state1 = itemState1;
+    }
 }

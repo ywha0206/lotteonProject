@@ -188,25 +188,91 @@
     </dialog>
 
     <!-- 수취확인 팝업 -->
-    <dialog  id="popReceive">
+    <dialog id="popReceive">
         <div class="popup">
             <nav class="popup_top color">
                 <h1>수취확인</h1>
-                <button class="btn">X</button>
+                <button class="btn" onclick="closeReceive()">X</button>
             </nav>
             <section>
                 <p>
                     상품을 잘 받으셨나요?<br>
                     상품을 받으셨으면 수취확인을 눌러주세요.
                 </p>
+                <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+                    <select>
 
+                    </select>
+                </div>
                 <div>
-                    <button class="btn color">확인</button>
-                    <button class="btn grey">취소</button>
+                    <button onclick="receiveConfirmBtn()" class="btn color">확인</button>
+                    <button onclick="closeReceive()" class="btn grey">취소</button>
                 </div>
             </section>
         </div>
     </dialog>
+
+    <dialog id="popReturn">
+        <div class="popup">
+            <nav class="popup_top color">
+                <h1>반품신청</h1>
+                <button class="btn" onclick="closeReturn()">X</button>
+            </nav>
+            <section>
+                <p>
+                    반품하시겠습니까?<br>
+                    <input style="margin-top: 20px;" placeholder="반품 사유를 적어주세요.">
+                </p>
+                <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+                    <select>
+
+                    </select>
+                </div>
+                <div>
+                    <button onclick="postReturn()" class="btn color">반품하기</button>
+                    <button onclick="closeReturn()" class="btn grey">취소</button>
+                </div>
+            </section>
+        </div>
+    </dialog>
+
+    <dialog id="popChange">
+        <div class="popup">
+            <nav class="popup_top color">
+                <h1>반품신청</h1>
+                <button class="btn" onclick="closeChange()">X</button>
+            </nav>
+            <section>
+                <p>
+                    교환하시겠습니까?<br>
+                    <input style="margin-top: 20px;" placeholder="교환 사유를 적어주세요.">
+                </p>
+                <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+                    <select>
+
+                    </select>
+                </div>
+                <div>
+                    <button onclick="postChange()" class="btn color">교환하기</button>
+                    <button onclick="closeChange()" class="btn grey">취소</button>
+                </div>
+            </section>
+        </div>
+    </dialog>
+
+    <dialog id="popDeliveryDate">
+        <div style="width: 400px;" class="popup">
+            <nav class="popup_top color">
+                <h1>배송예정일</h1>
+                <button class="btn" onclick="closeDelivery()">X</button>
+            </nav>
+            <section>
+
+            </section>
+        </div>
+    </dialog>
+
+
 
     <!-- 상품평쓰기 팝업 -->
     <dialog  id="popReview">
