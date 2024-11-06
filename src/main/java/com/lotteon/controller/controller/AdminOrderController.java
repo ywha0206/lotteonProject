@@ -50,12 +50,6 @@ public class AdminOrderController {
         Long sellerId = auth.getUser().getSeller().getId();
         Page<ResponseAdminOrderDto> orders;
 
-//        if(role.equals("admin")){
-//            orders = orderService.selectedAdminOrdersByAdmin(page);
-//        }else{
-//            orders = orderService.selectedAdminOrdersBySeller(page);
-//        }
-
         if (role.equals("admin") && searchType.equals("0")) {
             // Admin 전체 조회
             orders = orderService.selectedAdminOrdersByAdmin(page);

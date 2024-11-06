@@ -22,14 +22,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/my")
@@ -95,10 +93,22 @@ public class MyController {
 
         return "pages/my/coupon";
     }
+
+    // 나의 쇼핑정보 > 나의 설정
     @GetMapping("/info")
-    public String info(Model model) {
+    public String info(Model model,Authentication authentication) {
+        log.info("컨트롤러 접속 ");
+
+        GetMyInfoDTO getCust = customerService.myInfo();
+        if(getCust!=null){
+            model.addAttribute("cust",getCust);
+        } else {
+            return "/";
+        }
         return "pages/my/info";
     }
+
+    // 나의 쇼핑정보 > 나의 설정 end
 
     @GetMapping("/orders")
     public String order(Model model,

@@ -3,6 +3,8 @@ package com.lotteon.service.member;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.requestDto.PostFindIdDto;
+import com.lotteon.dto.responseDto.GetAdminUserDTO;
+import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Address;
 import com.lotteon.entity.member.AttendanceEvent;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -201,4 +204,48 @@ public class CustomerService {
         }
         return customer.get().getMember().getMemUid();
     }
+
+    // 나의 설정 (사용자 ID, 비밀번호, 이름, 생년월일, 이메일, 휴대폰, 주소) 출력
+    public GetMyInfoDTO myInfo() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+
+        log.info("사용자 확인: " + customer.toString());
+
+        String[] email = customer.getCustEmail().split("@");
+        log.info("이메일 확인: " + Arrays.toString(email));
+
+        String hp = customer.getCustHp();
+        System.out.println("==============");
+        System.out.println(hp);
+        System.out.println("==============");
+        String hp1 = hp.substring(0,3);
+        String hp2 = hp.substring(3,7);
+        String hp3 = hp.substring(7,11);
+        System.out.println(hp2);
+        String[] addr = customer.getCustAddr().split("/");
+        System.out.println(addr);
+        log.info("주소 확인: " + Arrays.toString(addr));
+
+        GetMyInfoDTO dto = GetMyInfoDTO.builder()
+                .custId(customer.getId()) // 번호
+                .memUid(customer.getMember().getMemUid()) // 아이디
+                .custName(customer.getCustName()) // 이름
+                .custEmail1(email[0]) // 이메일1 @ 앞부분
+                .custEmail2(email[1]) // 이메일2 @ 뒷부분
+                .custHp1(hp1) // 휴대폰1 010
+                .custHp2(hp2) // 휴대폰2 -1234
+                .custHp3(hp3) // 휴대폰3 -5678
+                .custBirth(customer.getCustBirth()) // 생일
+                .custAddr1(addr[0]) // 우편
+                .custAddr2(addr[1]) // 기본
+                .custAddr3(addr[2]) // 상세
+                .build();
+
+        log.info("DTO 정보: " + dto);
+
+        return dto;
+    }
+
+
 }
