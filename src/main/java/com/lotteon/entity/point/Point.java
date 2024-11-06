@@ -58,7 +58,7 @@ public class Point {
         }
         String expiration;
         if(pointType==2){
-            expiration = "사용기간만료";
+            expiration = "사용";
         } else {
             expiration = String.valueOf(pointExpiration);
         }
@@ -71,11 +71,11 @@ public class Point {
 
         String type ;
         if(pointType==2){
-            type = "사용기간만료";
+            type = "사용";
         } else if(pointType==1){
             type = "적립";
         } else {
-            type = "사용";
+            type = "만료";
         }
 
         return GetPointsDto.builder()
@@ -85,7 +85,7 @@ public class Point {
                 .pointExpiration(expiration)
                 .pointType(type)
                 .pointVar(pointVar)
-                .pointEtc(pointEtc)
+                .pointEtc("상품구매포인트사용")
                 .warningExpiration(warning)
                 .build();
     }
@@ -113,11 +113,11 @@ public class Point {
 
         String type ;
         if(pointType==2){
-            type = "사용기간만료";
+            type = "사용";
         } else if(pointType==1){
             type = "적립";
         } else {
-            type = "사용";
+            type = "만료";
         }
 
         return GetPointsDto.builder()
@@ -131,7 +131,6 @@ public class Point {
                 .warningExpiration(warning)
                 .custName(customer.getCustName())
                 .custId(customer.getMember().getMemUid())
-                .point(customer.getCustPoint())
                 .build();
     }
 

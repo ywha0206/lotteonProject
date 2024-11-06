@@ -81,7 +81,7 @@ public class ApiProductController {
         if (Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey))) {
             return ResponseEntity.ok("이미 수령하였습니다.");
         }
-
+        
         String dailyCoupon = customerCouponService.postDailyCoupon(dto.getId(),auth);
 
         return ResponseEntity.ok(dailyCoupon);
