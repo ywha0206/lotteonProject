@@ -40,7 +40,7 @@
             <th>상태</th>
             <th>확인/신청</th>
           </tr>
-          <tr th:if="${!orders.isEmpty()}" th:each="order : ${orders}">
+          <tr th:if="${!orders.isEmpty()}" class="myOrdersTR" th:each="order : ${orders}">
             <td class="date" th:text="${order.orderRdate}">2022-12-13</td>
             <td>
               <div class="thumb">
