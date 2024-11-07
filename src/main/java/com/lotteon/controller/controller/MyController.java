@@ -125,10 +125,10 @@ public class MyController {
     ) {
         Page<GetMyCouponDto> coupons = customerCouponService.findAllByCustomer(page);
         if(coupons==null){
-            model.addAttribute("noItem",true);
+            model.addAttribute("noItem","true");
             return "pages/my/coupon";
         }
-        model.addAttribute("noItem",false);
+        model.addAttribute("noItem","false");
         model.addAttribute("coupons", coupons);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", coupons.getTotalPages());
@@ -192,11 +192,11 @@ public class MyController {
         } else {
             points = pointService.findAllByCustomer(page);
         }
-        if(points.isEmpty()){
-            model.addAttribute("noItem",true);
+        if(points==null){
+            model.addAttribute("noItem","true");
             return "pages/my/point";
         }
-        model.addAttribute("noItem",false);
+        model.addAttribute("noItem","false");
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -219,11 +219,11 @@ public class MyController {
         } else {
             points = pointService.findAllByCustomer2(page);
         }
-        if(points.isEmpty()){
-            model.addAttribute("noItem",true);
+        if(points==null){
+            model.addAttribute("noItem","true");
             return "pages/my/usepoint";
         }
-        model.addAttribute("noItem",false);
+        model.addAttribute("noItem","false");
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
