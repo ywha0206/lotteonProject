@@ -11,7 +11,9 @@ import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.entity.product.Order;
+import com.lotteon.entity.product.OrderCancleDocument;
 import com.lotteon.repository.member.UserLogRepository;
+import com.lotteon.repository.product.OrderCancleRepository;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.entity.product.Cart;
@@ -52,6 +54,7 @@ public class ApiProductController {
     private final ProductOptionService productOptionService;
     private final ProductService productService;
     private final ReviewService reviewService;
+    private final OrderCancleRepository orderCancleRepository;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
@@ -81,7 +84,7 @@ public class ApiProductController {
         if (Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey))) {
             return ResponseEntity.ok("이미 수령하였습니다.");
         }
-
+        
         String dailyCoupon = customerCouponService.postDailyCoupon(dto.getId(),auth);
 
         return ResponseEntity.ok(dailyCoupon);
@@ -195,7 +198,7 @@ public class ApiProductController {
             pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
         }
 
-        ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session);
+        ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session,postOrderDto.getOrderPointAndCouponDto());
         selectedProducts.forEach(v->{
             userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
         });
@@ -204,6 +207,7 @@ public class ApiProductController {
             customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
         }
         productService.top3UpdateBoolean();
+
 
         return orderItemResult;
     }

@@ -186,23 +186,7 @@
         }
     };
 
-/*
-    // DOMContentLoaded 시 1차 및 2차 카테고리를 한글로 변환하여 표시하는 함수
-    document.addEventListener('DOMContentLoaded', function () {
-        // 1차 카테고리 변환
-        document.querySelectorAll('.cate1').forEach(function (item) {
-            const value = item.getAttribute('data-value');
-            item.textContent = firstCategoryMap[value] || value;
-        });
 
-        // 2차 카테고리 변환
-        document.querySelectorAll('.cate2').forEach(function (item) {
-            const value = item.getAttribute('data-value');
-            const parentValue = item.getAttribute('data-parent');
-            item.textContent = secondCategoryMap[parentValue]?.[value] || value;
-        });
-    });
-*/
 
     // DOMContentLoaded 시 1차 및 2차 카테고리를 한글로 변환하여 표시하는 함수
     document.addEventListener('DOMContentLoaded', function () {

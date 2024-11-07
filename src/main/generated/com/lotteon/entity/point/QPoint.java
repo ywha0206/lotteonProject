@@ -36,6 +36,8 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final NumberPath<Integer> pointType = createNumber("pointType", Integer.class);
 
+    public final DateTimePath<java.time.LocalDateTime> pointUdate = createDateTime("pointUdate", java.time.LocalDateTime.class);
+
     public final NumberPath<Integer> pointVar = createNumber("pointVar", Integer.class);
 
     public QPoint(String variable) {

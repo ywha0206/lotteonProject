@@ -23,14 +23,20 @@ public class ReviewDocu {
     @Id
     private String id;
 
-    @JoinColumn(name = "prod_id")
+    @Column(name = "prod_id")
     private Long prodId;
 
-    @JoinColumn(name = "prod_name")
+    @Column(name = "prod_name")
     private String prodName;
 
-    @JoinColumn(name = "cust_id")
+    @Column(name = "cust_id")
     private Long custId;
+
+    @Column(name = "mem_uid")
+    private String memUid;
+
+    @Column(name = "prod_img")
+    private String prodImg;
 
     @Column(name = "review_score")
     private Integer reviewScore;
@@ -45,11 +51,14 @@ public class ReviewDocu {
     public GetReviewsDto toGetReviewsDto() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String rdate = reviewRdate.format(formatter);
+
         return GetReviewsDto.builder()
                 .review(reviewContent)
                 .prodId(prodId)
                 .score(reviewScore)
                 .prodName(prodName)
+                .img(prodImg)
+                .memUid(memUid)
                 .rdate(rdate)
                 .build();
     }
