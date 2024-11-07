@@ -230,7 +230,19 @@ public class PointService {
                 remainingPoints -= availablePoints;
             } else {
                 // 필요한 포인트만 차감하고 종료
-                point.changePointVar(availablePoints - remainingPoints);
+                point.changePointVar(0);
+
+
+                Point point2 = Point.builder()
+                        .pointEtc("사용후남은포인트")
+                        .pointVar(point.getPointVar() - remainingPoints)
+                        .pointExpiration(point.getPointExpiration())
+                        .pointType(1)
+                        .customer(point.getCustomer())
+                        .orderId(point.getOrderId())
+                        .build();
+                pointRepository.save(point2);
+
                 remainingPoints = 0;
             }
 

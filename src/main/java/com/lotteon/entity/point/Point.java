@@ -154,6 +154,7 @@ public class Point {
 
     public void updateReUsePoint() {
         this.pointType = 1;
+        this.pointUdate = null;
     }
 
     public void updateRobPoint() {

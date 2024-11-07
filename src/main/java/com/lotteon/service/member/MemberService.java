@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -105,5 +106,11 @@ public class MemberService {
             map.put("msg","사용할 수 있는 회사명입니다.");
             return map;
         }
+    }
+
+    public Long findCnt(LocalDateTime startOfDay,LocalDateTime endOfDay) {
+        Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
+        Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
+        return memberRepository.countByMemRdateBetween(startTimestamp,endTimestamp);
     }
 }
