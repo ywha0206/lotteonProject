@@ -4,7 +4,6 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.*;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
-import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.service.article.QnaService;
@@ -28,9 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,7 +37,6 @@ import java.util.stream.Collectors;
 public class MyController {
 
     private final OrderService orderService;
-    private final CouponService couponService;
     private final CustomerCouponService customerCouponService;
     private final CustomerService customerService;
     private final PointService pointService;
@@ -54,9 +50,6 @@ public class MyController {
         int hasCoupon = customerCouponService.findAllCntByCustomer();
         model.addAttribute("hasCoupon", hasCoupon);
         int hasPoint = customerService.findByCustomer();
-        if(hasPoint==0){
-            model.addAttribute("hasPoint", 0);
-        }
         model.addAttribute("hasPoint", hasPoint);
     }
 
@@ -67,8 +60,8 @@ public class MyController {
 
 
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
-        if (points == null) {
-            model.addAttribute("noPoint", "true");
+        if (points.isEmpty()) {
+            model.addAttribute("noPoint", true);
             return "pages/my/index";
         }
         List<GetReviewsDto> reviews = reviewService.findTop3();
@@ -101,7 +94,7 @@ public class MyController {
 
         model.addAttribute("orders", orders);
         model.addAttribute("points", points);
-        model.addAttribute("noPoint","false");
+        model.addAttribute("noPoint",false);
 
 
         List<GetAddressDto> addrs = addressService.findAllByCustomer();
@@ -138,6 +131,7 @@ public class MyController {
 
     // 나의 쇼핑정보 > 나의 설정
     @GetMapping("/info")
+<<<<<<< Updated upstream
     public String info(Model model) {
         log.info("컨트롤러 접속 111");
 
@@ -145,9 +139,19 @@ public class MyController {
 
         model.addAttribute("cust",getCust);
 
+=======
+    public String info(Model model,Authentication authentication) {
+        log.info("컨트롤러 접속 ");
+
+        GetMyInfoDTO getCust = customerService.myInfo();
+        if(getCust!=null){
+            model.addAttribute("cust",getCust);
+        } else {
+            return "/";
+        }
+>>>>>>> Stashed changes
         return "pages/my/info";
     }
-
     // 나의 쇼핑정보 > 나의 설정 end
 
     @GetMapping("/orders")

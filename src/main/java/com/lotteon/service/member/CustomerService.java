@@ -7,7 +7,13 @@ import com.lotteon.dto.requestDto.PostFindIdDto;
 
 
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Address;
@@ -30,6 +36,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
+ 
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -214,8 +223,20 @@ public class CustomerService {
     // 나의 설정 (사용자 ID, 비밀번호, 이름, 생년월일, 이메일, 휴대폰, 주소) 출력
     public GetMyInfoDTO myInfo() {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        Customer customer2 = auth.getUser().getCustomer();
+
+        Customer customer = customerRepository.findById(customer2.getId()).get();
+
+=======
         Customer customer = auth.getUser().getCustomer();
 
+>>>>>>> Stashed changes
+=======
+        Customer customer = auth.getUser().getCustomer();
+
+>>>>>>> Stashed changes
         log.info("사용자 확인: " + customer.toString());
 
         String[] email = customer.getCustEmail().split("@");
@@ -248,17 +269,19 @@ public class CustomerService {
                 .custAddr3(addr[2]) // 상세
                 .build();
 
-        log.info("DTO 정보: " + dto);     
-
+        log.info("DTO 정보: " + dto);
         return dto;
-
-
         }
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // 나의 설정 정보 수정
     public Boolean modifyInfo(String type, PatchMyInfoDTO patchMyInfoDTO) {
+
         try{
-            Customer customer = customerRepository.findById(patchMyInfoDTO.getCustId()).get();
+            Customer customer = customerRepository.findById(patchMyInfoDTO.getCustId())
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
             if(type.equals("pass")){ // 비밀번호
                 customer.setMemPwd(passwordEncoder.encode(patchMyInfoDTO.getMemPwd()));
             }else if(type.equals("email")){ // 이메일
@@ -277,7 +300,12 @@ public class CustomerService {
             log.error(e.getMessage());
         }
         return false;
-
+=======
+        return dto;
+>>>>>>> Stashed changes
+=======
+        return dto;
+>>>>>>> Stashed changes
     }
 
 

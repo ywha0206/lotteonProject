@@ -171,7 +171,7 @@
               <div><b>기본배송지 설정</b> <a>변경</a></div>
               <th:block th:each="addr:${addrs}">
                 <th:block th:if="${addr.getState()>0}">
-                  <p class="addr1">[[${addr.getAddr2()}]]</p>
+                  <p class="addr1">[[${addr.getAddr1()}]]</p>
                   <p class="addr2">[[${addr.getAddr3()}]]</p>
                 </th:block>
               </th:block>
