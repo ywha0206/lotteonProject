@@ -232,14 +232,14 @@ public class MyController {
         return "pages/my/usepoint";
     }
 
-    @GetMapping("/qnas")
+    /* @GetMapping("/qnas")
     public String getMyQnas(Model model, Principal principal) {
         MyUserDetails userDetails = (MyUserDetails) ((Authentication) principal).getPrincipal();
         Member memberId = userDetails.getUser(); // MyUserDetails에서 ID를 가져오는 메서드 사용
         List<ArticleDto> qnaList = qnaService.getMyQnas(memberId.getId());
         model.addAttribute("qnaList", qnaList);
         return "pages/my/qna"; // 뷰 파일로 연결
-    }
+    }*/
 
     @GetMapping("/qnas")
     public String getMyQnas(Model model, Principal principal,
