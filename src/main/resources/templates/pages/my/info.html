@@ -54,6 +54,16 @@
                     <option value="naver.com">naver.com</option>
                     <option value="daum.net">daum.net</option>
                   </select><!-- #emailDomainSelect -->
+                  <input type="button" class="btn modify" data-type="email" value="수정하기" />
+                  <input type="text" name="email1" th:value="${cust.custEmail1}" /> @
+                  <input type="text" name="email2" th:value="${cust.custEmail2}" />
+                  <select>
+                    <option selected>직접입력</option>
+                    <option>gmail.com</option>
+                    <option>naver.com</option>
+                    <option>daum.net</option>
+                  </select>
+
                   <input type="button" class="btn" value="수정하기" />
                 </td>
               </tr>
@@ -69,9 +79,7 @@
               <tr>
                 <th>주소</th>
                 <td>
-<!--                  <input name="zip" type="text" placeholder="우편번호" readonly />-->
                   <input name="zip" type="text" placeholder="우편번호" th:value="${cust.custAddr1}" readonly class="addr1"/>
-
                   <input type="button" value="주소검색" class="btn" /><br />
                   <input name="addr1" class="addr addr2" type="text" placeholder="기본주소" th:value="${cust.custAddr2}" /><br />
                   <input name="addr2" class="addr addr3" type="text" placeholder="상세주소" th:value="${cust.custAddr3}" />
@@ -83,7 +91,6 @@
                   <input type="button" class="btn quit" value="탈퇴하기" />
                 </td>
               </tr>
-<!--            </th:block>-->
           </table>
           <p><input type="submit" class="btn submit" value="수정하기" /></p>
         </form>

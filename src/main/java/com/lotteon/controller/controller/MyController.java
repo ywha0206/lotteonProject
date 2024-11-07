@@ -62,7 +62,8 @@ public class MyController {
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
         if (points.isEmpty()) {
             model.addAttribute("noPoint", true);
-            return "pages/my/index";
+        } else {
+            model.addAttribute("noPoint",false);
         }
         List<GetReviewsDto> reviews = reviewService.findTop3();
         if (reviews != null) {
@@ -94,7 +95,7 @@ public class MyController {
 
         model.addAttribute("orders", orders);
         model.addAttribute("points", points);
-        model.addAttribute("noPoint",false);
+
 
 
         List<GetAddressDto> addrs = addressService.findAllByCustomer();
@@ -118,10 +119,10 @@ public class MyController {
     ) {
         Page<GetMyCouponDto> coupons = customerCouponService.findAllByCustomer(page);
         if(coupons==null){
-            model.addAttribute("noItem","true");
-            return "pages/my/coupon";
+            model.addAttribute("noItem",true);
+        } else {
+            model.addAttribute("noItem",false);
         }
-        model.addAttribute("noItem","false");
         model.addAttribute("coupons", coupons);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", coupons.getTotalPages());
@@ -186,11 +187,12 @@ public class MyController {
         } else {
             points = pointService.findAllByCustomer(page);
         }
-        if(points==null){
-            model.addAttribute("noItem","true");
-            return "pages/my/point";
+
+        if(points.isEmpty()){
+            model.addAttribute("noItem",true);
+        } else {
+            model.addAttribute("noItem",false);
         }
-        model.addAttribute("noItem","false");
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -213,11 +215,11 @@ public class MyController {
         } else {
             points = pointService.findAllByCustomer2(page);
         }
-        if(points==null){
-            model.addAttribute("noItem","true");
-            return "pages/my/usepoint";
+        if(points.isEmpty()){
+            model.addAttribute("noItem",true);
+        } else {
+            model.addAttribute("noItem",false);
         }
-        model.addAttribute("noItem","false");
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
