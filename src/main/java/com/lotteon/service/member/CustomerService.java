@@ -125,6 +125,9 @@ public class CustomerService {
 
     public int updateCustomerPoint(Customer customer) {
         List<Point> points = pointRepository.findAllByCustomerAndPointType(customer,1);
+        if(points.size()==0){
+            return 0;
+        }
         System.out.println(points);
         int point = 0;
 

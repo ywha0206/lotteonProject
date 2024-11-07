@@ -54,6 +54,9 @@ public class MyController {
         int hasCoupon = customerCouponService.findAllCntByCustomer();
         model.addAttribute("hasCoupon", hasCoupon);
         int hasPoint = customerService.findByCustomer();
+        if(hasPoint==0){
+            model.addAttribute("hasPoint", 0);
+        }
         model.addAttribute("hasPoint", hasPoint);
     }
 
@@ -64,8 +67,8 @@ public class MyController {
 
 
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
-        if (points.isEmpty()) {
-            model.addAttribute("noPoint", true);
+        if (points == null) {
+            model.addAttribute("noPoint", "true");
             return "pages/my/index";
         }
         List<GetReviewsDto> reviews = reviewService.findTop3();
@@ -98,7 +101,7 @@ public class MyController {
 
         model.addAttribute("orders", orders);
         model.addAttribute("points", points);
-        model.addAttribute("noPoint",false);
+        model.addAttribute("noPoint","false");
 
 
         List<GetAddressDto> addrs = addressService.findAllByCustomer();
