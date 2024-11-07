@@ -27,6 +27,7 @@ public class MainController {
         Object category1 = categoryProductService.findCategory();
         System.out.println(category1);
         List<GetBannerDTO> banners = bannerService.selectUsingBannerAt(2);
+        model.addAttribute("isMainPage", true);
         model.addAttribute("sliderb", banners);
         model.addAttribute("category1", category1);
         model.addAttribute("birth", birth);
