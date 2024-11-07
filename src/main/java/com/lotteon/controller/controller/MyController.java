@@ -135,15 +135,13 @@ public class MyController {
 
     // 나의 쇼핑정보 > 나의 설정
     @GetMapping("/info")
-    public String info(Model model,Authentication authentication) {
-        log.info("컨트롤러 접속 ");
+    public String info(Model model) {
+        log.info("컨트롤러 접속 111");
 
         GetMyInfoDTO getCust = customerService.myInfo();
-        if(getCust!=null){
-            model.addAttribute("cust",getCust);
-        } else {
-            return "/";
-        }
+
+        model.addAttribute("cust",getCust);
+
         return "pages/my/info";
     }
 

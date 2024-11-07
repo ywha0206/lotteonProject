@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PointRepository extends JpaRepository<Point, Long> {
@@ -55,5 +56,5 @@ public interface PointRepository extends JpaRepository<Point, Long> {
 
     List<Point> findAllByCustomer_IdAndPointTypeAndPointUdateBetween(Long custId, int i, LocalDateTime before, LocalDateTime after);
 
-    Point findFirstByCustomer_IdAndPointTypeAndPointExpirationBetween(Long custId, int i, LocalDateTime before, LocalDateTime after);
+    Optional<Point> findFirstByOrderIdAndPointEtc(Long orderId, String s);
 }

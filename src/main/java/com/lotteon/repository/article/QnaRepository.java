@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -27,4 +28,8 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
     Page<Qna> findByMemberId(Long memberId, Pageable pageable); // 사용자 ID로 조회하는 메서드 추가
 
     Page<Qna> findAllByMember_Seller(Seller seller, Pageable pageable);
+
+    Page<Qna> findAllByMember(Member member, Pageable pageable);
+
+    Long countByQnaRdateBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
 }
