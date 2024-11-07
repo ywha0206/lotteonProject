@@ -51,6 +51,10 @@ public class MyController {
         model.addAttribute("hasCoupon", hasCoupon);
         int hasPoint = customerService.findByCustomer();
         model.addAttribute("hasPoint", hasPoint);
+        Long hasOrder = orderService.findByCustomer();
+        model.addAttribute("hasOrder", hasOrder);
+        Long hasQna = qnaService.findByCustomer();
+        model.addAttribute("hasQna",hasQna);
     }
 
     @GetMapping(value = {"", "/", "/index"})
@@ -247,7 +251,11 @@ public class MyController {
 
         // 1. 로그인한 사용자의 페이징된 QnA 목록을 가져옴
         Page<ArticleDto> qnasPage = qnaService.getMyQnas(member.getId(), pageable);
-
+        if(qnasPage.isEmpty()){
+            model.addAttribute("noItem",true);
+        } else {
+            model.addAttribute("noItem",false);
+        }
         // 2. 현재 페이지의 QnA 목록 추출
         List<ArticleDto> qnaList = qnasPage.getContent();
 
