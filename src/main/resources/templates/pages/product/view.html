@@ -483,9 +483,11 @@
 
             console.log(data.status);
             if (data.status == 'noAuth') {
-                alert('로그인 후 이용해주세요.');
-                location.replace('/auth/login/view');
-            } else if (data.status == 'seller') {
+                confirm('장바구니에 담겼습니다. 장바구니로 이동하시겠습니까?') ? location.replace('/prod/cart') : null;
+            }else if (data.status == 'noCart') {
+                alert('다시 시도해 주세요.')
+                location.reload();
+            }  else if (data.status == 'seller') {
                 alert('일반 회원으로 이용해 주세요.')
             } else if (data.status == 'customer') {
                 confirm('장바구니에 담겼습니다. 장바구니로 이동하시겠습니까?') ? location.replace('/prod/cart') : null;

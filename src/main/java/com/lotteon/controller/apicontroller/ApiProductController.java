@@ -20,6 +20,8 @@ import com.lotteon.entity.product.Cart;
 import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.point.PointService;
 import com.lotteon.service.product.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -91,13 +93,21 @@ public class ApiProductController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<?> cartInsert(@RequestBody PostCartDto postCartDto, Authentication authentication, HttpSession session) {
+    public ResponseEntity<?> cartInsert(@RequestBody PostCartDto postCartDto,
+                                        Authentication authentication,
+                                        HttpServletRequest req, HttpServletResponse resp) {
         log.info("카트 컨트롤러 접속 "+postCartDto.toString());
         Map<String, String> response = new HashMap<>();
 
         if(authentication==null){
             log.info("비회원임!!!");
-            response.put("status", "noAuth");
+            Cart cart = cartService.insertCartFornoAuth(req, resp);
+            if(cart==null){
+                response.put("status", "noCart");
+            }else{
+                response.put("status", "noAuth");
+                cartService.insertCartItem(postCartDto,cart);
+            }
             return ResponseEntity.ok().body(response);
         }
         MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
@@ -106,7 +116,7 @@ public class ApiProductController {
         if(role.equals("admin") || role.equals("seller")){
             response.put("status", "seller");
         }else{
-            ResponseEntity result = cartService.insertCart(postCartDto, session);
+            ResponseEntity result = cartService.insertCart(postCartDto,authentication);
             Cart cart = (Cart) result.getBody();
             ResponseEntity result2 = cartService.insertCartItem(postCartDto,cart);
             response.put("status", "customer"); // Add a default response
