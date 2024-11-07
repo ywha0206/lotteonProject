@@ -130,16 +130,8 @@ public class MyController {
     }
 
     // 나의 쇼핑정보 > 나의 설정
+
     @GetMapping("/info")
-<<<<<<< Updated upstream
-    public String info(Model model) {
-        log.info("컨트롤러 접속 111");
-
-        GetMyInfoDTO getCust = customerService.myInfo();
-
-        model.addAttribute("cust",getCust);
-
-=======
     public String info(Model model,Authentication authentication) {
         log.info("컨트롤러 접속 ");
 
@@ -149,10 +141,8 @@ public class MyController {
         } else {
             return "/";
         }
->>>>>>> Stashed changes
         return "pages/my/info";
     }
-    // 나의 쇼핑정보 > 나의 설정 end
 
     @GetMapping("/orders")
     public String order(Model model,
