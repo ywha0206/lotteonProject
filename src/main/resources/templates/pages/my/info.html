@@ -47,7 +47,6 @@
                 <td>
                   <input type="text" name="email1" th:value="${cust.custEmail1}" class="email1"/> @
                   <input type="text" name="email2" th:value="${cust.custEmail2}" class="email2"/>
-
                    <!-- 이메일 select 시 변경 -->
                   <select onchange="changeDomain()" id="emailDomainSelect">
                     <option value="" selected>직접입력</option> <!-- "직접입력" 이 기본 선택된 상태로 보여짐 -->
@@ -64,6 +63,7 @@
                     <option>naver.com</option>
                     <option>daum.net</option>
                   </select>
+
                   <input type="button" class="btn" value="수정하기" />
                 </td>
               </tr>
