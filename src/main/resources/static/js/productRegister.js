@@ -62,7 +62,22 @@ window.onload = function (){
                         })
                         alert('결제 정보가 등록되었습니다!');
                         window.location.href = "/admin/prod/products";
-                    } else {
+                    } else if(data.success === 0) {
+                        fetch("/admin/prod/modifyOption", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
+                            },
+                            body: JSON.stringify(optionSubmit)
+                        }).then(resp => resp.json())
+                            .then(data => {
+                                console.log(data);
+                            }).catch(err => {
+                            console.log(err);
+                        })
+                        alert('상품 정보가 수정되었습니다!');
+                        window.location.href = "/admin/prod/products";
+                    }else {
                         alert('결제 정보 등록에 실패하였습니다');
                     }
                 })
@@ -97,7 +112,7 @@ function confirmOption(event) {
         totalStock += parseInt(inputStock.value);
         delete submitData[i].index;
     }
-
+    const price = 0;
     if(submitData.length === 0){
         document.getElementById('prodStock').value = parseInt(optionStock.value);
         const jsonData = {
@@ -107,7 +122,7 @@ function confirmOption(event) {
             optionValue2: null,
             optionName3: null,
             optionValue3: null,
-            additionalPrice: 0,
+            additionalPrice: price,
             stock: optionStock.value
         };
         console.log(document.getElementById('prodStock').value);
@@ -239,7 +254,7 @@ function showMixOption() {
                 // 옵션1 + 옵션2 + 옵션3 조합 생성
                 if (optionName3 && optionValue3.length > 0) {
                     optionValue3.forEach(value3 => {
-                        createOptionRow(`${optionName1}: ${value1.trim()} / ${optionName2}: ${value2.trim()} / ${optionName3}: ${value3.trim()}`);
+                        createOptionRow(`${optionName1}: ${value1.trim()} / ${optionName2}: ${value2.trim()} / ${optionName3}: ${value3.trim()}`, 0);
                         const jsonData = {
                             optionName: optionName1,
                             optionValue: value1.trim(),
@@ -253,7 +268,7 @@ function showMixOption() {
                         a++;
                     });
                 } else {
-                    createOptionRow(`${optionName1}: ${value1.trim()} / ${optionName2}: ${value2.trim()}`);
+                    createOptionRow(`${optionName1}: ${value1.trim()} / ${optionName2}: ${value2.trim()}`, 0);
                     const jsonData = {
                         optionName: optionName1,
                         optionValue: value1.trim(),
@@ -269,7 +284,7 @@ function showMixOption() {
             });
         } else {
             // 옵션1만 있는 경우
-            createOptionRow(`${optionName1}: ${value1.trim()}`);
+            createOptionRow(`${optionName1}: ${value1.trim()}`, 0);
             const jsonData = {
                 optionName: optionName1,
                 optionValue: value1.trim(),
@@ -289,15 +304,20 @@ function showMixOption() {
 let currentIndex = 0;
 
 // 새로운 옵션 조합 행을 테이블에 추가하는 함수
-function createOptionRow(combinationText) {
+function createOptionRow(combinationText, type) {
     const optionMixed = document.getElementById("optionMixed");
 
     const row = document.createElement("tr");
 
     // 옵션 조합 셀
     const combinationCell = document.createElement("td");
+    const combinationInput = document.createElement('input');
     combinationCell.innerText = combinationText;
+    combinationInput.type = "hidden";
+    combinationInput.value = combinationText;
+    combinationInput.name = "optionName"
     combinationCell.style.textAlign = 'center';
+    combinationCell.appendChild(combinationInput);
     row.appendChild(combinationCell);
 
     // 추가금액 입력 셀
@@ -307,6 +327,7 @@ function createOptionRow(combinationText) {
     priceInput.dataset.id = `${currentIndex}`;
     priceInput.className = "inputAddPrice";
     priceInput.placeholder = "추가금액";
+    priceInput.name = "optionAddPrice";
     priceCell.style.textAlign = 'center';
     priceCell.appendChild(priceInput);
     row.appendChild(priceCell);
@@ -318,10 +339,28 @@ function createOptionRow(combinationText) {
     stockInput.dataset.id = `${currentIndex}`;
     stockInput.className = "inputStock";
     stockInput.placeholder = "수량";
+    stockInput.name = "stock"
     stockCell.style.textAlign = 'center';
     stockCell.appendChild(stockInput);
     row.appendChild(stockCell);
-
+    if (type === 1){
+        const id = 0;
+        const deleteCell = document.createElement("td");
+        const deleteBtn = document.createElement("button");
+        const hiddenInput = document.createElement('input');
+        hiddenInput.value = id;
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'optionId';
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'deleteOptionBtn';
+        deleteBtn.textContent = '삭제';
+        deleteBtn.onclick = function() {
+            deleteRow(this)
+        };
+        deleteCell.appendChild(hiddenInput);
+        deleteCell.appendChild(deleteBtn);
+        row.appendChild(deleteCell);
+    }
     // 조합을 테이블에 추가
     optionMixed.appendChild(row);
     currentIndex++;

@@ -19,8 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin/prod")
@@ -75,15 +74,37 @@ public class AdminProdController {
         model.addAttribute("productCategory", getCateLocationDTO);
         List<PostProductOptionDTO> productOptions = productOptionService.findOptionByProduct(prodId);
 
-        List<String> value = new ArrayList<>();
-        List<String> name = new ArrayList<>();
-        for(PostProductOptionDTO option : productOptions) {
+        Map<String, List<String>> optionMap = new LinkedHashMap<>();
+        for (PostProductOptionDTO option : productOptions) {
+            // 첫 번째 옵션 이름과 값
+            String optionName1 = option.getOptionName();
+            String optionValue1 = option.getOptionValue();
+            // 두 번째 옵션 이름과 값
+            String optionName2 = option.getOptionName2();
+            String optionValue2 = option.getOptionValue2();
 
-            if (!name.contains(option.getOptionName())) {
-                name.add(option.getOptionName());
+            // optionName1 처리
+            if (optionName1 != null && !optionName1.isEmpty()) {
+                optionMap
+                        .computeIfAbsent(optionName1, k -> new ArrayList<>());
+
+                if (!optionMap.get(optionName1).contains(optionValue1)) {
+                    optionMap.get(optionName1).add(optionValue1);
+                }
             }
 
+            // optionName2 처리
+            if (optionName2 != null && !optionName2.isEmpty()) {
+                optionMap
+                        .computeIfAbsent(optionName2, k -> new ArrayList<>());
+
+                if (!optionMap.get(optionName2).contains(optionValue2)) {
+                    optionMap.get(optionName2).add(optionValue2);
+                }
+            }
         }
+        log.info("wwwwwwwwwwwwwwww"+optionMap);
+        model.addAttribute("optionValue", optionMap);
         model.addAttribute("options", productOptions);
         List<GetProdCateDTO> prodCate = categoryProductService.findCateAll();
         model.addAttribute("prodCate", prodCate);

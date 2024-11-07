@@ -162,4 +162,8 @@ public class Product {
         this.prodStock = dto.getProdStock();
         this.options = dto.getOptions();
     }
+
+    public void updateStock(int total){
+        this.prodStock = total;
+    }
 }

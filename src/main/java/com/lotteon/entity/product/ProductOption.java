@@ -1,5 +1,6 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.responseDto.GetOption1Dto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -116,4 +117,24 @@ public class ProductOption {
                 .optionStock(stock)
                 .build();
     }
+
+    public void updateOption(PostProductOptionDTO dto){
+        this.optionName = dto.getOptionName();
+        this.optionValue = dto.getOptionValue();
+        this.optionName2 = dto.getOptionName2();
+        this.optionValue2 = dto.getOptionValue2();
+        this.optionName3 = dto.getOptionName3();
+        this.optionValue3 = dto.getOptionValue3();
+        this.additionalPrice = dto.getAdditionalPrice();
+        this.stock = dto.getStock();
+    }
+
+    public void updateOptionState(String type){
+        if(type.equals("delete")){
+            this.optionState = 1;
+        }else if (type.equals("cancel")){
+            this.optionState = 0;
+        }
+    }
+
 }
