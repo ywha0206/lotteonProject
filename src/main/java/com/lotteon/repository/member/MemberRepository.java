@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,4 +49,5 @@ public interface  MemberRepository extends JpaRepository<Member, Long> {
 
     Page<Member> findAllByCustomer_CustHpContainsOrderByIdDesc(String custHp, Pageable pageable);
 
+    Long countByMemRdateBetween(Timestamp startTimestamp, Timestamp endTimestamp);
 }

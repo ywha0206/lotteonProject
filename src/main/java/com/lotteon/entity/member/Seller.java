@@ -108,6 +108,7 @@ public class Seller {
         int deliCnt=0;
         int deliCompleteCnt=0;
         int confirmCnt=0;
+        int checkCnt = 0;
         Double totalPrice = 0.0;
         Double totalRealPrice = 0.0;
         int variableOrderCnt=0;
@@ -123,9 +124,12 @@ public class Seller {
                     if(orderItem.getState2()==4){ // 배송완료
                         deliCompleteCnt++;
                     }
-                    if(orderItem.getState1()==1){ // 구매확정
+                    if(orderItem.getState2()==5){ // 구매확정
                         confirmCnt++;
                         totalRealPrice += orderItem.getTotal();
+                    }
+                    if(orderItem.getState2()==0){
+                        checkCnt++;
                     }
                     totalPrice += orderItem.getTotal();
                     variableOrderCnt++;
@@ -136,7 +140,7 @@ public class Seller {
                     .busiCode(formatBusinessCode(sellBusinessCode))
                     .company(sellCompany)
                     .orderCnt(variableOrderCnt)
-                    .completeCnt(variableOrderCnt)
+                    .completeCnt(variableOrderCnt-checkCnt)
                     .deliCnt(deliCnt)
                     .deliCompleteCnt(deliCompleteCnt)
                     .confirmCnt(confirmCnt)

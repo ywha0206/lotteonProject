@@ -32,6 +32,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -198,7 +199,7 @@ public class ApiProductController {
             pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
         }
 
-        ResponseEntity orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session,postOrderDto.getOrderPointAndCouponDto());
+        ResponseEntity<Map<String,Object>> orderItemResult = orderItemService.insertOrderItem(orderItemDto,orderDto,session,postOrderDto.getOrderPointAndCouponDto());
         selectedProducts.forEach(v->{
             userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
         });
@@ -207,6 +208,16 @@ public class ApiProductController {
             customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
         }
         productService.top3UpdateBoolean();
+        OrderCancleDocument orderCancleDocument = OrderCancleDocument.builder()
+                .points(postOrderDto.getOrderPointAndCouponDto().getPoints())
+                .custId(auth.getUser().getCustomer().getId())
+                .couponId(postOrderDto.getOrderPointAndCouponDto().getCouponId())
+                .orderId((long)orderItemResult.getBody().get("orderId"))
+                .pointId((long)orderItemResult.getBody().get("pointId"))
+                .pointUdate(LocalDateTime.now())
+                .build();
+
+        orderCancleRepository.save(orderCancleDocument);
 
 
         return orderItemResult;
