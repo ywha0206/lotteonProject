@@ -125,9 +125,6 @@
       </article>
 
 
-<!--
-      TODO: my index 문의내역
--->
       <h3>문의내역 <a th:href="@{/my/qnas/{page}(page=${page})}">더보기 &gt; </a></h3>
       <article>
         <table border="0" class="qna">
@@ -139,11 +136,11 @@
             <th>작성일</th>
             <th>상태</th>
           </tr>
-          <tr th:each="qna, iterStat : ${qnaList}">
+          <tr th:class="${qnaList}" th:each="qna, iterStat : ${qnaList}">
             <td th:text="${iterStat.index + 1}">1</td>
             <!-- 문의채널 -->
             <td>
-            <span th:text="${qna.type != null ? (qna.qnaType == 0 ? '고객센터' : '판매자 게시판') : 'N/A'}"></span>
+              <span th:text="${qna.type != null ? (qna.type == 0 ? '고객센터' : '판매자 게시판') : 'N/A'}"></span>
             </td>
             <!-- 1차 유형 -->
             <td class="cate1" th:data-value="${qna.cate1.categoryName}">1차 유형</td>
@@ -153,14 +150,14 @@
             <td th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2024-12-12</td>
             <!-- 상태 -->
             <td>
-        <span class="status confirm"
-              th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
-              th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}"></span>
+              <span class="status confirm"
+                    th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
+                    th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}"></span>
             </td>
             <td>
-          <span th:classappend="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
-                th:text="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}">
-          </span>
+              <span th:classappend="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
+                    th:text="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}">
+              </span>
             </td>
           </tr>
 
