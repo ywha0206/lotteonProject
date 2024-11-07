@@ -170,27 +170,25 @@
       <h3>나의설정</h3>
       <article class="user-settings">
         <section class="user">
-          <a th:href="@{/my/address}">
-            <article>
+            <article onclick="window.location.href='/my/address'">
               <div><b>기본배송지 설정</b> <a>변경</a></div>
-              <p class="addr1">부산광역시 부산진구 대연동 120</p>
-              <p class="addr2">한빛빌딩 10층</p>
+              <th:block th:each="addr:${addrs}">
+                <th:block th:if="${addr.getState()>0}">
+                  <p class="addr1">[[${addr.getAddr2()}]]</p>
+                  <p class="addr2">[[${addr.getAddr3()}]]</p>
+                </th:block>
+              </th:block>
             </article>
-          </a>
-          <a th:href="@{/my/info}">
-            <article>
+          <article onclick="window.location.href='/my/info'">
               <div><b>Email 설정</b> <a>변경</a></div>
-              <p>abc123@naver.com</p>
+              <p>[[${cust.custEmail1}]]@[[${cust.custEmail2}]]</p>
               <p class="lastUpdate">(최종수정일 2021-12-10)</p>
             </article>
-          </a>
-          <a th:href="@{/my/info}">
-            <article>
+          <article onclick="window.location.href='/my/info'">
               <div><b>휴대폰 설정</b> <a>변경</a></div>
-              <p>010-1234-1001</p>
+              <p>[[${cust.custHp1}]]-[[${cust.custHp2}]]-[[${cust.custHp3}]]</p>
               <p class="lastUpdate">(최종수정일 2021-12-10)</p>
             </article>
-          </a>
         </section>
       </article>
     </section>
