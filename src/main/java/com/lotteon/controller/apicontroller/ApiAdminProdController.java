@@ -13,6 +13,7 @@ import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
+import com.lotteon.service.product.ProductOptionService;
 import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ public class ApiAdminProdController {
     private final CategoryProductService categoryProductService;
     private final OrderItemService orderItemService;
     private final OrderService orderService;
+    private final ProductOptionService productOptionService;
 
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
@@ -58,13 +61,13 @@ public class ApiAdminProdController {
             categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
             response.put("success", result.getId());
         }else if(Objects.equals(postProdAllDTO.getType(), "modify")){
-            log.info("444444444444444444444"+postProdAllDTO.getPostProdCateMapperDTO());
             LocalDateTime localDateTime = postProdAllDTO.getPostProdDetailDTO().getMDate1().atStartOfDay();
             Timestamp timestamp = Timestamp.valueOf(localDateTime);
             postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
 
             Product product = productService.updateProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO(), postProdAllDTO.getProdId());
             categoryProductService.updateCateMapper(postProdAllDTO.getPostProdCateMapperDTO(), product);
+            response.put("success", 0);
         }
 
 
@@ -73,35 +76,55 @@ public class ApiAdminProdController {
 
     @PostMapping("/cate1")
     public ResponseEntity<List<GetCategoryDto>> cateChoice(@RequestBody GetCategoryDto getCategoryDto) {
-
-//        ResponseEntity<List<Category>>
-
-        log.info("222222222"+getCategoryDto.getId());
-
-        log.info("322323333"+categoryProductService.findCategory2(getCategoryDto.getId()));
         return ResponseEntity.ok(categoryProductService.findCategory2(getCategoryDto.getId()));
-
     }
 
     @PostMapping("/option")
-    public ResponseEntity<Map<String, Object>> option(@RequestBody PostProductOptionDTO[] optionDTOS) {
+    public void option(@RequestBody PostProductOptionDTO[] optionDTOS) {
+        for(PostProductOptionDTO optionDTO : optionDTOS) {
+            productOptionService.insertProdOption(optionDTO);
+        }
+    }
+
+    @PostMapping("/modifyOption")
+    public void modifyOption(@RequestBody PostProductOptionDTO[] optionDTOS) {
 
         int total = 0;
+        long prodId = 0;
+        String delete = "delete";
+        String cancel = "cancel";
         for(PostProductOptionDTO optionDTO : optionDTOS) {
-            log.info("444545455545454545454545"+optionDTO);
-            total += productService.insertProdOption(optionDTO);
-
+            if(optionDTO.getStock() != null){
+                total += optionDTO.getStock();
+            }
+            if(optionDTO.getId() == 0){
+                if(optionDTO.getOptionName() != null){
+                    productOptionService.insertProdOption(optionDTO);
+                }
+            } else{
+                productOptionService.updateProdOption(optionDTO);
+                prodId = optionDTO.getProductId();
+            }
+            List<Long> optionIds = optionDTO.getOptionId();
+            List<Long> optionIds2 = optionDTO.getOptionId2();
+            if(optionIds != null){
+                for(Long optionId : optionIds){
+                    productOptionService.updateProdOptionState(optionId,delete);
+                }
+            }
+            if(optionIds2 != null){
+                for(Long optionId : optionIds2){
+                    productOptionService.updateProdOptionState(optionId,cancel);
+                }
+            }
         }
-        log.info("total값은?" + total);
+        productService.updateStock(total, prodId);
 
-
-        return null;
     }
 
     @PostMapping("/product/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestBody List<String> ids){
 
-        log.info("9999"+ids.toString());
 
         for(String id : ids){
             productService.deleteProduct(Long.parseLong(id));

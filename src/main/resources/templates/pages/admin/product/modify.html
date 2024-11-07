@@ -6,7 +6,6 @@
         let option1Value = document.getElementsByClassName('cate1')[0];
         let option2Value = document.getElementsByClassName('cate2')[0];
 
-
         fetch("/admin/prod/cate1", {
             method: 'POST',
             headers: {
@@ -85,13 +84,234 @@
             option3Value.appendChild(prodcate_opt);
         }
     }
+
+    let deleteId = [];
+    let deleteCancelId = [];
     function deleteRow(button) {
+
+        if (button.value.trim() !== "") {
+            deleteId.push(button.value);
+        }
+
+        const index = deleteCancelId.indexOf(button.value);
+        if (index !== -1) {
+            deleteCancelId.splice(index, 1);  // 배열에서 해당 값을 제거
+        }
+        console.log("deleteId" + deleteId);
         // button의 부모 tr 요소를 찾아서 삭제
+        const row = button.closest('tr');
+        const deleteBtn = row.querySelector('.deleteOptionBtn');
+        const stock = row.querySelector('.optionStock');
+        stock.value = 0;
+        deleteBtn.innerText = '비활성화';
+        deleteBtn.style.color = '#db4455';
+        deleteBtn.onclick = function() {
+            deleteCancel(button);  // 이벤트가 발생했을 때 deleteCancel을 호출
+        };
+
+    }
+
+    function deleteCancel(button){
+        if (button.value.trim() !== "") {
+            deleteCancelId.push(button.value);
+        }
+        const index = deleteId.indexOf(button.value);
+        if (index !== -1) {
+            deleteId.splice(index, 1);  // 배열에서 해당 값을 제거
+        }
+        console.log("deleteCancelId" + deleteCancelId);
+        const row = button.closest('tr');
+        const deleteBtn = row.querySelector('.deleteOptionBtn');
+        deleteBtn.innerText = '활성화';
+        deleteBtn.style.color = '#000000';
+        deleteBtn.onclick = function() {
+            deleteRow(button);  // 이벤트가 발생했을 때 deleteCancel을 호출
+        };
+    }
+
+    function deleteTr(button) {
+
         const row = button.closest('tr');
         if (row) {
             row.remove();
         }
     }
+
+    function mixOptionPlus(button) {
+
+        let optionName = document.getElementById('optionName_0').innerText;
+        let optionValue = document.getElementById('optionValue_0').value.trim().split(", "); // 문자열을 배열로 변환
+        let hiddenValue = document.getElementById('optionValues_0').value.trim().split(", ");
+        console.log(optionName);
+        console.log(optionValue);
+        console.log(hiddenValue);
+
+        let optionName2 = null;
+        let optionValue2 = null;
+        let hiddenValue2 = null;
+
+        if (document.getElementById('optionSize').value >= 2) {
+            optionName2 = document.getElementById('optionName_1').innerText;
+            optionValue2 = document.getElementById('optionValue_1').value.trim().split(", "); // 문자열을 배열로 변환
+            hiddenValue2 = document.getElementById('optionValues_1').value.trim().split(", ");
+            console.log(optionName2);
+            console.log(optionValue2);
+            console.log(hiddenValue2);
+        }
+
+        function generateCombinations(arr1, arr2, name1, name2) {
+            let combinations = [];
+            arr1.forEach(val1 => {
+                arr2.forEach(val2 => {
+                    // name과 value를 포맷팅하여 조합
+                    let combination = `${name1}:${val1}` + (name2 ? ` / ${name2}:${val2}` : "");
+                    combinations.push(combination);
+                });
+            });
+            return combinations;
+        }
+
+        // hiddenValue와 optionValue의 조합을 생성
+        let hiddenCombinations = generateCombinations(hiddenValue, hiddenValue2 || [""], optionName, optionName2);
+        let optionCombinations = generateCombinations(optionValue, optionValue2 || [""], optionName, optionName2);
+
+        // optionCombinations에만 존재하는 조합을 필터링
+        let newCombinations = optionCombinations.filter(comb => !hiddenCombinations.includes(comb));
+        let missingInOptionCombinations = hiddenCombinations.filter(comb => !optionCombinations.includes(comb));
+
+        // 없는 조합 출력
+        console.log("optionValue에는 없고 hiddenValue에만 있는 조합들:", missingInOptionCombinations);
+        // 새로운 조합 출력
+        console.log("새로운 조합들:", newCombinations);
+
+        const cells = document.querySelectorAll('.option-combination');
+        const cellTexts = Array.from(cells).map(cell => cell.innerText.trim());
+        optionCombinations.forEach(combinationText => {
+            Array.from(cells).forEach(cell => {
+                // 각 셀의 텍스트가 현재 조합과 일치하는지 확인
+                if (cell.innerText.trim() === combinationText) {
+                    const row = cell.closest('tr');  // 해당 셀의 tr을 찾기
+                    const button = row ? row.querySelector('.deleteOptionBtn') : null;  // 해당 tr에서 버튼 찾기
+
+                    // 버튼이 존재하고, 버튼의 innerText가 '비활성화'인 경우 클릭
+                    if (button && button.innerText === '비활성화') {
+                        button.click();  // 버튼 클릭
+                    }
+                }
+            });
+        });
+        newCombinations.forEach(combinationText => {
+            if(cellTexts.includes(combinationText)){
+                return;
+            }
+            createOptionRow(combinationText, 1);
+        });
+        Array.from(cells).forEach(cell => {
+            // cell의 텍스트가 missingInOptionCombinations에 포함되면
+            missingInOptionCombinations.forEach(missingComb => {
+                if (cell.innerText.trim() === missingComb) {
+                    // 해당 cell 내의 버튼을 찾아서 클릭 이벤트를 트리거
+                    const row = cell.closest('tr');
+                    const button = row ? row.querySelector('.deleteOptionBtn') : null; // row가 존재하는지 확인
+                    if (button) {
+                        if(button.innerText !== '비활성화'){
+                            button.click();  // 실제로 클릭을 트리거
+                        }
+                    }
+                }
+            });
+        });
+    }
+    let optionSubmit = [];
+    let jsonData = {};
+    function optionModify() {
+        const modify = new FormData(document.getElementById('finalModify'));
+        for (const [key, value] of modify.entries()) {
+            console.log(key, value);
+            if(key === 'optionName'){
+                const parts = value.split(" / ");
+                const [optionName1, optionValue1] = parts[0].split(":");
+                let optionName2 = null;
+                let optionValue2 = null;
+                if (parts[1]) {
+                    [optionName2, optionValue2] = parts[1].split(":");
+                }
+                // 결과 출력 (테스트용)
+                jsonData.optionName = optionName1;
+                jsonData.optionValue = optionValue1;
+                jsonData.optionName2 = optionName2;
+                jsonData.optionValue2 = optionValue2;
+            }
+            // 추가금액 필드일 경우
+            if (key === 'optionAddPrice') {
+                jsonData.additionalPrice = value;
+                if(value === ''){
+                    alert('추가 금액을 적어주세요!')
+                    return;
+                }
+            }
+
+            // stock 필드일 경우
+            if (key === 'stock') {
+                jsonData.stock = value;
+                if(value === ''){
+                    alert('물품 수량을 적어주세요!')
+                    return;
+                }
+            }
+
+            // optionId 필드일 경우
+            if (key === 'optionId') {
+                jsonData.id = value;
+                jsonData.productId = document.getElementById('prodId').value;
+            }
+            if (Object.keys(jsonData).length === 8) {  // 필요한 8개 속성이 모두 채워졌을 때
+                optionSubmit.push({ ...jsonData });    // jsonData를 optionSubmit에 추가
+                jsonData = {};                         // jsonData를 초기화하여 다음 항목 준비
+            }
+        }
+        if(deleteId.length > 0){
+            let jsonData = {
+                optionId: deleteId
+            }
+            optionSubmit.push(jsonData);
+        }
+        if(deleteCancelId.length > 0){
+            let jsonData = {
+                optionId2: deleteCancelId
+            }
+            optionSubmit.push(jsonData);
+        }
+        console.log(JSON.stringify(optionSubmit));
+        document.getElementById('prodStock').value = 1;
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        // 모든 버튼을 가져옴
+        const buttons = document.querySelectorAll('.deleteOptionBtn');
+
+        // 각 버튼에 대해
+        buttons.forEach(button => {
+            // 텍스트가 '비활성화'인 버튼이라면
+            if (button.innerText === '비활성화') {
+                button.style.color = '#db4455';  // 텍스트 색상을 빨간색으로 설정
+            }
+        });
+    });
+
+    function prodImgModalOpen() {
+        const QnaModalBack = document.getElementsByClassName('prodQnaModalBack')[0];
+        QnaModalBack.style.display = "block"
+    }
+
+    // 940 이미지 모달창 닫기
+    function closeQnaModal() {
+        const QnaModalBack = document.getElementsByClassName('prodQnaModalBack')[0];
+        const closeBtn = document.getElementsByClassName('closeBtn')[0];
+        if (event.target === QnaModalBack || event.target === closeBtn) {
+            QnaModalBack.style.display = "none"
+        }
+    }
+
 </script>
 <body>
 <header th:replace="layout/admin/header.html"></header>
@@ -206,16 +426,25 @@
                         <th>상품이미지</th>
                         <td class="td-images">
                             <div class="img1">
-                                <input type="file" name="listImage" id="prodListImg">
+                                <input type="file" name="listImage" id="prodListImg" accept="image/*">
                                 <span>크기 190 x 190, 상품 목록에 출력될 이미지입니다.</span>
+                                <div id="previewListImg">
+                                    <img class="imgPreview" th:src="@{'/file/'+${product.getProdListImg()}}">
+                                </div>
                             </div>
                             <div class="img2">
-                                <input type="file" name="basicImage" id="prodBasicImg">
+                                <input type="file" name="basicImage" id="prodBasicImg" accept="image/*">
                                 <span>크기 230 x 230, 상품 메인에 출력될 이미지입니다.</span>
+                                <div id="previewBasicImg">
+                                    <img class="imgPreview" th:src="@{'/file/'+${product.getProdBasicImg()}}">
+                                </div>
                             </div>
                             <div class="img3">
-                                <input type="file" name="detailImage" id="prodDetailImg">
+                                <input type="file" name="detailImage" id="prodDetailImg" accept="image/*">
                                 <span>크기 450 x 450, 상품 상세에 출력될 이미지입니다.</span>
+                                <div id="previewDetailImg">
+                                    <img class="imgPreview" th:src="@{'/file/'+${product.getProdDetailImg()}}">
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -225,6 +454,9 @@
                             <div class="detail-img">
                                 <input type="file" name="description" id="description">
                                 <span>크기 가로 940px 세로 제약없음 , 크기 최대 1MB</span>
+                                <label onclick="prodImgModalOpen()" class="imgModal">
+                                    <b>클릭해서 이미지 보기</b>
+                                </label>
                             </div>
                         </td>
                     </tr>
@@ -232,86 +464,139 @@
                 </table>
             </div>
         </form>
-        <form>
+
+        <div class="prodQnaModalBack bigImageBox" onclick="closeQnaModal()">
+            <div class="prodImgModal">
+                <div style="display:flex; float: right; margin-bottom: 10px">
+                    <span class="closeBtn" onclick="closeQnaModal()" style="cursor: pointer; margin-right: 10px;">X</span>
+                </div>
+                <div class="prodImg940Modal">
+                    <img th:src="@{'/file/'+${prodDetail.getDescription()}}">
+                </div>
+            </div>
+        </div>
+
+        <form id="finalModify">
             <div class="main3">
                 <div class="main-title">옵션 수정</div>
                 <div class="main-description">옵션이 없을경우 재고량만 입력하시면 됩니다.</div>
-                <div class="options">
-                    <table class="tb5" id="optionTable" border="1">
-                        <tr class="tr_option" th:if="${#lists.size(options) == 1 and options.get(0).optionName == '옵션없음'}">
-                            <th style="text-align: left">옵션</th>
-                            <td class="optionTD" style="text-align: left">
-                                <div class="option_inputs">
-                                    <input type="text" id="optionStock" class="option_input option_input_stock"
-                                           placeholder="재고량" th:value="${options.get(0).stock}">
-                                </div>
-                            </td>
+                <div class="nameTb">
+                    <table class="tb5" id="optionTables">
+                        <tr class="option0">
+                            <th>옵션 명</th>
+                            <th>옵션 값</th>
                         </tr>
-                        <th:block th:unless="${#lists.size(options) == 1 and options.get(0).optionName == '옵션없음'}">
-                            <tr class="option0">
-                                <th>옵션 조합</th>
-                                <th>추가금액</th>
-                                <th>수량</th>
-                                <th>삭제</th>
-                            </tr>
-                        <tr class="option1" th:each="option : ${options}" >
-                            <th:block th:if="${option.optionName3 == null && option.optionName2 != null}">
+                        <input type="hidden" id="optionSize" th:value="${optionValue.size()}">
+                        <tr th:each="entry, i : ${optionValue}">
+                            <th:block th:if="${entry.key != '옵션없음'}">
+                                <td th:text="${entry.key}" th:id="'optionName_' + ${i.index}"></td>
                                 <td>
-                                    [[${option.optionName}]]:[[${option.optionValue}]] / [[${option.optionName2}]]:[[${option.optionValue2}]]
-                                </td>
-                                <td>
-                                    <input type="text" class="addPrice" th:value="${#numbers.formatInteger(option.additionalPrice, 1)}">
-                                </td>
-                                <td>
-                                    <input type="text" class="optionStock" th:value="${option.stock}">
-                                </td>
-                                <td>
-                                    <button type="button" class="deleteOptionBtn" onclick="deleteRow(this)">삭제</button>
+                                    <input type="text" th:value="${#strings.arrayJoin(entry.value, ', ')}"
+                                           th:id="'optionValue_' + ${i.index}"/>
+                                    <input type="hidden" th:value="${#strings.arrayJoin(entry.value, ', ')}"
+                                           th:id="'optionValues_' + ${i.index}">
                                 </td>
                             </th:block>
-                            <th:block th:if="${option.optionName2 == null && option.optionName3 == null}">
+                            <th:block th:unless="${entry.key != '옵션없음'}">
                                 <td>
-                                    [[${option.optionName}]]:[[${option.optionValue}]]
+                                    옵션이 없습니다.
                                 </td>
                                 <td>
-                                    <input type="text" class="addPrice" th:value="${#numbers.formatInteger(option.additionalPrice, 1)}">
-                                </td>
-                                <td>
-                                    <input type="text" class="optionStock" th:value="${option.stock}">
-                                </td>
-                                <td>
-                                    <button type="button" class="delete-button" onclick="deleteRow(this)">삭제</button>
+                                    옵션이 없습니다.
                                 </td>
                             </th:block>
                         </tr>
-                        </th:block>
                     </table>
                 </div>
-                <button class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
-                <button type="button" class="addoption" id="mix" onclick="showMix()">단일 옵션</button>
-                <button class="addoption" id="optionMix" type="button" onclick="showMixOption()" style="display: none">
-                    옵션 조합 생성
-                </button>
-                <button class="addoption" id="optionMixPlus" type="button" onclick="addOptionRow()"
-                        style="display: none;">옵션 추가
-                </button>
-            </div>
-
-            <div class="main3" id="mixOption" style="display: none;">
-                <div class="options-table">
-                    <table class="tb5">
-                        <thead>
+                <button type="button" class="addoption" onclick="mixOptionPlus()">옵션 추가하기</button>
+                <div class="options">
+                    <table class="tb6" id="optionTable" border="1">
                         <tr class="option0">
                             <th>옵션 조합</th>
                             <th>추가금액</th>
                             <th>수량</th>
+                            <th>상태</th>
                         </tr>
-                        </thead>
                         <tbody id="optionMixed">
-                        <!-- 옵션 조합이 여기에 추가됩니다 -->
+                        <tr class="option1" th:each="option : ${options}">
+                            <th:block th:if="${option.optionName == '옵션없음'}">
+                                <td class="option-combination">
+                                    <input type="hidden" name="optionName"
+                                           th:value="${option.optionName + ':' + option.optionValue}">
+                                    옵션없음</td>
+                                <td>
+                                    <input type="text" class="addPrice" name="optionAddPrice"
+                                           th:value="${#numbers.formatInteger(option.additionalPrice, 1)}">
+                                </td>
+                                <td>
+                                    <input type="text" class="optionStock" name="stock" th:value="${option.stock}">
+                                </td>
+                                <td>
+                                    <input type="hidden" name="optionId" th:value="${option.id}">
+                                    <button type="button" class="deleteOptionBtn">기본 옵션은 삭제할 수 없습니다!</button>
+                                </td>
+                            </th:block>
+                            <th:block th:if="${option.optionName3 == null && option.optionName2 != null}">
+                                <td class="option-combination">
+                                    <input type="hidden" name="optionName"
+                                           th:value="${option.optionName + ':' + option.optionValue + ' / ' + option.optionName2 + ':' + option.optionValue2}">
+                                    [[${option.optionName}]]:[[${option.optionValue}]] /
+                                    [[${option.optionName2}]]:[[${option.optionValue2}]]
+                                </td>
+                                <td>
+                                    <input type="text" class="addPrice" name="optionAddPrice"
+                                           th:value="${#numbers.formatInteger(option.additionalPrice, 1)}">
+                                </td>
+                                <td>
+                                    <input type="text" class="optionStock" name="stock" th:value="${option.stock}">
+                                </td>
+                                <td>
+                                    <input type="hidden" name="optionId" th:value="${option.id}">
+                                    <th:block th:if="${option.optionState == 0}">
+                                        <button type="button" th:value="${option.id}" class="deleteOptionBtn"
+                                                onclick="deleteRow(this)">활성화
+                                        </button>
+                                    </th:block>
+                                    <th:block th:if="${option.optionState > 0}">
+                                        <button type="button" th:value="${option.id}" class="deleteOptionBtn"
+                                                onclick="deleteCancel(this)">비활성화
+                                        </button>
+                                    </th:block>
+                                </td>
+                            </th:block>
+                            <th:block
+                                    th:if="${option.optionName2 == null && option.optionName3 == null && option.optionName != '옵션없음'}">
+                                <td class="option-combination">
+                                    <input type="hidden" name="optionName"
+                                           th:value="${option.optionName + ':' + option.optionValue}">
+                                    [[${option.optionName}]]:[[${option.optionValue}]]
+                                </td>
+                                <td>
+                                    <input type="text" class="addPrice" name="optionAddPrice"
+                                           th:value="${#numbers.formatInteger(option.additionalPrice, 1)}">
+                                </td>
+                                <td>
+                                    <input type="text" class="optionStock" name="stock" th:value="${option.stock}">
+                                </td>
+                                <td>
+                                    <input type="hidden" name="optionId" th:value="${option.id}">
+                                    <th:block th:if="${option.optionState == 0}">
+                                        <button type="button" th:value="${option.id}" class="deleteOptionBtn"
+                                                onclick="deleteRow(this)">활성화
+                                        </button>
+                                    </th:block>
+                                    <th:block th:if="${option.optionState > 0}">
+                                        <button type="button" th:value="${option.id}" class="deleteOptionBtn"
+                                                onclick="deleteCancel(this)">비활성화
+                                        </button>
+                                    </th:block>
+                                </td>
+                            </th:block>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
+                <button class="addoption" type="button" onclick="optionModify()">옵션저장</button>
             </div>
         </form>
         <form id="detail">

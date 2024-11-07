@@ -162,6 +162,51 @@ public class QnaService {
         return savedQna.getId(); // 저장된 QnA ID 반환
     }
 
+    // QnA 글 작성 셀러 문의
+    public Long insertQnaToSeller(ArticleDto articleDto) {
+        Long memberId = articleDto.getMemId();
+        // 작성일 및 기본 정보 설정
+        articleDto.setRdate(LocalDateTime.now());
+        articleDto.setViews(0); // 초기 조회수 0
+        articleDto.setState(0); // 초기 답변 상태: 대기 (답변 없음)
+
+        if (memberId == null) {
+            throw new IllegalStateException("로그인된 사용자가 아닙니다.");
+        }
+
+        // 작성자 설정
+        articleDto.setMemId(memberId);
+
+        // 카테고리 설정 (1차, 2차 카테고리)
+        // 기존 코드에서는 findByCategoryNameAndCategoryLevelAndCategoryType 메서드를 사용하여 카테고리를 찾았으나, 중복 결과로 인한 오류를 방지하기 위해 findFirstByCategoryNameAndCategoryLevelAndCategoryType 메서드로 수정했습니다.
+        CategoryArticle cate2 = categoryArticleRepository
+                .findFirstByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate2Name(), 2, 2)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
+        CategoryArticle cate1 = cate2.getParent();
+
+        // 회원 정보 설정
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
+
+        // DTO -> Entity 변환 (필드를 수동 매핑)
+        Qna qna = Qna.builder()
+                .qnaTitle(articleDto.getTitle())
+                .qnaContent(articleDto.getContent())
+                .qnaRdate(articleDto.getRdate())
+                .qnaState(articleDto.getState())
+                .qnaType(1)
+                .qnaAnswer(articleDto.getAnswer())
+                .qnaViews(articleDto.getViews())
+                .cate1(cate1)
+                .cate2(cate2)
+                .member(member)
+                .build();
+
+        // DB에 저장
+        Qna savedQna = qnaRepository.save(qna);
+        return savedQna.getId(); // 저장된 QnA ID 반환
+    }
+
     // QNA 삭제
     public void deleteQna(Long id) {
         Qna qna = qnaRepository.findById(id)
@@ -204,6 +249,11 @@ public class QnaService {
                 .collect(Collectors.toList());
     }
 
+    public Page<ArticleDto> getMyQnas(Long memberId, Pageable pageable) {
+        Page<Qna> qnas = qnaRepository.findByMemberId(memberId, pageable);
+        return qnas
+                .map(ArticleDto::fromEntity);
+    }
 
     public Long findCnt(LocalDateTime startOfDay, LocalDateTime endOfDay) {
         return qnaRepository.countByQnaRdateBetween(startOfDay,endOfDay);
