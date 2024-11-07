@@ -4,7 +4,6 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.*;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
-import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.service.article.QnaService;
@@ -28,9 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,7 +37,6 @@ import java.util.stream.Collectors;
 public class MyController {
 
     private final OrderService orderService;
-    private final CouponService couponService;
     private final CustomerCouponService customerCouponService;
     private final CustomerService customerService;
     private final PointService pointService;
