@@ -15,6 +15,7 @@ import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductDetailRepository;
 import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
+import com.lotteon.service.config.ImageService;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
@@ -58,22 +59,12 @@ public class ProductService {
     private final RedisTemplate<String,List<GetMainProductDto>> bestredisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
     private final MemberRepository memberRepository;
-    private final CategoryProdMapperRepository categoryProdMapperRepository;
+    private final ImageService imageService;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
 
     public Product insertProduct(PostProductDTO productDTO, PostProdDetailDTO prodDetailDTO) {
-
-        File fileUploadPath = new File(uploadPath);
-
-        //파일 업로드 디렉터리가 존재하지 않으면 디렉터리 생성
-        if (!fileUploadPath.exists()) {
-            fileUploadPath.mkdirs();
-        }
-
-        //파일 업로드 시스템 경로 구하기
-        String path = fileUploadPath.getAbsolutePath();
 
         List<MultipartFile> prodFiles = new ArrayList<>();  // ArrayList로 초기화
         prodFiles.add(productDTO.getListImage());
@@ -81,52 +72,37 @@ public class ProductService {
         prodFiles.add(productDTO.getDetailImage());
         prodFiles.add(productDTO.getDescription());
 
-        int i = 1;  // 이미지 번호를 매기기 위한 인덱스
-        boolean isUploadSuccessful = true;
-        for (MultipartFile file : prodFiles) {
-            if (!file.isEmpty()) {
-                // 원본 파일명 가져오기
-                String oName = file.getOriginalFilename();
-                // 파일 확장자 추출
-                String ext = oName.substring(oName.lastIndexOf("."));
-                // UUID를 사용하여 새로운 파일명 생성
-                String sName = UUID.randomUUID().toString() + ext;
+        boolean allFilesNull = prodFiles.stream().allMatch(Objects::isNull);
 
-                // 파일 저장
-                try {
-                    file.transferTo(new File(path, sName));
-                    switch (i) {
-                        case 1:
-                            productDTO.setProdListImg(sName);
-                            break;
-                        case 2:
-                            productDTO.setProdBasicImg(sName);
-                            break;
-                        case 3:
-                            productDTO.setProdDetailImg(sName);
-                            break;
-                        case 4:
-                            prodDetailDTO.setDescription(sName);
-                            break;
-                    }
-                } catch (IOException e) {
-                    log.error(e);
-                    isUploadSuccessful = false;
-                }
+        if (allFilesNull) {
+            List<String> uploadedImagePath = imageService.uploadImages(prodFiles);
+            if (uploadedImagePath != null) {
+                String prodListImg = !uploadedImagePath.isEmpty() ? uploadedImagePath.get(0) : null;
+                String prodBasicImg = uploadedImagePath.size() > 1 ? uploadedImagePath.get(1) : null;
+                String prodMainImg = uploadedImagePath.size() > 2 ? uploadedImagePath.get(2) : null;
+                String description = uploadedImagePath.size() > 3 ? uploadedImagePath.get(3) : null;
+
+// DTO에 값 할당 (필요에 따라)
+                productDTO.setProdListImg(prodListImg);
+                productDTO.setProdBasicImg(prodBasicImg);
+                productDTO.setProdDetailImg(prodMainImg);
+                prodDetailDTO.setDescription(description);
+
+            } else {
+                log.error("Failed to upload banner image.");
+                throw new RuntimeException("Image upload failed");
             }
-            i++;
-        }
-        if (isUploadSuccessful) {
-
-            MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Seller seller = auth.getUser().getSeller();
-            Member member = memberRepository.findBySeller(seller).orElseThrow();
-            productDTO.setSeller(seller);
-            Product product = modelMapper.map(productDTO, Product.class);
-            return productRepository.save(product);
         } else {
-            return null;
+            log.warn("No image file provided for banner.");
         }
+
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        Member member = memberRepository.findBySeller(seller).orElseThrow();
+        productDTO.setSeller(seller);
+        Product product = modelMapper.map(productDTO, Product.class);
+        return productRepository.save(product);
+
     }
 
 
@@ -134,35 +110,6 @@ public class ProductService {
 
         ProductDetail prodDetail = modelMapper.map(postProdDetailDTO, ProductDetail.class);
         productDetailRepository.save(prodDetail);
-    }
-    public int insertProdOption(PostProductOptionDTO optionDTO) {
-
-        Optional<Product> opt = productRepository.findById(optionDTO.getProductId());
-
-        Product product = null;
-        if (opt.isPresent()) {
-            product = opt.get();
-        }
-
-        log.info("666767776767" + product);
-
-        ProductOption productOption = ProductOption.builder()
-                .product(product)
-                .optionName(optionDTO.getOptionName())
-                .optionValue(optionDTO.getOptionValue())
-                .optionName2(optionDTO.getOptionName2())
-                .optionValue2(optionDTO.getOptionValue2())
-                .optionName3(optionDTO.getOptionName3())
-                .optionValue3(optionDTO.getOptionValue3())
-                .additionalPrice(optionDTO.getAdditionalPrice())
-                .stock(optionDTO.getStock())
-                .build();
-
-
-        ProductOption option = productOptionRepository.save(productOption);
-        return option.getStock();
-
-
     }
 
     public ProductPageResponseDTO<PostProductDTO> getPageProductListAdmin(ProductPageRequestDTO pageRequestDTO) {
@@ -480,7 +427,6 @@ public class ProductService {
                     switch (i) {
                         case 1:
                             productDTO.setProdListImg(sName);
-                            log.info("Setting List Image: " + sName);
                             break;
                         case 2:
                             productDTO.setProdBasicImg(sName);
@@ -507,12 +453,16 @@ public class ProductService {
             productDetail.updateDetail(prodDetailDTO);
             productDTO.updateSeller(product, prodId);
             product.updateProduct(productDTO);
-
             return product;
-
         }else{
             return null;
         }
+    }
+
+    public void updateStock(int totalStock, long prodId){
+        Product product = productRepository.findById(prodId).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        product.updateStock(totalStock);
+
     }
 
 }

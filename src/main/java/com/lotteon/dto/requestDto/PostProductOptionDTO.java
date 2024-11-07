@@ -4,6 +4,8 @@ import com.lotteon.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -23,4 +25,8 @@ public class PostProductOptionDTO {
     private Integer stock;
     private long productId;
     private int optionState; // 필수옵션인지 아닌지
+
+    // 추가 필드
+    private List<Long> optionId;
+    private List<Long> optionId2;
 }
