@@ -303,15 +303,27 @@
       })
       const orders = resp.data;
       let payment = null;
-      switch (orders.payment){
-        case 1: payment = '신용카드'; break;
-        case 2: payment =  '체크카드'; break;
-        case 3: payment = '계좌이체'; break;
-        case 4: payment = '무통장입금'; break;
-        case 5: payment = '휴대폰결제'; break;
-        case 6: payment = '카카오페이'; break;
+      switch (orders.payment) {
+        case 1:
+          payment = '신용카드';
+          break;
+        case 2:
+          payment = '체크카드';
+          break;
+        case 3:
+          payment = '계좌이체';
+          break;
+        case 4:
+          payment = '무통장입금';
+          break;
+        case 5:
+          payment = '휴대폰결제';
+          break;
+        case 6:
+          payment = '카카오페이';
+          break;
       }
-      console.log("resp data : "+orders.orderId)
+      console.log("resp data : " + orders.orderId)
       document.querySelector('#popOrder .orderId').innerText = orders.orderId;
       document.querySelector('#popOrder .orderDate').innerText = orders.orderDate;
       document.querySelector('#popOrder .custName').innerText = orders.custName;
@@ -322,21 +334,20 @@
       document.querySelector('#popOrder .receiverAddr3').innerText = orders.receiverAddr3;
       document.querySelector('#popOrder .paymentvalue').innerText = payment;
       document.querySelector('#popOrder .orderTotalPrice').innerText = orders.orderTotal;
-      if(orders.orderReq!=null){
+      if (orders.orderReq != null) {
         document.querySelector('#popOrder .orderReq').innerText = orders.orderReq;
       }
       const orderTable = document.querySelector('#popOrder .order table');
 
       // 기존의 내용을 지우고 새로 채우기
       orderTable.innerHTML = `
-      <tr>
-        <th>상품이미지</th>
-        <th>상품정보</th>
-        <th>결제금액</th>
-        <th>상태</th>
-      </tr>
-    `;
-
+        <tr>
+          <th>상품이미지</th>
+          <th>상품정보</th>
+          <th>결제금액</th>
+          <th>상태</th>
+        </tr>
+        `;
       // orderItemDtos 배열을 순회하며 행을 추가
       orders.orderItemDtos.forEach(item => {
 

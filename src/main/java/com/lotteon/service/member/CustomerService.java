@@ -229,10 +229,7 @@ public class CustomerService {
         System.out.println("==============");
         System.out.println(hp);
         System.out.println("==============");
-        String hp1 = hp.substring(0,3);
-        String hp2 = hp.substring(3,7);
-        String hp3 = hp.substring(7,11);
-        System.out.println(hp2);
+        String[] phone = hp.split("-");
         String[] addr = customer.getCustAddr().split("/");
         System.out.println(addr);
         log.info("주소 확인: " + Arrays.toString(addr));
@@ -243,9 +240,9 @@ public class CustomerService {
                 .custName(customer.getCustName()) // 이름
                 .custEmail1(email[0]) // 이메일1 @ 앞부분
                 .custEmail2(email[1]) // 이메일2 @ 뒷부분
-                .custHp1(hp1) // 휴대폰1 010
-                .custHp2(hp2) // 휴대폰2 -1234
-                .custHp3(hp3) // 휴대폰3 -5678
+                .custHp1(phone[0]) // 휴대폰1 010
+                .custHp2(phone[1]) // 휴대폰2 -1234
+                .custHp3(phone[2]) // 휴대폰3 -5678
                 .custBirth(customer.getCustBirth()) // 생일
                 .custAddr1(addr[0]) // 우편
                 .custAddr2(addr[1]) // 기본

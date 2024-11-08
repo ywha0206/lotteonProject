@@ -62,6 +62,17 @@ public class MemberService {
         member.get().updatePassword(passwordEncoder.encode(pwd));
     }
 
+    public Boolean updateMyPwd(String pwd, Long memId) {
+        Optional<Member> member = memberRepository.findById(memId);
+        if(member.isPresent()){
+            member.get().updatePassword(passwordEncoder.encode(pwd));
+            memberRepository.save(member.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Map<String,String> findByUid(String uid) {
         Map<String,String> map = new HashMap<>();
         Optional<Member> member = memberRepository.findByMemUid(uid);
