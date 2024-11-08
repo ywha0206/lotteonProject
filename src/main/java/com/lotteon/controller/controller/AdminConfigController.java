@@ -8,6 +8,8 @@ import com.lotteon.service.VisitorService;
 import com.lotteon.service.article.NoticeService;
 import com.lotteon.service.article.QnaService;
 import com.lotteon.service.config.*;
+import com.lotteon.service.member.MemberService;
+import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +38,10 @@ public class AdminConfigController {
     private final VersionService versionService;
     private final TermsService termsService;
     private final VisitorService visitorService;
-    private final QnaService qnaService;
     private final NoticeService noticeService;
+    private final OrderItemService orderItemService;
+    private final MemberService memberService;
+    private final QnaService qnaService;
 
     private String getSideValue() {
         return "config";  // 실제 config 값을 여기에 설정합니다.
@@ -63,6 +68,59 @@ public class AdminConfigController {
         // QnA 리스트 모델에 추가
         List<Qna> qnaList = qnaService.getTop5Qnas();
         model.addAttribute("qnas", qnaList);
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.minusDays(7).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = now.withHour(23).withMinute(59).withSecond(59).withNano(0);
+
+        Long beforeDeli = orderItemService.findItemCnt(0,startOfDay,endOfDay);
+        Long afterDeli = orderItemService.findItemCnt(1,startOfDay,endOfDay);
+        Long completeDeli = orderItemService.findItemCnt(4,startOfDay,endOfDay);
+        Long cancleDeli = orderItemService.findItemCnt(6,startOfDay,endOfDay);
+        Long exchangeDeli = orderItemService.findItemCnt(3,startOfDay,endOfDay);
+        Long returnDeli = orderItemService.findItemCnt(2,startOfDay,endOfDay);
+        Long successDeli = orderItemService.findItemCnt(5,startOfDay,endOfDay);
+
+        Long orderCnt = orderItemService.findAllItemCnt(startOfDay,endOfDay);
+        Long orderCntToday = orderItemService.findAllItemCnt(startOfDay.plusDays(7),endOfDay);
+        Long orderCntYesterday = orderItemService.findAllItemCnt(startOfDay.plusDays(6),endOfDay.minusDays(1));
+
+        int totalOrderPrice = orderItemService.findTotalPrice(startOfDay,endOfDay);
+        int totalOrderPriceToday = orderItemService.findTotalPrice(startOfDay.plusDays(7),endOfDay);
+        int totalOrderPriceYesterDay = orderItemService.findTotalPrice(startOfDay.plusDays(6),endOfDay.minusDays(1));
+
+        Long signupCnt = memberService.findCnt(startOfDay,endOfDay);
+        Long signupCntToday = memberService.findCnt(startOfDay.plusDays(7),endOfDay);
+        Long signupCntYesterDay = memberService.findCnt(startOfDay.plusDays(6),endOfDay.minusDays(1));
+
+        Long qnaCnt = qnaService.findCnt(startOfDay,endOfDay);
+        Long qnaCntToday = qnaService.findCnt(startOfDay.plusDays(7),endOfDay);
+        Long qnaCntYesterDay = qnaService.findCnt(startOfDay.plusDays(6),endOfDay.minusDays(1));
+
+        model.addAttribute("beforeDeli", beforeDeli);
+        model.addAttribute("afterDeli",afterDeli);
+        model.addAttribute("completeDeli",completeDeli);
+        model.addAttribute("cancleDeli",cancleDeli);
+        model.addAttribute("exchangeDeli",exchangeDeli);
+        model.addAttribute("returnDeli",returnDeli);
+        model.addAttribute("successDeli",successDeli);
+
+        model.addAttribute("orderCnt",orderCnt);
+        model.addAttribute("orderCntToday",orderCntToday);
+        model.addAttribute("orderCntYesterday",orderCntYesterday);
+
+        model.addAttribute("totalPrice",totalOrderPrice);
+        model.addAttribute("totalPriceToday",totalOrderPriceToday);
+        model.addAttribute("totalPriceYesterDay",totalOrderPriceYesterDay);
+
+        model.addAttribute("signupCnt",signupCnt);
+        model.addAttribute("signupCntToday",signupCntToday);
+        model.addAttribute("signupCntYesterDay",signupCntYesterDay);
+
+        model.addAttribute("qnaCnt",qnaCnt);
+        model.addAttribute("qnaCntToday",qnaCntToday);
+        model.addAttribute("qnaCntYesterDay",qnaCntYesterDay);
+
         return "pages/admin/index";
     }
     @GetMapping("/basics")

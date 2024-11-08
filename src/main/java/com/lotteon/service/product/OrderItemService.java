@@ -33,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,22 +62,13 @@ public class OrderItemService {
         product.setProdOrderCnt(product.getProdOrderCnt() + 1);
     }
 
-    public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session, OrderPointAndCouponDto dto) {
+    public ResponseEntity<Map<String,Object>> insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session, OrderPointAndCouponDto dto) {
         log.info("오더아이템 서비스 들어옴 ");
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer = auth.getUser().getCustomer();
         LocalDate today = LocalDate.now();
         Order order = orderService.insertOrder(orderDto);
-
-        OrderCancleDocument orderCancleDocument = OrderCancleDocument.builder()
-                .points(dto.getPoints())
-                .custId(auth.getUser().getCustomer().getId())
-                .couponId(dto.getCouponId())
-                .orderId(order.getId())
-                .pointUdate(LocalDateTime.now())
-                .build();
-
-        orderCancleRepository.save(orderCancleDocument);
+        Map<String,Object> map = new HashMap<>();
         log.info("오더 저장 성공 : "+order);
 
         if(order==null){
@@ -99,7 +91,8 @@ public class OrderItemService {
             productOption.setStock(savedStock);
 
             if(!optProduct.isPresent()){
-                return ResponseEntity.ok().body(false);
+                map.put("status",false);
+                return ResponseEntity.ok().body(map);
             }
             log.info("프로덕트 조회 : "+ optProduct.get());
 
@@ -111,7 +104,8 @@ public class OrderItemService {
             Optional<Seller> optSeller = sellerRepository.findById(sellId);
             System.out.println("2번 셀러"+optSeller.get());
             if(!optSeller.isPresent()){
-                return ResponseEntity.ok().body(false);
+                map.put("status",false);
+                return ResponseEntity.ok().body(map);
             }
             log.info("셀러 조회: "+optSeller.get());
 
@@ -140,23 +134,26 @@ public class OrderItemService {
                     .customer(customer)
                     .pointEtc("상품구매 포인트적립")
                     .pointExpiration(today.plusMonths(2))
-                    .orderId(orderItemId)
+                    .orderId(order.getId())
                     .build();
 
             pointRepository.save(point);
-
+            map.put("pointId",point.getId());
             int points = customerService.updateCustomerPoint(customer);
             customer.updatePoint(points);
             customerRepository.save(customer);
 
             if(returnorderItem==null){
-                return ResponseEntity.ok().body(false);
+                map.put("status",false);
+                return ResponseEntity.ok().body(map);
             }
         };
+        map.put("orderId", order.getId());
+        map.put("status",true);
 
         session.setAttribute("orderItemIds",orderItemIds);
 
-        return ResponseEntity.ok().body(true);
+        return ResponseEntity.ok().body(map);
     }
 
     public ResponseOrderDto selectedOrderComplete(List<Long> orderItemIds) {
@@ -420,6 +417,88 @@ public class OrderItemService {
         Long prodId = orderItem.getProduct().getId();
         Optional<Product> optProduct = productRepository.findById(prodId);
         optProduct.get().setProdOrderCnt(optProduct.get().getProdOrderCnt()-1);
+    }
+
+    public Long findItemCnt(int i,LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
+        Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
+        Long cnt = orderItemRepository.countByState2AndOrder_OrderRdateBetween(i,startTimestamp,endTimestamp);
+        return cnt;
+    }
+
+    public Long findAllItemCnt(LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
+        Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
+        Long cnt = orderItemRepository.countByOrder_OrderRdateBetween(startTimestamp,endTimestamp);
+        return cnt;
+    }
+
+    public int findTotalPrice(LocalDateTime startOfDay,LocalDateTime endOfDay) {
+        Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
+        Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_OrderRdateBetween(startTimestamp,endTimestamp);
+        int totalPrice =0;
+        for(OrderItem item : orderItems){
+            totalPrice += item.getTotal();
+        }
+
+        return totalPrice;
+    }
+
+    public List<Long> findItemOrder(LocalDateTime startDay) {
+        LocalDateTime endDay = startDay.withHour(23).withMinute(59).withSecond(59);
+        List<Long> cnts = new ArrayList<>();
+        cnts.add(orderItemRepository.countByOrder_OrderRdateBetween(Timestamp.valueOf(startDay.minusDays(4)),Timestamp.valueOf(endDay.minusDays(4))));
+        cnts.add(orderItemRepository.countByOrder_OrderRdateBetween(Timestamp.valueOf(startDay.minusDays(3)),Timestamp.valueOf(endDay.minusDays(3))));
+        cnts.add(orderItemRepository.countByOrder_OrderRdateBetween(Timestamp.valueOf(startDay.minusDays(2)),Timestamp.valueOf(endDay.minusDays(2))));
+        cnts.add(orderItemRepository.countByOrder_OrderRdateBetween(Timestamp.valueOf(startDay.minusDays(1)),Timestamp.valueOf(endDay.minusDays(1))));
+        cnts.add(orderItemRepository.countByOrder_OrderRdateBetween(Timestamp.valueOf(startDay),Timestamp.valueOf(endDay)));
+        return cnts;
+    }
+
+    public List<Long> findItemType(LocalDateTime startDay,int type) {
+        LocalDateTime endDay = startDay.withHour(23).withMinute(59).withSecond(59);
+        List<Long> cnts = new ArrayList<>();
+        cnts.add(orderItemRepository.countByState2AndOrder_OrderRdateBetween(type,Timestamp.valueOf(startDay.minusDays(4)),Timestamp.valueOf(endDay.minusDays(4))));
+        cnts.add(orderItemRepository.countByState2AndOrder_OrderRdateBetween(type,Timestamp.valueOf(startDay.minusDays(3)),Timestamp.valueOf(endDay.minusDays(3))));
+        cnts.add(orderItemRepository.countByState2AndOrder_OrderRdateBetween(type,Timestamp.valueOf(startDay.minusDays(2)),Timestamp.valueOf(endDay.minusDays(2))));
+        cnts.add(orderItemRepository.countByState2AndOrder_OrderRdateBetween(type,Timestamp.valueOf(startDay.minusDays(1)),Timestamp.valueOf(endDay.minusDays(1))));
+        cnts.add(orderItemRepository.countByState2AndOrder_OrderRdateBetween(type,Timestamp.valueOf(startDay),Timestamp.valueOf(endDay)));
+        return cnts;
+    }
+
+    public List<Integer> findItemTotalPriceByCategory(LocalDateTime starDay, LocalDateTime endDay) {
+        List<OrderItem> orderItems1 = orderItemRepository.findAllByProduct_CategoryMappings_Category_CategoryIdAndOrder_OrderRdateBetween((long)1,Timestamp.valueOf(starDay),Timestamp.valueOf(endDay));
+        int totalPrice1 =0;
+        for(OrderItem item : orderItems1){
+            totalPrice1 += item.getTotal();
+        }
+
+        List<OrderItem> orderItems2 = orderItemRepository.findAllByProduct_CategoryMappings_Category_CategoryIdAndOrder_OrderRdateBetween((long)55,Timestamp.valueOf(starDay),Timestamp.valueOf(endDay));
+        int totalPrice2 =0;
+        for(OrderItem item : orderItems2){
+            totalPrice2 += item.getTotal();
+        }
+
+        List<OrderItem> orderItems3 = orderItemRepository.findAllByProduct_CategoryMappings_Category_CategoryIdAndOrder_OrderRdateBetween((long)151,Timestamp.valueOf(starDay),Timestamp.valueOf(endDay));
+        int totalPrice3 =0;
+        for(OrderItem item : orderItems3){
+            totalPrice3 += item.getTotal();
+        }
+
+        List<OrderItem> orderItems4 = orderItemRepository.findAllByProduct_CategoryMappings_Category_CategoryIdAndOrder_OrderRdateBetween((long)177,Timestamp.valueOf(starDay),Timestamp.valueOf(endDay));
+        int totalPrice4 =0;
+        for(OrderItem item : orderItems4){
+            totalPrice4 += item.getTotal();
+        }
+
+        List<Integer> totalPrices = new ArrayList<>();
+        totalPrices.add(totalPrice1);
+        totalPrices.add(totalPrice2);
+        totalPrices.add(totalPrice3);
+        totalPrices.add(totalPrice4);
+
+        return totalPrices;
     }
 }
 

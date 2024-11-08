@@ -33,4 +33,7 @@ public class OrderCancleDocument {
 
     @Column(name = "point_udate")
     private LocalDateTime pointUdate;
+
+    @Column(name = "point_id")
+    private Long pointId;
 }

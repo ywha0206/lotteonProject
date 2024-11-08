@@ -11,12 +11,16 @@ import com.lotteon.repository.impl.CartItemOptionRepositoryImpl;
 import com.lotteon.repository.impl.CartItemRepositoryImpl;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.product.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Service;
@@ -44,29 +48,13 @@ public class CartService {
     private final CartItemOptionRepositoryImpl cartItemOptionRepositoryImpl;
 
     @Transactional
-    public ResponseEntity<?> insertCart(PostCartDto postCartDto, HttpSession session) {
+    public ResponseEntity<?> insertCart(PostCartDto postCartDto, Authentication auth) {
 
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-
-        // 인증 정보가 없는 경우
-        if (auth == null) {
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated. Cart saved to session.");
+        Long custId = null;
+        if(auth!=null && auth.getPrincipal() instanceof MyUserDetails){
+            MyUserDetails user =(MyUserDetails) auth.getPrincipal();
+            custId = user.getUser().getCustomer().getId();
         }
-
-        if(auth.getUser().getMemRole()=="seller"){
-            return ResponseEntity.status(HttpStatus.CONTINUE).body("seller");
-        }
-
-        Customer customer = auth.getUser().getCustomer();
-        if (customer == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer not found");
-        }
-
-        long custId = customer.getId();
-
         //장바구니 조회 없으면 생성
         Optional<Cart> optCart = cartRepository.findByCustId(custId);
 
@@ -80,6 +68,41 @@ public class CartService {
 
         return ResponseEntity.ok(cart);
 
+    }
+    //비회원 카트
+    private String getCookieValue(HttpServletRequest req, String cookieName) {
+        if (req.getCookies() != null) {
+            for (Cookie cookie : req.getCookies()) {
+                if (cookieName.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null; // 해당 쿠키가 없을 때 null 반환
+    }
+    public Cart insertCartFornoAuth(HttpServletRequest req, HttpServletResponse resp) {
+        String cartId = getCookieValue(req, "cartId");
+
+        if (cartId == null) {
+            Cart cart = cartRepository.save(new Cart());
+            Cookie newCookie = new Cookie("cartId", cart.getId().toString());
+            newCookie.setPath("/prod");
+            newCookie.setMaxAge(60 * 60 * 24 * 7); // 7일 유효기간
+            resp.addCookie(newCookie);
+            return cart;
+        } else {
+            Optional<Cart> optCart = cartRepository.findById(Long.parseLong(cartId));
+            if(optCart.isPresent()) {
+                Cart cart = optCart.get();
+                return cart;
+            }else{
+                Cookie deleteCookie = new Cookie("cartId", null);
+                deleteCookie.setPath("/prod");
+                deleteCookie.setMaxAge(0);
+                resp.addCookie(deleteCookie);
+                return null;
+            }
+        }
     }
 
     public ResponseEntity<?> insertCartItem(PostCartDto postCartDto, Cart cart) {
@@ -131,7 +154,6 @@ public class CartService {
                     .optionId(optionId)
                     .build();
 
-
             cartItemRepository.save(newCartItem);
 
         }
@@ -139,22 +161,49 @@ public class CartService {
         return ResponseEntity.ok().body("insert");
     }
 
-    public List<GetCartDto> selectCart(HttpSession session) {
-
+    public Cart selectCart(Authentication authentication,
+                                     HttpServletRequest req, HttpServletResponse resp) {
         // 1. 인증된 사용자 정보 가져오기
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+        Long custId = auth.getUser().getCustomer().getId();
 
-        // 2. 사용자 ID로 카트 조회
-        long custId = auth.getUser().getCustomer().getId();
-        Optional<Cart> cartOptional = cartRepository.findByCustId(custId);
-        // 3. 카트가 없으면 빈 리스트 반환
-        if (!cartOptional.isPresent()) {
-            return Collections.emptyList();  // 카트가 없을 경우
+        String cartId = getCookieValue(req, "cartId");
+        Optional<Cart> optCustCart = cartRepository.findByCustId(custId);
+
+        if(cartId != null) {
+            Optional<Cart> optCookieCart = cartRepository.findById(Long.parseLong(cartId));
+            optCookieCart.get().getItems().forEach(cartItem -> {
+                cartItem.setCart(optCustCart.get());
+            });
+            Cookie newCookie = new Cookie("cartId", null);
+            newCookie.setPath("/prod");
+            newCookie.setMaxAge(0);
+            resp.addCookie(newCookie);
         }
 
-        Cart cart = cartOptional.get();
+
+        return optCustCart.get();
+    }
+
+    public Cart selectCartFornoAuth(HttpServletRequest req) {
+        String cartId = getCookieValue(req, "cartId");
+        Optional<Cart> optCart = cartRepository.findById(Long.parseLong(cartId));
+
+        Cart cart;
+        if(!optCart.isPresent()) {
+            cart = cartRepository.save(new Cart());
+        }else{
+            cart = optCart.get();
+        }
+
+        return cart;
+    }
+
+    public List<GetCartDto> selectCartItem(Cart cart) {
+        // 3. 카트가 없으면 빈 리스트 반환
+        if (cart == null) {
+            return Collections.emptyList();  // 카트가 없을 경우
+        }
 
         // 4. 카트에 담긴 아이템 목록을 조회
         List<CartItem> cartItems = cart.getItems();
@@ -162,32 +211,24 @@ public class CartService {
 
         // 5. 각 카트 아이템을 DTO로 변환
         for (CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();  // 카트 아이템에 연결된 상품
+            Product product = cartItem.getProduct();
             CartProductDto cartProductDto = modelMapper.map(product, CartProductDto.class);
 
-            //옵션이 있으면 옵션리스트에 담기
+            // 옵션이 있으면 옵션 리스트에 담기
             Long optionId = null;
             int additionalPrice = 0;
             List<String> optionValue = new ArrayList<>();
-            if(cartItem.getOptionId()!=null){
+            if (cartItem.getOptionId() != null) {
                 optionId = cartItem.getOptionId();
                 ProductOption option = productOptionRepository.findById(optionId).orElse(null);
 
-                if (option.getOptionValue() != null) {
-                    optionValue.add(option.getOptionValue());
+                if (option != null) {
+                    if (option.getOptionValue() != null) optionValue.add(option.getOptionValue());
+                    if (option.getOptionValue2() != null) optionValue.add(option.getOptionValue2());
+                    if (option.getOptionValue3() != null) optionValue.add(option.getOptionValue3());
+                    if (option.getAdditionalPrice() != null) additionalPrice = option.getAdditionalPrice().intValue();
                 }
-                if (option.getOptionValue2() != null) {
-                    optionValue.add(option.getOptionValue2());
-                }
-                if (option.getOptionValue3() != null) {
-                    optionValue.add(option.getOptionValue3());
-                }
-                if(option.getAdditionalPrice() != null){
-                    additionalPrice = option.getAdditionalPrice().intValue();
-                }
-
             }
-            log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
 
             // 6. DTO로 변환
             GetCartDto getCartDto = GetCartDto.builder()
@@ -222,12 +263,8 @@ public class CartService {
 
     }
 
-    public Map<Long,List<GetOption1Dto>> selectOptions() {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Customer customer = auth.getUser().getCustomer();
-        Optional<Cart> cartOptional = cartRepository.findByCustId(customer.getId());
+    public Map<Long,List<GetOption1Dto>> selectOptions(Cart cart) {
 
-        Cart cart = cartOptional.get();
         Map<Long,List<GetOption1Dto>> map = new HashMap<>();
         cart.getItems().forEach(v->{
             List<ProductOption> options = productOptionRepository.findAllByProduct(v.getProduct());
@@ -246,5 +283,6 @@ public class CartService {
         Optional<CartItem> cartItem = cartItemRepository.findById(cart);
         cartItem.get().setQuantity(quantity);
     }
+
 }
 

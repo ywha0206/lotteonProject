@@ -240,7 +240,7 @@
         async function checkBusiness(currentValue) {
 
             try {
-                const response = await fetch(`http://localhost:8080/api/bizno?brno=${currentValue}`, {
+                const response = await fetch(`/api/bizno?brno=${currentValue}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
