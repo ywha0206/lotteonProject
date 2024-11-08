@@ -124,15 +124,13 @@ body{height: 100vh;}
         opacity: 1;
     }
 }
-#my .address-nick{width: 40%; display: inline-block;box-sizing: border-box}
-#my .address-name{width: 58%; display: inline-block;box-sizing: border-box}
-#my .address-nick span, #my .address-name span{padding-left: 3px}
-
+#my .address-nick{width: 40%; float: left}
+#my .address-name{width: 58%; float: right}
 #addrBox2,#addrBox3{width: 100% ; height: auto; border-radius: 10px;background: #F2F2F2;margin-bottom: 10px; padding: 10px;}
-#addr12,#addr13,#addr22,#addr23,#addr32,#addr33{width:100%;background: transparent; border: none;outline: none;}
+#addr12,#addr13,#addr22,#addr23,#addr32,#addr33{width:100%;background: transparent; border: none;outline: none;font-size: 12px}
 #addrHp12, #addrHp22, #addrHp32,#addrHp13, #addrHp23, #addrHp33{border: none; outline: none; width: 30%; background: transparent; padding: 0 10px}
-#addrName2,#addrName3,#addrHp2,#addrHp3,#addrNick2,#addrNick3,#request2,#request3 {width: 100%;border-radius: 10px;border: none;padding: 5px;display: inline-block;margin-bottom: 2px;background: #F2F2F2;}
-#my .address-box > span{padding-left: 3px}
+#addrName2,#addrName3,#addrHp2,#addrHp3,#addrNick2,#addrNick3,#request2,#request3 {width: 100%;border-radius: 10px;border: none;padding: 5px;display: inline-block;margin-bottom: 2px;background: #F2F2F2; font-size: 12px}
+#my span.label{padding-left: 3px; font-size: 12px}
 span.addrBox{display: flex;height: 18px;overflow: hidden;align-items: center; cursor: pointer}
 span.addrBox>span{
     display: inline-block;
@@ -145,13 +143,12 @@ span.addrBox>span{
     margin-left: 10px;
 }
 #addrHp2>input{padding: 0;}
-#addrHp2 > span {display: none}
-#addr12, #addr13{width: 50px}
+#addrHp2 > span {display: none;margin: auto 3px}
 #addrHp2,#addrHp3{text-align: center; margin-bottom: 5px}
 #request2,#request3{margin-bottom: 10px}
 #addrName2,#addrName3,#addrNick2,#addrNick3{margin-bottom: 3px}
-#my .new-addr > label{position: absolute;bottom: 15px;left: 15px;}
-#my .address-box > label{position: absolute;bottom: 15px;left: 15px;}
+#my .new-addr > label{position: absolute;bottom: 18px;left: 18px; font-size: 12px;}
+#my .address-box > label{position: absolute;bottom: 18px;left: 18px; font-size: 12px}
 #my .screen-reader { /* 스크린 리더를 고려해서 체크박스를 화면에서 숨김 */
     position: absolute;
     width: 1px;
