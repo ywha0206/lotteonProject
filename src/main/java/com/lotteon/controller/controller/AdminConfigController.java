@@ -1,7 +1,12 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.*;
+import com.lotteon.entity.article.Notice;
+import com.lotteon.entity.article.Qna;
 import com.lotteon.service.VisitorService;
+import com.lotteon.service.article.NoticeService;
+import com.lotteon.service.article.QnaService;
 import com.lotteon.service.config.*;
 import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/config")
@@ -29,6 +35,8 @@ public class AdminConfigController {
     private final VersionService versionService;
     private final TermsService termsService;
     private final VisitorService visitorService;
+    private final QnaService qnaService;
+    private final NoticeService noticeService;
 
     private String getSideValue() {
         return "config";  // 실제 config 값을 여기에 설정합니다.
@@ -49,7 +57,12 @@ public class AdminConfigController {
         model.addAttribute("todayCount", todayCount);
         model.addAttribute("yesterdayCount", yesterdayCount);
         model.addAttribute("weekCount", weekCount);
-
+        // 공지사항 리스트 모델에 추가
+        List<Notice> noticeList = noticeService.getTop5Notices();
+        model.addAttribute("notices", noticeList);
+        // QnA 리스트 모델에 추가
+        List<Qna> qnaList = qnaService.getTop5Qnas();
+        model.addAttribute("qnas", qnaList);
         return "pages/admin/index";
     }
     @GetMapping("/basics")
