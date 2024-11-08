@@ -39,11 +39,11 @@
                                         <span class="ratingBg">
                                             <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
                                         </span>
-                                        <a href="#review">
+                                        <a href="#ai-box">
                                             <span th:text="${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}"></span>
                                             <span th:text="${product.prodReviewCnt eq null?'':'리뷰 '+product.prodReviewCnt+'건 보기'}"></span>
                                         </a><a>|</a>
-                                        <a href="#related-product">Ai추천 상품 보기</a>
+                                        <a href="#toggleButton">Ai추천 상품 보기</a>
                                     </span>
 
                                 </td>
@@ -144,7 +144,7 @@
                 <button id="toggleButton" onclick="toggleDetail()">상품 정보 더보기 ▼</button>
             </div>
 
-            <h2 class="sub_tit4" style="margin-bottom: 0"><span style="font-size: 14px;color: #7b7b7b; line-height: 23px;">당신을 위한</span><br/>똑똑한 AI 상품 추천</h2>
+            <h2 id="ai-box" class="sub_tit4" style="margin-bottom: 0"><span style="font-size: 14px;color: #7b7b7b; line-height: 23px;">당신을 위한</span><br/>똑똑한 AI 상품 추천</h2>
             <div id="related-products">
                 <div th:each="prod : ${related}" class="relaties">
                     <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
@@ -196,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <h2 style="display: flex; align-items: center;">
+            <h2 id="detail-id" style="display: flex; align-items: center;">
                 <span class="sub_tit3" style="display: inline-block; width: auto;margin-right: 10px;">상품정보 제공고시</span>
                 <span style="font-size: 13px; display: inline-block; width: 480px">[전자상거래에 관한 상품정보 제공에 관한 고시]항목에 의거 등록된 정보입니다.</span>
             </h2>
@@ -577,7 +577,7 @@
 
     // 스크롤 이벤트 리스너 추가
     window.addEventListener("scroll", () => {
-        const sectionElement = document.querySelector('#footer');
+        const sectionElement = document.querySelector('#detail-id');
         const sectionTop = sectionElement.offsetTop;
         const sectionHeight = sectionElement.offsetHeight;
         const scrollPosition = window.scrollY + window.innerHeight;

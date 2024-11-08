@@ -264,42 +264,65 @@
           </tr>
         </th:block>
       </table>
+
       <!-- .tb1-->
       <div class="total_yh">
         <button class="btnDel" id="btnDel"><a href="#">선택삭제</a></button>
-        <div class="total">
-          <table class="tb2">
-            <tr>
-              <th class="th">전체합계</th>
-            </tr>
-            <tr>
-              <th>상품수</th>
-              <td class="data qty">0</td>
-            </tr>
-            <tr>
-              <th>상품금액</th>
-              <td class="data price">0</td>
-            </tr>
-            <tr>
-              <th>할인금액</th>
-              <td class="data discount">0</td>
-            </tr>
-            <tr>
-              <th>배송비</th>
-              <td class="data deliver">0</td>
-            </tr>
-            <tr>
-              <th>적립 포인트</th>
-              <td class="data point">0</td>
-            </tr>
-            <tr>
-              <th>전체주문금액</th>
-              <td class="red data realtotal">0</td>
-            </tr>
-          </table>
-        <!-- .tb2-->
-        <div class="btn_order"><a th:href="@{/prod/order}" id="btnOrder">주문하기</a></div>
-      </div>
+        <div style="display: flex;">
+          <div id="related-products">
+            <div th:each="prod : ${related}" class="relaties">
+              <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
+              <div class="related-descriptions">
+                <dt style="font-weight: 400">
+                  [[${prod.prodName}]]
+                </dt>
+                <dd style="display: flex; margin-top: 5px">
+                  <p class="related-total">[[${#numbers.formatInteger(prod.getProdPrice() - prod.getProdPrice() * (prod.getProdDiscount()/100), 1,'COMMA')}]]원</p>
+                  <p class="related-price" th:if="${prod.prodDiscount > 0.0}">[[${#numbers.formatInteger(prod.getProdPrice(), 1,'COMMA')}]]원&nbsp;</p>
+                </dd>
+                <div class="d-flex align-items-center">
+                            <span class="ratingBg" style="zoom: 0.8">
+                                <span class="rating" th:style="'width:'+ ${prod.prodRating * 2}+'%;'"></span>
+                            </span>
+                  <span th:text="${prod.prodReviewCnt eq null?'(0)':'('+prod.prodReviewCnt+')'}" style="margin-left: 5px;color: #7b7b7b"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="total">
+            <table class="tb2">
+              <tr>
+                <th class="th">전체합계</th>
+              </tr>
+              <tr>
+                <th>상품수</th>
+                <td class="data qty">0</td>
+              </tr>
+              <tr>
+                <th>상품금액</th>
+                <td class="data price">0</td>
+              </tr>
+              <tr>
+                <th>할인금액</th>
+                <td class="data discount">0</td>
+              </tr>
+              <tr>
+                <th>배송비</th>
+                <td class="data deliver">0</td>
+              </tr>
+              <tr>
+                <th>적립 포인트</th>
+                <td class="data point">0</td>
+              </tr>
+              <tr>
+                <th>전체주문금액</th>
+                <td class="red data realtotal">0</td>
+              </tr>
+            </table>
+            <!-- .tb2-->
+            <div class="btn_order"><a th:href="@{/prod/order}" id="btnOrder">주문하기</a></div>
+          </div>
+        </div>
         <!-- .total-->
       </div>
     </main>

@@ -70,7 +70,7 @@ public class CartService {
 
     }
     //비회원 카트
-    private String getCookieValue(HttpServletRequest req, String cookieName) {
+    public String getCookieValue(HttpServletRequest req, String cookieName) {
         if (req.getCookies() != null) {
             for (Cookie cookie : req.getCookies()) {
                 if (cookieName.equals(cookie.getName())) {
@@ -145,6 +145,7 @@ public class CartService {
             existingCartItem.setQuantity(newQuantity);
             cartItemRepository.save(existingCartItem);
         } else {
+            Optional<ProductOption> option = productOptionRepository.findById(optionId);
 
             CartItem newCartItem = CartItem.builder()
                     .cart(cart)
@@ -152,6 +153,7 @@ public class CartService {
                     .quantity(postCartDto.getQuantity())
                     .totalPrice(postCartDto.getTotalPrice())
                     .optionId(optionId)
+                    .optionCurrAdditional(option.get().getAdditionalPrice())
                     .build();
 
             cartItemRepository.save(newCartItem);
@@ -276,7 +278,16 @@ public class CartService {
 
     public void updateCartOption(Long id, Long prod) {
         Optional<CartItem> cartItem = cartItemRepository.findById(prod);
-        cartItem.get().updateOption(id);
+        Optional<ProductOption> productOption = productOptionRepository.findById(id);
+        if(cartItem.get().getOptionCurrAdditional()!=null){
+            cartItem.get().updateOption(id,productOption.get().getAdditionalPrice());
+            cartItemRepository.save(cartItem.get());
+            cartItem.get().updateAdditional(productOption.get().getAdditionalPrice());
+            cartItemRepository.save(cartItem.get());
+        } else {
+            cartItem.get().insertAdditional(id,productOption.get().getAdditionalPrice());
+            cartItemRepository.save(cartItem.get());
+        }
     }
 
     public void updateQuantity(Long cart, Integer quantity) {
