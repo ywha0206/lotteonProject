@@ -275,14 +275,3 @@ public class QnaService {
     }
 }
 
-    public Long findCnt(LocalDateTime startOfDay, LocalDateTime endOfDay) {
-
-        return qnaRepository.countByQnaRdateBetween(startOfDay,endOfDay);
-    }
-
-    public Long findByCustomer() {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return qnaRepository.countByMemberId(auth.getUser().getId());
-
-    }
-}
