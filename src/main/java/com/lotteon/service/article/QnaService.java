@@ -261,6 +261,7 @@ public class QnaService {
 
     public List<Qna> getTop5QnasForMy(long memId) {
         return qnaRepository.findTop5ByMember_IdOrderByQnaRdateDesc(memId);
+    }
 
     public Long findCnt(LocalDateTime startOfDay, LocalDateTime endOfDay) {
 
