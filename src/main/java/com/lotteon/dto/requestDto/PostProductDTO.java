@@ -40,6 +40,7 @@ public class PostProductDTO {
     private int prodViews;
     private int prodRating;
     private int prodPoint;
+    private Integer prodReviewCnt;
     @CreationTimestamp
     private Timestamp prodRdate;
     private List<ProductOption> options = new ArrayList<>();
