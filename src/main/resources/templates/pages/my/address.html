@@ -13,7 +13,7 @@
                 <h3>배송지 설정</h3>
                 <div class="address-wrapper">
                     <div th:class="${addr.state==1 ? 'address-box on' : 'address-box'}" th:each="addr,i : ${addrs}">
-                        <div th:text="${addr.addrNick eq '기본배송지'?'내 정보':addr.addrNick}" class="address-name" style="font-size: 17px">
+                        <div th:text="${addr.addrNick eq '기본배송지'?'내 정보':addr.addrNick}" class="address-nick" style="font-size: 17px">
                             기본배송지
                         </div>
                         <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.name} + ' / '"></span><span th:text="${addr.hp1+'-'+addr.hp2+'-'+addr.hp3}"></span></div>
@@ -70,26 +70,26 @@
             newAddr.innerHTML = `
             <div class="new-addr">
                 <div class="address-nick">
-                    <span>배송지 별명</span>
+                    <span class="label">배송지 별명</span>
                     <input id="addrNick2" placeholder="집, 회사 등">
                 </div>
                 <div class="address-name">
-                    <span>수취인 </span>
+                    <span class="label">수취인 </span>
                     <input id="addrName2" placeholder="받는 사람 이름">
                 </div>
-                <span>연락처 </span>
+                <span class="label">연락처 </span>
                 <div id="addrHp2">
-                    <input id="addrHp12" maxlength="3" data-valid="number" style="text-align: right;margin-right: 4px"><span> -</span>
-                    <input id="addrHp22" maxlength="7" data-valid="number" style="text-align: center"><span>- </span>
+                    <input id="addrHp12" maxlength="3" data-valid="number" style="text-align: right;margin-right: 4px"><span>-</span>
+                    <input id="addrHp22" maxlength="7" data-valid="number" style="text-align: center" placeholder="'-' 제외 숫자 입력"><span>-</span>
                     <input id="addrHp32" maxlength="5" data-valid="number" style="text-align: left;margin: 0 2px">
                 </div>
-                <span class="addrBox" onclick="postcode(2)">배송지 <span>우편번호 검색</span> <a style="margin-left: 3px;text-decoration: underline; color=#E0E0E0">검색하기</a></span>
+                <span class="addrBox label" onclick="postcode(2)">배송지 <span>우편번호 검색</span> <a style="margin-left: 4px;text-decoration: underline; color:#A3A3A3;font-size: 12px">검색하기</a></span>
                 <div id="addrBox2">
                     <input id="addr12" placeholder="우편번호">
                     <input id="addr22" placeholder="주소">
                     <input id="addr32" placeholder="상세주소">
                 </div>
-                <span>배송 요청사항</span>
+                <span class="label">배송 요청사항</span>
                 <input id="request2" placeholder="요청사항"><br>
                 <input id="basicState2" type="checkbox" class="screen-reader"><label for="basicState2"><i></i> 이 배송지를 기본배송지로 </label><br>
                 <button onclick="addAddress(event)" class="add-btn">추가</button>
@@ -255,7 +255,8 @@
         const hp3 = inputs[2];
         hp1.style.display = 'none';
         hp3.style.display = 'none';
-        hp2.style.width='80%';
+        hp2.style.width='100%';
+        hp2.style.padding='0 20px';
 
         inputs.forEach(function(input, idx) {
             // keyup 이벤트 리스너 추가
@@ -268,6 +269,10 @@
                 }
 
                 hp2.addEventListener('keyup', function() {
+                    // 이전 상태 저장
+                    previousHp2Value = hp2.value;
+                    previousHp3Value = hp3.value;
+
                     if (hp2.value.length === 7) {
                         hp1.value = hp2.value.substr(0, 3);
                         hp3.value = hp2.value.substr(6, 1);
@@ -275,6 +280,7 @@
                         hp3.setAttribute('maxlength', '5');
                         hp1.style.display = 'inline-block';
                         hp3.style.display = 'inline-block';
+                        hp2.style.padding='0';
                         document.querySelector('#addrHp12+span').style.display='inline-block';
                         document.querySelector('#addrHp22+span').style.display='inline-block';
                         hp2.style.width='15%';
@@ -284,6 +290,22 @@
 
                 // iptPhoneC의 keyup 이벤트
                 hp3.addEventListener('keyup', function() {
+                    // 백스페이스 키가 눌렸을 때
+                    if (e.keyCode === 8 && hp3.value.length === 0) {
+                        // hp2와 hp3를 이전 상태로 복원
+                        hp2.value = hp1.value + hp2.value + hp3.value;
+                        hp1.value='';
+                        hp3.value='';
+                        hp2.focus();
+                        hp1.style.display = 'none';
+                        hp3.style.display = 'none';
+                        hp2.style.width = '100%';
+                        hp2.style.padding='0 20px';
+                        document.querySelector('#addrHp12+span').style.display = 'none';
+                        document.querySelector('#addrHp22+span').style.display = 'none';
+                        return;
+                    }
+
                     if (hp3.value.length === 5) {
                         if (hp2.value.length === 3) {
                             hp2.value = hp2.value + hp3.value.substr(0, 1);
