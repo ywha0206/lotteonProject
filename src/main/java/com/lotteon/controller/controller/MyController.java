@@ -14,6 +14,7 @@ import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.point.PointService;
 import com.lotteon.service.product.OrderService;
 import com.lotteon.service.product.ReviewService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -138,16 +139,17 @@ public class MyController {
     // 나의 쇼핑정보 > 나의 설정
 
     @GetMapping("/info")
-    public String info(Model model,Authentication authentication) {
-        log.info("컨트롤러 접속 ");
-
-        GetMyInfoDTO getCust = customerService.myInfo();
-        if(getCust!=null){
-            model.addAttribute("cust",getCust);
-        } else {
-            return "/";
+    public String info(Model model, Authentication authentication) {
+        MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        GetMyInfoDTO dto = customerService.myInfoModify(customer);
+        log.info("컨트롤러 디티오 "+dto);
+        if(dto==null){
+            return "redirect:/auth/login/view";
+        }else{
+            model.addAttribute("cust",dto);
+            return "pages/my/info";
         }
-        return "pages/my/info";
     }
 
     @GetMapping("/orders")
