@@ -30,6 +30,8 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
 
     Page<Qna> findAllByMember_Seller(Seller seller, Pageable pageable);
 
+    List<Qna> findTop5ByMember_IdOrderByQnaRdateDesc(Long id);
+
     Page<Qna> findAllByMember(Member member, Pageable pageable);
 
     Long countByQnaRdateBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
@@ -37,4 +39,5 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
     Long countByMemberId(Long id);
 
     Page<Qna> findAllBySeller(Seller seller, Pageable pageable);
+
 }

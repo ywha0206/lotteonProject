@@ -125,7 +125,7 @@
       </article>
 
 
-      <h3>문의내역 <a th:href="@{/my/qnas/{page}(page=${page})}">더보기 &gt; </a></h3>
+      <h3>문의내역 <a th:href="@{/my/qnas}" target="_self">더보기 &gt;</a></h3>
       <article>
         <table border="0" class="qna">
           <tr>
@@ -136,28 +136,27 @@
             <th>작성일</th>
             <th>상태</th>
           </tr>
-          <tr th:class="${qnaList}" th:each="qna, iterStat : ${qnaList}">
+          <tr th:if="${#lists.isEmpty(qnaList)}">
+            <td colspan="6">문의내역이 없습니다!</td>
+          </tr>
+          <tr th:each="qna, iterStat : ${qnaList}">
             <td th:text="${iterStat.index + 1}">1</td>
             <!-- 문의채널 -->
             <td>
-              <span th:text="${qna.type != null ? (qna.type == 0 ? '고객센터' : '판매자 게시판') : 'N/A'}"></span>
+              <span th:text="${qna.type != null ? (qna.type == 0 ? '고객센터' : '판매자 게시판') : 'N/A'}">N/A</span>
             </td>
             <!-- 1차 유형 -->
-            <td class="cate1" th:data-value="${qna.cate1.categoryName}">1차 유형</td>
+            <td class="cate1" th:data-value="${qna.cate1.categoryName}" th:text="${qna.cate1.categoryName}">1차 유형</td>
             <!-- 제목 -->
-            <td th:text="${qna.title}"></td>
-            <!-- 작성일 -->
+            <td>
+              <a th:href="@{'/cs/qna/view/' + ${qna.id}}" th:text="${qna.title}">문의 제목</a>
+            </td>            <!-- 작성일 -->
             <td th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2024-12-12</td>
             <!-- 상태 -->
             <td>
-              <span class="status confirm"
-                    th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
-                    th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}"></span>
-            </td>
-            <td>
-              <span th:classappend="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
-                    th:text="${qna != null && qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}">
-              </span>
+                <span class="status confirm"
+                      th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}"
+                      th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}">검토 중</span>
             </td>
           </tr>
 
@@ -199,6 +198,7 @@
   let prodId;
   let content;
   let score;
+  let selectedSellerCompany;
 
   async function openReturn(event){
     const orderId = event.target.dataset.id;
@@ -430,6 +430,7 @@
       document.querySelector('#popSeller .email').innerText = seller.email
       document.querySelector('#popSeller .bizNum').innerText = seller.busiCode
       document.querySelector('#popSeller .address').innerText = seller.address
+      selectedSellerCompany = seller.company
       sellerDialog.showModal();
     } catch (e) {
       console.log(e)
@@ -542,7 +543,9 @@
     const qnaCancelBtn = popQuestion.querySelector(".cancel-btn");
 
     submitBtn.addEventListener('click', function(event) {
+      document.getElementById('popQuestion').querySelector('.sellId').value = selectedSellerCompany
       popSeller.close();
+
       popQuestion.showModal();
 
       const email  =  /*[[${email}]]*/ "";

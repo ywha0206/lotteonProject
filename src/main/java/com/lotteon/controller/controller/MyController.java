@@ -77,10 +77,10 @@ public class MyController {
             model.addAttribute("noReview", true);
         }
 
+
         // 최신 QnA 5개 불러오기
         // QnaService에서 Qna를 ArticleDto로 변환하여 가져오도록 수정
-        List<ArticleDto> qnaList = qnaService.getTop5Qnas().stream()
-                .map(ArticleDto::fromEntity)
+        List<ArticleDto> qnaList = qnaService.getTop5QnasForMy(myUserDetails.getUser().getId()).stream()                .map(ArticleDto::fromEntity)
                 .collect(Collectors.toList());
         model.addAttribute("qnaList", qnaList);
 
@@ -110,8 +110,9 @@ public class MyController {
         return "pages/my/index";
     }
 
-    @PostMapping(value = {"", "/", "/index"})
+    @PostMapping("/qna")
     public String indexPost(ArticleDto articleDto) {
+        System.out.println("===================");
         qnaService.insertQnaToSeller(articleDto);
         return "redirect:/my/index";
     }
@@ -233,14 +234,7 @@ public class MyController {
         return "pages/my/usepoint";
     }
 
-    /* @GetMapping("/qnas")
-    public String getMyQnas(Model model, Principal principal) {
-        MyUserDetails userDetails = (MyUserDetails) ((Authentication) principal).getPrincipal();
-        Member memberId = userDetails.getUser(); // MyUserDetails에서 ID를 가져오는 메서드 사용
-        List<ArticleDto> qnaList = qnaService.getMyQnas(memberId.getId());
-        model.addAttribute("qnaList", qnaList);
-        return "pages/my/qna"; // 뷰 파일로 연결
-    }*/
+
 
     @GetMapping("/qnas")
     public String getMyQnas(Model model, Principal principal,
