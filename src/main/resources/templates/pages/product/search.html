@@ -95,11 +95,16 @@
                             </span>
                             <span class="badge customer-satisfaction" style="display: inline-block;">
                                 <i class="fas fa-thumbs-up"></i>
-                                <span>고객만족우수</span>
+                                <span th:if="${product.grade} == 5">플래티넘</span>
+                                <span th:if="${product.grade} == 4">프리미엄</span>
+                                <span th:if="${product.grade} == 3">빅파워</span>
+                                <span th:if="${product.grade} == 2">파워</span>
+                                <span th:if="${product.grade} == 1">새싹</span>
+                                <span th:if="${product.grade} == 0">씨앗</span>
                             </span>
                             <span class="badge grade" style="display: inline-block;">
                                 <i class="fas fa-star"></i>
-                                <span th:text="${product.rating}">등급</span>
+                                <span>[[${#numbers.formatDecimal(product.rating / 10.0, 1, 1)}]]</span>
                             </span>
                         </span>
                     </td>
