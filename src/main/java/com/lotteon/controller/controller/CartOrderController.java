@@ -9,13 +9,11 @@ import com.lotteon.dto.responseDto.cartOrder.GetCouponDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.product.Cart;
+import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.CustomerCouponService;
-import com.lotteon.service.product.CartService;
-import com.lotteon.service.product.OrderItemService;
-import com.lotteon.service.product.OrderService;
-import com.lotteon.service.product.ProductService;
+import com.lotteon.service.product.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -44,6 +42,7 @@ public class CartOrderController {
     private final CustomerService customerService;
     private final CustomerCouponService customerCouponService;
     private final ProductService productService;
+    private final RecommendationService recommendationService;
 
     @GetMapping("/cart")
     public String join(Model model, HttpServletRequest req,
@@ -53,6 +52,8 @@ public class CartOrderController {
             cart = cartService.selectCartFornoAuth(req);
         }else{
             cart = cartService.selectCart(authentication, req,resp);
+            List<Product> findRelatedCart = recommendationService.findRelatedCart(cart);
+            model.addAttribute("related", findRelatedCart);
         }
 
         List<GetCartDto> cartItems = cartService.selectCartItem(cart);
@@ -63,6 +64,7 @@ public class CartOrderController {
         Map<Long,List<GetOption1Dto>> options = cartService.selectOptions(cart);
         model.addAttribute("options", options);
         model.addAttribute("category1", category1);
+
         return "pages/product/cart";
     }
 

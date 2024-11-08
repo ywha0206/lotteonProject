@@ -32,11 +32,6 @@ public class CartItem {
     @Column(name = "cart_item_quantity")
     private int quantity;
 
-    public void setQuantity(int quantity) {
-        this.totalPrice = (totalPrice/this.quantity)*quantity;
-        this.quantity = quantity;
-    }
-
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "prod_option_id")
 //    private ProductOption productOption;
@@ -52,7 +47,25 @@ public class CartItem {
     @Column(name = "option_id")
     private Long optionId;
 
-    public void updateOption(Long id) {
+    @Column(name = "option_curr_additional")
+    private Double optionCurrAdditional;
+
+    public void updateOption(Long id, Double additional) {
+        this.optionId = id;
+        this.totalPrice = ((this.totalPrice / this.quantity)-optionCurrAdditional+additional)*this.quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.totalPrice = (totalPrice/this.quantity)*quantity;
+        this.quantity = quantity;
+    }
+
+    public void updateAdditional(Double additionalPrice) {
+        this.optionCurrAdditional = additionalPrice;
+    }
+
+    public void insertAdditional(Long id ,Double additionalPrice) {
+        this.optionCurrAdditional = additionalPrice;
         this.optionId = id;
     }
 }
