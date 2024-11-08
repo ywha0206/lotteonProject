@@ -1,10 +1,13 @@
 package com.lotteon.entity.member;
 
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
@@ -17,6 +20,7 @@ import java.time.LocalDateTime;
 public class UserLog {
     @Id
     private String id;
+
     private Long custId;
     private Long prodId;
     private String action;
