@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.HashMap;
 
 import com.lotteon.dto.requestDto.MyInfoPassDto;
+import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.service.member.MemberService;
 import jakarta.servlet.http.HttpSession; // javax 대신 jakarta 패키지 사용
 import java.util.Map;
@@ -25,23 +26,24 @@ public class ApiMyUserController {
     private final MemberService memberService;
 
     // 나의 설정 정보 수정
-//    @PatchMapping("/info/{type}")
-//    public ResponseEntity<?> modifyInfo(@PathVariable("type") String type,
-//                                        @RequestBody PatchMyInfoDTO patchMyInfoDTO,
-//                                        HttpSession session) {
-//
-//        Boolean success = customerService.modifyInfo(type, patchMyInfoDTO);
-//
-//        // 특정 조건에 따라 세션을 무효화합니다. 예: type이 "password"일 때 세션 무효화
-//        if ("password".equals(type)) { // 비밀번호가 변경된 경우에만 세션을 무효화합니다.
-//            session.invalidate(); // 세션 무효화
-//        }
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("success", success);
-//
-//        return ResponseEntity.ok(response);
-//    }
+    @PatchMapping("/info/{type}")
+    public ResponseEntity<?> modifyInfo(@PathVariable("type") String type,
+                                        @RequestBody PatchMyInfoDTO patchMyInfoDTO,
+                                        HttpSession session) {
+        Long custId = patchMyInfoDTO.getCustId();
+        String email = patchMyInfoDTO.getCustEmail();
+        String hp = patchMyInfoDTO.getCustHp();
+
+        log.info("컨트롤러 접속 "+type+"dto "+patchMyInfoDTO);
+
+        Boolean success = false;
+        if(type.equals("email")){
+            success = customerService.updateCustomerEmail(custId, email);
+        }else {
+            success = customerService.updateCustomerHp(custId, hp);
+        }
+        return ResponseEntity.ok().body("false");
+    }
 
 
     @PostMapping("/info/pass2")
@@ -58,6 +60,15 @@ public class ApiMyUserController {
         }
         return ResponseEntity.ok().body("false");
     }
-
+    @PostMapping("/info")
+    public String updateMyinfo(GetMyInfoDTO getMyInfoDTO) {
+        log.info("컨트롤러 접속 "+getMyInfoDTO);
+        Boolean result = customerService.updateCustomer(getMyInfoDTO);
+        if(result){
+            return "redirect:/my/info";
+        }else{
+            return "redirect:/my/index";
+        }
+    }
 
 }
