@@ -7,18 +7,25 @@ import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetConfigDTO;
 import com.lotteon.dto.responseDto.GetConfigListDTO;
 import com.lotteon.entity.config.*;
+import com.lotteon.entity.product.OrderItem;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.service.config.*;
+import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.SimpleFormatter;
 
 @Log4j2
 @RestController
@@ -32,6 +39,7 @@ public class ApiConfigController {
     private final CopyrightService copyrightService;
     private final VersionService versionService;
     private final TermsService termsService;
+    private final OrderItemService orderItemService;
 
     @GetMapping("/banners/{tab}")
     public ResponseEntity<?> selectBanner(@PathVariable("tab") String tab) {
@@ -159,6 +167,45 @@ public class ApiConfigController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/graph")
+    public ResponseEntity<?> viewGraph() {
+        Map<String, Object> map = new HashMap<>();
+
+        List<String> days = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+        days.add(today.minusDays(4).format(formatter));
+        days.add(today.minusDays(3).format(formatter));
+        days.add(today.minusDays(2).format(formatter));
+        days.add(today.minusDays(1).format(formatter));
+        days.add(today.format(formatter));
+        map.put("days", days);
+
+        LocalDateTime startDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        List<Long> orderCnt = orderItemService.findItemOrder(startDay);
+        map.put("orderCnt",orderCnt);
+
+        List<Long> completeCnt = orderItemService.findItemType(startDay,5);
+        map.put("completeCnt",completeCnt);
+
+        List<Long> cancleCnt = orderItemService.findItemType(startDay,6);
+        map.put("cancleCnt",cancleCnt);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/graph2")
+    public ResponseEntity<?> viewGraph2() {
+        Map<String,Object> map = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.minusDays(7).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = now.withHour(23).withMinute(59).withSecond(59).withNano(0);
+        List<Integer> totalPrice = orderItemService.findItemTotalPriceByCategory(startOfDay,endOfDay);
+        map.put("totalPrice",totalPrice);
+
+        return ResponseEntity.ok(map);
     }
 
 }

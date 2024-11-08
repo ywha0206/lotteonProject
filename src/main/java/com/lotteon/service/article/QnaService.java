@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
       - 2024/10/31 박경림 - 일반 CS 1차 유형별 글 목록 조회 기능 메서드 수정
 
  * */
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -71,7 +70,8 @@ public class QnaService {
         Page<Qna> qnaPage;
         if ("seller".equals(member.getMemRole())) {
             // 판매자일 경우 자신의 상품에 대한 QnA만 조회
-            qnaPage = qnaRepository.findAllByMember_Seller(member.getSeller(), pageable);
+            qnaPage = qnaRepository.findAllBySeller(member.getSeller(), pageable);
+            System.out.println(qnaPage);
         } else {
             // 관리자는 모든 QnA를 조회
             qnaPage = qnaRepository.findAll(pageable);
@@ -261,6 +261,17 @@ public class QnaService {
 
     public List<Qna> getTop5QnasForMy(long memId) {
         return qnaRepository.findTop5ByMember_IdOrderByQnaRdateDesc(memId);
+    }
+
+    public Long findCnt(LocalDateTime startOfDay, LocalDateTime endOfDay) {
+
+        return qnaRepository.countByQnaRdateBetween(startOfDay,endOfDay);
+    }
+
+    public Long findByCustomer() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return qnaRepository.countByMemberId(auth.getUser().getId());
+
     }
 }
 

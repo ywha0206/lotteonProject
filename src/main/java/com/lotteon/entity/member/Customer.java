@@ -101,6 +101,16 @@ public class Customer {
         this.member.updatePassword(memPwd);
     }
 
+    public void updateEmail(String email) {
+        this.custEmail = email;
+    }
+    public void updateHp(String hp) {
+        this.custHp= hp;
+    }
+
+    public void updateAddr(String addr) {
+        this.custAddr = addr;
+    }
 }
 
 

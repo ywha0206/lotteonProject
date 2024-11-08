@@ -477,6 +477,7 @@ public class OrderService {
         Long couponId = orderCancleDocument.get().getCouponId();
         int points = orderCancleDocument.get().getPoints();
         Long custId = orderCancleDocument.get().getCustId();
+        Long orderId = orderCancleDocument.get().getOrderId();
         LocalDateTime time = orderCancleDocument.get().getPointUdate();
         LocalDateTime before = time.minusMinutes(2);
         LocalDateTime after = time.plusMinutes(2);
@@ -491,13 +492,18 @@ public class OrderService {
                 v.updateReUsePoint();
             });
         }
+        Point point = pointRepository.findById(orderCancleDocument.get().getPointId()).get();
+        pointRepository.delete(point);
 
-        Point point = pointRepository.findFirstByCustomer_IdAndPointTypeAndPointExpirationBetween(custId,1,before,after);
-        point.updateRobPoint();
+        Optional<Point> point2 = pointRepository.findFirstByOrderIdAndPointEtc(orderId,"사용후남은포인트");
+        if(point2.isPresent()){
+            pointRepository.delete(point2.get());
+        }
+    }
 
+    public Long findByCustomer() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-
-
-
+        return orderRepository.countByCustomer(auth.getUser().getCustomer());
     }
 }

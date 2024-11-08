@@ -7,7 +7,6 @@ import com.lotteon.dto.requestDto.PostFindIdDto;
 
 
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
-
 import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Address;
@@ -23,13 +22,18 @@ import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.term.TermsRepository;
+import com.lotteon.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
+ 
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -51,6 +55,7 @@ public class CustomerService {
     private final PointRepository pointRepository;
     private final AttendanceEventRepository attendanceEventRepository;
     private final AddressRepository addressRepository;
+    private final AuthService authService;
 
 
     @Transactional
@@ -125,6 +130,9 @@ public class CustomerService {
 
     public int updateCustomerPoint(Customer customer) {
         List<Point> points = pointRepository.findAllByCustomerAndPointType(customer,1);
+        if(points.size()==0){
+            return 0;
+        }
         System.out.println(points);
         int point = 0;
 
@@ -213,19 +221,16 @@ public class CustomerService {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer = auth.getUser().getCustomer();
 
+        //Customer customer = customerRepository.findById(customer2.getId()).get();
+
         log.info("사용자 확인: " + customer.toString());
 
         String[] email = customer.getCustEmail().split("@");
         log.info("이메일 확인: " + Arrays.toString(email));
 
         String hp = customer.getCustHp();
-        System.out.println("==============");
         System.out.println(hp);
-        System.out.println("==============");
-        String hp1 = hp.substring(0,3);
-        String hp2 = hp.substring(3,7);
-        String hp3 = hp.substring(7,11);
-        System.out.println(hp2);
+        String[] phone = hp.split("-");
         String[] addr = customer.getCustAddr().split("/");
         System.out.println(addr);
         log.info("주소 확인: " + Arrays.toString(addr));
@@ -236,9 +241,9 @@ public class CustomerService {
                 .custName(customer.getCustName()) // 이름
                 .custEmail1(email[0]) // 이메일1 @ 앞부분
                 .custEmail2(email[1]) // 이메일2 @ 뒷부분
-                .custHp1(hp1) // 휴대폰1 010
-                .custHp2(hp2) // 휴대폰2 -1234
-                .custHp3(hp3) // 휴대폰3 -5678
+                .custHp1(phone[0]) // 휴대폰1 010
+                .custHp2(phone[1]) // 휴대폰2 -1234
+                .custHp3(phone[2]) // 휴대폰3 -5678
                 .custBirth(customer.getCustBirth()) // 생일
                 .custAddr1(addr[0]) // 우편
                 .custAddr2(addr[1]) // 기본
@@ -246,38 +251,102 @@ public class CustomerService {
                 .build();
 
         log.info("DTO 정보: " + dto);
-
         return dto;
-
-
-        }
-
-    // 나의 설정 정보 수정
-    public Boolean modifyInfo(String type, PatchMyInfoDTO patchMyInfoDTO) {
-        try{
-            Customer customer = customerRepository.findById(patchMyInfoDTO.getCustId()).get();
-            if(type.equals("pass")){ // 비밀번호
-                customer.setMemPwd(passwordEncoder.encode(patchMyInfoDTO.getMemPwd()));
-            }else if(type.equals("email")){ // 이메일
-                String email = patchMyInfoDTO.getCustEmail1()+"@"+patchMyInfoDTO.getCustEmail2();
-                customer.setCustEmail(email);
-            }else if(type.equals("hp")){ // 휴대폰
-                String hp = patchMyInfoDTO.getCustHp1()+patchMyInfoDTO.getCustHp2()+patchMyInfoDTO.getCustHp3();
-                customer.setCustHp(hp);
-            }else { // 주소
-               String addr = patchMyInfoDTO.getCustAddr1()+"/"+patchMyInfoDTO.getCustAddr2()+"/"+patchMyInfoDTO.getCustAddr3();
-                customer.setCustAddr(addr);
-            }
-            customerRepository.save(customer); // 수정된 Entity 저장
-            return true;
-        }catch (Exception e){
-            log.error(e.getMessage());
-        }
-        return false;
-
     }
 
+    public Boolean updateCustomerEmail(Long custId, String email) {
+        log.info("서비스 접속 "+custId+email);
+        Optional<Customer> optCustomer = customerRepository.findById(custId);
+        if(optCustomer.isPresent()){
+            Customer customer = optCustomer.get();
+            customer.updateEmail(email);
+            updateUser(customer.getMember());
+            return true;
+        }else{
+            return false;
+        }
+    }
 
+    public Boolean updateCustomerHp(Long custId, String hp) {
+        log.info("서비스 접속 "+custId+hp);
+        Optional<Customer> optCustomer = customerRepository.findById(custId);
+        if(optCustomer.isPresent()){
+            Customer customer = optCustomer.get();
+            customer.updateHp(hp);
+            updateUser(customer.getMember());
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public void updateUser(Member member) {
+        // 1. 사용자 정보를 업데이트합니다.
+        memberRepository.save(member);
+
+        // 2. UserDetailsService를 통해 업데이트된 사용자 정보를 가져옵니다.
+        MyUserDetails updatedUserDetails = (MyUserDetails) authService.loadUserByUsername(member.getMemUid());
+
+        // 3. 인증 정보를 업데이트합니다.
+        updateAuthentication(updatedUserDetails);
+    }
+    public void updateAuthentication(MyUserDetails updatedUserDetails) {
+        // 새로운 인증 객체를 생성합니다.
+        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
+                updatedUserDetails,    // 업데이트된 사용자 정보
+                updatedUserDetails.getPassword(),  // 비밀번호
+                updatedUserDetails.getAuthorities() // 권한 정보
+        );
+
+        // SecurityContextHolder에 새로운 인증 객체를 설정합니다.
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
+
+    public GetMyInfoDTO myInfoModify(Customer customer) {
+        Optional<Customer> optCustomer = customerRepository.findById(customer.getId());
+        log.info("서비스 오피티 커스터머 "+optCustomer.get());
+        if(optCustomer.isPresent()){
+            Customer cust = optCustomer.get();
+            String[] custHps = cust.getCustHp().split("-");
+            String[] custAddr = cust.getCustAddr().split("/");
+            String[] custEmail = cust.getCustEmail().split("@");
+            return GetMyInfoDTO.builder()
+                    .custId(cust.getId())
+                    .memUid(cust.getMember().getMemUid())
+                    .custBirth(cust.getCustBirth())
+                    .custName(cust.getCustName())
+                    .custHp1(custHps[0])
+                    .custHp2(custHps[1])
+                    .custHp3(custHps[2])
+                    .custAddr1(custAddr[0])
+                    .custAddr2(custAddr[1])
+                    .custAddr3(custAddr[2])
+                    .custEmail1(custEmail[0])
+                    .custEmail2(custEmail[1])
+                    .build();
+        }else{
+            return null;
+        }
+    }
+
+    public Boolean updateCustomer(GetMyInfoDTO getMyInfoDTO) {
+        String addr = getMyInfoDTO.getCustAddr1()+"/"+getMyInfoDTO.getCustAddr2()+"/"+getMyInfoDTO.getCustAddr3();
+        String email = getMyInfoDTO.getCustEmail1()+"@"+getMyInfoDTO.getCustEmail2();
+        String hp = getMyInfoDTO.getCustHp1()+"-"+getMyInfoDTO.getCustHp2()+"-"+getMyInfoDTO.getCustHp3();
+        Long custId = getMyInfoDTO.getCustId();
+
+        Optional<Customer> optCustomer = customerRepository.findById(custId);
+
+        if(optCustomer.isPresent()){
+            Customer customer = optCustomer.get();
+            customer.updateEmail(email);
+            customer.updateHp(hp);
+            customer.updateAddr(addr);
+            updateUser(customer.getMember());
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 

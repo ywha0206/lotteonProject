@@ -24,11 +24,12 @@
           <li><a th:classappend="${type == 'month' && keyword == '8'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='month',keyword=8)}">8월</a></li>
           <li><a th:classappend="${type == 'month' && keyword == '9'} ? 'on' : ''" th:href="@{/my/orders(page=0,type='month',keyword=9)}">9월</a></li>
         </ul>
-        <p>
-          <input type="date" max="9999-12-31" /><span>~</span
-        ><input type="date" max="9999-12-31" />
-        </p>
-        <button class="btnConfirm">조회하기</button>
+        <form th:action="@{/my/orders}">
+          <input type="hidden" name="type" value="custom">
+          <input type="hidden" id="keyword" name="keyword" />
+          <input type="date" id="startDate" max="9999-12-31" /><span>~</span><input id="endDate" type="date" max="9999-12-31" />
+          <button onclick="combineDates()" type="submit" class="btnConfirm">조회하기</button>
+        </form>
       </article>
       <article>
         <table border="0" class="order">
@@ -39,7 +40,7 @@
             <th>상태</th>
             <th>확인/신청</th>
           </tr>
-          <tr th:if="${!orders.isEmpty()}" th:each="order : ${orders}">
+          <tr th:if="${!orders.isEmpty()}" class="myOrdersTR" th:each="order : ${orders}">
             <td class="date" th:text="${order.orderRdate}">2022-12-13</td>
             <td>
               <div class="thumb">
@@ -62,8 +63,8 @@
             <td class="status" th:switch="${order.orderState}">
               <span th:case="0">결제완료</span>
               <span th:case="1">배송중</span>
-              <span th:case="2">수취확인버튼발사대</span>
-              <span th:case="3">상품평버튼발사대</span>
+              <span th:case="2">배송완료</span>
+              <span th:case="3">배송완료</span>
               <span th:case="4">주문완료</span>
               <span th:case="5">취소완료</span>
             </td>
@@ -89,13 +90,13 @@
           주문 내역이 없습니다.
         </div>
         <div th:if="${noItem==false}" class="page">
-          <a class="none" th:href="@{/my/orders(page=0,type=${type},keyword=${keyword})}"><<</a>
+          <a class="none prev" th:href="@{/my/orders(page=0,type=${type},keyword=${keyword})}">이전</a>
           <a class="none" th:href="@{/my/orders(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
           <a class="none" th:href="@{/my/orders(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
-          <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+          <a class="active" style="font-weight: 600; background-color: #f2f3f7; color: #000;" th:text="${page}+1"></a>
           <a class="none" th:href="@{/my/orders(page=${page + 1},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
           <a class="none" th:href="@{/my/orders(page=${page + 2},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-          <a class="none" th:href="@{/my/orders(page=${totalPages - 1},type=${type},keyword=${keyword})}">>></a>
+          <a class="none next" th:href="@{/my/orders(page=${totalPages - 1},type=${type},keyword=${keyword})}">다음</a>
         </div>
       </article>
 
@@ -302,15 +303,27 @@
       })
       const orders = resp.data;
       let payment = null;
-      switch (orders.payment){
-        case 1: payment = '신용카드'; break;
-        case 2: payment =  '체크카드'; break;
-        case 3: payment = '계좌이체'; break;
-        case 4: payment = '무통장입금'; break;
-        case 5: payment = '휴대폰결제'; break;
-        case 6: payment = '카카오페이'; break;
+      switch (orders.payment) {
+        case 1:
+          payment = '신용카드';
+          break;
+        case 2:
+          payment = '체크카드';
+          break;
+        case 3:
+          payment = '계좌이체';
+          break;
+        case 4:
+          payment = '무통장입금';
+          break;
+        case 5:
+          payment = '휴대폰결제';
+          break;
+        case 6:
+          payment = '카카오페이';
+          break;
       }
-      console.log("resp data : "+orders.orderId)
+      console.log("resp data : " + orders.orderId)
       document.querySelector('#popOrder .orderId').innerText = orders.orderId;
       document.querySelector('#popOrder .orderDate').innerText = orders.orderDate;
       document.querySelector('#popOrder .custName').innerText = orders.custName;
@@ -321,21 +334,20 @@
       document.querySelector('#popOrder .receiverAddr3').innerText = orders.receiverAddr3;
       document.querySelector('#popOrder .paymentvalue').innerText = payment;
       document.querySelector('#popOrder .orderTotalPrice').innerText = orders.orderTotal;
-      if(orders.orderReq!=null){
+      if (orders.orderReq != null) {
         document.querySelector('#popOrder .orderReq').innerText = orders.orderReq;
       }
       const orderTable = document.querySelector('#popOrder .order table');
 
       // 기존의 내용을 지우고 새로 채우기
       orderTable.innerHTML = `
-      <tr>
-        <th>상품이미지</th>
-        <th>상품정보</th>
-        <th>결제금액</th>
-        <th>상태</th>
-      </tr>
-    `;
-
+        <tr>
+          <th>상품이미지</th>
+          <th>상품정보</th>
+          <th>결제금액</th>
+          <th>상태</th>
+        </tr>
+        `;
       // orderItemDtos 배열을 순회하며 행을 추가
       orders.orderItemDtos.forEach(item => {
 
@@ -379,7 +391,7 @@
               <li class="discount"><span>할인</span><span>- ${item.discount}원</span></li>
               <li class="delivery"><span>배송비</span><span>${item.delivery}원</span></li>
               <li class="total"><span>결제금액</span><strong>${item.totalPrice}원</strong></li>
-            </ul>
+            </ul> 
           </td>
           <td class="status">${orderStatus}</td>
         </tr>
@@ -514,10 +526,15 @@
             "Content-Type" : "application/json"
           }
         })
+        window.location.href="/my/orders"
       } catch (e) {
         console.log(e)
       }
     }
   }
-
+  function combineDates() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    document.getElementById('keyword').value = startDate + '~' + endDate;
+  }
 </script>
