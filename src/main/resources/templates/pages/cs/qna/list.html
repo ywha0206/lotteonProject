@@ -24,22 +24,20 @@
 
             <section class="cs_faq">
                 <div class="cate_bar">
-                    <!--<h3 class="cate_title">회원</h3>
-                    <p class="cate_des">회원 관련 문의내용입니다.</p>-->
                     <h3 class="cate_title" th:text="${selectedCate1 == 'user' ? '회원' :
                                       selectedCate1 == 'coupon' ? '쿠폰/이벤트' :
                                       selectedCate1 == 'order' ? '주문/결제' :
                                       selectedCate1 == 'delivery' ? '배송' :
                                       selectedCate1 == 'cancel' ? '취소/반품/교환' :
                                       selectedCate1 == 'travel' ? '여행/숙박/항공' :
-                                      selectedCate1 == 'safe' ? '안전거래' : '기타'}"></h3>
+                                      selectedCate1 == 'safe' ? '안전거래' : '안전거래' }"></h3>
                     <p class="cate_des" th:text="${selectedCate1 == 'user' ? '회원 관련 문의내용입니다.' :
                                   selectedCate1 == 'coupon' ? '쿠폰/이벤트 관련 문의내용입니다.' :
                                   selectedCate1 == 'order' ? '주문/결제 관련 문의내용입니다.' :
                                   selectedCate1 == 'delivery' ? '배송 관련 문의내용입니다.' :
                                   selectedCate1 == 'cancel' ? '취소/반품/교환 관련 문의내용입니다.' :
                                   selectedCate1 == 'travel' ? '여행/숙박/항공 관련 문의내용입니다.' :
-                                  selectedCate1 == 'safe' ? '안전거래 관련 문의내용입니다.' : '기타 문의내용입니다.'}">
+                                  selectedCate1 == 'safe' ? '안전거래 관련 문의내용입니다.' : '안전거래 문의내용입니다.'}">
                     </p>
 
                 </div>

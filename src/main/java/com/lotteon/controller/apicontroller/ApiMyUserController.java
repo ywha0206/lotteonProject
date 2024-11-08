@@ -42,11 +42,7 @@ public class ApiMyUserController {
         }else {
             success = customerService.updateCustomerHp(custId, hp);
         }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", success);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body("false");
     }
 
 
