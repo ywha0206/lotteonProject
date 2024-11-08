@@ -16,8 +16,8 @@
               <tr>
                 <th>사용자 ID</th>
                 <td>
-                    <input type="hidden" id="memUId" th:value="${#authentication.principal.user.id}">
-                    <input type="hidden" id="custId" th:value="${#authentication.principal.user.customer.id}">
+                    <input type="hidden" id="memUId" name="memId" th:value="${#authentication.principal.user.id}">
+                    <input type="hidden" id="custId" name="custId" th:value="${#authentication.principal.user.customer.id}">
                   <input type="text" id="uid" class="uid" name="uid" th:value="${cust.memUid}" disabled/>
                 </td>
               </tr>
@@ -46,8 +46,8 @@
               <tr>
                 <th>Email</th>
                 <td>
-                  <input type="text" name="email1" th:value="${cust.custEmail1}" class="email1"/> @
-                  <input type="text" name="email2" th:value="${cust.custEmail2}" class="email2"/>
+                  <input type="text" name="custEmail1" th:value="${cust.custEmail1}" class="email1"/> @
+                  <input type="text" name="custEmail2" th:value="${cust.custEmail2}" class="email2"/>
                    <!-- 이메일 select 시 변경 -->
                   <select onchange="changeDomain()" id="emailDomainSelect">
                     <option value="" selected>직접입력</option> <!-- "직접입력" 이 기본 선택된 상태로 보여짐 -->
@@ -55,26 +55,26 @@
                     <option value="naver.com">naver.com</option>
                     <option value="daum.net">daum.net</option>
                   </select><!-- #emailDomainSelect -->
-                    <button type="button" id="btnEmail" class="btn modify btnEmail" >수정하기</button>
+                    <button type="button" id="btnEmail" data-type="email" class="btn modify btnEmail" >수정하기</button>
 
                 </td>
               </tr>
               <tr>
                 <th>휴대폰</th>
                 <td>
-                  <input type="text" th:value="${cust.custHp1}" max="999" class="hp1"/> -
-                  <input type="text" th:value="${cust.custHp2}" max="9999" class="hp2"/> -
-                  <input type="text" th:value="${cust.custHp3}" max="9999" class="hp3"/>
+                  <input type="text" th:value="${cust.custHp1}" name="custHp1" max="999" class="hp1"/> -
+                  <input type="text" th:value="${cust.custHp2}" name="custHp2" max="9999" class="hp2"/> -
+                  <input type="text" th:value="${cust.custHp3}" name="custHp3" max="9999" class="hp3"/>
                     <button type="button" id="btnHp" class="btn modify" data-type="hp" >수정하기</button>
                 </td>
               </tr>
               <tr>
                 <th>주소</th>
                 <td>
-                  <input name="zip" type="text" placeholder="우편번호" th:value="${cust.custAddr1}" readonly class="addr1"/>
+                  <input name="custAddr1" type="text" placeholder="우편번호" th:value="${cust.custAddr1}" readonly class="addr1"/>
                     <button type="button" class="btn" id="btnSearchAddr" >주소검색</button>
-                  <input name="addr1" class="addr addr2" type="text" placeholder="기본주소" th:value="${cust.custAddr2}" /><br />
-                  <input name="addr2" class="addr addr3" type="text" placeholder="상세주소" th:value="${cust.custAddr3}" />
+                  <input name="custAddr2" class="addr addr2" type="text" placeholder="기본주소" th:value="${cust.custAddr2}" /><br />
+                  <input name="custAddr3" class="addr addr3" type="text" placeholder="상세주소" th:value="${cust.custAddr3}" />
                 </td>
               </tr>
               <tr>
@@ -162,35 +162,48 @@
     // 수정 버튼 클릭 시 Fetch 요청 처리
     const btnEmail = document.querySelector('#btnEmail');
     const btnHp = document.querySelector('#btnHp');
+
     btnEmail.addEventListener('click',function (e){
         e.preventDefault();
-        alert('fs');
+        const type = btnEmail.dataset.type;
+        const Email = document.querySelector('.email1').value + "@"+ document.querySelector('.email2').value
+        const jsonData = {
+            "custId": document.querySelector('#custId').value,
+            "custEmail": Email
+        };
+        console.log(type)
+        if(confirm('이메일을 수정하시겠습니까?')){
+            modify(type, jsonData)
+        }
     })
 
     btnHp.addEventListener('click',function (e){
         e.preventDefault();
-        alert('fs');
-    })
-
-    function modify(e){
-        e.preventDefault();
-        const button = e.target;
-        button.disabled = true; // 중복 클릭 방지
-
-        const type = button.dataset.type;
+        const type = btnHp.dataset.type;
+        const hp = document.querySelector('.hp1').value + "-"+ document.querySelector('.hp2').value+"-"+document.querySelector('.hp3').value
         const jsonData = {
             "custId": document.querySelector('#custId').value,
-            "custEmail1": document.querySelector('.email1').value,
-            "custEmail2": document.querySelector('.email2').value
+            "custHp": hp
         };
+        console.log(type+hp)
+        if(confirm('휴대폰 번호를 수정하시겠습니까?')){
+            modify(type, jsonData)
+        }
+    })
 
+    function modify(type, jsonData){
+        // const button = e.target;
+        // button.disabled = true; // 중복 클릭 방지
+
+        console.log(type)
+        console.log(jsonData)
         fetch(`/my/info/${type}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonData)
         })
             .then(resp => resp.ok ? resp.json() : Promise.reject("서버 응답 오류"))
-            .then(data => alert(data.success ? '이메일이 성공적으로 수정되었습니다.' : '이메일 수정에 실패했습니다.'))
+            .then(data => alert(data.success ? '성공적으로 수정되었습니다.' : '수정에 실패했습니다.'), location.reload)
             .catch(err => alert('수정 중 오류가 발생했습니다.'))
             .finally(() => button.disabled = false);
     }

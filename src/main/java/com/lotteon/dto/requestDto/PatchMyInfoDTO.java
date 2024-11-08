@@ -25,15 +25,10 @@ public class PatchMyInfoDTO {
     private Long    custId;         // 사용자 번호
     private String  memPwd;         // 사용자 비밀번호
 
-    private String  custEmail1;      // 이메일 @ 앞부분
-    private String  custEmail2;      // 이메일 @ 뒷부분
+    private String  custEmail;
 
-    private String  custHp1;         // 휴대폰 번호 010
-    private String  custHp2;         // 휴대폰 번호 두번째 -1234
-    private String  custHp3;         // 휴대폰 번호 세번째 -5678
+    private String  custHp;    // 휴대폰 번호 세번째 -5678
 
-    private String custAddr1;        // 우편
-    private String custAddr2;        // 주소
-    private String custAddr3;        // 상세주소
+    private String custAddr;   // 상세주소
 
 }
