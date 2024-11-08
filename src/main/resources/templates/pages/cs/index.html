@@ -31,40 +31,40 @@
 
         <!-- 자주하는 질문 섹션 -->
         <section class="cs_index cs_index_fnq">
-            <h3 class="sub_title"><span>자주하는 질문</span><a href="#" class="viewAll">전체보기</a></h3>
+            <h3 class="sub_title"><span>자주하는 질문</span><a th:href="@{/cs/faqs}" class="viewAll">전체보기</a></h3>
             <ul class="fnq_ul">
                 <li class="fnq_li">
-                    <a href="#">
+                    <a th:href="@{/cs/faqs?category=user}" class="faq_link">
                         <img th:src="@{/images/자주하는질문/회원.png}" alt="회원" class="fnq_icon">
                         <p class="fnq_content">회원</p>
                     </a>
                 </li>
                 <li class="fnq_li">
-                    <a href="#">
+                    <a th:href="@{/cs/faqs?category=coupon}" class="faq_link">
                         <img th:src="@{/images/자주하는질문/쿠폰이벤트.png}" alt="쿠폰/이벤트" class="fnq_icon">
                         <p class="fnq_content">쿠폰/이벤트</p>
                     </a>
                 </li>
                 <li class="fnq_li">
-                    <a href="#">
+                    <a th:href="@{/cs/faqs?category=order}" class="faq_link">
                         <img th:src="@{/images/자주하는질문/주문결제.png}" alt="주문/결제" class="fnq_icon">
                         <p class="fnq_content">주문/결제</p>
                     </a>
                 </li>
                 <li class="fnq_li">
-                    <a href="#">
+                    <a  th:href="@{/cs/faqs?category=delivery}" class="faq_link">
                         <img th:src="@{/images/자주하는질문/배송.png}" alt="배송" class="fnq_icon">
                         <p class="fnq_content">배송</p>
                     </a>
                 </li>
                 <li class="fnq_li">
-                    <a href="#">
+                    <a th:href="@{/cs/faqs?category=cancel}" class="faq_link">
                         <img th:src="@{/images/자주하는질문/취소반품.png}" alt="취소/반품/환불" class="fnq_icon">
                         <p class="fnq_content">취소/반품/환불</p>
                     </a>
                 </li>
                 <li class="fnq_li">
-                    <a href="#">
+                    <a th:href="@{/cs/faqs?category=safe}" class="faq_link">
                         <img th:src="@{/images/자주하는질문/안전결제.png}" alt="안전결제" class="fnq_icon">
                         <p class="fnq_content">안전결제</p>
                     </a>
@@ -76,7 +76,7 @@
             <h3 class="sub_title"><span>문의하기</span><a th:href="@{/cs/qnas}" class="viewAll">전체보기</a></h3>
             <ul class="qna_ul">
                 <li class="qna_card" th:each="qna : ${qnas}">
-                    <a href="">
+                    <a th:href="@{/cs/qna/view/{id}(id=${qna.id})}" class="qna_link">
                         <span class="category" th:data-value="${qna.cate1.categoryName}" th:text="${qna.cate1.categoryName}">카테고리</span>
                         <div class="content">
                             <p class="title" th:text="${qna.qnaTitle}">문의 제목</p>

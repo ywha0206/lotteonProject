@@ -6,9 +6,11 @@ import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.entity.member.Member;
+import com.lotteon.entity.member.Seller;
 import com.lotteon.repository.article.QnaRepository;
 import com.lotteon.repository.category.CategoryArticleRepository;
 import com.lotteon.repository.member.MemberRepository;
+import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.service.category.CategoryArticleService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +47,7 @@ public class QnaService {
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final CategoryArticleRepository categoryArticleRepository;
-
-
-
+    private final SellerRepository sellerRepository;
 
 
     /* 관리자 cs 기능 */
@@ -165,6 +165,9 @@ public class QnaService {
     // QnA 글 작성 셀러 문의
     public Long insertQnaToSeller(ArticleDto articleDto) {
         Long memberId = articleDto.getMemId();
+        String sellCompany = articleDto.getSellCompany();
+        Seller seller = sellerRepository.findBySellCompany(sellCompany).get();
+
         // 작성일 및 기본 정보 설정
         articleDto.setRdate(LocalDateTime.now());
         articleDto.setViews(0); // 초기 조회수 0
@@ -200,6 +203,7 @@ public class QnaService {
                 .cate1(cate1)
                 .cate2(cate2)
                 .member(member)
+                .seller(seller) // 판매자 ID 설정
                 .build();
 
         // DB에 저장
@@ -255,7 +259,9 @@ public class QnaService {
                 .map(ArticleDto::fromEntity);
     }
 
-
+    public List<Qna> getTop5QnasForMy(long memId) {
+        return qnaRepository.findTop5ByMember_IdOrderByQnaRdateDesc(memId);
+    }
 }
 
 

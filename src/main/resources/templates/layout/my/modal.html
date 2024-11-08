@@ -166,8 +166,9 @@
                 <button class="btn close-btn">X</button>
             </nav>
             <section>
-                <form method="post" >
+                <form method="post" th:action="@{/my/qna}">
                     <input class="memId" type="hidden" name="memId" th:value="${memId}" />
+                    <input class="sellId" type="hidden" name="sellCompany"/>
                     <table>
                         <tr>
                             <th>문의종류</th>

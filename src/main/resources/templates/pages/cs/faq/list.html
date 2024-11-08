@@ -94,6 +94,37 @@
             });
         });
 
+        document.addEventListener('DOMContentLoaded', function () {
+            // 각 FAQ 섹션에서 3개 이상의 항목만 '더보기' 버튼을 활성화
+            document.querySelectorAll('.faq_main').forEach(faqMain => {
+                const rows = faqMain.querySelectorAll('.faq_list tr');
+                const hiddenRows = Array.from(rows).slice(3); // 3개 이상인 항목들을 선택
+
+                if (hiddenRows.length > 0) {
+                    hiddenRows.forEach(row => row.classList.add('hidden')); // 기본적으로 숨김
+                    const loadMoreButton = faqMain.querySelector('.loadMore');
+                    loadMoreButton.style.display = "inline"; // '더보기' 버튼 표시
+                } else {
+                    const loadMoreButton = faqMain.querySelector('.loadMore');
+                    loadMoreButton.style.display = "none"; // '더보기' 버튼 숨기기
+                }
+            });
+        });
+
+        function toggleMore(button) {
+            const table = button.closest('table');
+            const hiddenRows = table.querySelectorAll('.hidden');
+
+            if (button.innerText === "더보기") {
+                hiddenRows.forEach(row => row.style.display = "table-row"); // 숨긴 항목 보이기
+                button.innerText = "접기";
+            } else {
+                hiddenRows.forEach(row => row.style.display = "none"); // 숨긴 항목 숨기기
+                button.innerText = "더보기";
+            }
+        }
+
+
         function toggleMore(button) {
             const table = button.closest('table');
             const hiddenRows = table.querySelectorAll('.hidden');

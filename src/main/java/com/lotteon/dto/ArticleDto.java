@@ -44,7 +44,8 @@ public class ArticleDto {
     private Member member;
     private LocalDateTime updateDate;  // 업데이트된 날짜 (필요 시 추가)
     private String status;       // 글 상태 (예: '작성 중', '게시 완료' 등)
-
+    private Long sellId;         // QnA 전용: 판매자
+    private String sellCompany;
 
     // 2차 카테고리별 FAQ 목록을 포함할 리스트
     private List<CategoryFaq> categoryFaqs;
@@ -76,38 +77,43 @@ public class ArticleDto {
     }
 
 
-    /*public static ArticleDto fromEntity(Qna qna){
-        return ArticleDto.builder()
-                .id(qna.getId())
-                .title(qna.getQnaTitle())
-                .content(qna.getQnaContent())
-                .rdate(qna.getQnaRdate())
-                .views(qna.getQnaViews())
-                .cate1(qna.getCate1())
-                .cate2(qna.getCate2())
-                .cate1Id(qna.getCate1() != null ? qna.getCate1().getCategoryId() : null)
-                .cate2Id(qna.getCate1() != null ? qna.getCate2().getCategoryId() : null)
-                .member(qna.getMember())
-                .memId(qna.getMember()!=null ? qna.getMember().getId() : null)
-                .answer(qna.getQnaAnswer())
-                .build();
-    }*/
     public static ArticleDto fromEntity(Qna qna) {
-        return ArticleDto.builder()
-                .id(qna.getId())
-                .title(qna.getQnaTitle()) // **수정된 부분: title 필드에 qnaTitle 매핑**
-                .content(qna.getQnaContent())
-                .rdate(qna.getQnaRdate())
-                .views(qna.getQnaViews())
-                .cate1(qna.getCate1())
-                .cate2(qna.getCate2())
-                .cate1Id(qna.getCate1() != null ? qna.getCate1().getCategoryId() : null)
-                .cate2Id(qna.getCate2() != null ? qna.getCate2().getCategoryId() : null)
-                .member(qna.getMember())
-                .memId(qna.getMember() != null ? qna.getMember().getId() : null)
-                .answer(qna.getQnaAnswer()) // **수정된 부분: QnA 전용 필드 answer 매핑**
-                .state(qna.getQnaState())   // **수정된 부분: QnA 전용 필드 state 매핑**
-                .type(qna.getQnaType())     // **수정된 부분: QnA 전용 필드 type 매핑**
-                .build();
+        if(qna.getSeller()==null){
+            return ArticleDto.builder()
+                    .id(qna.getId())
+                    .title(qna.getQnaTitle()) // **수정된 부분: title 필드에 qnaTitle 매핑**
+                    .content(qna.getQnaContent())
+                    .rdate(qna.getQnaRdate())
+                    .views(qna.getQnaViews())
+                    .cate1(qna.getCate1())
+                    .cate2(qna.getCate2())
+                    .cate1Id(qna.getCate1() != null ? qna.getCate1().getCategoryId() : null)
+                    .cate2Id(qna.getCate2() != null ? qna.getCate2().getCategoryId() : null)
+                    .member(qna.getMember())
+                    .memId(qna.getMember() != null ? qna.getMember().getId() : null)
+                    .answer(qna.getQnaAnswer()) // **수정된 부분: QnA 전용 필드 answer 매핑**
+                    .state(qna.getQnaState())   // **수정된 부분: QnA 전용 필드 state 매핑**
+                    .type(qna.getQnaType())     // **수정된 부분: QnA 전용 필드 type 매핑**
+                    .build();
+        } else {
+            return ArticleDto.builder()
+                    .id(qna.getId())
+                    .title(qna.getQnaTitle()) // **수정된 부분: title 필드에 qnaTitle 매핑**
+                    .content(qna.getQnaContent())
+                    .rdate(qna.getQnaRdate())
+                    .views(qna.getQnaViews())
+                    .cate1(qna.getCate1())
+                    .cate2(qna.getCate2())
+                    .cate1Id(qna.getCate1() != null ? qna.getCate1().getCategoryId() : null)
+                    .cate2Id(qna.getCate2() != null ? qna.getCate2().getCategoryId() : null)
+                    .member(qna.getMember())
+                    .memId(qna.getMember() != null ? qna.getMember().getId() : null)
+                    .answer(qna.getQnaAnswer()) // **수정된 부분: QnA 전용 필드 answer 매핑**
+                    .state(qna.getQnaState())   // **수정된 부분: QnA 전용 필드 state 매핑**
+                    .type(qna.getQnaType())     // **수정된 부분: QnA 전용 필드 type 매핑**
+                    .sellId(qna.getSeller().getId())    // **추가된 부분: 셀러 ID 매핑**
+                    .build();
+        }
+
     }
 }

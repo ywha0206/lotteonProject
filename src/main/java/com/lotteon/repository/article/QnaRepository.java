@@ -27,4 +27,6 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
     Page<Qna> findByMemberId(Long memberId, Pageable pageable); // 사용자 ID로 조회하는 메서드 추가
 
     Page<Qna> findAllByMember_Seller(Seller seller, Pageable pageable);
+
+    List<Qna> findTop5ByMember_IdOrderByQnaRdateDesc(Long id);
 }
