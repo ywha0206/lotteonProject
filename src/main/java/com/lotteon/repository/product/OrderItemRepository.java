@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     List<OrderItem> findAllBySellerAndOrder_Id(Seller seller, Long orderId);
 
     Page<OrderItem> findAllByOrder_OrderRdateBetween(Timestamp startTimestamp, Timestamp endTimestamp, Pageable pageable);
+
+    List<OrderItem> findAllByOrder_OrderRdateBetween(Timestamp startTimestamp, Timestamp endTimestamp);
 
     List<OrderItem> findAllByDeliSdateBefore(LocalDate threeDaysAgo);
 
@@ -43,4 +46,11 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
 
     List<OrderItem> findByOrder_IdAndState2(Long orderId, int i);
 
+    Long countByState2(int i);
+
+    Long countByOrder_OrderRdateBetween(Timestamp startTimestamp, Timestamp endTimestamp);
+
+    Long countByState2AndOrder_OrderRdateBetween(int i, Timestamp startTimestamp, Timestamp endTimestamp);
+
+    List<OrderItem> findAllByProduct_CategoryMappings_Category_CategoryIdAndOrder_OrderRdateBetween(Long i, Timestamp timestamp, Timestamp timestamp1);
 }

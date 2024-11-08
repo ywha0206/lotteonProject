@@ -7,7 +7,6 @@ import com.lotteon.dto.requestDto.PostFindIdDto;
 
 
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
-
 import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Address;
@@ -30,6 +29,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
+ 
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -125,6 +127,9 @@ public class CustomerService {
 
     public int updateCustomerPoint(Customer customer) {
         List<Point> points = pointRepository.findAllByCustomerAndPointType(customer,1);
+        if(points.size()==0){
+            return 0;
+        }
         System.out.println(points);
         int point = 0;
 
@@ -211,7 +216,9 @@ public class CustomerService {
     // 나의 설정 (사용자 ID, 비밀번호, 이름, 생년월일, 이메일, 휴대폰, 주소) 출력
     public GetMyInfoDTO myInfo() {
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Customer customer = auth.getUser().getCustomer();
+        Customer customer2 = auth.getUser().getCustomer();
+
+        Customer customer = customerRepository.findById(customer2.getId()).get();
 
         log.info("사용자 확인: " + customer.toString());
 
@@ -222,10 +229,7 @@ public class CustomerService {
         System.out.println("==============");
         System.out.println(hp);
         System.out.println("==============");
-        String hp1 = hp.substring(0,3);
-        String hp2 = hp.substring(3,7);
-        String hp3 = hp.substring(7,11);
-        System.out.println(hp2);
+        String[] phone = hp.split("-");
         String[] addr = customer.getCustAddr().split("/");
         System.out.println(addr);
         log.info("주소 확인: " + Arrays.toString(addr));
@@ -236,9 +240,9 @@ public class CustomerService {
                 .custName(customer.getCustName()) // 이름
                 .custEmail1(email[0]) // 이메일1 @ 앞부분
                 .custEmail2(email[1]) // 이메일2 @ 뒷부분
-                .custHp1(hp1) // 휴대폰1 010
-                .custHp2(hp2) // 휴대폰2 -1234
-                .custHp3(hp3) // 휴대폰3 -5678
+                .custHp1(phone[0]) // 휴대폰1 010
+                .custHp2(phone[1]) // 휴대폰2 -1234
+                .custHp3(phone[2]) // 휴대폰3 -5678
                 .custBirth(customer.getCustBirth()) // 생일
                 .custAddr1(addr[0]) // 우편
                 .custAddr2(addr[1]) // 기본
@@ -246,16 +250,16 @@ public class CustomerService {
                 .build();
 
         log.info("DTO 정보: " + dto);
-
         return dto;
-
-
-        }
+    }
 
     // 나의 설정 정보 수정
     public Boolean modifyInfo(String type, PatchMyInfoDTO patchMyInfoDTO) {
+
         try{
-            Customer customer = customerRepository.findById(patchMyInfoDTO.getCustId()).get();
+            Customer customer = customerRepository.findById(patchMyInfoDTO.getCustId())
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
             if(type.equals("pass")){ // 비밀번호
                 customer.setMemPwd(passwordEncoder.encode(patchMyInfoDTO.getMemPwd()));
             }else if(type.equals("email")){ // 이메일
@@ -272,12 +276,9 @@ public class CustomerService {
             return true;
         }catch (Exception e){
             log.error(e.getMessage());
+            return false;
         }
-        return false;
-
     }
-
-
 }
 
 

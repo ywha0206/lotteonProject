@@ -1,6 +1,7 @@
 package com.lotteon.entity.article;
 
 import com.lotteon.entity.category.CategoryArticle;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;

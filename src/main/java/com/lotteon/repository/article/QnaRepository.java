@@ -2,6 +2,7 @@ package com.lotteon.repository.article;
 
 import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.category.CategoryArticle;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import org.springframework.data.domain.Limit;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -29,4 +31,13 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
     Page<Qna> findAllByMember_Seller(Seller seller, Pageable pageable);
 
     List<Qna> findTop5ByMember_IdOrderByQnaRdateDesc(Long id);
+
+    Page<Qna> findAllByMember(Member member, Pageable pageable);
+
+    Long countByQnaRdateBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    Long countByMemberId(Long id);
+
+    Page<Qna> findAllBySeller(Seller seller, Pageable pageable);
+
 }

@@ -14,7 +14,7 @@
                 </p>
             </nav>
             <article class="admin_current">
-                <h4>집계현황</h4>
+                <h4>주간집계현황</h4>
                 <div class="row">
                     <div class="col">
                         <div id="barChart"></div>
@@ -24,21 +24,25 @@
                     </div>
                 </div>
 
-                <h4>운영현황</h4>
+                <h4>주간운영현황</h4>
                 <table class="order_tbl">
                     <tr>
                         <th>입금대기</th>
-                        <th>배송준비</th>
+                        <th>배송중</th>
+                        <th>배송완료</th>
                         <th>취소요청</th>
                         <th>교환요청</th>
                         <th>반품요청</th>
+                        <th>주문완료</th>
                     </tr>
                     <tr class="count">
-                        <td>101</td>
-                        <td>124</td>
-                        <td>14</td>
-                        <td>7</td>
-                        <td>24</td>
+                        <td th:text="${beforeDeli}">101</td>
+                        <td th:text="${afterDeli}">124</td>
+                        <td th:text="${completeDeli}"></td>
+                        <td th:text="${cancleDeli}">14</td>
+                        <td th:text="${exchangeDeli}">7</td>
+                        <td th:text="${returnDeli}">24</td>
+                        <td th:text="${successDeli}">24</td>
                     </tr>
                 </table>
                 <table class="operate_tbl">
@@ -50,43 +54,43 @@
                         <th colspan='2'>문의 게시물</th>
                     </tr>
                     <tr class="count">
-                        <td colspan='2'>131</td>
-                        <td colspan='2'>1,130,000</td>
-                        <td colspan='2'>1,014</td>
+                        <td colspan='2' th:text="${orderCnt}">131</td>
+                        <td colspan='2' data-th-text="${#numbers.formatInteger(totalPrice, 3, 'COMMA') + '원'}">1,130,000</td>
+                        <td colspan='2' th:text="${signupCnt}">1,014</td>
                         <td colspan='2' th:text="${weekCount}">1,014</td>
-                        <td colspan='2'>14</td>
+                        <td colspan='2' th:text="${qnaCnt}">14</td>
                     </tr>
                     <tr class="pc">
                         <th>오늘</th>
-                        <td>60</td>
+                        <td th:text="${orderCntToday}">60</td>
 
                         <th>오늘</th>
-                        <td>60</td>
+                        <td data-th-text="${#numbers.formatInteger(totalPriceToday, 3, 'COMMA') + '원'}">60</td>
 
                         <th>오늘</th>
-                        <td>60</td>
+                        <td th:text="${signupCntToday}">60</td>
 
                         <th>오늘</th>
                         <td th:text="${todayCount}">60</td>
 
                         <th>오늘</th>
-                        <td>60</td>
+                        <td th:text="${qnaCntToday}">60</td>
                     </tr>
                     <tr>
                         <th>어제</th>
-                        <td>60</td>
+                        <td th:text="${orderCntYesterday}">60</td>
 
                         <th>어제</th>
-                        <td>60</td>
+                        <td data-th-text="${#numbers.formatInteger(totalPriceYesterDay, 3, 'COMMA') + '원'}">60</td>
 
                         <th>어제</th>
-                        <td>60</td>
+                        <td th:text="${signupCntYesterDay}">60</td>
 
                         <th>어제</th>
                         <td th:text="${yesterdayCount}">60</td>
 
                         <th>어제</th>
-                        <td>60</td>
+                        <td th:text="${qnaCntYesterDay}">60</td>
                     </tr>
                 </table>
             </article>
@@ -122,6 +126,15 @@
                 <div class="list">
                     <h4>고객문의</h4>
                     <ul>
+                        <li th:each="qna : ${qnas}">
+                            <a th:href="@{'/admin/cs/qna/view/' + ${qna.id}}">
+                                <p class="content" th:text="${qna.title}">문의 제목</p>
+                                <span class="nick" th:text="${qna.member != null && qna.member.memUid != null ? qna.member.memUid.substring(0, 2) + '**' : 'N/A'}">작성자</span>
+                                <span class="date" th:text="${#temporals.format(qna.rdate, 'yy.MM.dd')}">작성일</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul>
                         <li class="qna"><a href="#">
                             <p class="cate">가입</p> <p class="content">가입문의내용</p>
                             <span class="nick">chh**</span><span class="date">22.10.31</span>
@@ -154,59 +167,89 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
 
     <script>
-        const barOptions = {
-            series: [
-                {name: '주문', data: [62, 105, 48, 63, 64]},
-                {name: '결제', data: [33, 62, 28, 43, 43]},
-                {name: '취소', data: [15, 30, 45, 15, 15]}
-            ],
-            colors: ['#4F81BD', '#C0504D', '#9BBB59'],  // 막대 색상: 주문(파랑), 결제(초록), 취소(노랑)
-            xaxis: {categories: ['10-10', '10-11', '10-12', '10-13', '10-14'],},  // X축 카테고리
-            chart: {type: 'bar', height: 300},
-            plotOptions: {
-                bar: {
-                    horizontal: false, columnWidth: '55%', endingShape: 'rounded'  // 끝을 둥글게 처리
-                }
-            },
-            dataLabels: {enabled: false},
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']  // 테두리 색상 투명
-            },
-            fill: {opacity: 1},  // 막대 채우기 투명도
-            tooltip: {y: {formatter: function(val) {return val + ' 건';}}},
-            legend: {
-                show: true,
-                position: 'top',
-                horizontalAlign: 'center',
-                labels: {
-                    colors: '#000',
-                    useSeriesColors: false  // 시리즈별 색상 사용 비활성화
-                },
+        document.addEventListener('DOMContentLoaded',async (e)=>{
+            try {
+                const resp = await axios.get("/admin/config/graph",{
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                })
+                const days = resp.data.days;
+                const orderCnt = resp.data.orderCnt;
+                const completeCnt = resp.data.completeCnt;
+                const cancleCnt = resp.data.cancleCnt
+                const barOptions = {
+                    series: [
+                        {name: '주문', data: orderCnt},
+                        {name: '결제', data: completeCnt},
+                        {name: '취소', data: cancleCnt}
+                    ],
+                    colors: ['#4F81BD', '#C0504D', '#9BBB59'],  // 막대 색상: 주문(파랑), 결제(초록), 취소(노랑)
+                    xaxis: {categories: days,},  // X축 카테고리
+                    chart: {type: 'bar', height: 300},
+                    plotOptions: {
+                        bar: {
+                            horizontal: false, columnWidth: '55%', endingShape: 'rounded'  // 끝을 둥글게 처리
+                        }
+                    },
+                    dataLabels: {enabled: false},
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']  // 테두리 색상 투명
+                    },
+                    fill: {opacity: 1},  // 막대 채우기 투명도
+                    tooltip: {y: {formatter: function(val) {return val + ' 건';}}},
+                    legend: {
+                        show: true,
+                        position: 'top',
+                        horizontalAlign: 'center',
+                        labels: {
+                            colors: '#000',
+                            useSeriesColors: false  // 시리즈별 색상 사용 비활성화
+                        },
+                    }
+                };
+                const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
+                barChart.render();
+            } catch (e) {
+
             }
-        };
-        const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
-        barChart.render();
+        })
 
-        const pieOptions = {
-            labels: ['가전', '식품', '의류', '기타'],  // 카테고리 레이블
-            series: [600, 300, 100, 100],  // 매출 데이터
-            chart: {
-                type: 'pie',  // 차트 유형: 파이 차트
-                height: 350,  // 차트 높이
-            },
-            dataLabels: {enabled: false},
-            colors: [
-                '#4F81BD',
-                '#C0504D',
-                '#9BBB59',
-                '#8064A2'
-            ],
-            legend: {position: 'bottom'}, // 범례 위치
-            title: {text: '주요 매출', align: 'center'}
-        };
+        document.addEventListener('DOMContentLoaded',async (e)=> {
+            try {
+                const resp = await axios.get("/admin/config/graph2", {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                const totalPrice = resp.data.totalPrice
+                const pieOptions = {
+                    labels: ['패션·의류·뷰티', '가전·디지털', '식품·생필품', '홈·문구·취미'],  // 카테고리 레이블
+                    series: totalPrice,  // 매출 데이터
+                    chart: {
+                        type: 'pie',  // 차트 유형: 파이 차트
+                        height: 350,  // 차트 높이
+                    },
+                    dataLabels: {enabled: false},
+                    colors: [
+                        '#4F81BD',
+                        '#C0504D',
+                        '#9BBB59',
+                        '#8064A2'
+                    ],
+                    legend: {position: 'bottom'}, // 범례 위치
+                    title: {text: '주요 매출', align: 'center'}
+                };
 
-        const pieChart = new ApexCharts(document.querySelector("#pieChart"), pieOptions);
-        pieChart.render();  // 차트 렌더링
+                const pieChart = new ApexCharts(document.querySelector("#pieChart"), pieOptions);
+                pieChart.render();  // 차트 렌더링
+            } catch (e) {
+
+            }
+        });
+
+
+
     </script>

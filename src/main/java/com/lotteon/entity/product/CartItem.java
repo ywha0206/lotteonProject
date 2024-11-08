@@ -21,6 +21,7 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     @ToString.Exclude
+    @Setter
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY)

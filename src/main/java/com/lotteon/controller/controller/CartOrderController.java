@@ -8,6 +8,7 @@ import com.lotteon.dto.responseDto.cartOrder.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.GetCouponDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
+import com.lotteon.entity.product.Cart;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.CustomerCouponService;
@@ -15,9 +16,12 @@ import com.lotteon.service.product.CartService;
 import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
 import com.lotteon.service.product.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/prod")
@@ -41,14 +46,21 @@ public class CartOrderController {
     private final ProductService productService;
 
     @GetMapping("/cart")
-    public String join(Model model, HttpSession session) {
+    public String join(Model model, HttpServletRequest req,
+                       HttpServletResponse resp , Authentication authentication) {
+        Cart cart;
+        if(authentication==null){
+            cart = cartService.selectCartFornoAuth(req);
+        }else{
+            cart = cartService.selectCart(authentication, req,resp);
+        }
 
-        List<GetCartDto> cartItems = cartService.selectCart(session);
+        List<GetCartDto> cartItems = cartService.selectCartItem(cart);
         model.addAttribute("cartItems", cartItems);
 
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
 
-        Map<Long,List<GetOption1Dto>> options = cartService.selectOptions();
+        Map<Long,List<GetOption1Dto>> options = cartService.selectOptions(cart);
         model.addAttribute("options", options);
         model.addAttribute("category1", category1);
         return "pages/product/cart";
