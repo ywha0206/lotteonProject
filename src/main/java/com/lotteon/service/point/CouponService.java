@@ -24,6 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -172,4 +174,11 @@ public class CouponService {
         return couponId;
     }
 
+    public List<GetCouponDto> findAllSeller(Long id) {
+        Optional<Seller> seller = sellerRepository.findById(id);
+        List<Coupon> coupons = couponRepository.findAllByMember_SellerAndCouponState(seller.get(),"발급중");
+        List<GetCouponDto> dtos = coupons.stream().map(v->v.toGetCouponDto()).toList();
+
+        return dtos;
+    }
 }

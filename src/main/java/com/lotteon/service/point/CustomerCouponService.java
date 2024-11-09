@@ -23,11 +23,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
@@ -44,6 +46,7 @@ public class CustomerCouponService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
+    private final RedisTemplate<String,Object> redisTemplate;
 
 
     public void postCustCoupon(Long id) {
@@ -347,6 +350,7 @@ public class CustomerCouponService {
     @Cacheable(value = "dailyCoupon", key = "'daily_' + #id + '_' + #auth.user.id + '_' + T(java.time.LocalDate).now()", cacheManager = "cacheManager")
     public String postDailyCoupon(Long id, MyUserDetails auth) {
         Coupon coupon = couponRepository.findById(id).orElseThrow();
+
         coupon.updateCouponIssueCnt();
         CustomerCoupon newCustomerCoupon = CustomerCoupon.builder()
                 .coupon(coupon)
@@ -400,4 +404,5 @@ public class CustomerCouponService {
         coupon.get().useCoupon(0);
         coupon.get().getCoupon().updateCouponUseCnt();
     }
+
 }

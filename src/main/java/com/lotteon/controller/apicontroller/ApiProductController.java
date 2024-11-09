@@ -2,16 +2,14 @@ package com.lotteon.controller.apicontroller;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.GetProductNamesDto;
+import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.PostReviewDto;
 import com.lotteon.dto.requestDto.cartOrder.*;
-import com.lotteon.dto.requestDto.PostCouponDto;
-import com.lotteon.dto.requestDto.cartOrder.OrderDto;
-import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
-import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
 import com.lotteon.dto.responseDto.GetAddressDto;
+import com.lotteon.dto.responseDto.GetCouponDto;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.GetOption1Dto;
-import com.lotteon.entity.product.Order;
+import com.lotteon.entity.product.Cart;
 import com.lotteon.entity.product.OrderCancleDocument;
 import com.lotteon.repository.member.UserLogRepository;
 import com.lotteon.repository.product.OrderCancleRepository;
@@ -19,7 +17,6 @@ import com.lotteon.service.WebSocketService;
 import com.lotteon.service.member.AddressService;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
-import com.lotteon.entity.product.Cart;
 import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.point.PointService;
 import com.lotteon.service.product.*;
@@ -29,11 +26,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -79,6 +74,15 @@ public class ApiProductController {
         Map<String,Object> map = new HashMap<>();
         map.put("option2s",options);
         return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/customer/coupon")
+    public ResponseEntity<?> getCouponList(
+            @RequestParam Long id
+    ){
+        List<GetCouponDto> custCoupons = couponService.findAllSeller(id);
+
+        return ResponseEntity.ok(custCoupons);
     }
 
     @PostMapping("/customer/coupon")
