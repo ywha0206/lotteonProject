@@ -41,4 +41,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findAllByCouponNameAndMember_SellerOrderByIdDesc(String keyword, Seller seller, Pageable pageable);
 
     Page<Coupon> findAllByMember_SellerOrderByIdDesc(Seller seller, Pageable pageable);
+
+    List<Coupon> findAllByMember_SellerAndCouponState(Seller seller, String 발급중);
 }

@@ -26,7 +26,7 @@
                                     <span>[[${product.getSellCompany}]]</span>
                                     <span>상품번호 : [[${product.getId}]]</span>
                                     <input type="hidden" th:value="${product.getId}" name="prodId">
-                                    <span id="coupondl" th:if="${couponId != 0}" th:data-id="${couponId}" onclick="getCustomerCoupon(event)">
+                                    <span id="coupondl" th:if="${couponId != 0}" th:data-id="${couponId}" th:data-seller="${product.seller.id}" onclick="getCustomerCoupon(event)">
                                         쿠폰받기
                                         <span class="img"></span>
                                     </span>
@@ -282,6 +282,7 @@
             </div> <!-- .refund-->
         </main> <!-- #main-->
     </div>
+    <div class="popup"></div>
     <input type="hidden" th:value="${options}" id="hiddenOption">
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
@@ -307,6 +308,27 @@
     }
 
     async function getCustomerCoupon(event) {
+        try {
+            const resp = await axios.get(`/prod/customer/coupon?id=${event.target.dataset.seller}`,null,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            const coupons = resp.data
+            document.querySelector('.popup').innerHTML = `<h1>발급가능한 쿠폰리스트</h1>`+coupons.map(v=>`
+                <article onclick="postCoupon(event)" data-id="${v.id}" class="coupon-box">
+                    <div data-id="${v.id}">${v.couponName}</div>
+                    <div data-id="${v.id}">${v.couponDiscount} ${v.couponDiscountOption}</div>
+                    <div data-id="${v.id}">${v.couponCaution}</div>
+                </article>
+            `).join('')+`<button onclick="closeCouponBtn()">닫기</button>`;
+            document.querySelector('.popup').style.display = 'flex';
+        } catch (e) {
+
+        }
+    }
+
+    async function postCoupon(event){
         const submitData = {
             'id': event.target.dataset.id
         }
@@ -321,8 +343,11 @@
 
         } catch (e) {
             alert("로그인이 필요합니다.")
-            window.location.href = "/auth/login/view"
         }
+    }
+
+    function closeCouponBtn() {
+        document.querySelector('.popup').style.display = 'none';
     }
 
     // 요일명을 저장한 배열
