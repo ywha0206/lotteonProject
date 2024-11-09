@@ -23,7 +23,7 @@ public class MainController {
     private final BannerService bannerService;
 
     @GetMapping(value = {"/","/index"})
-    public String main(Model model, @RequestParam(value = "birth", defaultValue = "false") Boolean birth, @RequestParam(value = "memState", defaultValue = "none") String memState) {
+    public String main(Model model, @RequestParam(value = "birth", defaultValue = "false") String birth, @RequestParam(value = "memState", defaultValue = "none") String memState) {
         Object category1 = categoryProductService.findCategory();
         System.out.println(category1);
         List<GetBannerDTO> banners = bannerService.selectUsingBannerAt(2);
