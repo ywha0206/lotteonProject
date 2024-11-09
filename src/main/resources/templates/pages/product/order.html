@@ -354,7 +354,7 @@
       if(Number(event.target.dataset.point) < Number(pointsId.value)){
         pointsId.value = event.target.dataset.point;
       }
-      if(Number(event.target.dataset.point) > Number(document.querySelector('.OrderPrice').innerText) ){
+      if(Number(pointsId.value) > Number(document.querySelector('.OrderPrice').innerText) ){
         pointsId.value = document.querySelector('.OrderPrice').innerText
       }
       pointValue = pointsId.value

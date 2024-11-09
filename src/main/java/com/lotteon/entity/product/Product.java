@@ -166,4 +166,8 @@ public class Product {
     public void updateStock(int total){
         this.prodStock = total;
     }
+
+    public void updateReviewCnt() {
+        this.prodReviewCnt = prodReviewCnt + 1;
+    }
 }

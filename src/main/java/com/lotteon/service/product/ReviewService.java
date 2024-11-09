@@ -12,6 +12,7 @@ import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductRepository;
 import com.lotteon.repository.product.ReviewDocuRepository;
+import com.lotteon.service.config.ImageService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.point.PointService;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +39,21 @@ public class ReviewService {
     private final PointRepository pointRepository;
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
+    private final ImageService imageService;
 
     public String addReview(PostReviewDto dto) {
         Optional<Product> product = productRepository.findById(dto.getProdId());
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer = auth.getUser().getCustomer();
+
+        if (dto.getReviewImg() != null && !dto.getReviewImg().isEmpty()) {
+            String uploadedImagePath = imageService.uploadImage(dto.getReviewImg());
+            if (uploadedImagePath != null) {
+                dto.setPath(uploadedImagePath);
+            } else {
+                throw new RuntimeException("Image upload failed");
+            }
+        }
         boolean hasOrdered = orderRepository.existsByCustomerAndOrderItems_Product(customer, product.get());
 
         if (!hasOrdered) {
@@ -58,6 +69,7 @@ public class ReviewService {
                 .reviewContent(dto.getReview())
                 .reviewRdate(LocalDateTime.now())
                 .prodName(product.get().getProdName())
+                .reviewImg(dto.getPath())
                 .build();
         reviewDocuRepository.save(review);
 
@@ -68,6 +80,7 @@ public class ReviewService {
                 .orElse(0.0);
 
         product.get().updateRating(averageScore);
+        product.get().updateReviewCnt();
         productRepository.save(product.get());
 
         this.updatePoint(customer);

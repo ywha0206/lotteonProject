@@ -48,6 +48,9 @@ public class ReviewDocu {
     @CreationTimestamp
     private LocalDateTime reviewRdate;
 
+    @Column(name = "review_img")
+    private String reviewImg;
+
     public GetReviewsDto toGetReviewsDto() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String rdate = reviewRdate.format(formatter);
