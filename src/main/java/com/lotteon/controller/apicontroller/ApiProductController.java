@@ -1,7 +1,10 @@
 package com.lotteon.controller.apicontroller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.GetProductNamesDto;
+import com.lotteon.dto.requestDto.PostBannerDTO;
 import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.PostReviewDto;
 import com.lotteon.dto.requestDto.cartOrder.*;
@@ -9,6 +12,7 @@ import com.lotteon.dto.responseDto.GetAddressDto;
 import com.lotteon.dto.responseDto.GetCouponDto;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.GetOption1Dto;
+import com.lotteon.entity.config.Banner;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.entity.product.OrderCancleDocument;
 import com.lotteon.repository.member.UserLogRepository;
@@ -26,17 +30,16 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 @RestController
@@ -278,11 +281,41 @@ public class ApiProductController {
 
     @PostMapping("/review")
     public ResponseEntity<?> insertReview(
-            @RequestBody PostReviewDto review
+            @RequestPart("jsonData") String jsonData,
+            @RequestPart("reviewImg") MultipartFile reviewImg
     ){
-        String result = reviewService.addReview(review);
 
-        return ResponseEntity.ok().body(result);
+        ObjectMapper objectMapper = new ObjectMapper();
+        PostReviewDto reviewDto;
+        String result;
+
+        try {
+            reviewDto = objectMapper.readValue(jsonData, PostReviewDto.class);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Invalid JSON Data: " + e.getMessage()));
+        }
+
+        if (reviewImg != null) {
+            try {
+                reviewDto.setReviewImg(reviewImg); // 이미지 파일 설정
+            } catch (Exception e) {
+                log.error("Error setting review image", e);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Collections.singletonMap("error", "Failed to set review image: " + e.getMessage()));
+            }
+        } else {
+            log.warn("No image uploaded for the review");
+        }
+
+        try {
+            result = reviewService.addReview(reviewDto);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("Error inserting review", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Failed to register review: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/review/names")

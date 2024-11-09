@@ -1,6 +1,7 @@
 package com.lotteon.dto.requestDto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,4 +14,6 @@ public class PostReviewDto {
     private Long prodId;
     private Integer score;
     private String review;
+    private MultipartFile reviewImg;
+    private String path;
 }
