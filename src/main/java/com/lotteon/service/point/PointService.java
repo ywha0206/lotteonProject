@@ -257,4 +257,47 @@ public class PointService {
 
     }
 
+    public void usePoint2(Integer points, Long orderId) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        List<Point> pointList  = pointRepository.findAllByCustomerAndPointTypeOrderByPointExpirationAsc(customer,1);
+        int remainingPoints = points;
+
+        for (Point point : pointList) {
+            if (remainingPoints <= 0) break;  // 필요한 포인트가 모두 차감되면 종료
+
+            int availablePoints = point.getPointVar();
+
+            if (availablePoints <= remainingPoints) {
+                point.changePointVar(0);
+                remainingPoints -= availablePoints;
+            } else {
+                // 필요한 포인트만 차감하고 종료
+                point.changePointVar(0);
+
+
+                Point point2 = Point.builder()
+                        .pointEtc("사용후남은포인트")
+                        .pointVar(point.getPointVar() - remainingPoints)
+                        .pointExpiration(point.getPointExpiration())
+                        .pointType(1)
+                        .customer(point.getCustomer())
+                        .orderId(orderId)
+                        .build();
+                pointRepository.save(point2);
+
+                remainingPoints = 0;
+            }
+
+            // 변경된 포인트를 업데이트합니다.
+            pointRepository.save(point);
+
+            int points2 = customerService.updateCustomerPoint(customer);
+            customer.updatePoint(points2);
+            customerRepository.save(customer);
+
+        }
+
+    }
+
 }
