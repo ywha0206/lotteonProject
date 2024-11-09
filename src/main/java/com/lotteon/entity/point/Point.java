@@ -89,7 +89,7 @@ public class Point {
                 .pointExpiration(expiration)
                 .pointType(type)
                 .pointVar(pointVar)
-                .pointEtc("상품구매포인트사용")
+                .pointEtc(pointEtc)
                 .warningExpiration(warning)
                 .build();
     }

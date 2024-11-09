@@ -16,6 +16,7 @@ import com.lotteon.service.point.CouponService;
 import com.lotteon.service.point.CustomerCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -166,13 +167,13 @@ public class EventService {
         customerRepository.save(customer);
     }
 
-    public void issueCoupon() {
+    @Cacheable(value = "couponCache", key = "'birth_' + #id", cacheManager = "cacheManager")
+    public String issueCoupon(Long id) {
         Customer customer = this.getCustomer();
-
 
         Optional<Coupon> coupon = couponRepository.findById((long)7);
         if(coupon.isEmpty()){
-            return;
+            return "false";
         }
 
         CustomerCoupon customerCoupon = CustomerCoupon.builder()
@@ -183,5 +184,6 @@ public class EventService {
                 .build();
 
         customerCouponRepository.save(customerCoupon);
+        return "true";
     }
 }

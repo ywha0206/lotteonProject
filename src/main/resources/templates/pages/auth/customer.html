@@ -234,7 +234,6 @@
             emailChecker = false;
             return;
         }
-        alert('이메일이 발송되었습니다.')
         try {
             const resp = await axios.post(`/auth/check/email?email=${currentValue}`, null, {
                 headers: {
@@ -244,6 +243,7 @@
             const data = resp.data
             console.log(data)
             if(data.code==="SU"){
+                alert('이메일이 발송되었습니다.')
                 emailChecker = true;
                 randomCode = data.validation
                 document.querySelector('.email-validation').innerHTML = `

@@ -43,8 +43,12 @@ public class EventController {
 
     @GetMapping("/birth")
     public String birth(Model model) {
-        eventService.issueCoupon();
-        return "redirect:/index?birth=true";
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long memId = auth.getUser().getId();
+        String result = "false";
+        result = eventService.issueCoupon(memId);
+        System.out.println(result);
+        return "redirect:/index?birth="+result;
     }
 
     @GetMapping("/coupon")
