@@ -134,4 +134,18 @@ public class AddressService {
         addressRepository.save(address.get());
 
     }
+
+    public List<GetAddressDto> findAllByUid() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        List<Address> address = addressRepository.findAllByCustomer(customer);
+        List<GetAddressDto> dtos = address.stream().map(Address::toGetAddressDto).toList();
+        return dtos;
+    }
+
+    public GetAddressDto findByAddrId(Long id) {
+        Optional<Address> address = addressRepository.findById(id);
+        GetAddressDto dto = address.get().toGetAddressDto();
+        return dto;
+    }
 }

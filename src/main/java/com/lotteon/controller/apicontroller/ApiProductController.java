@@ -8,6 +8,7 @@ import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
+import com.lotteon.dto.responseDto.GetAddressDto;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.entity.product.Order;
@@ -15,6 +16,7 @@ import com.lotteon.entity.product.OrderCancleDocument;
 import com.lotteon.repository.member.UserLogRepository;
 import com.lotteon.repository.product.OrderCancleRepository;
 import com.lotteon.service.WebSocketService;
+import com.lotteon.service.member.AddressService;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.entity.product.Cart;
@@ -60,6 +62,7 @@ public class ApiProductController {
     private final ReviewService reviewService;
     private final OrderCancleRepository orderCancleRepository;
     private final WebSocketService webSocketService;
+    private final AddressService addressService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
@@ -287,5 +290,19 @@ public class ApiProductController {
     public ResponseEntity<?> patchQuantity(@RequestParam Long cart,@RequestParam Integer quantity){
         cartService.updateQuantity(cart,quantity);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/order/address")
+    public ResponseEntity<?> getDifferentAddress(){
+        List<GetAddressDto> address = addressService.findAllByUid();
+        return ResponseEntity.ok(address);
+    }
+
+    @GetMapping("/order/address-select")
+    public ResponseEntity<?> getSelectAddress(
+            @RequestParam Long id
+    ){
+        GetAddressDto address = addressService.findByAddrId(id);
+        return ResponseEntity.ok(address);
     }
 }

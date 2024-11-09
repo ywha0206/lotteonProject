@@ -1,22 +1,18 @@
 package com.lotteon.service.product;
 
+import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
 import com.lotteon.entity.product.Cart;
-import com.lotteon.entity.product.CartItem;
 import com.lotteon.entity.product.Product;
 import com.lotteon.repository.product.CartRepository;
 import com.lotteon.repository.product.ProductRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -85,6 +81,44 @@ public class RecommendationService {
                 Aggregation.group("prodId").count().as("interactionCount"), // Group by prodId and count occurrences
                 Aggregation.sort(Sort.by(Sort.Order.desc("interactionCount"))), // Sort by count in descending order
                 Aggregation.limit(3) // Limit to top 5 most interacted products
+        );
+
+        // Step 3: Get the related product IDs
+        List<Long> relatedProductIds = mongoTemplate.aggregate(relatedCartsAggregation, "user_logs", Document.class)
+                .getMappedResults().stream()
+                .map(doc -> doc.getLong("_id")) // Extract prodId from the grouped result
+                .collect(Collectors.toList());
+
+
+        return productRepository.findAllByIdIn(relatedProductIds);
+    }
+
+    public List<Product> findRelatedOrder(List<PostCartSaveDto> selectedProducts) {
+        List<Long> prodIds = selectedProducts.stream().map(PostCartSaveDto::getProductId).toList();
+        return this.recommendRelatedOrder(prodIds);
+    }
+
+    private List<Product> recommendRelatedOrder(List<Long> prodIds) {
+        // Step 1: Get all `custId`s who interacted with the given `prodIds` in the "cart" action
+        Aggregation getCustIdsAggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("prodId").in(prodIds)), // Filter by prodIds
+                Aggregation.match(Criteria.where("action").is("order")), // Only "cart" actions
+                Aggregation.group("custId") // Group by custId
+        );
+
+        List<Long> custIds = mongoTemplate.aggregate(getCustIdsAggregation, "user_logs", Document.class)
+                .getMappedResults().stream()
+                .map(doc -> doc.getLong("_id")) // Extract custId from the grouped result
+                .collect(Collectors.toList());
+
+        // Step 2: Aggregate related products for these custIds excluding the original prodIds
+        Aggregation relatedCartsAggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("custId").in(custIds)), // Filter logs by custIds
+                Aggregation.match(Criteria.where("action").is("order")), // Only "cart" actions
+                Aggregation.match(Criteria.where("prodId").nin(prodIds)), // Exclude original prodIds
+                Aggregation.group("prodId").count().as("interactionCount"), // Group by prodId and count occurrences
+                Aggregation.sort(Sort.by(Sort.Order.desc("interactionCount"))), // Sort by count in descending order
+                Aggregation.limit(5) // Limit to top 5 most interacted products
         );
 
         // Step 3: Get the related product IDs

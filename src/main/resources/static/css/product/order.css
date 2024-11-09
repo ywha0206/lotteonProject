@@ -143,3 +143,67 @@ input{text-indent: 5px; border: 1px solid #d9d9d9;
             background-color: #cc3434;margin-left: 12px;}
 
 .btn_order > a {font-size: 20px;}
+
+/* 관련 상품 스타일 */
+#related-products {
+    display: flex;
+    margin-top: 30px;
+}
+
+.relaties {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 154px;
+    height: auto;
+    gap: 10px;
+    margin-left: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);*/
+}
+
+.relaties img {
+    width: 134px;
+    height: 134px;
+    border-radius: 8px;
+}
+
+.related-descriptions {
+    width: 134px;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: #333;
+}
+.related-descriptions dt {
+    font-weight: 400;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 최대 2줄 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.related-price{color: #a8a8a8; text-decoration: line-through}
+.related-total{font-weight: bold; margin-right: 5px}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    background-color: white;
+    z-index: 1000;
+    overflow: scroll;
+    height: 550px;
+    flex-direction: column;
+    gap: 20px;
+    padding: 40px;
+    display: none;
+}
+
+.address-box {
+    border: 1px solid black;
+    padding: 20px;
+}
