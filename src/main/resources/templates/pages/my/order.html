@@ -497,21 +497,31 @@
   })
 
   document.getElementById('reviewButton').addEventListener('click',async ()=>{
-    const submitData = {
-      "prodId" : prodId,
-      "orderId" : orderId,
-      "review" : content,
-      "score" : score
+    const reviewImgInput = document.querySelector('.review-img');
+    const reviewImg = reviewImgInput.files[0];
+    const submitData = new FormData();
+    const jsonData = {
+      'prodId' : prodId,
+      'orderId' : orderId,
+      'review' : content,
+      'score' : score
     }
+    submitData.append('jsonData',JSON.stringify(jsonData))
+    if (reviewImg) {
+      submitData.append('reviewImg',reviewImg);
+    } else {
+      console.log('파일이 선택되지 않았습니다.');
+    }
+    console.log(submitData)
     try {
       const resp = await axios.post("/prod/review",submitData,{
         headers: {
-          "Content-Type" : "application/json"
+          "Content-Type" : "multipart/form-data"
         }
       })
       alert(resp.data)
     } catch (e) {
-      console.log(e)
+
     }
   })
 
