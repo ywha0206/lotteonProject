@@ -65,11 +65,22 @@ public class ApiProductController {
         customerCouponService.useCustCoupon();
     }
 
+    @GetMapping("/option1")
+    public ResponseEntity<?> getOption1(
+            @RequestParam Long id
+    ){
+        List<GetOption1Dto> options = productOptionService.findByProdId(id);
+
+        return ResponseEntity.ok(options);
+    }
+
     @GetMapping("/option2")
     public ResponseEntity<?> getOption2(
             @RequestParam String optionValue,
             @RequestParam Long prodId
     ){
+        System.out.println(optionValue);
+        System.out.println(prodId);
         List<GetOption1Dto> options = productOptionService.findByOptionValue(optionValue,prodId);
         Map<String,Object> map = new HashMap<>();
         map.put("option2s",options);

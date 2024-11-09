@@ -450,8 +450,8 @@
                         <span class="optName">${option2[0].optionName}</span>
                         <select onclick="optionId2Changer(event)" class="prodOptions">
                     ` + option2.map(v => `
-                        <option class="endOption2" data-price="${v.optionPrice}" data-id="${v.optionId}">
-                            ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}
+                        <option class="endOption2" data-price="${v.optionPrice}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
+                            ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
                         </option>
                     `).join('') + `
                         </select>
@@ -467,6 +467,34 @@
                     `
                 }
                 select2.style.display = 'block'
+                optionId.value = option2[0].optionId;
+                if(option2[0].optionPrice){
+                    selectedAdditionalPrice = Number(option2[0].optionPrice);
+                    calculateTotalPrice();
+                } else {
+                    selectedAdditionalPrice = Number(0)
+                    calculateTotalPrice();
+                }
+                if(option2[0].optionStock===0){
+                    optionId.value = option2[1].optionId;
+                    if(option2[1].optionPrice){
+                        selectedAdditionalPrice = Number(option2[1].optionPrice);
+                        calculateTotalPrice();
+                    } else {
+                        selectedAdditionalPrice = Number(0);
+                        calculateTotalPrice();
+                    }
+
+                }
+                if(option2[1].optionStock===1){
+                    if(option2[2].optionPrice){
+                        selectedAdditionalPrice = Number(option2[2].optionPrice);
+                        calculateTotalPrice();
+                    } else {
+                        selectedAdditionalPrice = Number(0);
+                        calculateTotalPrice();
+                    }
+                }
 
             } catch (e) {
 
@@ -487,7 +515,7 @@
         }
     }
 
-    window.onload = function () {
+    window.onload = async function () {
         const select1 = document.getElementById('select1');
 
         if (endOption) {
@@ -501,6 +529,78 @@
             } else {
 
             }
+        }
+
+        if(nextOption) {
+            const select1 = document.getElementById('select1')
+            const select2 = document.getElementById('select2')
+            const selectedOption = select1.options[select1.selectedIndex];
+            try {
+                const resp = await axios.get("/prod/option2", {
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    params: {
+                        "optionValue": selectedOption.dataset.option,
+                        "prodId": [[${product.id}]]
+                    }
+                })
+                const option2 = resp.data.option2s
+                if (option2[0].type === "endOption2") {
+                    select2.innerHTML = `
+                        <span class="optName">${option2[0].optionName}</span>
+                        <select onclick="optionId2Changer(event)" class="prodOptions">
+                    ` + option2.map(v => `
+                        <option class="endOption2" data-price="${v.optionPrice}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
+                            ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
+                        </option>
+                    `).join('') + `
+                        </select>
+                    `;
+                } else {
+                    select2.innerHTML = `
+                        <span class="optName">${option2[0].optionName}</span>
+                        <select onclick="optionId2Changer(event)" class="prodOptions">
+                    ` + option2.map(v => `
+                        <option class="nextOption2" data-option="${v.optionValue}">${v.optionValue}</option>
+                    `).join('') + `
+                        </select>
+                    `
+                }
+                select2.style.display = 'block'
+                optionId.value = option2[0].optionId;
+                if(option2[0].optionPrice){
+                    selectedAdditionalPrice = Number(option2[0].optionPrice);
+                    calculateTotalPrice();
+                } else {
+                    selectedAdditionalPrice = Number(0)
+                    calculateTotalPrice();
+                }
+                if(option2[0].optionStock===0){
+                    optionId.value = option2[1].optionId;
+                    if(option2[1].optionPrice){
+                        selectedAdditionalPrice = Number(option2[1].optionPrice);
+                        calculateTotalPrice();
+                    } else {
+                        selectedAdditionalPrice = Number(0);
+                        calculateTotalPrice();
+                    }
+
+                }
+                if(option2[1].optionStock===1){
+                    if(option2[2].optionPrice){
+                        selectedAdditionalPrice = Number(option2[2].optionPrice);
+                        calculateTotalPrice();
+                    } else {
+                        selectedAdditionalPrice = Number(0);
+                        calculateTotalPrice();
+                    }
+                }
+
+            } catch (e) {
+                
+            }
+
         }
 
 

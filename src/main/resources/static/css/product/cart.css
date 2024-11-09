@@ -153,3 +153,44 @@ input:focus{outline: none;}
 }
 .related-price{color: #a8a8a8; text-decoration: line-through}
 .related-total{font-weight: bold; margin-right: 5px}
+
+.choose-btn {
+    position: relative;
+    top: -230px;
+    left: 49px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    background-color: white;
+    z-index: 1000;
+    overflow: scroll;
+    height: 250px;
+    flex-direction: column;
+    gap: 20px;
+    padding: 40px;
+    display: none;
+}
+
+.popup .option1 {
+    padding: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    &:hover {
+        background-color: #c7c7c7;
+    }
+}
+
+.disabled {
+    color: gray; /* 매진 표시를 위해 색상 조정 */
+    pointer-events: none; /* 클릭 불가 처리 */
+    cursor: not-allowed;
+}

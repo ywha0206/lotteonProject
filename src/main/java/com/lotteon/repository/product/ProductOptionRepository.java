@@ -17,4 +17,6 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
     List<ProductOption> findAllByProduct(Product product);
 
     List<ProductOption> findAllByProductAndOptionValue(Product product, String optionValue);
+
+    List<ProductOption> findAllByProductAndOptionState(Product product, int i);
 }

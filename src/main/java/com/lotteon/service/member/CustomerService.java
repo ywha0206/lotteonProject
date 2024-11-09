@@ -9,17 +9,11 @@ import com.lotteon.dto.requestDto.PostFindIdDto;
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import com.lotteon.dto.responseDto.GetMyInfoDTO;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
-import com.lotteon.entity.member.Address;
-import com.lotteon.entity.member.AttendanceEvent;
-import com.lotteon.entity.member.Customer;
-import com.lotteon.entity.member.Member;
+import com.lotteon.entity.member.*;
 import com.lotteon.entity.point.Point;
 
-import com.lotteon.repository.member.AddressRepository;
-import com.lotteon.repository.member.AttendanceEventRepository;
+import com.lotteon.repository.member.*;
 
-import com.lotteon.repository.member.CustomerRepository;
-import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.term.TermsRepository;
 import com.lotteon.service.AuthService;
@@ -56,6 +50,7 @@ public class CustomerService {
     private final AttendanceEventRepository attendanceEventRepository;
     private final AddressRepository addressRepository;
     private final AuthService authService;
+    private final MemberChangeDitectorRepository memberChangeDitectorRepository;
 
 
     @Transactional
@@ -261,6 +256,15 @@ public class CustomerService {
             Customer customer = optCustomer.get();
             customer.updateEmail(email);
             updateUser(customer.getMember());
+            LocalDate today = LocalDate.now();
+            memberChangeDitectorRepository.deleteAllByMemIdAndAction(optCustomer.get().getMember().getId(),"email");
+
+            MemberChangeDitector memberChangeDitector = MemberChangeDitector.builder()
+                    .action("email")
+                    .memId(optCustomer.get().getMember().getId())
+                    .changeDate(today)
+                    .build();
+            memberChangeDitectorRepository.save(memberChangeDitector);
             return true;
         }else{
             return false;
@@ -274,6 +278,15 @@ public class CustomerService {
             Customer customer = optCustomer.get();
             customer.updateHp(hp);
             updateUser(customer.getMember());
+
+            memberChangeDitectorRepository.deleteAllByMemIdAndAction(optCustomer.get().getMember().getId(),"hp");
+            LocalDate today = LocalDate.now();
+            MemberChangeDitector memberChangeDitector = MemberChangeDitector.builder()
+                    .action("hp")
+                    .memId(optCustomer.get().getMember().getId())
+                    .changeDate(today)
+                    .build();
+            memberChangeDitectorRepository.save(memberChangeDitector);
             return true;
         }else{
             return false;
