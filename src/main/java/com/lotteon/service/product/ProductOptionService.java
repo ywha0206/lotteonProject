@@ -30,7 +30,7 @@ public class ProductOptionService {
 
     public List<GetOption1Dto> findByProdId(long prodId) {
         Optional<Product> product = productRepository.findById(prodId);
-        List<ProductOption> options = productOptionRepository.findAllByProduct(product.get());
+        List<ProductOption> options = productOptionRepository.findAllByProductAndOptionState(product.get(),0);
         List<GetOption1Dto> variableOptions = new ArrayList<>();
         if(options.get(0).getOptionName().equals("옵션없음")){
             GetOption1Dto getOption1Dto = GetOption1Dto.builder()

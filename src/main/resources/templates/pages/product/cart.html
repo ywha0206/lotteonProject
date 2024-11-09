@@ -240,10 +240,12 @@
                   <select onchange="changeOption(event)">
                     <option th:each="option : ${options[cartItem.cartProductDto.id]}"
                             th:value="${option.optionValue}"
-                            th:text="${option.optionValue} + ' (+' + ${option.optionPrice} + ') '"
+                            th:text="${option.optionStock == 0 ? option.optionValue + ' (매진)' : option.optionValue + ' (+' + option.optionPrice + ') '}"
                             th:selected="${cartItem.optionId == option.optionId}"
                             th:data-id="${option.optionId}"
                             th:data-prod="${cartItem.cartItemId}"
+                            th:classappend="${option.optionStock == 0 ? 'disabled' : ''}"
+                            th:attr="disabled=${option.optionStock == 0 ? 'disabled' : null}"
                     >
                     </option>
                   </select>
@@ -271,7 +273,7 @@
         <div style="display: flex;">
           <div id="related-products">
             <div th:each="prod : ${related}" class="relaties">
-              <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
+              <a target="_blank" th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
               <div class="related-descriptions">
                 <dt style="font-weight: 400">
                   [[${prod.prodName}]]
@@ -327,17 +329,17 @@
       </div>
     </main>
     <!-- main -->
+    <div style="display: none;" class="popup"></div>
   </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 <script th:inline="javascript">
-  async function changeOption(event){
+
+  async function changeOption(event) {
     const selectedOption = event.target.options[event.target.selectedIndex]
     const optionId = selectedOption.dataset.id;
     const prodId = selectedOption.dataset.prod;
 
-    console.log(optionId)
-    console.log(prodId)
     try {
       const resp = await axios.patch(`/prod/cart/option?id=${optionId}&&prod=${prodId}`,null,{
         headers:{

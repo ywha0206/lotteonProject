@@ -6,6 +6,8 @@ import com.lotteon.dto.responseDto.*;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
+import com.lotteon.entity.member.MemberChangeDitector;
+import com.lotteon.repository.member.MemberChangeDitectorRepository;
 import com.lotteon.service.article.QnaService;
 import com.lotteon.service.member.AddressService;
 import com.lotteon.service.member.CustomerService;
@@ -44,6 +46,7 @@ public class MyController {
     private final AddressService addressService;
     private final QnaService qnaService;
     private final ReviewService reviewService;
+    private final MemberChangeDitectorRepository memberChangeDitectorRepository;
 
 
     @ModelAttribute
@@ -95,6 +98,15 @@ public class MyController {
             model.addAttribute("email", customer.getCustEmail());
             // model에 memId 추가
             model.addAttribute("memId", myUserDetails.getUser().getId());
+
+            MemberChangeDitector emailDitector = memberChangeDitectorRepository.findByMemIdAndAction(myUserDetails.getUser().getId(),"email");
+            if(emailDitector != null) {
+                model.addAttribute("emailDitector", emailDitector.getChangeDate());
+            }
+            MemberChangeDitector hpDitector = memberChangeDitectorRepository.findByMemIdAndAction(myUserDetails.getUser().getId(),"hp");
+            if(hpDitector != null) {
+                model.addAttribute("hpDitector", hpDitector.getChangeDate());
+            }
         }
 
 
