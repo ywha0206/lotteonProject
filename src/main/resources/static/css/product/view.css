@@ -484,8 +484,6 @@ div.greyBox{
     display: inline-block; background: url('/images/ico_sprites.png') no-repeat -328px -140px #FFFFFF;
     width: 26px;height: 24px; border: none; outline: none; zoom:0.5; padding-top: 2px
 }
-.ratingBg{padding: 0!important; ;display: inline-block; background: url("/images/ico_rating_star.png") no-repeat 0 0;width: 84px;height: 16px;}
-.ratingBg > .rating{display: inline-block; background: url("/images/ico_rating_star.png") no-repeat 0 -200px;width: 84px;height: 16px;}
 
 .popup {
     position: fixed;
