@@ -467,14 +467,17 @@
   stars.forEach(star => {
     star.addEventListener('click', function() {
       const ratingValue = this.dataset.value;
+      const ta = document.querySelector("#review-content");
 
-      stars.forEach(s => {
-        if (s.dataset.value <= ratingValue) {
-          s.classList.add('filled');
-        } else {
-          s.classList.remove('filled');
-        }
-      });
+      document.querySelector('#rating_span').innerText = this.value;
+      if(+ratingValue>40){
+        ta.placeholder =`상품의 어떤 점이 좋으셨나요?`
+      }else if(+ratingValue>=30){
+        ta.placeholder =`받아보신 상품은 어떠셨나요?`
+      }else{
+        ta.placeholder =`상품의 어떤 부분이 마음에 들지 않으셨나요?`
+      }
+
       score = ratingValue;
     });
   });
