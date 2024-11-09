@@ -561,13 +561,36 @@
           </tr>
         </table>
         <!-- .tb1-->
+        <div id="related-products">
+          <div th:each="prod : ${related}" class="relaties">
+            <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
+            <div class="related-descriptions">
+              <dt style="font-weight: 400">
+                [[${prod.prodName}]]
+              </dt>
+              <dd style="display: flex; margin-top: 5px">
+                <p class="related-total">[[${#numbers.formatInteger(prod.getProdPrice() - prod.getProdPrice() * (prod.getProdDiscount()/100), 1,'COMMA')}]]원</p>
+                <p class="related-price" th:if="${prod.prodDiscount > 0.0}">[[${#numbers.formatInteger(prod.getProdPrice(), 1,'COMMA')}]]원&nbsp;</p>
+              </dd>
+              <div class="d-flex align-items-center">
+                            <span class="ratingBg" style="zoom: 0.8">
+                                <span class="rating" th:style="'width:'+ ${prod.prodRating * 2}+'%;'"></span>
+                            </span>
+                <span th:text="${prod.prodReviewCnt eq null?'(0)':'('+prod.prodReviewCnt+')'}" style="margin-left: 5px;color: #7b7b7b"></span>
+              </div>
+            </div>
+          </div>
+        </div>
         <div>
           <div class="order_info">
             <h2 class="sub_tit2">배송정보</h2>
             <table class="tb2">
               <tr>
                 <th>수령자</th>
-                <td><input type="text" class="recive" name="receiverName" th:value="${customer.custName}" /></td>
+                <td>
+                  <input type="text" class="recive" name="receiverName" th:value="${customer.custName}" />
+                  <button onclick="loadDiffAddress(event)" th:data-id="${customer.memUid}" class="btn_zip">변경하기</button>
+                </td>
               </tr>
               <tr>
                 <th>휴대폰</th>
@@ -694,6 +717,106 @@
     </main>
     <!-- #main-->
   </div>
+  <div class="popup"></div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+
+
+<script>
+  let memUid = `[[${customer.memUid}]]`
+
+  async function loadDiffAddress(event){
+    event.preventDefault();
+    try {
+      const resp = await axios.get(`/prod/order/address`,null,{
+        headers : {
+          "Content-Type" : "application/json"
+        }
+      })
+      const address = resp.data
+      document.querySelector('.popup').innerHTML = address.map((addr, i) => `
+            <div class="address-wrapper">
+                <div class="${addr.state === 1 ? 'address-box on' : 'address-box'}">
+                    <div class="address-nick" style="font-size: 17px">
+                        ${addr.addrNick === '기본배송지' ? '내 정보' : addr.addrNick}
+                    </div>
+                    <div style="margin-bottom: 30px; height: 15px;">
+                        <span>${addr.name}</span><span>${addr.hp1 + '-' + addr.hp2 + '-' + addr.hp3}</span>
+                    </div>
+                    <div style="margin-bottom: 5px; height: 25px;">
+                        <span>(${addr.addr1})</span><br>
+                        <span>${addr.addr2}</span>
+                    </div>
+                    <div style="margin-bottom: 30px; height: 15px;"><span>${addr.addr3}</span></div>
+                    <div height: 25px;">
+                        요청사항 :<span>${addr.request}</span>
+                    </div>
+                </div>
+                <button onclick="changeAddress(event)" data-id="${addr.id}">선택하기</button>
+            </div>
+        `).join('')+`<button onclick="addrClose()">닫기</button>`;
+      document.querySelector('.popup').style.display = 'flex'
+    } catch (e) {
+
+    }
+  }
+
+  async function changeAddress(event){
+    event.preventDefault();
+    try {
+      const resp = await axios.get(`/prod/order/address-select?id=${event.target.dataset.id}`,null,{
+        headers:{
+          "Content-Type" : "application/json"
+        }
+      })
+      const addr = resp.data
+      document.querySelector('.tb2').innerHTML = `
+              <tr>
+                <th>수령자</th>
+                <td>
+                  <input type="text" class="recive" name="receiverName" value="${addr.name}" />
+                  <button onclick="loadDiffAddress(event)" data-id="${memUid}" class="btn_zip">변경하기</button>
+                </td>
+              </tr>
+              <tr>
+                <th>휴대폰</th>
+                <td><input type="text" class="hp" name="receiverHp" value="${addr.hp1}-${addr.hp2}-${addr.hp3}" /></td>
+              </tr>
+              <tr>
+                <th>우편번호</th>
+                <td>
+                  <input type="text" class="zip" title="우편번호 검색칸" name="receiverZip" value="${addr.addr1}" />
+                  <button class="btn_zip"><a href="#">검색</a></button>
+                </td>
+              </tr>
+              <tr>
+                <th>기본주소</th>
+                <td>
+                  <input type="text" class="addr1" placeholder="기본주소 검색" name="receiverAddr1" value="${addr.addr2}" />
+                </td>
+              </tr>
+              <tr>
+                <th>상세주소</th>
+                <td>
+                  <input type="text" class="addr2" placeholder="상세주소" name="receiverAddr2" value="${addr.addr3}" />
+                </td>
+              </tr>
+              <tr>
+                <th>요청사항</th>
+                <td>
+                  <input type="text" class="req" placeholder="배송 요청사항을 입력해주세요." name="receiverReq" />
+                </td>
+              </tr>
+            `
+      document.querySelector('.popup').style.display = 'none';
+    } catch (e) {
+
+    }
+  }
+
+  function addrClose(){
+    document.querySelector('.popup').style.display = 'none'
+  }
+
+</script>
 

@@ -92,6 +92,9 @@ public class CartOrderController {
         List<GetCouponDto> coupons = customerCouponService.findByCustomerAndSeller(productIds);
         model.addAttribute("coupons",coupons);
 
+        List<Product> relatedOrder = recommendationService.findRelatedOrder(selectedProducts);
+        model.addAttribute("related", relatedOrder);
+
         return "pages/product/order";
     }
 
