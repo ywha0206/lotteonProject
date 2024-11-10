@@ -52,10 +52,13 @@ public class EventService {
     public String updateEvent() {
         Customer customer = this.getCustomer();
 
-        AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
-        if (event == null) {
-            event = this.insertEvent(event,customer);
+
+        AttendanceEvent event;
+        if (attendanceEventRepository.findByCustomer(customer) == null) {
+            event = this.insertEvent(customer);
             attendanceEventRepository.save(event);
+        } else {
+            event = attendanceEventRepository.findByCustomer(customer);
         }
         if(event.getAttendanceToday()==1){
             return "done";
@@ -94,8 +97,8 @@ public class EventService {
 
     }
 
-    private AttendanceEvent insertEvent(AttendanceEvent event,Customer customer) {
-        return event = AttendanceEvent.builder()
+    private AttendanceEvent insertEvent(Customer customer) {
+        return AttendanceEvent.builder()
                 .attendanceSequence(0)
                 .customer(customer)
                 .attendanceDays(0)
