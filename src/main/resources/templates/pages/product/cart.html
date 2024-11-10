@@ -243,6 +243,7 @@
                             th:text="${option.optionStock == 0 ? option.optionValue + ' (매진)' : option.optionValue + ' (+' + option.optionPrice + ') '}"
                             th:selected="${cartItem.optionId == option.optionId}"
                             th:data-id="${option.optionId}"
+                            th:data-stock="${option.optionStock}"
                             th:data-prod="${cartItem.cartItemId}"
                             th:classappend="${option.optionStock == 0 ? 'disabled' : ''}"
                             th:attr="disabled=${option.optionStock == 0 ? 'disabled' : null}"
