@@ -331,8 +331,9 @@ public class ApiProductController {
     }
 
     @PatchMapping("/cart/option")
-    public ResponseEntity<?> patchOption(@RequestParam Long id,@RequestParam Long prod){
-        cartService.updateCartOption(id,prod);
+    public ResponseEntity<?> patchOption(@RequestParam Long id,@RequestParam Long prod, @RequestParam int quantity){
+        System.out.println(quantity);
+        cartService.updateCartOption(id,prod,quantity);
         return ResponseEntity.ok().build();
     }
 

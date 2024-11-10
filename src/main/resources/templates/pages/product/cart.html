@@ -43,7 +43,7 @@
                 const deliver = tr.querySelector('td:nth-child(9)').textContent.trim()=='무료배송'
                         ? 0 :
                         parseInt(tr.querySelector('td:nth-child(9)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 배송비
-                const totalPrice = parseInt(tr.querySelector('td:nth-child(10)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 총금액
+                const totalPrice = parseFloat(tr.querySelector('td:nth-child(10)').textContent.trim().replace(/[^0-9.-]+/g, ""));
 
                 return {
                   quantity,
@@ -133,7 +133,7 @@
                 const productId = tr.getAttribute('data-product-id'); // 여기서 product id를 가져옴
                 const quantity = tr.getAttribute('data-quantity');
                 const optionId = tr.getAttribute('data-option-id');
-                const totalPrice =  parseInt(tr.getAttribute('data-total-price'));
+                const totalPrice =  parseFloat(tr.getAttribute('data-total-price'));
                 return {
                   cartItemId: checkbox.value,
                   productId: productId,
@@ -216,7 +216,7 @@
           <th>총합</th>
         </tr>
         <th:block th:if="${!cartItems.isEmpty()}">
-          <tr th:each="cartItem : ${cartItems}" th:data-total-price="${cartItem.totalPrice}" th:data-option-id="${cartItem.optionId}" th:data-product-id="${cartItem.cartProductDto.id}" th:data-quantity="${cartItem.quantity}">
+          <tr class="parent-closet" th:each="cartItem : ${cartItems}" th:data-total-price="${cartItem.totalPrice}" th:data-option-id="${cartItem.optionId}" th:data-product-id="${cartItem.cartProductDto.id}" th:data-quantity="${cartItem.quantity}">
             <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
             <td>
               <a th:href="@{'/prod/product?prodId='+${cartItem.cartProductDto.id}}">
@@ -237,7 +237,7 @@
                   <span>옵션없음</span>
                 </th:block>
                 <th:block th:unless="${cartItem.optionValue.isEmpty()}">
-                  <select onchange="changeOption(event)">
+                  <select class="option-select" onchange="changeOption(event)">
                     <option th:each="option : ${options[cartItem.cartProductDto.id]}"
                             th:value="${option.optionValue}"
                             th:text="${option.optionStock == 0 ? option.optionValue + ' (매진)' : option.optionValue + ' (+' + option.optionPrice + ') '}"
@@ -253,7 +253,7 @@
                 </th:block>
               </div>
             </td>
-            <td><input th:data-quant="${cartItem.quantity}" th:data-id="${cartItem.cartItemId}" onchange="changeQuantity(event)" style="width: 40px;" type="number" th:value="${cartItem.quantity}"></td>
+            <td><input th:data-quant="${cartItem.quantity}" class="prod-quantity" th:data-id="${cartItem.cartItemId}" onchange="changeQuantity(event)" style="width: 40px;" type="number" th:value="${cartItem.quantity}"></td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodPrice, 1, 'COMMA') : 0}]]원</td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodDiscount, 1, 'COMMA') : 0}]] %</td>
             <td>[[${cartItem.cartProductDto.prodPoint}]] P</td>
@@ -340,9 +340,15 @@
     const selectedOption = event.target.options[event.target.selectedIndex]
     const optionId = selectedOption.dataset.id;
     const prodId = selectedOption.dataset.prod;
+    const prodStock = selectedOption.dataset.stock;
+    const quantity = document.querySelector('.prod-quantity')
+    if(Number(prodStock) < Number(quantity.value)){
+      alert(`주문가능한 수량 : ${prodStock}`)
+      quantity.value = Number(prodStock)
+    }
 
     try {
-      const resp = await axios.patch(`/prod/cart/option?id=${optionId}&&prod=${prodId}`,null,{
+      const resp = await axios.patch(`/prod/cart/option?id=${optionId}&&prod=${prodId}&quantity=${quantity.value}`,null,{
         headers:{
           "Content-Type" : "application/json"
         }
@@ -356,8 +362,15 @@
   }
 
   async function changeQuantity(event){
-    const quantity = event.target.value;
+    let quantity = event.target.value;
     const cartItemId = event.target.dataset.id;
+    const select = event.target.closest('.parent-closet').querySelector('.option-select');
+    const selectedOption = select.options[select.selectedIndex]
+    const prodStock = selectedOption.dataset.stock;
+    if(Number(prodStock) < Number(quantity)){
+      quantity = prodStock
+      alert(`주문가능한 수량 : ${prodStock}`)
+    }
     try {
       const resp = await axios.patch(`/prod/cart/quantity?cart=${cartItemId}&&quantity=${quantity}`,null,{
         headers:{

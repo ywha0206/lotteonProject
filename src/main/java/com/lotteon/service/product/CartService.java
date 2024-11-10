@@ -276,16 +276,20 @@ public class CartService {
         return map;
     }
 
-    public void updateCartOption(Long id, Long prod) {
+    public void updateCartOption(Long id, Long prod, int quantity) {
         Optional<CartItem> cartItem = cartItemRepository.findById(prod);
         Optional<ProductOption> productOption = productOptionRepository.findById(id);
         if(cartItem.get().getOptionCurrAdditional()!=null){
+            cartItem.get().setQuantity(quantity);
+            cartItemRepository.save(cartItem.get());
             cartItem.get().updateOption(id,productOption.get().getAdditionalPrice());
             cartItemRepository.save(cartItem.get());
             cartItem.get().updateAdditional(productOption.get().getAdditionalPrice());
             cartItemRepository.save(cartItem.get());
         } else {
             cartItem.get().insertAdditional(id,productOption.get().getAdditionalPrice());
+            cartItemRepository.save(cartItem.get());
+            cartItem.get().setQuantity(quantity);
             cartItemRepository.save(cartItem.get());
         }
     }
