@@ -26,60 +26,28 @@
             베스트 상품
         </h3><!--.tit_sty02 -->
         <ul class="bestRank">
-            <li><a href="#">
-                <div class="photo1">
-                    <img src="/images/144x120.png" class="bImg" alt="베스트 상품 이미지 1">
-                </div><!--.photo-->
-                <dl>
-                    <dt class="Btit cf">
-                        <p>베스트 상품명 1</p>
-                        <p class="oPrice cf">30,000원 </p>
-                        <em class="dis cf">10%&#8595;</em>
-                    </dt><!--.Btit-->
-                    <dd class="dPrice">
-                        27,000원
-                    </dd><!--.price-->
-                </dl>
-            </a></li>
-
-            <li class="cf"><a href="#">
-                <div class="photo2 pho">
-                    <img src="/images/60x60.png" class="bImg" alt="베스트 상품 이미지 2">
-                </div><!--.photo-->
-                <dl class="txt">
-                    <dt class="Btit cf">
-                        <p>베스트 상품명 2</p>
-                        <p class="oPrice cf">30,000원 </p>
-                        <em class="dis cf">10%&#8595;</em>
-                    </dt><!--.Btit-->
-                    <dd class="dPrice">
-                        27,000원
-                    </dd><!--.price-->
-                </dl>
-            </a></li>
-
-            <li class="cf"><a href="#">
-                <div class="photo3 pho">
-                    <img src="/images/60x60.png" class="bImg" alt="베스트 상품 이미지 2">
-                </div><!--.photo-->
-                <dl class="txt">
-                    <dt class="Btit cf">
-                        <p>베스트 상품명 3</p>
-                        <p class="oPrice cf">30,000원 </p>
-                        <em class="dis cf">10%&#8595;</em>
-                    </dt><!--.Btit-->
-                    <dd class="dPrice">
-                        27,000원
-                    </dd><!--.price-->
-                </dl>
-            </a></li>
-
+            <li th:each="v : ${best}">
+                <a th:href="@{/prod/product(prodId=${v.id})}">
+                    <div class="photo1">
+                        <img style="width:140px;" th:src="@{/file/${v.img}}" class="bImg" alt="베스트 상품 이미지 1">
+                    </div><!--.photo-->
+                    <dl>
+                        <dt class="Btit cf">
+                            <p>[[${v.prodName}]]</p>
+                            <p class="oPrice cf">[[${v.prodPrice}]] </p>
+                            <em class="dis cf">[[${v.prodDiscount}]]%&#8595;</em>
+                        </dt><!--.Btit-->
+                        <dd class="dPrice">
+                            [[${#numbers.formatInteger(v.prodPrice * (1 - v.prodDiscount / 100), 0, 'COMMA')}]] 원
+                        </dd><!--.price-->
+                    </dl>
+                </a></li>
         </ul>
     </div><!--.best-->
 </aside>
 <script>
     let isLoading = false;
-    const sections = ['bestRank','hi']
+    const sections = ['hi']
     const loadedSections = new Set();
 
     const socket = new SockJS('/ws');

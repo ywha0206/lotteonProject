@@ -48,6 +48,12 @@ public class ProductController {
     private final ReviewService reviewService;
     private final ReviewDocuRepository reviewDocuRepository;
 
+    @ModelAttribute
+    public void findBest(Model model) {
+        List<GetMainProductDto> products = productService.findBestItem();
+
+        model.addAttribute("best",products);
+    }
 
     @GetMapping("/products")
     public String products(Model model, @RequestParam(value = "cate",required = false) String cate, ProductPageRequestDTO productPageRequestDTO) {
