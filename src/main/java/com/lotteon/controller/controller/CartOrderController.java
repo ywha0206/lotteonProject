@@ -1,6 +1,7 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.cartOrder.PostCartSaveDto;
+import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.dto.responseDto.cartOrder.GetCartDto;
 import com.lotteon.dto.responseDto.GetCategoryDto;
@@ -23,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -43,6 +45,13 @@ public class CartOrderController {
     private final CustomerCouponService customerCouponService;
     private final ProductService productService;
     private final RecommendationService recommendationService;
+
+    @ModelAttribute
+    public void findBest(Model model) {
+        List<GetMainProductDto> products = productService.findBestItem();
+
+        model.addAttribute("best",products);
+    }
 
     @GetMapping("/cart")
     public String join(Model model, HttpServletRequest req,

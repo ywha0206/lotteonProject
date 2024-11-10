@@ -143,6 +143,7 @@ public class Point {
         if(pointVar==0){
             this.pointType = 2;
             this.pointUdate = now;
+            this.pointEtc = "상품구매 포인트사용";
         } else {
             this.pointVar = pointVar;
         }

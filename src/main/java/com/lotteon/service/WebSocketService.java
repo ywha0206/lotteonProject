@@ -12,9 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class WebSocketService {
 
     private final ProductService productService;
-
-    @Scheduled(fixedRate = 90000) // 600,000ms = 10분
-    public void refreshBestProducts() {
-        productService.updateBestItems();
-    }
+    
 }
