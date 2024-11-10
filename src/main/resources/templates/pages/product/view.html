@@ -78,12 +78,13 @@
                                 <td>
                                     <span class="optName" th:text="${option1s[0].optionName}"></span>
                                     <select onchange="optionIdChanger(event)" name="options" class="prodOptions" id="select1">
-                                        <option id="noOption" th:data-id="${option1.optionId}" th:if="${option1.type == 'noOption'}" th:each="option1 : ${option1s}">옵션 없음</option>
+                                        <option th:data-stock="${option1.optionStock}" id="noOption" th:data-id="${option1.optionId}" th:if="${option1.type == 'noOption'}" th:each="option1 : ${option1s}">옵션 없음</option>
                                         <option class="endOption"
                                                 th:data-price="${option1.optionPrice}"
                                                 th:data-id="${option1.optionId}"
                                                 th:if="${option1.type == 'endOption'}"
                                                 th:each="option1 : ${option1s}"
+                                                th:data-stock="${option1.optionStock}"
                                                 th:text="${option1.optionValue} + (${#numbers.formatInteger(option1.optionPrice, 1)} != null ? ' (' + ${#numbers.formatInteger(option1.optionPrice, 1)} + '원)' : '')"></option>
                                         <option class="nextOption" th:data-option="${option1.optionValue}" th:if="${option1.type == 'nextOption'}" th:each="option1 : ${option1s}" th:text="${option1.optionValue}"></option>
                                     </select>
@@ -297,10 +298,12 @@
     let selectedAdditionalPrice = 0;
     let count = 0;
     let basePrice = parseFloat([[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]);
+    let selectedStock = 0;
     if (noOption) {
         const select1 = document.getElementById('select1')
         const selectedOption = select1.options[select1.selectedIndex];
         optionId.value = selectedOption.dataset.id;
+        selectedStock = selectedOption.dataset.stock;
         qty.style.display = 'block'
     }
     if (endOption) {
@@ -405,14 +408,23 @@
         }
     });
 
-    countInput.addEventListener('change', function () {
+    countInput.addEventListener('change', function (e) {
+        let maxValue = parseInt(countInput.max);
+        maxValue = Number(selectedStock)
+        if(e.target.value > maxValue){
+            e.target.value = maxValue;
+            alert(`수량은 ${maxValue} 까지만 가능합니다.`)
+        }
         calculateTotalPrice();
     });
 
     function calculateTotalPrice() {
         const countInput = document.querySelector('.count');
         let inNum = countInput.value || 0; // 수량을 가져오고 기본값 0 설정
-        let totalPriceValue = Number(inNum * basePrice); // 총 가격 계산
+        let totalPriceValue = Number(inNum * basePrice); // 총 가격 계산\
+        if(selectedStock < inNum){
+            inNum = selectedStock
+        }
         if (selectedAdditionalPrice !== 0) {
             totalPriceValue = Number(inNum) * (Number(basePrice) + Number(selectedAdditionalPrice));
         }
@@ -424,10 +436,16 @@
     async function optionIdChanger(event) {
         if (endOption) {
             const selectedOption = event.target.options[event.target.selectedIndex];
+            const countInput = document.querySelector('.count');
             if (selectedOption.classList.contains("endOption")) {
                 optionId.value = selectedOption.dataset.id;
+                selectedStock = selectedOption.dataset.stock;
                 if (selectedOption.dataset.price) {
                     selectedAdditionalPrice = Number(selectedOption.dataset.price);
+                    calculateTotalPrice()
+                }
+                if(Number(countInput.value) > Number(selectedStock)){
+                    countInput.value = selectedStock
                     calculateTotalPrice()
                 }
             }
@@ -450,7 +468,7 @@
                         <span class="optName">${option2[0].optionName}</span>
                         <select onclick="optionId2Changer(event)" class="prodOptions">
                     ` + option2.map(v => `
-                        <option class="endOption2" data-price="${v.optionPrice}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
+                        <option class="endOption2" data-price="${v.optionPrice}" data-stock="${v.optionStock}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
                             ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
                         </option>
                     `).join('') + `
@@ -467,34 +485,16 @@
                     `
                 }
                 select2.style.display = 'block'
-                optionId.value = option2[0].optionId;
-                if(option2[0].optionPrice){
-                    selectedAdditionalPrice = Number(option2[0].optionPrice);
-                    calculateTotalPrice();
-                } else {
-                    selectedAdditionalPrice = Number(0)
-                    calculateTotalPrice();
-                }
-                if(option2[0].optionStock===0){
-                    optionId.value = option2[1].optionId;
-                    if(option2[1].optionPrice){
-                        selectedAdditionalPrice = Number(option2[1].optionPrice);
-                        calculateTotalPrice();
-                    } else {
-                        selectedAdditionalPrice = Number(0);
-                        calculateTotalPrice();
-                    }
+                const prodOptions = select2.querySelector('.prodOptions')
+                optionId.value = prodOptions.options[prodOptions.selectedIndex].dataset.id;
+                selectedStock = prodOptions.options[prodOptions.selectedIndex].dataset.stock;
+                selectedAdditionalPrice = prodOptions.options[prodOptions.selectedIndex].dataset.price;
 
+                if(Number(countInput.value) > Number(selectedStock)){
+                    countInput.value = selectedStock
+                    calculateTotalPrice()
                 }
-                if(option2[1].optionStock===1){
-                    if(option2[2].optionPrice){
-                        selectedAdditionalPrice = Number(option2[2].optionPrice);
-                        calculateTotalPrice();
-                    } else {
-                        selectedAdditionalPrice = Number(0);
-                        calculateTotalPrice();
-                    }
-                }
+                calculateTotalPrice();
 
             } catch (e) {
 
@@ -506,6 +506,8 @@
         const selectedOption = event.target.options[event.target.selectedIndex];
         if (selectedOption.classList.contains("endOption2")) {
             optionId.value = selectedOption.dataset.id;
+            selectedStock = selectedOption.dataset.stock;
+            console.log(selectedStock)
             qty.style.display = 'block'
             if (selectedOption.dataset.price) {
                 selectedAdditionalPrice = Number(selectedOption.dataset.price);
@@ -522,12 +524,11 @@
             const selectedOption = select1.options[select1.selectedIndex];
             if (selectedOption.classList.contains("endOption")) {
                 optionId.value = selectedOption.dataset.id;
+                selectedStock = selectedOption.dataset.stock;
                 if (selectedOption.dataset.price) {
                     selectedAdditionalPrice = Number(selectedOption.dataset.price);
                     calculateTotalPrice();
                 }
-            } else {
-
             }
         }
 
@@ -551,7 +552,7 @@
                         <span class="optName">${option2[0].optionName}</span>
                         <select onclick="optionId2Changer(event)" class="prodOptions">
                     ` + option2.map(v => `
-                        <option class="endOption2" data-price="${v.optionPrice}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
+                        <option class="endOption2" data-price="${v.optionPrice}" data-stock="${v.optionStock}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
                             ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
                         </option>
                     `).join('') + `
@@ -568,37 +569,19 @@
                     `
                 }
                 select2.style.display = 'block'
-                optionId.value = option2[0].optionId;
-                if(option2[0].optionPrice){
-                    selectedAdditionalPrice = Number(option2[0].optionPrice);
-                    calculateTotalPrice();
-                } else {
-                    selectedAdditionalPrice = Number(0)
-                    calculateTotalPrice();
-                }
-                if(option2[0].optionStock===0){
-                    optionId.value = option2[1].optionId;
-                    if(option2[1].optionPrice){
-                        selectedAdditionalPrice = Number(option2[1].optionPrice);
-                        calculateTotalPrice();
-                    } else {
-                        selectedAdditionalPrice = Number(0);
-                        calculateTotalPrice();
-                    }
+                const prodOptions = select2.querySelector('.prodOptions')
+                optionId.value = prodOptions.options[prodOptions.selectedIndex].dataset.id;
+                selectedStock = prodOptions.options[prodOptions.selectedIndex].dataset.stock;
+                selectedAdditionalPrice = prodOptions.options[prodOptions.selectedIndex].dataset.price;
 
+                if(Number(countInput.value) > Number(selectedStock)){
+                    countInput.value = selectedStock
+                    calculateTotalPrice()
                 }
-                if(option2[1].optionStock===1){
-                    if(option2[2].optionPrice){
-                        selectedAdditionalPrice = Number(option2[2].optionPrice);
-                        calculateTotalPrice();
-                    } else {
-                        selectedAdditionalPrice = Number(0);
-                        calculateTotalPrice();
-                    }
-                }
+                calculateTotalPrice();
 
             } catch (e) {
-                
+
             }
 
         }
