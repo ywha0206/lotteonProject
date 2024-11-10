@@ -87,8 +87,10 @@ public class OrderItemService {
             int orderItemQuantity = orderItem.getQuantity();
             Long optionId = orderItem.getOptionId();
 
-            productService.top3UpdateBoolean();
-            productService.updateBestItems();
+            String updateResult = productService.top3UpdateBoolean();
+            if(updateResult.equals("true")){
+                productService.updateBestItems();
+            }
             //재고 처리
             Optional<ProductOption> optProductOption = productOptionRepository.findById(optionId);
             ProductOption productOption = optProductOption.get();

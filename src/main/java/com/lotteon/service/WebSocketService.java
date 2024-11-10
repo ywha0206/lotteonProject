@@ -12,5 +12,4 @@ import org.springframework.transaction.annotation.Transactional;
 public class WebSocketService {
 
     private final ProductService productService;
-    
 }
