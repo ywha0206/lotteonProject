@@ -64,11 +64,31 @@ h1.logo{z-index: 3}
 /* 마이롯데, 장바구니, 나의 찜 */
 #header .myTool {display: flex;gap: 25px;justify-content: flex-end;z-index: 3;}
 #header .myTool .img-header-link {width: 50px; height: 50px; cursor:pointer;}
+.cartCount{background: #E60012;
+    display: inline-block;
+    border-radius: 50%;
+    width: 23px;
+    height: 23px;
+    color: #fff;
+    font-weight: 900;
+    text-align: center;
+    line-height: 19px;
+    position: relative;
+    font-size: 11px;
+    left: -18px;
+    font-family: 'Noto Sans KR', sans-serif;
+    top: -10px;
+    border: 1px solid #fff;
+    box-sizing: border-box;}
 
 /* 메뉴 박스 (gnb) : 히트상품 ~ */
+/*#header .menu-box:before {display: block; content:""; clear: both; width:100%; height: 1px; background: #f0f0f0;} !* 메뉴 박스 위에 line *!*/
+/*#header .menu-box .menu-box-in:before {display: block; content:""; clear: both; width:100%; height: 1px; background: #f0f0f0;}*/
 
 #header .menu-box .menu-box-in .gnb{position:absolute; top:162px; left:0;}
 #header .menu-box .menu-box-in .gnb li{float:left; margin-right:10px;}
+
+/* 히트상품 font */
 #header .menu-box .menu-box-in .gnb li a{display: inline-block; height: 40px; font-size: 1.27em; line-height: 40px;
     margin-right: 6px; transition:all 0.3s; cursor: pointer;}
 #header .menu-box .menu-box-in .gnb li a:hover{cursor: pointer; color: #f65; font-weight: 500; transition:all 0.3s;}

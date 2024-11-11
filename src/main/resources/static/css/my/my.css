@@ -70,20 +70,10 @@ body{height: 100vh;}
 #my table.order tr > th:nth-child(4) { width: 15%; }
 #my table.order tr > th:nth-child(5) { width: 20%; }
 
-/*#my table.order tr > td:nth-child(2) { display: flex; justify-content: center}*/
-/*#my table.order .thumb {float: left;width: 120px;height: 120px;overflow: hidden;display: flex;justify-content: center;align-items: center}*/
-/*#my table.order .thumb > img {max-width: 100%;width: auto;height: 100%;}*/
-
-/*#my table.order ul {float:left;margin-left: 10px;margin-right: 10px;}*/
-/*#my table.order ul > li {margin: 4px 0;}*/
-
-/*#my table.order .prodName {max-width: 250px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}*/
-/*#my table.order .prodPrice {margin-top: 6px;font-family: '고딕';font-size: 16px;font-weight: bold;color: #222;}*/
-/*#my table.order .prodPrice::after {content: '원';font-size: 12px;}*/
 #my table.order .confirm{height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 #my table.order .confirm > button {display: block;width: 100px;height: 35px; padding: 6px; box-sizing: border-box; font-size: 12px; border:none;}
 #my table.order button {border-radius: 10px; margin-top: 2px;font-family: '돋움';color: #676767;line-height: 19px;}
-/*#my table.order li{text-align: left;}*/
+
 
 #my table.order .color{background: #E60012; color: #FFF;     border: none;}
 #my table.order .grey{background: #F2F2F2; color: #000; border: 1px solid #808080;}
@@ -229,3 +219,38 @@ body{height: 100vh;}
 
 
 
+
+/* 비밀번호 확인 */
+.passInfo_nav{
+    /*box-shadow: 0 0 8px #c7c7c7;*/
+    background: #f7f7f7;
+    border-radius: 22px;
+    height: 70px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    width: 840px;
+    position: relative;
+    left: 20px;
+}
+.passInfo_dd{margin-left: 30px; margin-top: 18px;}
+.passInfo_dd h4{font-size: 16px;}
+.passInfoDiv{display: flex;
+    justify-content: center;
+    margin-top: 85px;}
+.passInfo{
+    width: 400px;
+    border: none;
+    border-bottom: 1px solid #c7c7c7;
+    height: 40px;
+    font-size: 17px;
+    text-indent: 10px;
+}
+.btnPassInfo{
+    border: none;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background: #E60012;
+    color: #fff;
+}

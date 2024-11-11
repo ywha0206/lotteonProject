@@ -148,8 +148,16 @@ public class MyController {
         return "pages/my/coupon";
     }
 
-    // 나의 쇼핑정보 > 나의 설정
+    @GetMapping("/infoPass")
+    public String infoPass(Authentication authentication, Model model) {
 
+        MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
+        Long memId = auth.getUser().getId();
+        model.addAttribute("memId", memId);
+        return "pages/my/passInfo";
+    }
+
+    // 나의 쇼핑정보 > 나의 설정
     @GetMapping("/info")
     public String info(Model model, Authentication authentication) {
         MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
