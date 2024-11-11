@@ -54,7 +54,7 @@
                         <li th:each="v : ${best}">
                             <a th:href="@{/prod/product(prodId=${v.id})}">
                             <div class="photo1">
-                                <img style="width:140px;" th:src="@{/file/${v.img}}" class="bImg" alt="베스트 상품 이미지 1">
+                                <img style="width:140px;" th:src="@{'/file/' + ${v.img}}" class="bImg" alt="베스트 상품 이미지 1">
                             </div><!--.photo-->
                             <dl>
                                 <dt class="Btit cf">
