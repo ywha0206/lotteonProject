@@ -47,9 +47,9 @@
         <div th:if="${!noItem}" class="page"
              th:with="lastPage=${totalPages > 0 ? totalPages - 1 : 0}">
           <!-- 첫 번째 페이지로 이동 (비활성화 조건 추가) -->
-          <a th:href="@{/my/qnas?page=0}"
+          <a th:href="@{/my/qnas?page=0}" class="prev"
              th:classappend="${currentPage == 0} ? 'disabled'"
-             th:text="'<<'"></a>
+             th:text="'이전'"></a>
 
           <!-- 페이지 번호 목록 -->
           <ol>
@@ -62,9 +62,9 @@
           </ol>
 
           <!-- 마지막 페이지로 이동 (totalPages가 1 이상일 때만 표시) -->
-          <a th:if="${totalPages > 1}" th:href="@{'/my/qnas?page=' + ${lastPage}}"
+          <a th:if="${totalPages > 1}" th:href="@{'/my/qnas?page=' + ${lastPage}}" class="next"
              th:classappend="${currentPage == lastPage} ? 'disabled'"
-             th:text="'>>'"></a>
+             th:text="'다음'"></a>
         </div>
 
 
