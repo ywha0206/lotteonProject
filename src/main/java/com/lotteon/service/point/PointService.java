@@ -272,7 +272,6 @@ public class PointService {
                 point.changePointVar(0);
                 remainingPoints -= availablePoints;
             } else {
-                // 필요한 포인트만 차감하고 종료
                 point.changePointVar(0);
 
 
@@ -288,9 +287,6 @@ public class PointService {
 
                 remainingPoints = 0;
             }
-
-            // 변경된 포인트를 업데이트합니다.
-            pointRepository.save(point);
 
             int points2 = customerService.updateCustomerPoint(customer);
             customer.updatePoint(points2);
