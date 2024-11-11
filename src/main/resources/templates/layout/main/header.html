@@ -42,78 +42,78 @@
            th:style="'height: 80px;width: 100%; position: absolute; top: -80px; right: 0; left: 0; text-align:center ;background-color:'+${topBanner.bannerBg}">
             <img th:src="@{'/file/'+${topBanner.bannerImg}}" th:alt="${topBanner.bannerName}" style="height: 100%">
         </a>
-        <div class="h_utill"></div><!--.h_utill-->
+        <div id="headerTop"></div><!--.h_utill-->
         <div id="headerIn">
-            <h1 class="logo">
-                <a th:href="@{/}">
-                <img class="hlogo" th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo">
-            </a></h1><!--.logo-->
-
             <div class="utill">
-                <ul>
-                    <li class="login" sec:authorize="!isAuthenticated()">
-                        <a th:href="@{/auth/login/view}">로그인</a>
-                    </li><!-- .login -->
+            <ul>
+                <li class="login" sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/auth/login/view}">로그인</a>
+                </li><!-- .login -->
 
-                    <li class="logout" sec:authorize="isAuthenticated()">
-                        <a th:href="@{/auth/logout}">로그아웃</a>
-                    </li><!-- .logout -->
+                <li class="logout" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/auth/logout}">로그아웃</a>
+                </li><!-- .logout -->
 
-                    <li class="join" sec:authorize="!isAuthenticated()">
-                        <a th:href="@{/auth/join}">회원가입</a>
-                    </li><!-- .join -->
+                <li class="join" sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/auth/join}">회원가입</a>
+                </li><!-- .join -->
 
-                    <li class="cs"><a th:href="@{/cs/index}">고객센터</a></li><!-- .cs -->
-                    <li sec:authorize="hasRole('admin')"><a th:href="@{/admin/config/index}">관리자</a></li>
-                    <li sec:authorize="hasRole('seller')"><a th:href="@{/admin/prod/products}">판매자</a></li>
+                <li class="cs"><a th:href="@{/cs/index}">고객센터</a></li><!-- .cs -->
+                <li sec:authorize="hasRole('admin')"><a th:href="@{/admin/config/index}">관리자</a></li>
+                <li sec:authorize="hasRole('seller')"><a th:href="@{/admin/prod/products}">판매자</a></li>
 
-                    <!-- 로그인 시 || 안녕하세요, 000님 (관리자) -->
-                    <!-- 관리자: admin / 판매자: seller / 사용자: customer (사용자면 사용자 등급 표시)  -->
-                    <li sec:authorize="hasRole('admin')"><a>안녕하세요, 관리자님 환영합니다.</a></li>
-                    <li sec:authorize="hasRole('seller')"><a>안녕하세요, 판매자님 환영합니다.</a></li>
+                <!-- 로그인 시 || 안녕하세요, 000님 (관리자) -->
+                <!-- 관리자: admin / 판매자: seller / 사용자: customer (사용자면 사용자 등급 표시)  -->
+                <li sec:authorize="hasRole('admin')"><a>안녕하세요, 관리자님 환영합니다.</a></li>
+                <li sec:authorize="hasRole('seller')"><a>안녕하세요, 판매자님 환영합니다.</a></li>
 
-                    <!-- (customer)일반사용자로 로그인 시 사용자등급별 출력 -->
-                    <li sec:authorize="hasRole('customer')">
-                        안녕하세요&nbsp;
-                        <span th:text="${#authentication.principal.user.customer.custName}"></span>&nbsp;님&nbsp;
-                        &#40;<span th:switch="${#authentication.principal.user.customer.custGrade}">
+                <!-- (customer)일반사용자로 로그인 시 사용자등급별 출력 -->
+                <li sec:authorize="hasRole('customer')">
+                    안녕하세요&nbsp;
+                    <span th:text="${#authentication.principal.user.customer.custName}"></span>&nbsp;님&nbsp;
+                    &#40;<span th:switch="${#authentication.principal.user.customer.custGrade}">
                             <span th:case="'VVIP'">VVIP</span>
                             <span th:case="'VIP'">VIP</span>
                             <span th:case="'GOLD'">GOLD</span>
                             <span th:case="'SILVER'">SILVER</span>
                             <span th:case="'FAMILY'">FAMILY</span>
                         </span>&#41;
-                    </li>
+                </li>
 
 
-                </ul>
-            </div><!--.utill-->
+            </ul>
+        </div><!--.utill-->
 
-            <nav class="gnb"></nav><!--.gnb-->
+            <section id="top-box">
+                <h1 class="logo">
+                    <a th:href="@{/}">
+                    <img class="hlogo" th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo">
+                </a></h1><!--.logo-->
+                <!-- 내 도구:마이롯데, 장바구니, 나의 찜 -->
+                <div class="myTool">
+                    <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
+                    <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"></a>
+                    <a><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
+                </div><!-- .myTool -->
+            </section>
 
-            <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search2">
-                <input autocomplete="off" onclick="openRelated()" type="text" id="search2" name="search" placeholder="어떤 상품을 찾으세요?">
-                <input type="hidden" name="related" th:value="${related}"/>
-                <label for="search2"></label><!--.search2-->
-                <button style="border: none;" type="submit" class="ico_sch">
-                    <img th:src="@{/images/ico_search.png}" alt="검색하기">
-                </button><!--.ico_sch-->
-            </form><!--.search2 -->
+            <section class="search-container">
+                <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search">
+                    <input autocomplete="off" onclick="openRelated()" type="text" id="search" name="search" placeholder="어떤 상품을 찾으세요?">
+                    <input type="hidden" name="related" th:value="${related}"/>
+                    <label for="search"></label><!--.search2-->
+                    <button style="border: none;" type="submit" class="ico_sch">
+                        <img th:src="@{/images/ico_search.png}" alt="검색하기">
+                    </button><!--.ico_sch-->
+                </form><!--.search2 -->
+                <div id="related-box" class="related-search-box">
+                    <div onclick="closeRelated()" class="close-related">X</div>
+                    <h4>연관검색어</h4><br>
+                    <div class="related-keyword"></div><!--.related-keyword -->
+                </div><!--#related-box .related-search-box -->
+            </section>
 
-            <div id="related-box" class="related-search-box">
-                <div onclick="closeRelated()" class="close-related">X</div>
-                <h4>연관검색어</h4><br>
-                <div class="related-keyword"></div><!--.related-keyword -->
-            </div><!--#related-box .related-search-box -->
-
-            <!-- 내 도구:마이롯데, 장바구니, 나의 찜 -->
-            <div class="myTool">
-                <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
-                <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"></a>
-                <a><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
-            </div><!-- .myTool -->
-
-            <!-- 메뉴 막스 -->
+            <!-- 메뉴 박스 -->
             <div class="menu-box">
                 <div class="menu-box-in">
 
@@ -180,34 +180,42 @@
         }
     }
 
-
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 120) { // 스크롤이 120px 이상일 때 적용
+            header.classList.add('fix');
+        } else {
+            header.classList.remove('fix');
+        }
+    });
 
     function openRelated(){
-        const related = document.getElementById('related-box')
-        const search = document.getElementById('search2')
         const relatedSearch = document.querySelector('.related-search-inp')
-        related.style.display='block';
+        const search = document.querySelector('.search-container')
+        const topBox = document.getElementById('top-box')
         search.classList.add("open");
+        topBox.classList.add("open");
         relatedSearch.focus()
     }
 
     function closeRelated(){
-        const related = document.getElementById('related-box')
-        const search = document.getElementById('search2')
+        const search = document.querySelector('.search-container')
+        const topBox = document.getElementById('top-box')
         search.classList.remove("open");
-        related.style.display='none'
+        topBox.classList.remove("open");
     }
     document.addEventListener('click', function(event) {
         const related = document.getElementById('related-box');
-        const search = document.getElementById('search2');
+        const search = document.querySelector('.search-container')
+        const topBox = document.getElementById('top-box');
 
         if (!related.contains(event.target) && !search.contains(event.target)) {
             search.classList.remove('open');
-            related.style.display='none'
+            topBox.classList.remove("open");
         }
     });
 
-    document.getElementById("search2").addEventListener("input", function() {
+    document.getElementById("search").addEventListener("input", function() {
         clearTimeout(timer);  // 이전 타이머를 초기화하여 중복 요청 방지
 
         // 새로운 타이머 설정 (2초 후에 연관 검색어 표시)
