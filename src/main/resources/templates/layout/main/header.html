@@ -109,7 +109,7 @@
             <!-- 내 도구:마이롯데, 장바구니, 나의 찜 -->
             <div class="myTool">
                 <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
-                <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"></a>
+                <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"><span class="cartCount" th:if="${cartCount!=null&&cartCount!=0}">[[${cartCount}]]</span></a>
                 <a><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
             </div><!-- .myTool -->
 

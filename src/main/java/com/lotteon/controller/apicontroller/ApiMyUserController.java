@@ -72,7 +72,17 @@ public class ApiMyUserController {
         }
     }
 
-    @PostMapping("/info/confirmPass")
+    @PatchMapping("/info/password")
+    public ResponseEntity<?> confirmPassToMyinfo(@RequestBody MyInfoPassDto myInfoPassDto) {
+        log.info("컨트롤러 접속"+myInfoPassDto);
+        Long memId = myInfoPassDto.getMemId();
+        String pass = myInfoPassDto.getPass();
+        Boolean confirmPass = memberService.confirmPass(pass,memId);
+
+        return ResponseEntity.ok().body(confirmPass);
+    }
+
+        @PostMapping("/info/confirmPass")
     public ResponseEntity<?> confirmPass(@RequestBody MyInfoPassDto myInfoPassDto,HttpSession session) {
         String pass = myInfoPassDto.getPass();
         Long memId = myInfoPassDto.getMemId();

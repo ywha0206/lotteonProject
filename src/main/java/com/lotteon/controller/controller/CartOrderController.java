@@ -58,7 +58,7 @@ public class CartOrderController {
                        HttpServletResponse resp , Authentication authentication) {
         Cart cart;
         if(authentication==null){
-            cart = cartService.selectCartFornoAuth(req);
+            cart = cartService.selectCartFornoAuth(req,resp);
         }else{
             cart = cartService.selectCart(authentication, req,resp);
             List<Product> findRelatedCart = recommendationService.findRelatedCart(cart);

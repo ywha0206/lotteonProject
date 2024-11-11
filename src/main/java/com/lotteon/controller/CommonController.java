@@ -2,14 +2,12 @@ package com.lotteon.controller;
 
 import com.lotteon.dto.responseDto.*;
 import com.lotteon.service.config.*;
+import com.lotteon.service.product.CartService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +22,7 @@ public class CommonController {
     private final FLotteService flotteService;
     private final FCsService fcsService;
     private final CopyrightService copyrightService;
+    private final CartService cartService;
 
     @ModelAttribute
     public void getCommon(Model model, HttpServletRequest request) {
@@ -41,6 +40,12 @@ public class CommonController {
         model.addAttribute("fLotte", fLotteDTO);
         model.addAttribute("fCs", fCsDTO);
         model.addAttribute("copy", copyrightDTO);
+
+
+        Integer count = cartService.findCartCount(request);
+
+        model.addAttribute("cartCount", count);
+
 
         List<GetBannerDTO> banners = null;
 
