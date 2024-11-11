@@ -356,4 +356,21 @@ public class ApiProductController {
         GetAddressDto address = addressService.findByAddrId(id);
         return ResponseEntity.ok(address);
     }
+
+    @PostMapping("/heart")
+    public ResponseEntity<?> postHeart(
+            @RequestParam Long id
+    ){
+        String result = productService.postHeart(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/heart")
+    public ResponseEntity<?> deleteHeart(
+            @RequestParam List<Long> id
+    ){
+        productService.deleteHearts(id);
+        return ResponseEntity.ok().build();
+    }
+
 }
