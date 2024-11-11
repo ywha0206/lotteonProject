@@ -98,15 +98,15 @@
     <div id="wrap">
         <main id="main" class="content-container">
             <!-- 상품 목록 네비게이션 -->
-            <nav id="navi" class="product-nav">
+            <nav id="navi" class="product-nav"  style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                 <div class="title-and-location">
                     <h2 class="sub_tit">상품목록</h2>
-                    <p class="location">
-                        <span>[[${location.level3Name}]]</span> &gt;
-                        <span>[[${location.level2Name}]]</span> &gt;
-                        <span>[[${location.level1Name}]]</span>
-                        <span th:if="${param.sort != null}" id="sortText"></span>
-                    </p>
+                    <ol  class="breadcrumb">
+                        <li class="breadcrumb-item">[[${location.level3Name}]]</li>
+                        <li class="breadcrumb-item">[[${location.level2Name}]]</li>
+                        <li class="breadcrumb-item">[[${location.level1Name}]]</li>
+                        <li class="breadcrumb-item" th:if="${param.sort != null}" id="sortText"></li>
+                    </ol>
                 </div>
             </nav>
 
@@ -148,7 +148,7 @@
                     <div class="badge-container">
                         <div class="badge company">
                             <i class="fas fa-store"></i>
-                            <span>[[${product.getSellCompany}]]</span>
+                            <span>&nbsp;&nbsp;[[${product.getSellCompany}]]</span>
                         </div>
                         <span class="badge customer-satisfaction" style="display: inline-block;">
                             <i class="fas fa-thumbs-up"></i>
@@ -159,10 +159,9 @@
                             <span th:if="${product.seller.sellGrade} == 1">새싹</span>
                             <span th:if="${product.seller.sellGrade} == 0">씨앗</span>
                         </span>
-                        <div class="badge grade">
-                            <i class="fas fa-star"></i>
-                            <span>[[${#numbers.formatDecimal(product.getProdRating / 10.0, 1, 1)}]]</span>
-                        </div>
+                        <span class="ratingBg">
+                            <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
+                        </span>
                     </div>
                 </div>
             </div>
