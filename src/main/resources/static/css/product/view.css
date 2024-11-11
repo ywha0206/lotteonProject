@@ -32,53 +32,48 @@
 }
 
 /* 네비게이션 스타일 */
-#wrap #navi {
-    width: 765px;
-    height: auto;
+
+.title-and-location {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #000000;
-    margin: 0 auto;
+    padding: 20px;
 }
 
 .sub_tit {
-    margin-left: 20px;
     font-size: 18px;
     font-weight: 700;
     color: #d9534f;
-    margin-bottom: 8px;
-    margin-top: 10px;
-}
-.location {margin-right: 10px;}
-.location > span:nth-of-type(1)::after , .location > span:nth-of-type(2)::after {
-    content: ' > ';
+    border-bottom: 2px solid #d9534f; /* 구분선 추가 */
+    padding-bottom: 5px;
 }
 
 /* 상품 정보 섹션 */
 .product_info {
     margin: 0 auto;
     display: flex;
-    width: 770px;
+    width: 100%;
     height: auto;
     margin-top: 24px;
-    gap: 22px;
+    /* gap: 13px; */
+    justify-content: space-evenly;
 }
 
 .product_info > img {
     width: 380px;
     height: 380px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
 }
 
 .tb1 {
-    width: 390px;
+    width: 400px;
     border-collapse: collapse;
 }
 
 .tb1 td {
-    padding: 10px;
+    padding: 10px 0 10px 10px;
 }
 
 /* 회사 정보 */
@@ -91,7 +86,7 @@
 /* 상품명 및 별점 */
 .prod_name > .prod_name_span{font-size: 20px;font-weight: bold;}
 .prod_name > .box {display: flex ; height: 16px ; overflow: hidden; align-items: center; margin-top: 5px}
-.prod_name > .box > * {margin: 0 5px; padding-top:2px; font-size: 12px}
+.prod_name > .box > * {margin: 0 5px;padding-top:2px;font-size: 12px}
 .prod_name > .box > a{display: inline-block ;height: 16px; line-height: 16px;font-size: 12px}
 .prod_name > .box > a > span {display: inline-block ;margin-top: -2px;height: 16px;font-size: 12px}
 
@@ -138,7 +133,10 @@
 /* 버튼 스타일 */
 .buttons {
     display: flex;
-    gap: 12px;
+    /* gap: 12px; */
+    padding-left: 10px;
+    justify-content: space-between;
+    width: 400px;
 }
 
 .cart, .btnorder {
@@ -174,13 +172,15 @@
 .view_banner {
     width: 100%;
     height: 64px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-end;
+    margin: 10px;
+    /* padding-right: 10px; */
+    /* display: flex; */
+    /* justify-content: flex-end; */
     overflow: hidden;
+    box-sizing: border-box;
 }
 .view_banner a[href]{
-display: inline-block;
+    display: inline-block;
     text-align: center;
     width: 390px;border-radius: 8px; overflow: hidden}
 
@@ -276,6 +276,7 @@ display: inline-block;
 }
 .related-price{color: #a8a8a8; text-decoration: line-through}
 .related-total{font-weight: bold; margin-right: 5px}
+.related-dc{font-weight: bold;color: #E60012;}
 
 /* 상품 리뷰 스타일 */
 .cmt {
@@ -484,6 +485,19 @@ div.greyBox{
     display: inline-block; background: url('/images/ico_sprites.png') no-repeat -328px -140px #FFFFFF;
     width: 26px;height: 24px; border: none; outline: none; zoom:0.5; padding-top: 2px
 }
+.popup, .bg {
+    display: none;
+}
+
+.bg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
 
 .popup {
     position: fixed;
@@ -492,18 +506,55 @@ div.greyBox{
     transform: translate(-50%, -50%);
     width: 500px;
     background-color: white;
-    z-index: 1000;
-    overflow: scroll;
+    z-index: 1001;
+    overflow: auto;
     height: 550px;
     flex-direction: column;
     gap: 20px;
     padding: 40px;
     display: none;
+    border-radius: 20px;
 }
 
 .coupon-box {
     border: 1px solid;
     padding: 20px;
+}
+.popup .notification {
+    position: relative;
+    bottom: 0; /* 팝업 내부에서의 위치 */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* 알림 메시지가 표시될 때 */
+.popup .notification.show {
+    opacity: 1;
+}
+
+.close-btn {
+    background: url('/images/ico_sprites.png') no-repeat -777px -120px;
+    width: 22px;
+    height: 20px;
+    &:hover{
+        background-position: -777px -81px;
+    }
+}
+#sticky-element{
+    width: 811px;
+    height: 50px;
+    position: relative;
+    transition: position 0.3s ease, top 0.3s ease;}
+#sticky-element.fixed {
+    position: fixed;
+    top: 80px; /* 헤더 높이 */
+    z-index: 1000;
+    margin-left: -109px;
 }
 
 .disabled {
