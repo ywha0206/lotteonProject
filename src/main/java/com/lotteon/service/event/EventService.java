@@ -89,12 +89,12 @@ public class EventService {
         for(AttendanceEvent event : attendanceEvents){
             if(event.getAttendanceSequence()==1){
                 event.updateEventSequenceZero();
+                attendanceEventRepository.save(event);
             } else if(event.getAttendanceSequence()==0){
                 event.updateEventSequenceOne();
+                attendanceEventRepository.save(event);
             }
         }
-        attendanceEventRepository.saveAll(attendanceEvents);
-
     }
 
     private AttendanceEvent insertEvent(Customer customer) {

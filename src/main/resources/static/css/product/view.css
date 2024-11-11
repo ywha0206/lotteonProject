@@ -513,3 +513,47 @@ div.greyBox{
     pointer-events: none; /* 클릭 불가 처리 */
     cursor: not-allowed;
 }
+
+.jjim-box{
+    cursor: pointer;
+    color: #E60012;
+    border: 1px solid #E60012;
+    padding: 10px 10px;
+    border-radius: 15px;
+    width: 80px;
+    height: 30px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    float: right;
+    margin-top: -9px;
+    margin-right: 9px;
+}
+
+.heart-img{
+    display: inline-block;
+    background: url(/images/heart-none.png);
+    width: 30px;
+    height: 30px;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    outline: none;
+    zoom: 0.5;
+    padding-top: 2px;
+    margin-left: 30px;
+}
+
+.heart-active{
+    display: inline-block;
+    background: url(/images/heart-active.png);
+    width: 30px;
+    height: 30px;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    outline: none;
+    zoom: 0.5;
+    padding-top: 2px;
+    margin-left: 30px;
+}
