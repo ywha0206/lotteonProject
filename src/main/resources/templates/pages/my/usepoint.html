@@ -61,14 +61,14 @@
                         사용 내역이 없습니다.
                     </div>
 
-                    <div th:if="${!noItem}" class="page">
-                        <a class="none" th:href="@{/my/points/use(page=0,type=${type},keyword=${keyword})}"><<</a>
+                    <div th:if="${noItem==false}" class="page">
+                        <a class="none prev" th:href="@{/my/points/use(page=0,type=${type},keyword=${keyword})}">이전</a>
                         <a class="none" th:href="@{/my/points/use(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
                         <a class="none" th:href="@{/my/points/use(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
-                        <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                        <a class="active" style="font-weight: 600; background-color: #f2f3f7; color: #000;" th:text="${page}+1"></a>
                         <a class="none" th:href="@{/my/points/use(page=${page + 1},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
                         <a class="none" th:href="@{/my/points/use(page=${page + 2},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-                        <a class="none" th:href="@{/my/points/use(page=${totalPages - 1},type=${type},keyword=${keyword})}">>></a>
+                        <a class="none next" th:href="@{/my/points/use(page=${totalPages - 1},type=${type},keyword=${keyword})}">다음</a>
                     </div>
                 </article>
             </section>

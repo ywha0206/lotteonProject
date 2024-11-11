@@ -64,6 +64,11 @@ public class CartService {
 
         if (auth != null) { // 로그인한 상태
             MyUserDetails authDetails = (MyUserDetails) auth.getPrincipal();
+            if(authDetails.getUser().getMemRole().equals("admin")) {
+                return null;
+            } else if (authDetails.getUser().getMemRole().equals("seller")) {
+                return null;
+            }
             Long custId = authDetails.getUser().getCustomer().getId();
             optCart = cartRepository.findByCustId(custId);
 
