@@ -125,7 +125,7 @@ body{height: 100vh;}
 #my table.coupon tr > th:nth-child(2) { width: 16%; }
 #my table.coupon tr > th:nth-child(3) { width: 20.5%; }
 #my table.coupon tr > th:nth-child(4) { width: 18%; }
-#my table.coupon tr > th:nth-child(5) { width: 20%; }
+#my table.coupon tr > th:nth-child(5) {width: 28%; }
 
 /* 쿠폰내역 안내 */
 #my ul.notice {list-style: disc; margin: 30px; width: 90%;}
@@ -162,7 +162,7 @@ body{height: 100vh;}
 #my .page {margin: 20px 0;text-align: center;}
 #my .page a {display: inline-block;height: 19px;box-sizing: border-box;}
 #my .page  .prev,
-#my .page .next{width: 40px; height: 30px; display: inline-block; line-height : 30px; background-color: #f2f3f7; border-radius: 7px;}
+#my .page .next{width: 40px; height: 30px; display: inline-block; line-height : 30px; border-radius: 7px;}
 #my .page > li > .num{width: 15px;display: inline-block;}
 #my .page  a {color: #000;
     width: 30px;
