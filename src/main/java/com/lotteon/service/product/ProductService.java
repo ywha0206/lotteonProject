@@ -2,9 +2,11 @@ package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
+import com.lotteon.dto.responseDto.GetHeartsDto;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.category.CategoryProductMapper;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.*;
@@ -60,6 +62,7 @@ public class ProductService {
     private final ImageService imageService;
     private final CategoryProdMapperRepository categoryProdMapperRepository;
     private final OrderItemRepository orderItemRepository;
+    private final HeartRepository heartRepository;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
@@ -474,4 +477,64 @@ public class ProductService {
 
     }
 
+    public String postHeart(Long id) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        Optional<Product> product = productRepository.findById(id);
+        if(heartRepository.findByProdIdAndCustId(id,customer.getId()).isPresent()){
+            heartRepository.delete(heartRepository.findByProdIdAndCustId(id,customer.getId()).get());
+            return "none";
+        } else {
+            Heart heart = Heart.builder()
+                    .prodName(product.get().getProdName())
+                    .prodDiscount(product.get().getProdDiscount())
+                    .prodPrice(product.get().getProdPrice())
+                    .prodImg(product.get().getProdListImg())
+                    .prodId(id)
+                    .custId(customer.getId())
+                    .build();
+
+            heartRepository.save(heart);
+
+            return "active";
+        }
+
+    }
+
+    public String getHeart(long prodId) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+
+        Optional<Product> product = productRepository.findById(prodId);
+
+        Optional<Heart> heart = heartRepository.findByProdIdAndCustId(prodId,customer.getId());
+        if(heart.isPresent()){
+            return "active";
+        } else {
+            return "none";
+        }
+    }
+
+    public Page<GetHeartsDto> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        Page<Heart> hearts = heartRepository.findAllByCustId(customer.getId(),pageable);
+        Page<GetHeartsDto> dtos = hearts.map(Heart::toGetHeartsDto);
+        return dtos;
+    }
+
+    public void deleteHearts(List<Long> id) {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+
+        heartRepository.findByProdIdAndCustId(id.get(0),customer.getId());
+
+        id.forEach(v->{
+            Optional<Heart> heart = heartRepository.findByProdIdAndCustId(v,customer.getId());
+            if(heart.isPresent()){
+                heartRepository.delete(heart.get());
+            }
+        });
+    }
 }

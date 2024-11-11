@@ -28,6 +28,10 @@
                                     <span>[[${product.getSellCompany}]]</span>
                                     <span>상품번호 : [[${product.getId}]]</span>
                                     <input type="hidden" th:value="${product.getId}" name="prodId">
+
+                                    <span th:if="${heart=='none'}" onclick="postHeart(event)" th:data-id="${product.getId()}" class="heart-img"></span>
+                                    <span th:if="${heart=='active'}" onclick="postHeart(event)" th:data-id="${product.getId()}" class="heart-active"></span>
+
                                     <span id="coupondl" th:if="${couponId != 0}" th:data-id="${couponId}" th:data-seller="${product.seller.id}" onclick="getCustomerCoupon(event)">
                                         쿠폰받기
                                         <span class="img"></span>
@@ -344,6 +348,28 @@
     }
     if (endOption) {
         qty.style.display = 'block'
+    }
+
+    async function postHeart(event){
+        try {
+            const resp = await axios.post(`/prod/heart?id=${event.target.dataset.id}`,null,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+
+            if(resp.data==="active"){
+                event.target.classList.remove('heart-img')
+                event.target.classList.add('heart-active')
+            } else if(resp.data==="none"){
+                event.target.classList.remove('heart-active')
+                event.target.classList.add('heart-img')
+            }
+
+        } catch (e) {
+
+        }
+
     }
 
     async function getCustomerCoupon(event) {

@@ -11,6 +11,7 @@ import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.service.product.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -93,6 +94,10 @@ public class ProductController {
             MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
             if (auth.getUser().getCustomer() != null) {
                 userLogService.saveUserLog(auth.getUser().getCustomer().getId(), prodId, "view");
+                String heart = productService.getHeart(prodId);
+                model.addAttribute("heart",heart);
+            } else {
+                model.addAttribute("heart","none");
             }
         }
         List<Product> related = recommendationService.findRelatedProducts(prodId);
@@ -107,6 +112,8 @@ public class ProductController {
         model.addAttribute("option1s", option1);
         Page<GetReviewsDto> reviews = reviewService.findAllByProdId(page,prodId);
         model.addAttribute("reviews",reviews);
+
+
         return "pages/product/view";
     }
 
@@ -167,6 +174,27 @@ public class ProductController {
         Page<ReviewDocu> reviewPage = reviewDocuRepository.findAllByProdIdOrderByReviewRdateDesc(id,pageRequest);
         Page<GetReviewsDto> dtos = reviewPage.map(ReviewDocu::toGetReviewsDto);
         return dtos.getContent();
+    }
+
+    @GetMapping("/hearts")
+    public String getHearts(@RequestParam(value = "page",defaultValue = "0")int page,Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 인증되지 않은 사용자라면 로그인 페이지로 리다이렉트
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "redirect:/auth/login/view";
+        }
+        Page<GetHeartsDto> hearts = productService.findAll(page);
+        if(hearts.isEmpty()){
+            model.addAttribute("noItem",true);
+        } else {
+            model.addAttribute("noItem",false);
+            model.addAttribute("hearts",hearts);
+        }
+        List<GetCategoryDto> category1 = categoryProductService.findCategory();
+        model.addAttribute("category1", category1);
+        return "pages/product/heart";
+
     }
 
 }
