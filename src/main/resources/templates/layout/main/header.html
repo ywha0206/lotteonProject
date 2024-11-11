@@ -98,7 +98,7 @@
             </section>
 
             <section class="search-container">
-                <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="search">
+                <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="t-search">
                     <input autocomplete="off" onclick="openRelated()" type="text" id="search" name="search" placeholder="어떤 상품을 찾으세요?">
                     <input type="hidden" name="related" th:value="${related}"/>
                     <label for="search"></label><!--.search2-->
