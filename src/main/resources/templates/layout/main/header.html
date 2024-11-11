@@ -180,7 +180,14 @@
         }
     }
 
-
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 120) { // 스크롤이 120px 이상일 때 적용
+            header.classList.add('fix');
+        } else {
+            header.classList.remove('fix');
+        }
+    });
 
     function openRelated(){
         const relatedSearch = document.querySelector('.related-search-inp')
