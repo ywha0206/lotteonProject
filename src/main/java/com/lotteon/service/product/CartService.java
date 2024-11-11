@@ -99,6 +99,7 @@ public class CartService {
         int count2 = optCookieCart.map(cart -> cart.getItems().size()).orElse(0);
         return (count1 + count2) > 0 ? count1 + count2 : null;
     }
+
     @Transactional
     public ResponseEntity<?> insertCart(PostCartDto postCartDto, Authentication auth) {
 
@@ -132,6 +133,7 @@ public class CartService {
         }
         return null; // 해당 쿠키가 없을 때 null 반환
     }
+
     public Cart insertCartFornoAuth(HttpServletRequest req, HttpServletResponse resp) {
         String cartId = getCookieValue(req, "cartId");
 
