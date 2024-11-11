@@ -70,20 +70,10 @@ body{height: 100vh;}
 #my table.order tr > th:nth-child(4) { width: 15%; }
 #my table.order tr > th:nth-child(5) { width: 20%; }
 
-/*#my table.order tr > td:nth-child(2) { display: flex; justify-content: center}*/
-/*#my table.order .thumb {float: left;width: 120px;height: 120px;overflow: hidden;display: flex;justify-content: center;align-items: center}*/
-/*#my table.order .thumb > img {max-width: 100%;width: auto;height: 100%;}*/
-
-/*#my table.order ul {float:left;margin-left: 10px;margin-right: 10px;}*/
-/*#my table.order ul > li {margin: 4px 0;}*/
-
-/*#my table.order .prodName {max-width: 250px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}*/
-/*#my table.order .prodPrice {margin-top: 6px;font-family: '고딕';font-size: 16px;font-weight: bold;color: #222;}*/
-/*#my table.order .prodPrice::after {content: '원';font-size: 12px;}*/
 #my table.order .confirm{height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 #my table.order .confirm > button {display: block;width: 100px;height: 35px; padding: 6px; box-sizing: border-box; font-size: 12px; border:none;}
 #my table.order button {border-radius: 10px; margin-top: 2px;font-family: '돋움';color: #676767;line-height: 19px;}
-/*#my table.order li{text-align: left;}*/
+
 
 #my table.order .color{background: #E60012; color: #FFF;     border: none;}
 #my table.order .grey{background: #F2F2F2; color: #000; border: 1px solid #808080;}
@@ -197,10 +187,70 @@ body{height: 100vh;}
     font-weight: bold;
 }
 
-.page {
-    width: 100%;
-    display: flex;
+.page ol {
+    display: flex; /* ol 요소를 flex 컨테이너로 설정하여 자식 요소(li)를 가로 정렬 */
     justify-content: center;
+    padding: 0;
+    margin: 0;
+    list-style: none; /* 기본 목록 스타일 제거 */
+}
+
+.page ol li {
+    margin: 0 5px; /* 각 페이지 번호 사이의 간격 */
+}
+
+.page ol li a {
+    display: inline-block;
+    color: #000;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 7px;
+    border: 1px solid #c7c7c7;
+    box-sizing: border-box;
+}
+
+.page ol li a.active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #000;
+}
+
+
+
+
+/* 비밀번호 확인 */
+.passInfo_nav{
+    /*box-shadow: 0 0 8px #c7c7c7;*/
+    background: #f7f7f7;
+    border-radius: 22px;
+    height: 70px;
     margin-top: 30px;
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 840px;
+    position: relative;
+    left: 20px;
+}
+.passInfo_dd{margin-left: 30px; margin-top: 18px;}
+.passInfo_dd h4{font-size: 16px;}
+.passInfoDiv{display: flex;
+    justify-content: center;
+    margin-top: 85px;}
+.passInfo{
+    width: 400px;
+    border: none;
+    border-bottom: 1px solid #c7c7c7;
+    height: 40px;
+    font-size: 17px;
+    text-indent: 10px;
+}
+.btnPassInfo{
+    border: none;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background: #E60012;
+    color: #fff;
 }

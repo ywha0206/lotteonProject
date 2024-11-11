@@ -33,3 +33,20 @@ main {
 .admin-btn{
     border-radius: 5px;
 }
+
+span.ratingBg{
+    position: relative;
+    display: inline-block;
+    background: url("/images/ico_rating_star.png") no-repeat 0 0;
+    width: 84px;
+    height: 16px;
+}
+span.ratingBg > span.rating{
+    width: 84px;
+    height: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    background: url("/images/ico_rating_star.png") no-repeat 0 -200px;
+}

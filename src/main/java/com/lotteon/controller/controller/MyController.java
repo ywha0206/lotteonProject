@@ -148,8 +148,16 @@ public class MyController {
         return "pages/my/coupon";
     }
 
-    // 나의 쇼핑정보 > 나의 설정
+    @GetMapping("/infoPass")
+    public String infoPass(Authentication authentication, Model model) {
 
+        MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
+        Long memId = auth.getUser().getId();
+        model.addAttribute("memId", memId);
+        return "pages/my/passInfo";
+    }
+
+    // 나의 쇼핑정보 > 나의 설정
     @GetMapping("/info")
     public String info(Model model, Authentication authentication) {
         MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
@@ -274,6 +282,8 @@ public class MyController {
         model.addAttribute("qnasPage", qnasPage);       // 전체 페이지 정보 추가
         model.addAttribute("qnaList", qnaList);         // 현재 페이지 QnA 목록 추가
         model.addAttribute("totalQnaCount", totalQnaCount); // 전체 QnA 글 개수 추가
+        model.addAttribute("currentPage", qnasPage.getNumber());           // 현재 페이지 번호
+        model.addAttribute("totalPages", qnasPage.getTotalPages());        // 전체 페이지 수
 
         // 5. 마이페이지 QnA 목록 페이지 반환
         return "pages/my/qna"; // 마이페이지 QnA 목록 뷰 파일

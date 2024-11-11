@@ -7,14 +7,16 @@
     <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
     <div id="wrap">
         <!-- .aside -->
-        <main id="main" style="height: auto;">
-            <nav id="navi" style="width: 810px">
-                <h2 class="sub_tit">상품보기</h2>
-                <p class="location">
-                    <span>[[${location.level1Name}]]</span>
-                    <span>[[${location.level2Name}]]</span>
-                    <span>[[${location.level3Name}]]</span>
-                </p>
+        <main id="main" style="height: auto;" data-bs-spy="scroll" data-bs-target="#sticky-element" data-bs-offset="130" tabindex="0">
+            <nav id="navi" style="width: 810px;--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <div class="title-and-location">
+                    <h2 class="sub_tit">상품보기</h2>
+                    <ol  class="breadcrumb">
+                        <li class="breadcrumb-item">[[${location.level1Name}]]</li>
+                        <li class="breadcrumb-item">[[${location.level2Name}]]</li>
+                        <li class="breadcrumb-item">[[${location.level3Name}]]</li>
+                    </ol>
+                </div>
             </nav> <!-- #navi-->
             <div class="product_info">
                 <img th:src="@{'/file/'+${product.getProdBasicImg()}}" alt="">
@@ -46,7 +48,8 @@
                                         <a href="#ai-box">
                                             <span th:text="${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}"></span>
                                             <span th:text="${product.prodReviewCnt eq null?'':'리뷰 '+product.prodReviewCnt+'건 보기'}"></span>
-                                        </a><a>|</a>
+                                        </a>
+                                        <div class="vr"></div>
                                         <a href="#toggleButton">Ai추천 상품 보기</a>
                                     </span>
 
@@ -54,14 +57,14 @@
                             </tr>
                             <tr>
                                 <td class="price">
-                                    <del>[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원&nbsp;</del>
-                                    <span>[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span>
+                                    <del th:style="${product.getProdDiscount()>0.0?'':'text-decoration:none;color:#000;font-weight:bold'}">[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원&nbsp;</del>
+                                    <span th:if="${product.getProdDiscount()>0.0}">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span>
                                     <i class="install"></i>
                                     <span th:if="${prodDetail.installmentable}">무이자할부</span>
                                     <span th:unless="${prodDetail.installmentable}">할부(무이자X)</span>
                                     <i class="cardEvent"></i>
                                     <span>카드 추가 혜택</span> <br>
-                                    <span id="finalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
+                                    <span id="finalPrice" th:style="${product.getProdDiscount()>0.0?'':'font-size:0;'}">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
                                 </td>
                             </tr>
                             <tr>
@@ -80,8 +83,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="optName" th:text="${option1s[0].optionName}"></span>
-                                    <select onchange="optionIdChanger(event)" name="options" class="prodOptions" id="select1">
+                                    <span class="optName" th:text="${option1s[0].optionName}" th:style="${option1s[0].optionName!='옵션없음'?'':'color:transparent'}"></span>
+                                    <select onchange="optionIdChanger(event)" name="options" class="prodOptions" id="select1"
+                                            th:attr="disabled=${option1s[0].optionName == '옵션없음' ? 'disabled' : null}"
+                                            th:style="${option1s[0].optionName !='옵션없음'?'':'padding-top:0;'}">
                                         <option th:data-stock="${option1.optionStock}" id="noOption" th:data-id="${option1.optionId}" th:if="${option1.type == 'noOption'}" th:each="option1 : ${option1s}">옵션 없음</option>
                                         <option class="endOption"
                                                 th:data-price="${option1.optionPrice}"
@@ -89,7 +94,7 @@
                                                 th:if="${option1.type == 'endOption'}"
                                                 th:each="option1 : ${option1s}"
                                                 th:data-stock="${option1.optionStock}"
-                                                th:text="${option1.optionValue} + (${#numbers.formatInteger(option1.optionPrice, 1)} != null ? ' (' + ${#numbers.formatInteger(option1.optionPrice, 1)} + '원)' : '')"></option>
+                                                th:text="${option1.optionValue} + (${#numbers.formatInteger(option1.optionPrice, 1)} != null ? '  (+' + ${#numbers.formatInteger(option1.optionPrice, 1)} + '원)' : '')"></option>
                                         <option class="nextOption" th:data-option="${option1.optionValue}" th:if="${option1.type == 'nextOption'}" th:each="option1 : ${option1s}" th:text="${option1.optionValue}"></option>
                                     </select>
                                 </td>
@@ -128,49 +133,117 @@
                             <button type="button" class="btnorder"><a> 구매하기</a></button>
                         </div> <!-- .buttons -->
                     </form>
+                    <div class="view_banner">
+                        <a
+                                class="banner"
+                                th:unless="${banner eq null}"
+                                th:href="@{'/'+${banner.bannerLink}}"
+                                th:style="'background-color:'+${banner.bannerBg}">
+                            <img
+                                    th:src="@{'/file/'+${banner.bannerImg}}"
+                                    th:alt="${banner.bannerName}">
+                        </a>
+                    </div>
                 </div> <!-- .product_details -->
             </div> <!-- .product_info -->
-            <div class="view_banner">
-                <a
-                        class="banner"
-                        th:unless="${banner eq null}"
-                        th:href="@{'/'+${banner.bannerLink}}"
-                        th:style="'background-color:'+${banner.bannerBg}">
-                    <img
-                            th:src="@{'/file/'+${banner.bannerImg}}"
-                            th:alt="${banner.bannerName}">
-                </a>
-            </div>
+
+            <nav id="sticky-element" class="list-group-horizontal">
+                    <a href="#productDetail" class="list-group-item-action">상세설명</a>
+                    <a href="#productReview" class="list-group-item-action">상품평<span th:text="${product.prodReviewCnt eq null?'(0)':'('+product.prodReviewCnt+')'}" style="font-weight: inherit"></span></a>
+                    <a href="#" class="list-group-item-action">교환/반품</a>
+                    <a href="" class="list-group-item-action"></a>
+            </nav>
             <h2 class="sub_tit2">상품 상세정보</h2>
-            <div class="detail_image_container">
+            <div id="productDetail" class="detail_image_container">
                 <div class="detail_image" id="detailImageContainer">
                     <img class="detailImg" th:src="@{'/file/'+${prodDetail.getDescription()}}" alt="상품 상세보기 이미지">
                 </div>
-                <button id="toggleButton" onclick="toggleDetail()">상품 정보 더보기 ▼</button>
+                <button id="toggleButton" onclick="toggleDetail()">상품 상세 더보기 <i class="bi bi-arrow-down-short"></i></button>
             </div>
 
-            <h2 id="ai-box" class="sub_tit4" style="margin-bottom: 0"><span style="font-size: 14px;color: #7b7b7b; line-height: 23px;">당신을 위한</span><br/>똑똑한 AI 상품 추천</h2>
-            <div id="related-products">
-                <div th:each="prod : ${related}" class="relaties">
-                    <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
-                    <div class="related-descriptions">
-                        <dt style="font-weight: 400">
-                            [[${prod.prodName}]]
-                        </dt>
-                        <dd style="display: flex; margin-top: 5px">
-                            <p class="related-total">[[${#numbers.formatInteger(prod.getProdPrice() - prod.getProdPrice() * (prod.getProdDiscount()/100), 1,'COMMA')}]]원</p>
-                            <p class="related-price" th:if="${prod.prodDiscount > 0.0}">[[${#numbers.formatInteger(prod.getProdPrice(), 1,'COMMA')}]]원&nbsp;</p>
-                        </dd>
-                        <div class="d-flex align-items-center">
-                            <span class="ratingBg" style="zoom: 0.8">
-                                <span class="rating" th:style="'width:'+ ${prod.prodRating * 2}+'%;'"></span>
-                            </span>
-                            <span th:text="${prod.prodReviewCnt eq null?'(0)':'('+prod.prodReviewCnt+')'}" style="margin-left: 5px;color: #7b7b7b"></span>
-                        </div>
-                    </div>
+            <h2 id="detail-id" style="display: flex; align-items: center;">
+                <span class="sub_tit3" style="display: inline-block; width: auto;margin-right: 10px;">상품정보 제공고시</span>
+                <span style="font-size: 13px; display: inline-block; width: 480px">[전자상거래에 관한 상품정보 제공에 관한 고시]항목에 의거 등록된 정보입니다.</span>
+            </h2>
+            <section id="refund">
+                <div>
+                    <table class="tb2">
+                        <colgroup>
+                            <col style="width: 15%;">
+                            <col style="width: 85%;">
+                        </colgroup>
+                        <tr>
+                            <th>상품번호</th>
+                            <td>[[${prodDetail.productId}]]</td>
+                        </tr>
+                        <tr>
+                            <th>상품상태</th>
+                            <td>[[${prodDetail.stat}]]</td>
+                        </tr>
+                        <tr>
+                            <th>부가세면세여부</th>
+                            <td th:if="${prodDetail.tax}">과세상품</td>
+                            <td th:unless="${prodDetail.tax}">비과세상품</td>
+                        </tr>
+                        <tr>
+                            <th>영수증 발행</th>
+                            <td>발행가능신용카드전표, 온라인 현금영수증</td>
+                        </tr>
+                        <tr>
+                            <th>사업자 구분</th>
+                            <td>통신판매업자</td>
+                        </tr>
+                        <tr>
+                            <th>브랜드</th>
+                            <td>[[${product.seller.sellCompany}]]</td>
+                        </tr>
+                        <tr>
+                            <th>원산지</th>
+                            <td>[[${prodDetail.origin}]]</td>
+                        </tr>
+                        <tr>
+                            <th>제조사/수입국</th>
+                            <td>[[${prodDetail.manufacture}]]</td>
+                        </tr>
+                        <tr>
+                            <th>제조국</th>
+                            <td>[[${prodDetail.madein}]]</td>
+                        </tr>
+                        <tr>
+                            <th>취급시 주의사항</th>
+                            <td>[[${prodDetail.caution}]]</td>
+                        </tr>
+                        <tr>
+                            <th>제조연월</th>
+                            <td th:text="${#dates.format(prodDetail.mdate, 'yyyy-MM-dd')}"></td>
+                        </tr>
+                        <tr>
+                            <th>품질보증기간</th>
+                            <td>구매 후 [[${prodDetail.warranty}]]개월</td>
+                        </tr>
+                        <tr>
+                            <th>A/S 책임자</th>
+                            <td>[[${product.seller.sellRepresentative}]]</td>
+                        </tr>
+                        <tr>
+                            <th>전화번호</th>
+                            <td>[[${product.seller.sellHp}]]</td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
-            <h2 class="sub_tit4" id="review">상품리뷰 <span style="font-size: 16px" th:text="${product.prodReviewCnt eq null?'0':product.prodReviewCnt}"></span></h2>
+                <button class="toggle" onclick="toggleRefund()">상품 필수 정보 더보기</button>
+            </section>
+
+            <div class="refund">
+                        <span>소비자가 전자상거래등에서 소비자 보호에 관한 법률 제 17조 1항 또는 제 3항에 따라 청약철회를 하고
+                        동법 제 18조 제 1항에 따라 청약철회한 물품을 판매자에게 반환하였음에도 불구하고 결제 대금의 환급이
+                        3영업일을 넘게 지연된 경우, 소비자는 전자상거래등에서 소비자보호에 관한 법률 제 18조 제 2항 및 동법 시행령 제 21조 2에
+                        따라 지연일수에 대하여 전상법 시행령으로 정하는 이율을 곱하여 산정한 지연이자("지연배상금")를 신청할 수 있습니다.
+                        아울러, 교환반품보증 및 결제대금의 환급신청은 [나의 쇼핑정보]에서 하실 수 있으며, 자세한 문의는
+                        개별 판매자에게 연락하여 주시기 바랍니다.</span>
+            </div> <!-- .refund-->
+
+            <h2 id="productReview" class="sub_tit4">상품리뷰 <span style="font-size: 16px" th:text="${product.prodReviewCnt eq null?'0':product.prodReviewCnt}"></span></h2>
             <div class="reviewContainer" style="margin: 0 auto;">
                 <div class="cmt" th:if="${product.prodReviewCnt<1}">
                     <div>
@@ -201,97 +274,49 @@
                     </div>
                 </div>
             </div>
-            <h2 id="detail-id" style="display: flex; align-items: center;">
-                <span class="sub_tit3" style="display: inline-block; width: auto;margin-right: 10px;">상품정보 제공고시</span>
-                <span style="font-size: 13px; display: inline-block; width: 480px">[전자상거래에 관한 상품정보 제공에 관한 고시]항목에 의거 등록된 정보입니다.</span>
-            </h2>
-
-
-
-            <table class="tb2">
-                <colgroup>
-                    <col style="width: 40%;">
-                    <col style="width: 60%;">
-                </colgroup>
-                <tr>
-                    <th>상품번호</th>
-                    <td>[[${prodDetail.productId}]]</td>
-                </tr>
-                <tr>
-                    <th>상품상태</th>
-                    <td>[[${prodDetail.stat}]]</td>
-                </tr>
-                <tr>
-                    <th>부가세면세여부</th>
-                    <td th:if="${prodDetail.tax}">과세상품</td>
-                    <td th:unless="${prodDetail.tax}">비과세상품</td>
-                </tr>
-                <tr>
-                    <th>영수증 발행</th>
-                    <td>발행가능신용카드전표, 온라인 현금영수증</td>
-                </tr>
-                <tr>
-                    <th>사업자 구분</th>
-                    <td>통신판매업자</td>
-                </tr>
-                <tr>
-                    <th>브랜드</th>
-                    <td>[[${product.seller.sellCompany}]]</td>
-                </tr>
-                <tr>
-                    <th>원산지</th>
-                    <td>[[${prodDetail.origin}]]</td>
-                </tr>
-            </table> <!-- tb2 -->
-            <table class="tb3">
-                <colgroup>
-                    <col style="width: 40%;">
-                    <col style="width: 60%;">
-                </colgroup>
-                <tr>
-                    <th>제조사/수입국</th>
-                    <td>[[${prodDetail.manufacture}]]</td>
-                </tr>
-                <tr>
-                    <th>제조국</th>
-                    <td>[[${prodDetail.madein}]]</td>
-                </tr>
-                <tr>
-                    <th>취급시 주의사항</th>
-                    <td>[[${prodDetail.caution}]]</td>
-                </tr>
-                <tr>
-                    <th>제조연월</th>
-                    <td th:text="${#dates.format(prodDetail.mdate, 'yyyy-MM-dd')}"></td>
-                </tr>
-                <tr>
-                    <th>품질보증기간</th>
-                    <td>구매 후 [[${prodDetail.warranty}]]개월</td>
-                </tr>
-                <tr>
-                    <th>A/S 책임자</th>
-                    <td>[[${product.seller.sellRepresentative}]]</td>
-                </tr>
-                <tr>
-                    <th>전화번호</th>
-                    <td>[[${product.seller.sellHp}]]</td>
-                </tr>
-            </table> <!-- tb3 -->
-            <div class="refund">
-                <span>소비자가 전자상거래등에서 소비자 보호에 관한 법률 제 17조 1항 또는 제 3항에 따라 청약철회를 하고
-                동법 제 18조 제 1항에 다라 청약철회한 물품을 판매자에게 반환하였음에도 불구하고 결제 대금의 환급이
-                3영업일을 넘게 지연된 경우, 소비자는 전자상거래등에서 소비자보호에 관한 법률 제 18조 제 2항 및 동법 시행령 제 21조 2에
-                따라 지연일수에 대하여 전상법 시행령으로 정하는 이율을 곱하여 산정한 지연이자("지연배상금")를 신청할 수 있습니다.
-                아울러, 교환반품보증 및 결제대금의 환급신청은 [나의 쇼핑정보]에서 하실 수 있으며, 자세한 문의는
-                개별 판매자에게 연락하여 주시기 바랍니다.</span>
-            </div> <!-- .refund-->
+            <h2 id="ai-box" class="sub_tit4" style="margin-bottom: 0"><span style="font-size: 14px;color: #7b7b7b; line-height: 23px;">당신을 위한</span><br/>똑똑한 AI 상품 추천</h2>
+            <div id="related-products">
+                <div th:each="prod : ${related}" class="relaties position-relative">
+                    <a th:href="@{/prod/product(prodId=${prod.id})}" class="stretched-link"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
+                    <div class="related-descriptions">
+                        <dt style="font-weight: 400">
+                            [[${prod.prodName}]]
+                        </dt>
+                        <div class="d-flex align-items-center">
+                            <span class="ratingBg" style="zoom: 0.8;margin-left: 0;">
+                                <span class="rating" th:style="'width:'+ ${prod.prodRating * 2}+'%;'"></span>
+                            </span>
+                            <span th:text="${prod.prodReviewCnt eq null?'(0)':'('+prod.prodReviewCnt+')'}" style="margin-left: 5px;color: #7b7b7b"></span>
+                        </div>
+                        <p class="related-price" th:if="${prod.prodDiscount > 0.0}">[[${#numbers.formatInteger(prod.getProdPrice(), 1,'COMMA')}]]원&nbsp;</p>
+                        <dd style="display: flex;gap:3px">
+                            <span class="related-dc" th:if="${prod.prodDiscount > 0.0}">[[${#numbers.formatInteger(prod.getProdDiscount(), 1)}]]%</span>
+                            <p class="related-total">[[${#numbers.formatInteger(prod.getProdPrice() - prod.getProdPrice() * (prod.getProdDiscount()/100), 1,'COMMA')}]]원</p>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 800px"></div>
         </main> <!-- #main-->
     </div>
     <div class="popup"></div>
+    <div class="bg"></div>
     <input type="hidden" th:value="${options}" id="hiddenOption">
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 <script>
+    const scrollSpy = new bootstrap.ScrollSpy(document.body, {
+        target: '#sticky-element',  // 여기에 스크롤Spy가 적용될 대상
+        offset: 60
+    });
+
+    const stickyElement = document.getElementById('sticky-element');// 헤더 높이를 가져옴
+    const stickyOffset = stickyElement.offsetTop;
+    let isFixed = false;
+
+    window.addEventListener('scroll', function() {
+        scrollSpy.refresh();
+    });
     const noOption = document.getElementById('noOption');
     const totalPrice = document.getElementById('totalPrice')
     const qty = document.getElementById('qty')
@@ -344,14 +369,31 @@
                 }
             })
             const coupons = resp.data
-            document.querySelector('.popup').innerHTML = `<h1>발급가능한 쿠폰리스트</h1>`+coupons.map(v=>`
-                <article onclick="postCoupon(event)" data-id="${v.id}" class="coupon-box">
+            document.querySelector('.popup').innerHTML
+                = `<h1>발급가능한 쿠폰리스트</h1><section>`
+                +coupons.map(v=>
+                `<article onclick="postCoupon(event)" data-id="${v.id}" class="coupon-box">
                     <div data-id="${v.id}">${v.couponName}</div>
                     <div data-id="${v.id}">${v.couponDiscount} ${v.couponDiscountOption}</div>
                     <div data-id="${v.id}">${v.couponCaution}</div>
-                </article>
-            `).join('')+`<button onclick="closeCouponBtn()">닫기</button>`;
+                 </article>
+            `).join('')
+                +`</section><button onclick="closeCouponBtn()">닫기</button>
+            <div class="notification" id="popupNotification">쿠폰이 적용된 가격을 확인해보세요!</div>`;
             document.querySelector('.popup').style.display = 'flex';
+            document.querySelector('.bg').style.display = "block";
+            document.querySelector('body').style.overflow = 'hidden';
+            const notification = document.getElementById('popupNotification');
+
+            // 알림 메시지를 나타내기
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100); // 약간의 지연 후에 나타나게 함
+
+            // 3초 후 알림 메시지를 숨기기
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000); // 3초 동안 보여줌
         } catch (e) {
 
         }
@@ -377,6 +419,8 @@
 
     function closeCouponBtn() {
         document.querySelector('.popup').style.display = 'none';
+        document.querySelector('.bg').style.display = "none";
+        document.querySelector('body').style.overflow = 'auto';
     }
 
     // 요일명을 저장한 배열
@@ -779,15 +823,32 @@
         if (detailContainer.classList.contains("expanded")) {
             // 접기 상태로 변경
             detailContainer.style.maxHeight = "1000px";
-            toggleButton.textContent = "상품 정보 더보기 ▼";
+            toggleButton.innerHTML = `상품 정보 더보기 <i class="bi bi-arrow-down-short"></i>;`;
         } else {
             // 펼치기 상태로 변경 (scrollHeight 사용)
             detailContainer.style.maxHeight = detailContainer.scrollHeight + "px";
-            toggleButton.textContent = "상품 정보 접기 ▲";
+            toggleButton.innerHTML = `상품 정보 접기 <i class="bi bi-arrow-up-short"></i>`;
         }
 
         // 'expanded' 클래스 토글
         detailContainer.classList.toggle("expanded");
+    }
+    function toggleRefund(){
+        const refundContainer = document.querySelector("#refund>div");
+        const toggleBtn = document.querySelector("#refund>button");
+        // 현재 높이 확인
+        if (refundContainer.classList.contains("expanded")) {
+            // 접기 상태로 변경
+            refundContainer.style.maxHeight = "186px";
+            toggleBtn.textContent = '상품필수정보 더보기';
+        } else {
+            // 펼치기 상태로 변경 (scrollHeight 사용)
+            refundContainer.style.maxHeight = refundContainer.scrollHeight + "px";
+            toggleBtn.textContent = '상품필수정보 접기';
+        }
+
+        // 'expanded' 클래스 토글
+        refundContainer.classList.toggle("expanded");
     }
 
 </script>

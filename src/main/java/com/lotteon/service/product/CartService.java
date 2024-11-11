@@ -11,6 +11,7 @@ import com.lotteon.repository.impl.CartItemOptionRepositoryImpl;
 import com.lotteon.repository.impl.CartItemRepositoryImpl;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.product.*;
+import groovyjarjarantlr4.runtime.misc.IntArray;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,6 +48,52 @@ public class CartService {
     private final CartItemRepositoryImpl cartItemRepositoryImpl;
     private final CartItemOptionRepositoryImpl cartItemOptionRepositoryImpl;
 
+    public Integer findCartCount(HttpServletRequest req) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String cartId = getCookieValue(req, "cartId");
+
+        log.info("카트 아이디 있나요? "+cartId);
+        // 인증이 없는 경우
+        if (auth == null || auth.getPrincipal() instanceof String) {
+            return handleGuestCartCount(cartId); // 비로그인 사용자의 로직
+        }
+
+        // 로그인 여부와 쿠키 내 cartId 여부에 따라 다르게 처리
+        Optional<Cart> optCart = Optional.empty();
+
+        if (auth != null) { // 로그인한 상태
+            MyUserDetails authDetails = (MyUserDetails) auth.getPrincipal();
+            Long custId = authDetails.getUser().getCustomer().getId();
+            optCart = cartRepository.findByCustId(custId);
+
+            if (cartId != null) { // 로그인한 상태에서 쿠키에 cartId가 있을 때
+                Optional<Cart> cookieCart = cartRepository.findById(Long.parseLong(cartId));
+                // 두 카트 모두 존재하면 합쳐서 반환
+                return getCombinedCartCount(optCart, cookieCart);
+            }
+
+        }
+
+        // 최종적으로 카트 아이템 개수를 반환, null 또는 0인 경우 null 반환
+        return optCart
+                .map(cart -> cart.getItems().isEmpty() ? null : cart.getItems().size())
+                .orElse(null);
+    }
+
+    private Integer handleGuestCartCount(String cartId) {
+        if (cartId == null) {
+            return null;
+        }
+
+        Optional<Cart> optCart = cartRepository.findById(Long.parseLong(cartId));
+        return optCart.map(cart -> cart.getItems().size()).orElse(null);
+    }
+    private Integer getCombinedCartCount(Optional<Cart> optCustCart, Optional<Cart> optCookieCart) {
+        int count1 = optCustCart.map(cart -> cart.getItems().size()).orElse(0);
+        int count2 = optCookieCart.map(cart -> cart.getItems().size()).orElse(0);
+        return (count1 + count2) > 0 ? count1 + count2 : null;
+    }
     @Transactional
     public ResponseEntity<?> insertCart(PostCartDto postCartDto, Authentication auth) {
 
@@ -86,7 +133,7 @@ public class CartService {
         if (cartId == null) {
             Cart cart = cartRepository.save(new Cart());
             Cookie newCookie = new Cookie("cartId", cart.getId().toString());
-            newCookie.setPath("/prod");
+            newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24 * 7); // 7일 유효기간
             resp.addCookie(newCookie);
             return cart;
@@ -97,7 +144,7 @@ public class CartService {
                 return cart;
             }else{
                 Cookie deleteCookie = new Cookie("cartId", null);
-                deleteCookie.setPath("/prod");
+                deleteCookie.setPath("/");
                 deleteCookie.setMaxAge(0);
                 resp.addCookie(deleteCookie);
                 return null;
@@ -178,7 +225,7 @@ public class CartService {
                 cartItem.setCart(optCustCart.get());
             });
             Cookie newCookie = new Cookie("cartId", null);
-            newCookie.setPath("/prod");
+            newCookie.setPath("/");
             newCookie.setMaxAge(0);
             resp.addCookie(newCookie);
         }
@@ -187,14 +234,18 @@ public class CartService {
         return optCustCart.get();
     }
 
-    public Cart selectCartFornoAuth(HttpServletRequest req) {
+    public Cart selectCartFornoAuth(HttpServletRequest req, HttpServletResponse resp) {
         String cartId = getCookieValue(req, "cartId");
-        Optional<Cart> optCart = cartRepository.findById(Long.parseLong(cartId));
-
         Cart cart;
-        if(!optCart.isPresent()) {
+        if(cartId==null){
             cart = cartRepository.save(new Cart());
+
+            Cookie newCookie = new Cookie("cartId", cart.getId().toString());
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24 * 7);
+            resp.addCookie(newCookie);
         }else{
+            Optional<Cart> optCart = cartRepository.findById(Long.parseLong(cartId));
             cart = optCart.get();
         }
 
