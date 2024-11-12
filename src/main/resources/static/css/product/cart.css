@@ -127,7 +127,6 @@ input:focus{outline: none;}
     margin-left: 10px;
     padding: 10px;
     border-radius: 8px;
-    /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);*/
 }
 
 .relaties img {
@@ -153,6 +152,7 @@ input:focus{outline: none;}
 }
 .related-price{color: #a8a8a8; text-decoration: line-through}
 .related-total{font-weight: bold; margin-right: 5px}
+.related-dc{font-weight: bold;color: #E60012;}
 
 .choose-btn {
     position: relative;
