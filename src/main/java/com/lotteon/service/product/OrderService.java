@@ -472,36 +472,53 @@ public class OrderService {
     }
 
     public void cancleOrder(Long id) {
+        List<OrderCancleDocument> orderCancleDocuments = orderCancleRepository.findAllByOrderId(id);
+        Long couponId = 0L;
+        if(orderCancleDocuments.get(0).getCouponId()!=0){
+            couponId = orderCancleDocuments.get(0).getCouponId();
+        }
 
-        Optional<OrderCancleDocument> orderCancleDocument = orderCancleRepository.findByOrderId(id);
-        Long couponId = orderCancleDocument.get().getCouponId();
-        int points = orderCancleDocument.get().getPoints();
-        Long custId = orderCancleDocument.get().getCustId();
-        Long orderId = orderCancleDocument.get().getOrderId();
-        LocalDateTime time = orderCancleDocument.get().getPointUdate();
-        LocalDateTime before = time.minusMinutes(2);
-        LocalDateTime after = time.plusMinutes(2);
-        if(couponId!=0){
+        if(couponId!=0L){
             Optional<CustomerCoupon> coupon = customerCouponRepository.findById(couponId);
             coupon.get().updateCustCouponState(1);
         }
 
-        if(points!=0){
+        int point = 0;
+        for(OrderCancleDocument orderCancleDocument : orderCancleDocuments){
+            point += orderCancleDocument.getPoints();
+        }
+        Long custId = orderCancleDocuments.get(0).getCustId();
+
+        LocalDateTime time = orderCancleDocuments.get(0).getPointUdate();
+        LocalDateTime before = time.minusMinutes(2);
+        LocalDateTime after = time.plusMinutes(2);
+
+        if(point!=0){
             List<Point> pointLists = pointRepository.findAllByCustomer_IdAndPointTypeAndPointUdateBetween(custId,2,before,after);
             pointLists.forEach(v->{
                 v.updateReUsePoint();
             });
         }
-        Point point = pointRepository.findById(orderCancleDocument.get().getPointId()).get();
-        pointRepository.delete(point);
 
-        Optional<Point> point2 = pointRepository.findFirstByOrderIdAndPointEtc(orderId,"사용후남은포인트");
-        if(point2.isPresent()){
-            pointRepository.delete(point2.get());
+        List<Long> pointIds = orderCancleDocuments.stream().map(OrderCancleDocument::getPointId).toList();
+
+        pointIds.forEach(v->{
+            Optional<Point> point2 = pointRepository.findById(v);
+            if(point2.isPresent()){
+                pointRepository.delete(point2.get());
+            }
+        });
+
+        Optional<Point> point3 = pointRepository.findFirstByOrderIdAndPointEtc(id,"사용후남은포인트");
+
+        if(point3.isPresent()){
+            pointRepository.delete(point3.get());
         }
 
-        Optional<Point> point3 = pointRepository.findFirstByOrderIdAndPointType(orderId,3);
-        pointRepository.delete(point3.get());
+        Optional<Point> point4 = pointRepository.findFirstByOrderIdAndPointType(id,3);
+        if(point4.isPresent()){
+            pointRepository.delete(point4.get());    
+        }
     }
 
     public Long findByCustomer() {

@@ -191,26 +191,22 @@ public class PointService {
     }
 
     private Page<Point> findPointByCustHp(String keyword, Pageable pageable) {
-        Customer customer = customerRepository.findByCustHp(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_CustHpOrderByPointRdateDesc(customer.getCustHp(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_CustHpContainingOrderByPointRdateDesc(keyword,pageable);
         return points;
     }
 
     private Page<Point> findPointByCustEmail(String keyword, Pageable pageable) {
-        Customer customer = customerRepository.findByCustEmail(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_CustEmailOrderByPointRdateDesc(customer.getCustEmail(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_CustEmailContainingOrderByPointRdateDesc(keyword,pageable);
         return points;
     }
 
     private Page<Point> findPointByCustName(String keyword, Pageable pageable) {
-        Customer customer = customerRepository.findByCustName(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_CustNameOrderByPointRdateDesc(customer.getCustName(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_CustNameContainingOrderByPointRdateDesc(keyword,pageable);
         return points;
     }
 
     private Page<Point> findPointByUid(String keyword,Pageable pageable) {
-        Customer customer = customerRepository.findByMember_MemUid(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_Member_IdOrderByPointRdateDesc(customer.getMember().getId(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_Member_MemUidContainingOrderByPointRdateDesc(keyword,pageable);
         return points;
     }
 
@@ -307,4 +303,7 @@ public class PointService {
 
     }
 
+    public void deleteSelectedPoint(List<Long> id) {
+        id.forEach(pointRepository::deleteById);
+    }
 }

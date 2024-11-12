@@ -36,4 +36,7 @@ public class OrderCancleDocument {
 
     @Column(name = "point_id")
     private Long pointId;
+
+    @Column(name = "order_item_id")
+    private Long orderItemId;
 }

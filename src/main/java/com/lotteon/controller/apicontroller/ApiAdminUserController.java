@@ -5,6 +5,7 @@ import com.lotteon.entity.member.Member;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.service.AuthService;
 import com.lotteon.service.member.MemberService;
+import com.lotteon.service.point.PointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.angus.mail.iap.Response;
@@ -39,6 +40,7 @@ public class ApiAdminUserController {
 
     private final AuthService authService;
     private final MemberRepository memberRepository;
+    private final PointService pointService;
 
 
     // 1. 관리자 회원수정 정보조회 (+팝업호출)
@@ -110,5 +112,13 @@ public class ApiAdminUserController {
         response.put("success", success);
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/point")
+    public ResponseEntity<?> deletePoint(
+            @RequestParam List<Long> id
+    ){
+        pointService.deleteSelectedPoint(id);
+        return ResponseEntity.ok().build();
     }
 }

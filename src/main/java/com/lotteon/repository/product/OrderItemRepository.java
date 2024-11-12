@@ -53,4 +53,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     Long countByState2AndOrder_OrderRdateBetween(int i, Timestamp startTimestamp, Timestamp endTimestamp);
 
     List<OrderItem> findAllByProduct_CategoryMappings_Category_CategoryIdAndOrder_OrderRdateBetween(Long i, Timestamp timestamp, Timestamp timestamp1);
+
+    List<OrderItem> findAllByOrder_IdAndSeller(Long orderId, Seller seller);
 }
