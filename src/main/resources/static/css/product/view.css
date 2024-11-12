@@ -190,7 +190,6 @@
 }
 
 /* 상품 정보 제공 고시 */
-
 .sub_tit2, .sub_tit3, .sub_tit4 {
     font-size: 18px; /* 제목 폰트 크기 약간 키움 */
     font-weight: 700; /* 굵게 표시 */
@@ -270,7 +269,6 @@
     margin-left: 10px;
     padding: 10px;
     border-radius: 8px;
-    /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);*/
 }
 
 .relaties img {
