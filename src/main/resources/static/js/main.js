@@ -28,7 +28,7 @@ async function openCategory(event){
             <a href="#" onmouseover="hoverFunction(event)" onclick="productList(${v.id})" data-id="${v.id}" class="d2_tit cf" style="z-index: 1000">${v.name}
                 <ul class="dep3 cf" id="${v.id}" style="display: none">
                     ${subCategories.map(sub => `
-                        <li><a href="#" data-value="${sub.id}" onclick="productList(${sub.id})">${sub.name}</a></li>
+                        <li><a href="#" data-value="${sub.id}" onclick="productList2(${sub.id},event)">${sub.name}</a></li>
                     `).join('')}
                 </ul>
             </a>
@@ -50,6 +50,11 @@ function closePopupCategory(){
 }
 
 function productList(e){
+    window.location.href = `/prod/products?cate=${e}`;
+}
+
+function productList2(e,event){
+    event.stopPropagation();
     window.location.href = `/prod/products?cate=${e}`;
 }
 
