@@ -94,7 +94,8 @@
                 <div class="myTool">
                     <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
                     <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"><span class="cartCount" th:if="${cartCount!=null&&cartCount!=0}">[[${cartCount}]]</span></a>
-                     <a th:href="@{/prod/hearts}"><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
+                    <a th:href="@{/prod/hearts}"><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
+                    <button onclick="openChatBot()">챗봇</button>
                 </div><!-- .myTool -->
             </section>
 
@@ -146,9 +147,55 @@
             </div><!-- .menu-box -->
         </div><!--.headerIn-->
     </header><!--#header-->
+    <div class="chat-bot"></div>
 </body>
 
 <script>
+
+    function openChatBot(){
+        document.querySelector('.chat-bot').innerHTML =`
+            <span class="h3 title-chat">챗봇에게 뭐든지 물어보세요.</span> <span onclick="closeChat()" class="x-btn-chat h3">X</span><br>
+            <div class="chat-bot-text-box">
+                <div id="chatResponse">
+                    <div class="resp-chat">안녕하세요 승우에요. 궁금한점과 관련된 키워드를 입력해주세요.</div>
+                </div>
+            </div>
+            <div class="chat-bot-message-box">
+                <input type="text" id="userMessage" placeholder="메시지를 입력하세요">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        `
+        document.querySelector('.chat-bot').style.display = 'block'
+    }
+
+    function closeChat(){
+        document.querySelector('.chat-bot').style.display = 'none';
+    }
+
+    async function sendMessage() {
+        const userMessage = document.getElementById('userMessage').value;
+        try {
+            const response = await axios.get(`/api/chatbot/chat?prompt=${userMessage}`, null,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            });
+            const createReq = document.createElement('div')
+            createReq.classList.add('req-chat')
+            createReq.innerText = userMessage;
+            const createResp = document.createElement('div')
+            createResp.classList.add('resp-chat')
+            createResp.innerText = response.data
+            document.getElementById('chatResponse').appendChild(createReq)
+            document.getElementById('chatResponse').appendChild(createResp)
+
+            document.getElementById('userMessage').value = '';
+
+            document.querySelector('.chat-bot-text-box').scrollTop = document.querySelector('.chat-bot-text-box').scrollHeight;
+        } catch (error) {
+            console.error('Error communicating with chatbot:', error);
+        }
+    }
 
     let timer;
 

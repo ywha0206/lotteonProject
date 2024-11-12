@@ -56,4 +56,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Optional<Order> findByIdAndOrderItems_State2(Long orderId, int i);
 
     Long countByCustomer(Customer customer);
+
+    List<Order> findAllByOrderStateAndCustomer(int i, Customer customer);
 }

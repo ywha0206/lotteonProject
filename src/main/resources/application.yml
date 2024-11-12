@@ -1,14 +1,12 @@
-
 server:
     error:
         whitelabel:
             enabled: false
     port: 8080
+
 spring:
     config :
         import:
 
             - classpath:application-ec2.yml
-
-
 
