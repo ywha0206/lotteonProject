@@ -705,13 +705,14 @@
         $('.totalSlider').text(' / ' + slider.getSlideCount());
     });
     const main = document.getElementById("main");
-    window.addEventListener("scroll", function () {
-        // 현재 스크롤 위치를 가져옵니다.
-        const scrollY = window.scrollY;
-
-        // 스크롤 위치에 따라 배너와 헤더를 이동시킵니다.
-        document.getElementById("header").style.transform = `translateY(-${Math.min(80, scrollY)}px)`;
-        main.style.transform = `translateY(-${Math.min(80, scrollY)}px)`;
+    window.addEventListener("click", function (e) {
+        if(e.target.classList.contains("bnClose")){
+            document.getElementById("header").style.transform = `translateY(-80px)`;
+            document.getElementsByClassName("bnClose")[0].style.transform = `translateY(-80px)`;
+            document.getElementsByClassName("bnClose")[0].style.display = `none`;
+            document.getElementById("topBanner").style.transform = `translateY(-80px)`;
+            main.style.transform = `translateY(-80px)`;
+        }
     });
 
 
