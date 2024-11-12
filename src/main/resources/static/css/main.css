@@ -332,9 +332,14 @@ h1.logo{z-index: 3}
 .cont1 ul li{float:left; width: 217px; height: 320px; margin-right:28px; border: 1px solid #eee; box-sizing: border-box;}
 .cont1 ul .last{margin-right:0;}
 
-.cont1 ul li .photo{overflow: hidden;}
-.cont1 ul li dl{padding:32px 25px 25px;} /* top: 32px; bottom: 25px; (left,right) :25px; */
-.cont1 ul li dl dt.proTit{display: block; font-size:15px; font-weight:bold; letter-spacing:-0.5px;}
+.cont1 ul li .photo{height: 207px; display: flex; justify-content: center; align-items: flex-end}
+.cont1 ul li dl{padding:10px 20px} /* top: 32px; bottom: 25px; (left,right) :25px; */
+.cont1 ul li dl dt.proTit{font-size:15px; letter-spacing:-0.5px; font-weight: 400;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; margin-bottom: 5px}
 
 .cont1 ul li dl dd p.oPrice{ display:inline-block; font-size:12px; font-weight:normal; margin-top:5px;
     text-decoration:line-through; color: #aaa;}
