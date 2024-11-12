@@ -537,4 +537,14 @@ public class ProductService {
             }
         });
     }
+
+    public List<Product> getRecommendedProducts(int count) {
+        Page<Product> page = productRepository.findAllByOrderByProdOrderCntDesc(PageRequest.of(0, count));
+        return page.getContent();
+    }
+
+    public List<Product> getRecommendedProductsAndCate(int recommendedCount, Long i) {
+        Page<Product> page = productRepository.findAllByCategoryMappings_Category_CategoryIdOrderByProdOrderCntDesc(i,PageRequest.of(0, recommendedCount));
+        return page.getContent();
+    }
 }

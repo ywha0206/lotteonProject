@@ -4,6 +4,7 @@ import com.lotteon.entity.category.CategoryProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryProductRepository extends JpaRepository<CategoryProduct, Long> {
     List<CategoryProduct> findAllByParent(CategoryProduct categoryProduct);
@@ -19,4 +20,6 @@ public interface CategoryProductRepository extends JpaRepository<CategoryProduct
     CategoryProduct findByCategoryIdOrderByCategoryOrder(Long id);
 
     CategoryProduct findByCategoryName(String name);
+
+    Optional<CategoryProduct> findByCategoryNameContaining(String 화장품);
 }

@@ -4,6 +4,7 @@ import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.entity.product.Product;
 import com.lotteon.repository.custom.ProductRepositoryCustom;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -56,4 +57,5 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
     Page<Product> findAllByProdNameContaining(String keyword, Pageable pageable);
 
+    Page<Product> findAllByCategoryMappings_Category_CategoryIdOrderByProdOrderCntDesc(long i, Pageable pageable);
 }
