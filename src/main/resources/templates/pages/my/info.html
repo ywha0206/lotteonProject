@@ -5,14 +5,14 @@
 <main style="margin-top: 230px">
   <div id="my">
     <th:block th:replace="layout/my/aside.html"></th:block>
-<!--    <main>-->
+    <main>
       <th:block th:replace="layout/my/banner.html"></th:block>
     <section>
-      <h3>나의설정</h3>
+      <h3 class="myinfo_nav">나의설정</h3>
 
       <article>
         <form id="myInfoForm" th:action="@{/my/info}" method="post">
-          <table border="0" class="myInfo" style="width: 700px;">
+          <table border="0" class="myInfo" style="width: 800px;">
 <!--            <th:block th:each="cust : ${customer}">-->
               <tr>
                 <th>사용자 ID</th>
@@ -48,9 +48,9 @@
                 <th>Email</th>
                 <td>
                   <input type="text" name="custEmail1" th:value="${cust.custEmail1}" class="email1"/> @
-                  <input type="text" name="custEmail2" th:value="${cust.custEmail2}" class="email2"/>
+                  <input type="text" name="custEmail2" th:value="${cust.custEmail2}" class="email2"/><br/>
                    <!-- 이메일 select 시 변경 -->
-                  <select onchange="changeDomain()" id="emailDomainSelect">
+                  <select onchange="changeDomain()" style="width: 197px;" id="emailDomainSelect">
                     <option value="" selected>직접입력</option> <!-- "직접입력" 이 기본 선택된 상태로 보여짐 -->
                     <option value="gmail.com">gmail.com</option>
                     <option value="naver.com">naver.com</option>
@@ -63,9 +63,9 @@
               <tr>
                 <th>휴대폰</th>
                 <td>
-                  <input type="text" th:value="${cust.custHp1}" name="custHp1" max="999" class="hp1"/> -
-                  <input type="text" th:value="${cust.custHp2}" name="custHp2" max="9999" class="hp2"/> -
-                  <input type="text" th:value="${cust.custHp3}" name="custHp3" max="9999" class="hp3"/>
+                  <input type="text" style="width: 100px;" th:value="${cust.custHp1}" name="custHp1" max="999" class="hp1"/> -
+                  <input type="text" style="width: 100px;" th:value="${cust.custHp2}" name="custHp2" max="9999" class="hp2"/> -
+                  <input type="text" style="width: 100px;" th:value="${cust.custHp3}" name="custHp3" max="9999" class="hp3"/>
                     <button type="button" id="btnHp" class="btn modify" data-type="hp" >수정하기</button>
                 </td>
               </tr>
@@ -73,7 +73,7 @@
                 <th>주소</th>
                 <td>
                   <input name="custAddr1" id="addr1" type="text" placeholder="우편번호" th:value="${cust.custAddr1}" readonly class="addr1"/>
-                    <button type="button" class="btn" id="btnSearchAddr" >주소검색</button>
+                    <button type="button" class="btn" id="btnSearchAddr" >주소검색</button><br/>
                   <input name="custAddr2" id="addr2" class="addr addr2" type="text" placeholder="기본주소" th:value="${cust.custAddr2}" /><br />
                   <input name="custAddr3" id="addr3" class="addr addr3" type="text" placeholder="상세주소" th:value="${cust.custAddr3}" />
                 </td>
@@ -91,6 +91,7 @@
         </form>
       </article>
     </section>
+  </main>
   </div>
 </main>
 
