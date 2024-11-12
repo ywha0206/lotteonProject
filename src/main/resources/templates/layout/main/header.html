@@ -117,7 +117,7 @@
                     <li class="prodCart">
                         <a th:href="@{/prod/cart}">
                             <img class="img-header-link prodCart" th:src="@{/images/index_icon(cart).png}">
-                            <span class="cartCount">0</span>
+                            <span class="cartCount" th:if="${cartCount>0}">[[${cartCount}]]</span>
                             <!-- .cartCount -->
                             <p class="img-header-tit">장바구니</p>
                         </a>
