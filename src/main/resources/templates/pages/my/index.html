@@ -164,12 +164,12 @@
                 </th:block>
               </th:block>
             </article>
-          <article onclick="window.location.href='/my/info'">
+          <article onclick="window.location.href='/my/infoPass'">
               <div><b>Email 설정</b> <a>변경</a></div>
               <p>[[${cust.custEmail1}]]@[[${cust.custEmail2}]]</p>
               <p th:if="${emailDitector}" th:text="'최종 수정일' + ${emailDitector}" class="lastUpdate">(최종수정일 2021-12-10)</p>
             </article>
-          <article onclick="window.location.href='/my/info'">
+          <article onclick="window.location.href='/my/infoPass'">
               <div><b>휴대폰 설정</b> <a>변경</a></div>
               <p>[[${cust.custHp1}]]-[[${cust.custHp2}]]-[[${cust.custHp3}]]</p>
               <p th:if="${hpDitector}" th:text="'최종 수정일' + ${hpDitector}" class="lastUpdate">(최종수정일 2021-12-10)</p>

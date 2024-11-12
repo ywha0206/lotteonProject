@@ -50,7 +50,7 @@
                 </tr>
                 <tr th:each="point : ${points}">
                     <td>
-                        <input th:data-id="${point.id}" type="checkbox" class="checkbox">
+                        <input th:value="${point.id}" type="checkbox" class="checkbox check2">
                     </td>
                     <td th:text="${point.id}">5</td>
                     <td th:text="${point.custId}">xxx...</td>
@@ -61,7 +61,7 @@
                 </tr>
             </table>
             <div class="btns">
-                <button class="delete-btn">선택삭제</button>
+                <button onclick="deletePoint()" class="delete-btn">선택삭제</button>
             </div>
             <div class="page">
                 <a class="none" th:href="@{/admin/user/point(page=0, searchType=${searchType}, keyword=${keyword})}"><<</a>
@@ -76,3 +76,59 @@
     </div>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
+
+<script>
+    const selectAllCheckbox = document.getElementById('allCheckbox');
+    const itemCheckboxes = document.querySelectorAll('.check2');
+    let selectedIds = [];
+
+    selectAllCheckbox.addEventListener('change', function() {
+        const isChecked = selectAllCheckbox.checked; // 전체 체크박스가 체크되었는지 확인
+        itemCheckboxes.forEach(checkbox => {
+            checkbox.checked = isChecked; // 전체 체크박스의 상태를 개별 체크박스에 반영
+            updateDeleteNumbers(checkbox);
+        });
+    });
+
+    // 개별 체크박스 상태 변경 시 선택된 항목을 업데이트
+    itemCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const allChecked = [...itemCheckboxes].every(item => item.checked); // 모든 체크박스가 체크되었는지 확인
+            selectAllCheckbox.checked = allChecked; // 전체 선택 체크박스 상태 갱신
+            updateDeleteNumbers(checkbox);
+        });
+    });
+
+    function updateDeleteNumbers(checkbox) {
+        console.log("Selected IDs:", selectedIds);
+        const itemId = checkbox.value; // 각 체크박스의 value 속성 (heart.id)
+
+        if (checkbox.checked) {
+            // 체크된 경우 배열에 추가
+            if (!selectedIds.includes(itemId)) {
+                selectedIds.push(itemId);
+            }
+        } else {
+            // 체크 해제된 경우 배열에서 제거
+            selectedIds = selectedIds.filter(id => id !== itemId);
+        }
+    }
+
+    async function deletePoint(){
+        console.log("Selected IDs:", selectedIds); // 선택된 항목 ID 배열을 콘솔에 출력 (확인용)
+        let confirmMsg = confirm('선택된 포인트를 삭제하시겠습니까?');
+        if(!confirmMsg){
+            return;
+        }
+        try {
+            const resp = await axios.delete(`/admin/user/point?id=${selectedIds}`,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            window.location.href = "/admin/user/point"
+        } catch (e) {
+
+        }
+    }
+</script>
