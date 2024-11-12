@@ -272,6 +272,7 @@ h1.logo{z-index: 3}
 #aside .menu ul .dep1 .dep2 .dep3{}
 #aside .menu ul .dep1 .dep2 .dep3 li{}
 #aside .menu ul .dep1 .dep2 .dep3 li a{font-size:13px; display: block; width: 192px; color:#777; line-height: 3em; &:hover {color: brown;} }
+#aside .menu ul .dep1 .dep2 .dep3 li a:nth-child(2){margin-top: 20px;}
 #aside .menuBg{width:100%; height:0; overflow:hidden; background:#ff9; border-bottom:1px solid #333; position:absolute; top:100px; left:0;}
 
 /* 베스트 상품 영역 */

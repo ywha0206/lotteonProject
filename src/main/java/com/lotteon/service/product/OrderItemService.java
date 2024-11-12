@@ -385,6 +385,12 @@ public class OrderItemService {
         orderItemRepository.save(orderItem.get());
         orderRepository.save(orderItem.get().getOrder());
 
+
+        Optional<Point> point = pointRepository.findById(id);
+        if(point.isPresent()){
+            pointRepository.delete(point.get());
+        }
+
         int totalCnt = orderItem.get().getOrder().getOrderItems().size();
         int variableCnt = 0;
         List<OrderItem> orderItems = orderItem.get().getOrder().getOrderItems();
