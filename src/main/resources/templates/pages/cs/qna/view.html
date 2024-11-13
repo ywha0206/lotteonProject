@@ -16,17 +16,8 @@
         </ul>
     </aside>
     <div id="main" style="height: auto">
-<<<<<<< Updated upstream
         <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
             <div class="left">
-=======
-        <nav class="cs_nav">
-            <p class="cs_nav_tit"><span>홈</span> > <span>문의하기</span></p>
-        </nav>
-        <div class="box">
-            <section class="cs_qna">
-                <div class="cate_bar">
->>>>>>> Stashed changes
                     <h3 class="cate_title" th:text="${selectedCate1 == 'user' ? '회원' :
                                       selectedCate1 == 'coupon' ? '쿠폰/이벤트' :
                                       selectedCate1 == 'order' ? '주문/결제' :
@@ -61,15 +52,9 @@
 
                     <!-- 답변이 있을 때만 출력 -->
                     <div class="view_answer" th:if="${qna.answer != null && !#strings.isEmpty(qna.answer)}">
-<<<<<<< Updated upstream
                         <div class="view_title">
                             <img th:src="@{/images/finger_icon.png}" alt="답변 아이콘">
                             <p class="acate">[ 답변 ]</p>
-=======
-                        <div class="cate_title">
-                            <img th:src="@{/images/finger_icon.png}" alt="답변 아이콘">
-                            <p class="cate">답변</p>
->>>>>>> Stashed changes
                             <p class="title" th:text="${qna.title}">가입문의내용</p> <!-- 답변 제목 출력 -->
                         </div>
                         <div class="answer_content">
