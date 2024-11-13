@@ -127,22 +127,29 @@
                     <div class="product-image">
                         <img th:src="@{'/file/'+${product.getProdListImg()}}" alt="상품 이미지">
                     </div>
-                    <div class="product-info">
+                    <div class="product-info d-flex flex-column">
                         <h3 class="product-name">
                             <a th:href="@{/prod/product(prodId=${product.getId()})}">[[${product.getProdName}]]</a>
                         </h3>
-                        <p class="product-summary">[[${product.getProdSummary}]]</p>
                         <div class="price-info">
-                            <del class="original-price">[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원</del>
-                            <span class="discount" style="font-size: 16px; margin-right: 5px; display: inline-block; color: #c00000;">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%</span>
-                            <span class="current-price">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
-                        </div>
-                        <div class="delivery-info" th:if="${product.getProdDeliver() > 0}">
-                            배송비 : [[${product.getProdDeliver}]]원
+                            <del class="original-price"  th:if="${product.getProdDiscount()>0.0}">[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원</del>
+                            <p>
+                                <span class="discount"  th:if="${product.getProdDiscount()>0.0}" style="font-size: 16px; margin-right: 5px; display: inline-block; color: #c00000;">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%</span>
+                                <span class="current-price">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
+                                <span class="shipping delivery" th:unless="${product.getProdDeliver() == 0}">
+                                    <i class="bi bi-truck"></i> [[${#numbers.formatInteger(product.getProdDeliver(), 1,'COMMA')}]]원
+                                </span>
+                                <span class="shipping free" th:if="${product.getProdDeliver() == 0}">
+                                    무료배송
+                                </span>
+                            </p>
                         </div>
 
-                        <div class="free-shipping" th:if="${product.getProdDeliver() == 0}" style="border: 1px solid #8cb3e3; width: 85px; text-align: center; color: #17365D; background-color: #dae5f1;">
-                            무료배송
+                        <div style="display: flex; align-items: center" class="mt-auto">
+                            <span class="ratingBg">
+                                <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
+                            </span>
+                            <span class="product-summary">&nbsp;([[${product.prodReviewCnt}]]) · 판매 [[${product.prodOrderCnt}]]</span>
                         </div>
                     </div>
                     <div class="badge-container">
@@ -159,9 +166,7 @@
                             <span th:if="${product.seller.sellGrade} == 1">새싹</span>
                             <span th:if="${product.seller.sellGrade} == 0">씨앗</span>
                         </span>
-                        <span class="ratingBg">
-                            <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
-                        </span>
+
                     </div>
                 </div>
             </div>

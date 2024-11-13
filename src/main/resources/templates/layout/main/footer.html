@@ -3,7 +3,9 @@
     <link th:href="@{/css/reset.css}" rel="stylesheet">
     <link th:href="@{/css/main.css}" rel="stylesheet">
     <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
-    
+    <a href="#" class="btnTop">
+        <img th:src="@{/images/btnTop.svg}" alt="클릭 시 가장 상단으로 이동하기">
+    </a><!--.btnTop-->
     <footer id="footer">
         <div id="footerIn">
             
@@ -59,4 +61,24 @@
         </div><!--.footerIn-->
     </footer><!--#footer-->
 </body>
+    <script>
+        // .btnTop 버튼 없음
+        $(".btnTop").hide();
+        // .btnTop 버튼 보이기 (120px 만큼 스크롤 했을 때)
+        $(window).scroll(function(){
+            if($(this).scrollTop()>120){
+                $(".btnTop").fadeIn();
+            }else{
+                $(".btnTop").fadeOut();
+            }
+        })
+        // .btnTop 버튼 클릭 시 html top으로 부드럽게 스크롤
+        $(".btnTop").click(function() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth" // 부드러운 스크롤 효과
+            });
+            return false;
+        });
+    </script>
 </html>

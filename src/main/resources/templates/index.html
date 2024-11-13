@@ -545,11 +545,6 @@
         </div><!-- .mainIn -->
     </main><!--#main-->
 
-    
-
-    <a href="#" class="btnTop">
-        <img th:src="@{/images/btnTop.svg}" alt="클릭 시 가장 상단으로 이동하기">
-    </a><!--.btnTop-->
 </div><!--#wrap-->
 <footer th:replace="layout/main/footer.html"></footer>
 
@@ -566,7 +561,36 @@
     if(memState=='leave'){
         alert('탈퇴한 계정입니다. 새로 가입해주세요.')
     }
-
+    $(document).ready(function() {
+        var slider = $('.bxslider').bxSlider({
+            auto: true,               // 자동 슬라이드
+            pause: 3000, // 슬라이드 간의 대기 시간 (밀리초)
+            pager: true, // 페이지 네비게이션 표시
+            controls: true, // 이전/다음 버튼 표시
+            nextText: '>', // 다음 버튼 텍스트
+            prevText: '<', // 이전 버튼 텍스트
+            touchEnabled : (navigator.maxTouchPoints > 0),
+            autoHover: true,
+            autoControls:true,
+            autoControlsCombine:true,
+            onSlideBefore: function($slideElement, oldIndex, newIndex) {
+                // 현재 슬라이드 페이지 업데이트
+                $('.currentSlider').text((newIndex + 1));
+            }
+        });
+        // 초기 페이지 설정
+        $('.totalSlider').text(' / ' + slider.getSlideCount());
+    });
+    const main = document.getElementById("main");
+    window.addEventListener("click", function (e) {
+        if(e.target.classList.contains("bnClose")){
+            document.getElementById("header").style.transform = `translateY(-80px)`;
+            document.getElementsByClassName("bnClose")[0].style.transform = `translateY(-80px)`;
+            document.getElementsByClassName("bnClose")[0].style.display = `none`;
+            document.getElementById("topBanner").style.transform = `translateY(-80px)`;
+            main.style.transform = `translateY(-80px)`;
+        }
+    });
 
     let isLoading = false;
     const sections = [ 'hit', 'recommend', 'recent', 'discount', 'manyPoint'];
@@ -589,11 +613,11 @@
                     <dl>
                         <dt class="Btit cf">
                             <p>${v.prodName}</p>
-                            <p class="oPrice cf">${v.prodPrice} </p>
-                            <em class="dis cf">${v.prodDiscount}%&#8595;</em>
+                            <p class="oPrice cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodPrice.toLocaleString('en-US')}원 </p>
+                            <em class="dis cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodDiscount}%&#8595;</em>
                         </dt><!--.Btit-->
                         <dd class="dPrice">
-                           ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')} 원
+                           ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')}원
                         </dd><!--.price-->
                     </dl>
                 </a></li>
@@ -645,11 +669,11 @@
                     <dl>
                         <dt class="Btit cf">
                             <p>${v.prodName}</p>
-                            <p class="oPrice cf">${v.prodPrice} </p>
-                            <em class="dis cf">${v.prodDiscount}%&#8595;</em>
+                            <p class="oPrice cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodPrice.toLocaleString('en-US')}원 </p>
+                            <em class="dis cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodDiscount}%&#8595;</em>
                         </dt><!--.Btit-->
                         <dd class="dPrice">
-                            ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')} 원
+                            ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')}원
                         </dd><!--.price-->
                     </dl>
                 </a></li>
@@ -658,18 +682,18 @@
                 addItems.innerHTML = product.map(v=>`
                     <li><a href="/prod/product?prodId=${v.id}">
                         <div class="photo">
-                            <img style="width:200px; height: 180px;" src="/file/${v.img}" alt="hit photo1">
+                            <img style="width:200px; height: auto;" src="/file/${v.img}" alt="hit photo1">
                         </div><!--.photo-->
                         <dl>
                             <dt class="proTit cf">
                                 ${v.prodName}
                             </dt>
                             <dd>
-                                <p class="oPrice cf">${v.prodPrice}</p>
-                                <em class="dis cf">${v.prodDiscount}%&#8595;</em>
+                                <p class="oPrice cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodPrice.toLocaleString('en-US')}원</p>
+                                <em class="dis cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodDiscount}%&#8595;</em>
                             </dd>
                             <dd class="dPrice">
-                                ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')} 원
+                                ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')}원
                             </dd><!--.price-->
                     </dl>
                     </a></li>
@@ -684,65 +708,6 @@
         }
 
     }
-    $(document).ready(function() {
-        var slider = $('.bxslider').bxSlider({
-            auto: true,               // 자동 슬라이드
-            pause: 3000, // 슬라이드 간의 대기 시간 (밀리초)
-            pager: true, // 페이지 네비게이션 표시
-            controls: true, // 이전/다음 버튼 표시
-            nextText: '>', // 다음 버튼 텍스트
-            prevText: '<', // 이전 버튼 텍스트
-            touchEnabled : (navigator.maxTouchPoints > 0),
-            autoHover: true,
-            autoControls:true,
-            autoControlsCombine:true,
-            onSlideBefore: function($slideElement, oldIndex, newIndex) {
-                // 현재 슬라이드 페이지 업데이트
-                $('.currentSlider').text((newIndex + 1));
-            }
-        });
-        // 초기 페이지 설정
-        $('.totalSlider').text(' / ' + slider.getSlideCount());
-    });
-    const main = document.getElementById("main");
-    window.addEventListener("click", function (e) {
-        if(e.target.classList.contains("bnClose")){
-            document.getElementById("header").style.transform = `translateY(-80px)`;
-            document.getElementsByClassName("bnClose")[0].style.transform = `translateY(-80px)`;
-            document.getElementsByClassName("bnClose")[0].style.display = `none`;
-            document.getElementById("topBanner").style.transform = `translateY(-80px)`;
-            main.style.transform = `translateY(-80px)`;
-        }
-    });
-
-
-    // .btnTop 버튼 없음
-    $(".btnTop").hide();
-    // .btnTop 버튼 보이기 (120px 만큼 스크롤 했을 때)
-    $(window).scroll(function(){
-        if($(this).scrollTop()>120){
-            $(".btnTop").fadeIn();
-        }else{
-            $(".btnTop").fadeOut();
-        }
-    })
-    // .btnTop 버튼 클릭했을 때
-    // $(".btnTop").click(function(){
-    //     $("body, html").animate({
-    //         scrollTop:0
-    //     },500);
-    //     return false;
-    // })
-
-    // .btnTop 버튼 클릭 시 html top으로 부드럽게 스크롤
-    $(".btnTop").click(function() {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth" // 부드러운 스크롤 효과
-        });
-        return false;
-    });
-
 
 
 </script>
