@@ -16,12 +16,8 @@
         </ul>
     </aside>
     <div id="main" style="height: auto">
-        <nav class="cs_nav">
-            <p class="cs_nav_tit"><span>홈</span> > <span>문의하기</span></p>
-        </nav>
-        <div class="box">
-            <section class="cs_qna">
-                <div class="cate_bar">
+        <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+            <div class="left">
                     <h3 class="cate_title" th:text="${selectedCate1 == 'user' ? '회원' :
                                       selectedCate1 == 'coupon' ? '쿠폰/이벤트' :
                                       selectedCate1 == 'order' ? '주문/결제' :
@@ -38,23 +34,27 @@
                                   selectedCate1 == 'safe' ? '안전거래 관련 문의내용입니다.' : '안전거래 문의내용입니다.'}">
                     </p>
                 </div>
-                <div class="qna_view">
+            <div class="right" style="text-align: right;">
+                <p class="cs_nav_tit" style="margin: 0; font-size: 0.9em; color: #555;"><span>홈</span> > <span>자주묻는질문</span></p>
+            </div>
+        </div>
+        <div class="box">
+            <section class="cs_notice">
                     <div class="view_title">
-                        <div class="cate_title">
-                            <p class="cate q_cate" th:data-value="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}" th:text="${qna.cate2.categoryName}">카테고리2</p>
-                            <p class="title" th:text="${qna.title}">가입문의내용</p> <!-- QNA 제목 -->
-                        </div>
-                        <p><span class="nick" th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}">chh**</span> <span class="date" th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2022-11-21</span></p> <!-- 작성자 닉네임과 작성일 -->
+                            <p class="v_title cate" th:data-value="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}" th:text="${qna.cate2.categoryName}">카테고리2</p>
+                            <p class="v_title title" th:text="${qna.title}">가입문의제목</p> <!-- QNA 제목 -->
+                            <p><span class="date rdate" th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}">chh**</span> <span class="date" th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2022-11-21</span></p> <!-- 작성자 닉네임과 작성일 -->
                     </div>
+
                     <div class="view_content">
                         <p th:text="${qna.content}">회원가입하고 싶어요. 어떻게 해야 하나요?</p> <!-- QNA 내용 -->
                     </div>
 
                     <!-- 답변이 있을 때만 출력 -->
                     <div class="view_answer" th:if="${qna.answer != null && !#strings.isEmpty(qna.answer)}">
-                        <div class="cate_title">
+                        <div class="view_title">
                             <img th:src="@{/images/finger_icon.png}" alt="답변 아이콘">
-                            <p class="cate">답변</p>
+                            <p class="acate">[ 답변 ]</p>
                             <p class="title" th:text="${qna.title}">가입문의내용</p> <!-- 답변 제목 출력 -->
                         </div>
                         <div class="answer_content">
@@ -62,12 +62,11 @@
                         </div>
                     </div>
                     <!-- 여기까지 답변 출력 조건 추가 -->
-                </div>
-
+          <div style="text-align: center; padding-top: 40px;">
                 <a th:href="@{/cs/qnas}" class="btn_gray btn_list">목록</a>
-
-            </section>
+          </div>
         </div>
+        </section>
     </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
@@ -144,7 +143,7 @@
 
     // 카테고리명을 한글로 변환하여 표시
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.q_cate').forEach(function (item) {
+        document.querySelectorAll('.cate').forEach(function (item) {
             const value = item.getAttribute('data-value');
             const parentValue = item.getAttribute('data-parent');
             item.textContent = secondCategoryMap[parentValue]?.[value] || value; // 한글로 변환
