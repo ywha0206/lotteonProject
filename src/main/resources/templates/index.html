@@ -63,7 +63,7 @@
                                     <em class="dis cf" th:if="${v.prodDiscount>0.0}">[[${#numbers.formatInteger(v.prodDiscount, 1)}]]%&#8595;</em>
                                 </dt><!--.Btit-->
                                 <dd class="dPrice">
-                                    [[${#numbers.formatInteger(v.prodPrice * (1 - v.prodDiscount / 100), 0, 'COMMA')}]] 원
+                                    [[${#numbers.formatInteger(v.prodPrice * (1 - v.prodDiscount / 100), 0, 'COMMA')}]]원
                                 </dd><!--.price-->
                             </dl>
                         </a></li>
@@ -703,7 +703,7 @@
                             <dd class="dPrice" style="display: inline-block">
                            ${(Math.ceil((v.prodPrice * (1 - v.prodDiscount / 100)) / 10) * 10).toLocaleString('en-US')}원
                            <span style="display: `+(v.deli > 0 ? 'none':'inline-block')+`;width: 55px;text-align: center;
-                    margin-left: 5px;border: 1px solid #0e77f7;color: #0e77f7;border-radius: 10px;height: 17px; font-size: 11px">
+                    margin-left: 5px; margin-top:1px;border: 1px solid #0e77f7;color: #0e77f7;border-radius: 10px;height: 18px; font-size: 11px">
                              무료배송
                            </span>
                         </dd><!--.price-->
