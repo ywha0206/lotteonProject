@@ -59,8 +59,8 @@
                             <dl>
                                 <dt class="Btit cf">
                                     <p>[[${v.prodName}]]</p>
-                                    <p class="oPrice cf">[[${v.prodPrice}]] </p>
-                                    <em class="dis cf">[[${v.prodDiscount}]]%&#8595;</em>
+                                    <p class="oPrice cf" th:if="${v.prodDiscount>0.0}">[[${#numbers.formatInteger(v.prodPrice, 1,'COMMA')}]]원&nbsp; </p>
+                                    <em class="dis cf" th:if="${v.prodDiscount>0.0}">[[${#numbers.formatInteger(v.prodDiscount, 1)}]]%&#8595;</em>
                                 </dt><!--.Btit-->
                                 <dd class="dPrice">
                                     [[${#numbers.formatInteger(v.prodPrice * (1 - v.prodDiscount / 100), 0, 'COMMA')}]] 원
@@ -613,11 +613,15 @@
                     <dl>
                         <dt class="Btit cf">
                             <p>${v.prodName}</p>
-                            <p class="oPrice cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodPrice.toLocaleString('en-US')}원 </p>
-                            <em class="dis cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodDiscount}%&#8595;</em>
+                            <p class="oPrice cf" style="${v.prodDiscount > 0 ? '' : 'display:none'}">${v.prodPrice.toLocaleString('en-US')}원 </p>
+                            <em class="dis cf" style="${v.prodDiscount > 0 ? '' : 'display:none'}">${v.prodDiscount}%&#8595;</em>
                         </dt><!--.Btit-->
                         <dd class="dPrice">
-                           ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')}원
+                           ${(Math.ceil((v.prodPrice * (1 - v.prodDiscount / 100)) / 10) * 10).toLocaleString('en-US')}원
+                           <span style="display: `+(v.deli > 0.0 ? 'none':'inline-block')+`;width: 60px;text-align: center;
+                    margin-left: 5px;border: 1px solid #0e77f7;color: #0e77f7;border-radius: 10px;">
+                             무료배송
+                           </span>
                         </dd><!--.price-->
                     </dl>
                 </a></li>
@@ -673,7 +677,11 @@
                             <em class="dis cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodDiscount}%&#8595;</em>
                         </dt><!--.Btit-->
                         <dd class="dPrice">
-                            ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')}원
+                           ${(Math.ceil((v.prodPrice * (1 - v.prodDiscount / 100)) / 10) * 10).toLocaleString('en-US')}원
+                           <span style="display: `+(v.deli > 0 ? 'none':'inline-block')+`;width: 55px;text-align: center;
+                    margin-left: 5px;border: 1px solid #0e77f7;color: #0e77f7;border-radius: 10px;height: 17px">
+                             무료배송
+                           </span>
                         </dd><!--.price-->
                     </dl>
                 </a></li>
@@ -681,20 +689,24 @@
             } else if(product[0].type==='hit'){
                 addItems.innerHTML = product.map(v=>`
                     <li><a href="/prod/product?prodId=${v.id}">
-                        <div class="photo">
-                            <img style="width:200px; height: auto;" src="/file/${v.img}" alt="hit photo1">
+                        <div class="photo" style="align-items: flex-end; margin: 0">
+                            <img src="/file/${v.img}" alt="hit photo1">
                         </div><!--.photo-->
                         <dl>
                             <dt class="proTit cf">
                                 ${v.prodName}
                             </dt>
                             <dd>
-                                <p class="oPrice cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodPrice.toLocaleString('en-US')}원</p>
+                                <p class="oPrice cf" style="${v.prodDiscount>0?'':'color:#FFF'}">${v.prodPrice.toLocaleString('en-US')}원</p>
                                 <em class="dis cf" style="${v.prodDiscount>0?'':'display:none'}">${v.prodDiscount}%&#8595;</em>
                             </dd>
-                            <dd class="dPrice">
-                                ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')}원
-                            </dd><!--.price-->
+                            <dd class="dPrice" style="display: inline-block">
+                           ${(Math.ceil((v.prodPrice * (1 - v.prodDiscount / 100)) / 10) * 10).toLocaleString('en-US')}원
+                           <span style="display: `+(v.deli > 0 ? 'none':'inline-block')+`;width: 55px;text-align: center;
+                    margin-left: 5px;border: 1px solid #0e77f7;color: #0e77f7;border-radius: 10px;height: 17px; font-size: 11px">
+                             무료배송
+                           </span>
+                        </dd><!--.price-->
                     </dl>
                     </a></li>
                     `
