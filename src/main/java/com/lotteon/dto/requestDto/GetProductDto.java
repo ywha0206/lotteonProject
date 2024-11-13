@@ -19,4 +19,6 @@ public class GetProductDto {
     private String sell_uid;
     private Integer grade;
     private Integer rating;
+    private Integer reviewCnt;
+    private Integer orderCnt;
 }

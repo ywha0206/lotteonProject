@@ -101,6 +101,8 @@ public class Product {
                 .price(prodPrice)
                 .rating(prodRating)
                 .summary(prodSummary)
+                .orderCnt(prodOrderCnt)
+                .reviewCnt(prodReviewCnt)
                 .sell_uid(seller.getSellCompany())
                 .grade(seller.getSellGrade())
                 .build();
@@ -113,6 +115,9 @@ public class Product {
                 .img(prodListImg)
                 .prodName(prodName)
                 .id(id)
+                .rating(prodRating)
+                .orderCnt(prodOrderCnt)
+                .reviewCnt(prodReviewCnt)
                 .type("best")
                 .build();
     }
@@ -131,6 +136,9 @@ public class Product {
                 .prodName(prodName)
                 .id(id)
                 .deli(deli)
+                .rating(prodRating)
+                .orderCnt(prodOrderCnt)
+                .reviewCnt(prodReviewCnt)
                 .type("hit")
                 .build();
     }
