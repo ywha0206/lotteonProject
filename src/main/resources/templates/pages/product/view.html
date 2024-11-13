@@ -306,18 +306,6 @@
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 <script>
-    const scrollSpy = new bootstrap.ScrollSpy(document.body, {
-        target: '#sticky-element',  // 여기에 스크롤Spy가 적용될 대상
-        offset: 60
-    });
-
-    const stickyElement = document.getElementById('sticky-element');// 헤더 높이를 가져옴
-    const stickyOffset = stickyElement.offsetTop;
-    let isFixed = false;
-
-    window.addEventListener('scroll', function() {
-        scrollSpy.refresh();
-    });
     const noOption = document.getElementById('noOption');
     const totalPrice = document.getElementById('totalPrice')
     const qty = document.getElementById('qty')
@@ -477,8 +465,7 @@
     });
 
     countInput.addEventListener('change', function (e) {
-        let maxValue = parseInt(countInput.max);
-        maxValue = Number(selectedStock)
+        let maxValue = Number(selectedStock)
         if(e.target.value > maxValue){
             e.target.value = maxValue;
             alert(`수량은 ${maxValue} 까지만 가능합니다.`)
@@ -489,10 +476,13 @@
     function calculateTotalPrice() {
         const countInput = document.querySelector('.count');
         let inNum = countInput.value || 0; // 수량을 가져오고 기본값 0 설정
-        let totalPriceValue = Number(inNum * basePrice); // 총 가격 계산\
-        if(selectedStock < inNum){
-            inNum = selectedStock
+        // 수량이 재고보다 많지 않도록 설정
+        if (+inNum > +selectedStock) {
+            inNum = selectedStock;
         }
+
+        let totalPriceValue = inNum * basePrice; // 기본 총 가격 계산
+
         if (selectedAdditionalPrice !== 0) {
             totalPriceValue = Number(inNum) * (Number(basePrice) + Number(selectedAdditionalPrice));
         }
