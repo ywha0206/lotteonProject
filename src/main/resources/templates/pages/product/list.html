@@ -154,18 +154,20 @@
                     </div>
                     <div class="badge-container">
                         <div class="badge company">
-                            <i class="fas fa-store"></i>
-                            <span>&nbsp;&nbsp;[[${product.getSellCompany}]]</span>
+                            <span>[[${product.getSellCompany}]]</span>
                         </div>
-                        <span class="badge customer-satisfaction" style="display: inline-block;">
-                            <i class="fas fa-thumbs-up"></i>
-                            <span th:if="${product.seller.sellGrade} == 5">플래티넘</span>
-                            <span th:if="${product.seller.sellGrade} == 4">프리미엄</span>
-                            <span th:if="${product.seller.sellGrade} == 3">빅파워</span>
+                        <div class="badge grade">
+                            <i th:if="${product.seller.sellGrade} < 2" style="background: none; zoom:1; width: 14px; height: 14px; font-size: 14px" class="bi bi-bag"></i>
+                            <i th:if="${product.seller.sellGrade} == 2" style="background-position: -2066px -2420px;"></i>
+                            <i th:if="${product.seller.sellGrade} == 3" style="background-position: -2258px -2420px;"></i>
+                            <i th:if="${product.seller.sellGrade} == 4" style="background-position: -2162px -2420px;"></i>
+                            <i th:if="${product.seller.sellGrade} == 5" style="background-position: -2354px -2420px;"></i>
+                            <span th:if="${product.seller.sellGrade} < 2" th:text="${product.seller.sellGrade==0?'씨앗':'새싹'}" style="padding-top: 2px;"></span>
                             <span th:if="${product.seller.sellGrade} == 2">파워</span>
-                            <span th:if="${product.seller.sellGrade} == 1">새싹</span>
-                            <span th:if="${product.seller.sellGrade} == 0">씨앗</span>
-                        </span>
+                            <span th:if="${product.seller.sellGrade} == 3">빅파워</span>
+                            <span th:if="${product.seller.sellGrade} == 4">프리미엄</span>
+                            <span th:if="${product.seller.sellGrade} == 5">플래티넘</span>
+                        </div>
 
                     </div>
                 </div>
