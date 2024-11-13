@@ -131,7 +131,6 @@ body {
 }
 
 .product-info {
-    /* flex: 1; */
     margin-right: 20px;
     width: 475px;
     height: 125px;
@@ -198,24 +197,22 @@ body {
 .badge-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     align-items: flex-start;
 }
 
 .badge {
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
-    padding: 5px 10px;
+    gap: 3px;
     border-radius: 15px;
     font-size: 12px;
-    background-color: #d9534f; /* 다운된 빨간색 */
-    color: #fff;
+    color: #757575 !important;
     font-weight: bold;
 }
+.badge.company>span{color: #555!important;}
+.badge.grade > i {color: #555!important; display: inline-block; background: url("/images/spIcon_svg.png") no-repeat; zoom:0.22; width: 64px; height: 72px;}
 
-.badge.company { background-color: #d9534f; } /* 다운된 빨간색 */
-.badge.customer-satisfaction { background-color: #757575; } /* 따뜻한 회색 */
-.badge.grade { background-color: #ffd700; } /* 골드 톤의 노란색 */
 
 .page {
     display: flex;

@@ -16,4 +16,7 @@ public class GetMainProductDto {
     private Long id;
     private String type;
     private String deli;
+    private Integer rating;
+    private Integer reviewCnt;
+    private Integer orderCnt;
 }
