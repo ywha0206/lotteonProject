@@ -35,7 +35,7 @@ section>ul>li>a .content{white-space : nowrap; overflow : hidden; text-overflow:
 .ico{width: 50px; text-align: center;}
 
 /* Q */
-.Q{font-size: 18px; font-weight: 900; color: #0070C0; width: 40px; text-align: center;}
+.Q{font-size: 1.8em; font-weight: 900; color: #0070C0; width: 40px; text-align: center;}
 
 /* button */
 .btn_list{display: block; margin: 0 auto;} /* 위쪽 여백 간격은 해당 html에만 적용되는 css파일에 .btn_list{margin-top: 원하는 값;} */
