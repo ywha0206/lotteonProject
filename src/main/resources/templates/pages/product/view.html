@@ -537,7 +537,7 @@
                         <select onclick="optionId2Changer(event)" class="prodOptions">
                     ` + option2.map(v => `
                         <option class="endOption2" data-price="${v.optionPrice}" data-stock="${v.optionStock}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
-                            ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
+                            ${v.optionValue}${v.optionPrice != null ? ' (+' + v.optionPrice.toLocaleString() + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
                         </option>
                     `).join('') + `
                         </select>
@@ -552,7 +552,7 @@
                         </select>
                     `
                 }
-                select2.style.display = 'block'
+                select2.style.display = 'table-cell'
                 const prodOptions = select2.querySelector('.prodOptions')
                 optionId.value = prodOptions.options[prodOptions.selectedIndex].dataset.id;
                 selectedStock = prodOptions.options[prodOptions.selectedIndex].dataset.stock;
@@ -621,7 +621,7 @@
                         <select onclick="optionId2Changer(event)" class="prodOptions">
                     ` + option2.map(v => `
                         <option class="endOption2" data-price="${v.optionPrice}" data-stock="${v.optionStock}" data-id="${v.optionId}" ${v.optionStock === 0 ? 'disabled' : ''}>
-                            ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
+                            ${v.optionValue}${v.optionPrice != null ? ' (+' + v.optionPrice.toLocaleString() + '원)' : ''}${v.optionStock === 0 ? ' (매진)' : ''}
                         </option>
                     `).join('') + `
                         </select>
@@ -636,7 +636,7 @@
                         </select>
                     `
                 }
-                select2.style.display = 'block'
+                select2.style.display = 'table-cell'
                 const prodOptions = select2.querySelector('.prodOptions')
                 optionId.value = prodOptions.options[prodOptions.selectedIndex].dataset.id;
                 selectedStock = prodOptions.options[prodOptions.selectedIndex].dataset.stock;
