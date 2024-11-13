@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -41,24 +42,15 @@ public class EventService {
     private final CouponRepository couponRepository;
     private final CustomerCouponRepository customerCouponRepository;
 
-    private Customer getCustomer() {
-        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        Customer customer = auth.getUser().getCustomer();
-        return customer;
-    }
-
-    public String updateEvent() {
-        Customer customer = this.getCustomer();
-
-
+    public String updateEvent(Long id) {
+        System.out.println("여기 왜 안들어옴???");
+        Customer customer = customerRepository.findById(id).get();
         AttendanceEvent event;
-        if (attendanceEventRepository.findByCustomer(customer) == null) {
+        if (attendanceEventRepository.findByCustomer(customer).isEmpty()) {
             event = this.insertEvent(customer);
             attendanceEventRepository.save(event);
         } else {
-            event = attendanceEventRepository.findByCustomer(customer);
+            event = attendanceEventRepository.findByCustomer(customer).get();
         }
         if(event.getAttendanceToday()==1){
             return "done";
@@ -83,18 +75,20 @@ public class EventService {
 
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 52 11 * * ?")
     public void resetEventSequence(){
         List<AttendanceEvent> attendanceEvents = attendanceEventRepository.findAll();
-        for(AttendanceEvent event : attendanceEvents){
-            if(event.getAttendanceSequence()==1){
+        List<AttendanceEvent> updatedEvents = new ArrayList<>();
+        for (AttendanceEvent event : attendanceEvents) {
+            if (event.getAttendanceSequence() == 1) {
                 event.updateEventSequenceZero();
-                attendanceEventRepository.save(event);
-            } else if(event.getAttendanceSequence()==0){
+                updatedEvents.add(event);
+            } else if (event.getAttendanceSequence() == 0) {
                 event.updateEventSequenceOne();
-                attendanceEventRepository.save(event);
+                updatedEvents.add(event);
             }
         }
+        attendanceEventRepository.saveAll(updatedEvents);
     }
 
     private AttendanceEvent insertEvent(Customer customer) {
@@ -109,11 +103,11 @@ public class EventService {
     }
 
 
-    public int findEvent(String result) {
-        Customer customer = this.getCustomer();
-        AttendanceEvent newEvent = attendanceEventRepository.findByCustomer(customer);
+    public int findEvent(String result, Long id) {
+        Customer customer = customerRepository.findById(id).get();
+        AttendanceEvent newEvent = attendanceEventRepository.findByCustomer(customer).get();
         if(result.equals("done")){
-            AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
+            AttendanceEvent event = attendanceEventRepository.findByCustomer(customer).get();
             int count = event.getAttendanceDays();
             return count;
         }
@@ -126,17 +120,18 @@ public class EventService {
             attendanceEventRepository.save(newEvent);
             return 7;
         } else {
-            AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
+            AttendanceEvent event = attendanceEventRepository.findByCustomer(customer).get();
             int count = event.getAttendanceDays();
 
-            this.updateCustomerPointOrCoupon(count,customer);
+            this.updateCustomerPointOrCoupon(count,id);
             return count;
         }
 
     }
 
-    private void updateCustomerPointOrCoupon(int count, Customer customer) {
-        AttendanceEvent event = attendanceEventRepository.findByCustomer(customer);
+    private void updateCustomerPointOrCoupon(int count, Long id) {
+        Customer customer = customerRepository.findById(id).get();
+        AttendanceEvent event = attendanceEventRepository.findByCustomer(customer).get();
         if(count==5){
             if(event.getAttendanceMiddleState()==0){
                 this.updateCustomerPoint(2000);
@@ -151,10 +146,13 @@ public class EventService {
     }
 
     private void updateCustomerPoint(int value) {
-        Customer customer = this.getCustomer();
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Customer customer = auth.getUser().getCustomer();
 
         LocalDate today = LocalDate.now().plusMonths(2);
-
 
         Point point = Point.builder()
                 .pointVar(value)
@@ -172,7 +170,7 @@ public class EventService {
 
     @Cacheable(value = "couponCache", key = "'birth_' + #id", cacheManager = "cacheManager")
     public String issueCoupon(Long id) {
-        Customer customer = this.getCustomer();
+        Customer customer = customerRepository.findById(id).get();
 
         Optional<Coupon> coupon = couponRepository.findById((long)7);
         if(coupon.isEmpty()){

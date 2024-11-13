@@ -67,4 +67,8 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Page<Point> findAllByCustomer_CustEmailContainingOrderByPointRdateDesc(String keyword, Pageable pageable);
 
     Page<Point> findAllByCustomer_CustHpContainingOrderByPointRdateDesc(String keyword, Pageable pageable);
+
+    Page<Point> findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByIdDesc(Customer customer, int i, LocalDate varDay, LocalDate today, Pageable pageable);
+
+    Page<Point> findAllByCustomerAndPointTypeOrderByIdDesc(Customer customer, int i, Pageable pageable);
 }
