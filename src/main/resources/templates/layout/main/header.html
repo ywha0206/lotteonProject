@@ -162,7 +162,7 @@
                 <div class="menu-box-in">
 
                     <ul class="gnb cf">
-                        <li><a th:href="@{/event/attendance}">출석이벤트</a></li>
+                        <li sec:authorize="hasRole('customer')"><a th:href="@{/event/attendance(id=${#authentication.principal.user.customer.id})}">출석이벤트</a></li>
                         <li><a th:href="${isMainPage != null && isMainPage}? '#aside' : '/#aside'">히트상품</a></li>
                         <li><a th:href="${isMainPage != null && isMainPage}? '#hit' : '/#hit'">추천상품</a></li>
                         <li><a th:href="${isMainPage != null && isMainPage}? '#recommend' : '/#recommend'">최신상품</a></li>
