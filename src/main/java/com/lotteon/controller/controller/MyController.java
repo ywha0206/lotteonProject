@@ -136,7 +136,7 @@ public class MyController {
             @RequestParam(name = "page",defaultValue = "0") int page
     ) {
         Page<GetMyCouponDto> coupons = customerCouponService.findAllByCustomer(page);
-        if(coupons==null){
+        if(coupons.isEmpty()){
             model.addAttribute("noItem",true);
         } else {
             model.addAttribute("noItem",false);

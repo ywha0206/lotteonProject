@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="navi">
-            <li class="side1" th:classappend="${config == 'order'} ? 'asideBg' : ''" onclick="openMenu(event, 'menu5')">주문관리</li>
+            <li sec:authorize="hasRole('seller')" class="side1" th:classappend="${config == 'order'} ? 'asideBg' : ''" onclick="openMenu(event, 'menu5')">주문관리</li>
             <div th:classappend="${config} == 'order' ? 'open' : ''" class="menues" id="menu5">
                 <a th:classappend="${active} == 'orders' ? 'active' : ''" th:href="@{/admin/order/orders}">- 주문현황</a>
                 <a th:classappend="${active} == 'deliverys' ? 'active' : ''" th:href="@{/admin/order/deliverys}">- 배송현황</a>

@@ -141,7 +141,7 @@ public class OrderItemService {
                     .customer(customer)
                     .pointEtc("상품구매 포인트적립")
                     .pointExpiration(today.plusMonths(2))
-                    .orderId(order.getId())
+                    .orderId(returnorderItem.getId())
                     .build();
 
             pointRepository.save(point);
@@ -149,6 +149,18 @@ public class OrderItemService {
             int points = customerService.updateCustomerPoint(customer);
             customer.updatePoint(points);
             customerRepository.save(customer);
+
+            OrderCancleDocument orderCancleDocument = OrderCancleDocument.builder()
+                    .pointId(point.getId())
+                    .orderItemId(returnorderItem.getId())
+                    .custId(customer.getId())
+                    .pointUdate(LocalDateTime.now())
+                    .points(orderItem.getSavePoint()*orderItem.getQuantity())
+                    .orderId(order.getId())
+                    .couponId(dto.getCouponId())
+                    .build();
+
+            orderCancleRepository.save(orderCancleDocument);
 
             if(returnorderItem==null){
                 map.put("status",false);
@@ -212,14 +224,10 @@ public class OrderItemService {
 
         log.info("셀러인지 어드민인지 확인하기 "+role+memId);
 
-        List<OrderItem> orderItems = new ArrayList<>();
 
-        if(role.equals("admin")){
-            orderItems = orderItemRepository.findAllByOrder_Id(orderId);
-        }else if(role.equals("seller")){
-            orderItems = orderItemRepository.findAllBySellerAndOrder_Id(seller,orderId);
-            log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
-        }
+        List<OrderItem> orderItems = orderItemRepository.findAllBySellerAndOrder_Id(seller,orderId);
+        log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
+
 
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();
         for(OrderItem orderItem : orderItems){
@@ -229,15 +237,15 @@ public class OrderItemService {
             List<String> options = (List<String>) optionResult.get("optionValues");
             ResponseOrderItemDto orderItemDto = ResponseOrderItemDtoBuilder(orderItem,options,additionalPrice);
             orderItemDtos.add(orderItemDto);
-
-            orderItemDtos.add(orderItemDto);
         }
         return ResponseOrderDtoBuilder(orderItems, orderItemDtos);
     }
 
     public List<GetAdminOrderNameDto> selectAdminOrderItem(Long orderId) {
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_Id(orderId);
-        List<GetAdminOrderNameDto> dtos = orderItems.stream().map(v->v.toGetAdminOrderNameDto()).toList();
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Seller seller = auth.getUser().getSeller();
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_IdAndSeller(orderId,seller);
+        List<GetAdminOrderNameDto> dtos = orderItems.stream().map(OrderItem::toGetAdminOrderNameDto).toList();
         return dtos;
     }
 
@@ -376,6 +384,12 @@ public class OrderItemService {
         orderItem.get().getOrder().updateState(orderState);
         orderItemRepository.save(orderItem.get());
         orderRepository.save(orderItem.get().getOrder());
+
+
+        Optional<Point> point = pointRepository.findById(id);
+        if(point.isPresent()){
+            pointRepository.delete(point.get());
+        }
 
         int totalCnt = orderItem.get().getOrder().getOrderItems().size();
         int variableCnt = 0;

@@ -59,4 +59,12 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Optional<Point> findFirstByOrderIdAndPointEtc(Long orderId, String s);
 
     Optional<Point> findFirstByOrderIdAndPointType(Long orderId, int i);
+
+    Page<Point> findAllByCustomer_Member_MemUidContainingOrderByPointRdateDesc(String keyword, Pageable pageable);
+
+    Page<Point> findAllByCustomer_CustNameContainingOrderByPointRdateDesc(String keyword, Pageable pageable);
+
+    Page<Point> findAllByCustomer_CustEmailContainingOrderByPointRdateDesc(String keyword, Pageable pageable);
+
+    Page<Point> findAllByCustomer_CustHpContainingOrderByPointRdateDesc(String keyword, Pageable pageable);
 }

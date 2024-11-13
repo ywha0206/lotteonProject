@@ -17,6 +17,8 @@ import com.lotteon.repository.member.*;
 import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.term.TermsRepository;
 import com.lotteon.service.AuthService;
+import com.lotteon.service.point.CustomerCouponService;
+import com.lotteon.service.point.PointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -42,8 +44,6 @@ import java.util.UUID;
 public class CustomerService {
 
     private final PasswordEncoder passwordEncoder;
-    private final TermsRepository termsRepository;
-    private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final CustomerRepository customerRepository;
     private final PointRepository pointRepository;
@@ -184,6 +184,8 @@ public class CustomerService {
         MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member member = auth.getUser();
 
+        Customer customer = member.getCustomer();
+        int points2 = this.updateCustomerPoint(customer);
         Optional<Address> addressEntity = addressRepository.findByCustomerAndBasicState(member.getCustomer(),1);
         if(addressEntity.isEmpty()){
             String address = member.getCustomer().getCustAddr();
@@ -195,7 +197,7 @@ public class CustomerService {
                     .custZip(addr[0])
                     .custAddr1(addr[1])
                     .custAddr2(addr[2])
-                    .points(member.getCustomer().getCustPoint())
+                    .points(points2)
                     .build();
         }
         String address = addressEntity.get().getAddress();
@@ -208,7 +210,7 @@ public class CustomerService {
                                         .custZip(addr[0])
                                         .custAddr1(addr[1])
                                         .custAddr2(addr[2])
-                                        .points(member.getCustomer().getCustPoint())
+                                        .points(points2)
                                         .build();
 
 

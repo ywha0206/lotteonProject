@@ -209,7 +209,7 @@ public class ApiProductController {
 
         //카트 세션 꺼내서 null처리하고 삭제
         List<PostCartSaveDto> selectedProducts = (List<PostCartSaveDto>) session.getAttribute("selectedProducts");
-
+        Long couponId = postOrderDto.getOrderPointAndCouponDto().getCouponId();
         List<Long> cartItemIds = new ArrayList<>();
         for(PostCartSaveDto postCartSaveDto : selectedProducts){
             if(postCartSaveDto.getCartItemId()!=null){

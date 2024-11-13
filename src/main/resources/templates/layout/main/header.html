@@ -86,26 +86,25 @@
 
             </ul>
         </div><!--.utill-->
-
+        <section id="top-box">
             <h1 class="logo">
                 <a th:href="@{/}">
                     <img class="hlogo" th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo">
                 </a>
             </h1><!--.logo-->
-            <section id="top-box">
 
                 <!-- 내 도구:마이롯데, 장바구니, 나의 찜 -->
                 <!--
                 <div class="myTool">
                     <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
-                    <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"><span class="cartCount" th:if="${cartCount!=null&&cartCount!=0}">[[${cartCount}]]</span></a>
+                    <a th:href="@{/prod/cart}">
+                        <img class="img-header-link" th:src="@{/images/header-cart.png}">
+                        <span class="cartCount" th:if="${cartCount!=null&&cartCount!=0}">[[${cartCount}]]</span>
+                    </a>
                     <a th:href="@{/prod/hearts}"><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
                     <button onclick="openChatBot()">챗봇</button>
                 </div>
                 -->
-            </section>
-
-
             <div class="myTool2">
                 <ul >
                     <li>
@@ -118,12 +117,11 @@
                         <a th:href="@{/prod/cart}">
                             <img class="img-header-link prodCart" th:src="@{/images/index_icon(cart).png}">
                             <span class="cartCount" th:if="${cartCount>0}">[[${cartCount}]]</span>
-                            <!-- .cartCount -->
                             <p class="img-header-tit">장바구니</p>
                         </a>
                     </li>
                     <li>
-                        <a>
+                        <a th:href="@{/prod/hearts}">
                             <img class="img-header-link" th:src="@{/images/index_icon(heart).png}">
                             <p class="img-header-tit">나의 찜</p>
                         </a>
@@ -136,10 +134,10 @@
                     </li>
                     <!-- <button onclick="openChatBot()">챗봇</button> -->
 
-                    </ul><!-- .myTool2 -->
-                </div>
+                </ul><!-- .myTool2 -->
+            </div>
 
-            </section><!-- #top-box -->
+        </section><!-- #top-box -->
 
             <!-- 연관 검색어 start -->
             <section class="search-container">
