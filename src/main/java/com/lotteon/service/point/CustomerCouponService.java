@@ -339,9 +339,6 @@ public class CustomerCouponService {
 
 
         Page<CustomerCoupon> coupons = customerCouponRepository.findAllByCustomerAndCouponState(auth.getUser().getCustomer(),1,pageable);
-        if(coupons.getTotalElements()==0){
-            return null;
-        }
         Page<GetMyCouponDto> dtos = coupons.map(CustomerCoupon::toGetMyCouponDto);
 
         return dtos;
