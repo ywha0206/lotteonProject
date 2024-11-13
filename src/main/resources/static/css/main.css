@@ -139,6 +139,7 @@ h1.logo{z-index: 3}
 
 /* 실시간 검색어 ∨ (trending) */
 #headerIn .search-slider{position: absolute; top: 162px; right: 0; display: flex; justify-content: space-between;}
+#headerIn .search-slider .bx-wrapper {height: 110px;}
 #headerIn .search-slider .searchSlider{position: relative;}
 #headerIn .search-slider .searchSlider li{overflow: hidden;}
 #headerIn .search-slider .searchSlider li a{margin-right:10px; display: inline-block; font-size: 14px;
@@ -426,7 +427,7 @@ h1.logo{z-index: 3}
 
 /* cont1 */
 .cont1{margin-top: 60px;}
-.cont1 .tit{font-size:26px; font-weight: 900; letter-spacing:-0.5px; margin-bottom: 20px;}
+.cont1 .tit{font-size:26px; font-weight: 700; letter-spacing:-0.5px; margin-bottom: 20px;}
 
 .cont1 ul{position: relative;}
 .cont1 ul:after{content:""; display:block; clear:both;}
