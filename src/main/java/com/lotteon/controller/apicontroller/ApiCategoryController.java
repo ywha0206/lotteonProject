@@ -50,8 +50,11 @@ public class ApiCategoryController {
             @RequestParam Long id
     ){
         String result = categoryProductService.deleteCategory(id);
-
-        return ResponseEntity.ok().body(result);
+        if(result.equals("SU")){
+            return ResponseEntity.ok().body(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
     @PostMapping("/admin/prod/category")
