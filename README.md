@@ -1,10 +1,14 @@
-# Lotteon
+<img align="center" width="100%" alt="header:Lotteon" src="https://capsule-render.vercel.app/api?type=waving&height=150&color=0:e99ab5,100:f9cad4&text=Lotte%20ON&desc=Team%202%20Project&descAlign=41&descAlignY=34&fontColor=E60029&reversal=false&animation=fadeIn&fontAlignY=64&section=header">
+
 
 ## 프로젝트 개요
 롯데이커머스의 웹 쇼핑몰 프로젝트 **Lotte On**은 고객에게 다양한 상품을 제공하고 최고의 쇼핑 경험을 제공하기 위해 개발되고 있는 온라인 플랫폼입니다. 본 프로젝트는 사용자 친화적인 인터페이스를 통해 쇼핑이 보다 쉽고 편리하게 이루어질 수 있도록 설계되었습니다.
 
+<div align=center> 
 
 ### [LotteOn - 더 나은 쇼핑의 발견](http://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:8080/)
+
+</div>
 
 ## Team 2
 - **팀장**: 이상훈
@@ -20,7 +24,7 @@
 ## 프로젝트 진행
 - **현재 버전**: 0.1.1-SNAPSHOT
 - **첫 번째 커밋**: 프로젝트 디렉토리 구조 설계 완료, 레이아웃 구성, 엔터티 및 디비설계
-- **커밋 주의사항**: yml 파일은 이그노어 시켜놨으니 각자 yml파일 자기 디비로 구성 없으면 팀장한태 yml파일 요청
+- **커밋 주의사항**: yml 파일은 ignore 시켜놨으니 각자 yml파일 자기 DB로 구성 (없으면 팀장에게 yml파일 요청)
 
 
 ## 작업 관리
@@ -38,14 +42,18 @@
 
 
 ## 기술 스택
-- Java
-- Spring Boot
-- Thymeleaf
-- JPA
-- MySQL
-- redis
-- MongoDB
-- GitHub Action
+- ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat-square&logo=openjdk&logoColor=white)
+- ![Spring](https://img.shields.io/badge/SpringBoot-%236DB33F.svg?style=flat-square&logo=spring&logoColor=white) ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-%23005C0F.svg?style=flat-square&logo=Thymeleaf&logoColor=white)
+- ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat-square&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat-square&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat-square&logo=javascript&logoColor=%23F7DF1E)
+- ![JPA](https://img.shields.io/badge/JPA-%236DB33F.svg?style=flat-square&logoColor=white)
+- ![MySQL](https://img.shields.io/badge/MySQL-4479A1.svg?style=flat-square&logo=mysql&logoColor=white)
+- ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat-square&logo=docker&logoColor=white)
+- ![Redis](https://img.shields.io/badge/Redis-%23DD0031.svg?style=flat-square&logo=redis&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=flat-square&logo=mongodb&logoColor=white)
+- ![Git](https://img.shields.io/badge/git-E44C30?style=flat-square&logo=git&logoColor=white)
+- ![Github Action](https://img.shields.io/badge/Github%20Action-121013?style=flat-square&logo=github&logoColor=white) ![AWS](https://img.shields.io/badge/AmazonAWS-%23FF9900.svg?style=flat-square&logo=amazon-aws&logoColor=white)
+  
+Thanks For
+- ![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=flat-square&logo=openai&logoColor=white) ![Bootstrap](https://img.shields.io/badge/Bootstrap-%238511FA.svg?style=flat-square&logo=bootstrap&logoColor=white)
 
 
 
@@ -159,3 +167,6 @@
 > 상품 옵션별 자동 조합
 > 추천 연관 상품
 > 쿠폰 오류 수정
+
+
+<img align="center" width="100%" alt="header:Lotteon" src="https://capsule-render.vercel.app/api?type=waving&height=150&color=0:e99ab5,100:f9cad4&descAlign=41&descAlignY=34&fontColor=E60029&reversal=false&animation=fadeIn&fontAlignY=64&section=footer">
